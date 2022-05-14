@@ -71,8 +71,8 @@ protected:
   bool debug;
 
   // scale factors
-  unique_ptr<AnalysisModule> sf_muon_iso_low, sf_muon_id_high, sf_muon_trigger_low, sf_muon_trigger_high;
-  unique_ptr<AnalysisModule> sf_muon_iso_low_dummy, sf_muon_id_high_dummy, sf_muon_trigger_low_dummy, sf_muon_trigger_high_dummy;
+  unique_ptr<AnalysisModule> sf_muon_iso_low, sf_muon_iso_high, sf_muon_id_high, sf_muon_trigger_low, sf_muon_trigger_high;
+  unique_ptr<AnalysisModule> sf_muon_iso_low_dummy,sf_muon_iso_high_dummy, sf_muon_id_high_dummy, sf_muon_trigger_low_dummy, sf_muon_trigger_high_dummy;
   unique_ptr<AnalysisModule> sf_ele_id_low, sf_ele_id_high, sf_ele_reco, sf_ele_trigger_low, sf_ele_trigger_high;
   unique_ptr<AnalysisModule> sf_ele_id_low_dummy, sf_ele_id_high_dummy, sf_ele_reco_dummy, sf_ele_trigger_low_dummy, sf_ele_trigger_high_dummy;
   unique_ptr<AnalysisModule> sf_btagging;
@@ -295,16 +295,19 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
   // set lepton scale factors: see UHH2/common/include/LeptonScaleFactors.h
   sf_muon_iso_low.reset(new uhh2::MuonIsoScaleFactors(ctx, Muon::Selector::PFIsoTight, Muon::Selector::CutBasedIdTight, true));
-  sf_muon_id_high.reset(new uhh2::MuonIdScaleFactors(ctx, Muon::Selector::CutBasedIdGlobalHighPt, true));
+  sf_muon_iso_high.reset(new uhh2::MuonIsoScaleFactors(ctx, Muon::Selector::TkIsoLoose, Muon::Selector::CutBasedIdGlobalHighPt, false));  
+ // sf_muon_id_high.reset(new uhh2::MuonIdScaleFactors(ctx, Muon::Selector::CutBasedIdGlobalHighPt, true));
+ // sf_muon_id_low.reset(new uhh2::MuonIdScaleFactors(ctx, Muon::Selector::CutBasedIdGlobalHighPt, true));
   sf_muon_trigger_low.reset(new uhh2::MuonTriggerScaleFactors(ctx, false, true));
-  sf_muon_trigger_high.reset(new uhh2::MuonTriggerScaleFactors(ctx, true, true));
+  sf_muon_trigger_high.reset(new uhh2::MuonTriggerScaleFactors(ctx,true, false));
   sf_ele_id_low.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_iso_V2_wp80, true));
   sf_ele_id_high.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_noIso_V2_wp80, true));
   sf_ele_reco.reset(new uhh2::ElectronRecoScaleFactors(ctx, false, true));
 
   // dummies (needed to aviod set value errors)
   sf_muon_iso_low_dummy.reset(new uhh2::MuonIsoScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, boost::none, true));
-  sf_muon_id_high_dummy.reset(new uhh2::MuonIdScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, true));
+  sf_muon_iso_high_dummy.reset(new uhh2::MuonIsoScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, boost::none, true));
+  //sf_muon_id_high_dummy.reset(new uhh2::MuonIdScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, true));
   sf_muon_trigger_low_dummy.reset(new uhh2::MuonTriggerScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, boost::none, true));
   sf_muon_trigger_high_dummy.reset(new uhh2::MuonTriggerScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, boost::none, true));
   sf_ele_id_low_dummy.reset(new uhh2::ElectronIdScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, true));
@@ -542,16 +545,23 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
     }
     fill_histograms(event, "IdEle_SF");
   }
-
+  cout <<"run number"<<event.run<< endl;
+  cout <<"event number"<<event.event<< endl;
+  cout <<"about to check iso"<< endl;
+  cout <<"Is it a high pt muon?"<< muon_is_high <<endl;
   // apply lepton isolation scale factors: muons only (include both id and isolation)
   if(isMuon){
     if(muon_is_low){
       sf_muon_iso_low->process(event);
-      sf_muon_id_high_dummy->process(event);
+      sf_muon_iso_high_dummy->process(event);
     }
     else if(muon_is_high){
+      cout <<"check high iso"<<endl;
+      sf_muon_iso_high->process(event);
+      cout <<"check low dummy iso"<<endl;
       sf_muon_iso_low_dummy->process(event);
-      sf_muon_id_high->process(event);
+      
+    //  sf_muon_id_high->process(event);
     }
     fill_histograms(event, "IsoMuon_SF");
   }
@@ -559,7 +569,7 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
     sf_muon_id_high_dummy->process(event);
     sf_muon_iso_low_dummy->process(event);
   }
-
+  cout <<"about to check reco"<< endl;
   // apply lepton reco scale factors: electrons only
   if(isMuon){
     sf_ele_reco_dummy->process(event);
@@ -650,25 +660,33 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
     fill_histograms(event, "TriggerEle");
     lumihists_TriggerEle->fill(event);
   }
-
+  cout << "about to do muon trigger"<< endl;
 
   // apply lepton trigger scale factors
   if(isMuon){
-    if(muon_is_low){
-      sf_muon_trigger_low->process(event);
-      sf_muon_trigger_high_dummy->process(event);
-    }
+      if(muon_is_low){
+        cout << "about to do muon pt in low range , process events"<< endl;
+        sf_muon_trigger_low->process(event);
+        cout << "done low trigger" <<endl;
+        sf_muon_trigger_high_dummy->process(event);
+        cout << "done dummy high trigger" <<endl;
+     }
     if(muon_is_high){
-      sf_muon_trigger_low_dummy->process(event);
+      cout << " in high pt"<<endl;
       sf_muon_trigger_high->process(event);
+      cout << "done high trigger" <<endl;
+      sf_muon_trigger_low_dummy->process(event);
+      cout << "done low dummy trigger" <<endl;
+      
     }
     fill_histograms(event, "TriggerMuon_SF");
+    cout << "done filling histos" <<endl;
   }
   if(isElectron){
     // TODO: implement electron trigger SFs (low + high pt)
     // fill_histograms(event, "TriggerEle");
-    sf_muon_trigger_low_dummy->process(event);
-    sf_muon_trigger_high_dummy->process(event);
+   // sf_muon_trigger_low_dummy->process(event);
+    //sf_muon_trigger_high_dummy->process(event);
   }
 
 
