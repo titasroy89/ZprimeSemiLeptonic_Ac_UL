@@ -1156,6 +1156,7 @@
 			<Item Name="jecsmear_direction"          Value="nominal"/>
 			<Item Name="ScaleVariationMuR"           Value="nominal"/>
 			<Item Name="ScaleVariationMuF"           Value="nominal"/>
+                        <Item Name="SystDirection_MuonId"        Value="nominal"/>
 			<Item Name="SystDirection_MuonIso"       Value="nominal"/>
 			<Item Name="SystDirection_MuonTrigger"   Value="nominal"/>
 			<Item Name="SystDirection_ElectronId"    Value="nominal"/>
@@ -1163,6 +1164,7 @@
 			<!-- add electron trigger SFs -->
 			<Item Name="Sys_PU"                      Value="central"/>
 			<Item Name="SystDirection_BTaggingShape" Value="central"/> 
+			<Item Name="Sys_prefiring"               Value="nominal"/>
 			<Item Name="Sys_TopTag"                  Value="nominal"/>
 			<Item Name="channel"                     Value="&CHANNEL;"/>
 
