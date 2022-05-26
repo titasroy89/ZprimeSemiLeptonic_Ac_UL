@@ -110,7 +110,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
   // lepton IDs
   // ElectronId eleID_veto = ElectronID_Fall17_tight_noIso; - eleID_veto tag changed
-  ElectronId eleID_veto = ElectronID_Fall17_tight_noIso;
+  ElectronId eleID_veto = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp90);
   MuonId     muID_veto  = MuonID(Muon::CutBasedIdTight);
 
   double electron_pt(25.);
