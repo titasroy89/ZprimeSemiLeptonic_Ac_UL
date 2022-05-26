@@ -109,6 +109,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
 
   // lepton IDs
+  // ElectronId eleID_veto = ElectronID_Fall17_tight_noIso; - eleID_veto tag changed
   ElectronId eleID_veto = ElectronID_Fall17_tight_noIso;
   MuonId     muID_veto  = MuonID(Muon::CutBasedIdTight);
 
