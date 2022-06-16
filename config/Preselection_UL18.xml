@@ -2,7 +2,7 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi  "59830"> <!-- from https://twiki.cern.ch/twiki/bin/view/CMS/TWikiLUM#SummaryTable -->
-<!ENTITY PRESELdir   "/nfs/dust/cms/group/zprime-uhh/Presel_UL18/">
+<!ENTITY PRESELdir   "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output/UL18">
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT        "-1">
 <!ENTITY IS_HOTVR    "false">
