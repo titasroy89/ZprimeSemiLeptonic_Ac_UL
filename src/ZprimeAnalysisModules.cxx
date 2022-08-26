@@ -203,7 +203,7 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
   isPhoton = (ctx.get("dataset_version").find("SinglePhoton") != std::string::npos);
 
-  isEleTriggerMeasurement = (ctx.get("is_EleTriggerMeasurement") == "true");
+  // isEleTriggerMeasurement = (ctx.get("is_EleTriggerMeasurement") == "true");
 
   // Lepton IDs
   ElectronId eleID_low  = ElectronTagID(Electron::mvaEleID_Fall17_iso_V2_wp80);
