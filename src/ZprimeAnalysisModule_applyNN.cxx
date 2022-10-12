@@ -42,6 +42,7 @@
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicGeneratorHists.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicCHSMatchHists.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeCandidate.h>
+#include <UHH2/ZprimeSemiLeptonic/include/ElecTriggerSF.h>
 
 #include <UHH2/common/include/TTbarGen.h>
 #include <UHH2/common/include/TTbarReconstruction.h>
@@ -313,6 +314,7 @@ protected:
   unique_ptr<AnalysisModule> sf_ele_id_low, sf_ele_id_high, sf_ele_reco;
   unique_ptr<AnalysisModule> sf_ele_id_dummy, sf_ele_reco_dummy;
   unique_ptr<MuonRecoSF> sf_muon_reco;
+  unique_ptr<AnalysisModule> sf_ele_trigger;
   unique_ptr<AnalysisModule> sf_btagging;
 
   // AnalysisModules
@@ -672,6 +674,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   sf_ele_id_high.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_noIso_V2_wp80, true));
   sf_ele_reco.reset(new uhh2::ElectronRecoScaleFactors(ctx, false, true));
 
+  sf_ele_trigger.reset( new uhh2::ElecTriggerSF(ctx, "central", "eta_ptbins", year) );
+
   // dummies (needed to aviod set value errors)
   sf_muon_iso_low_dummy.reset(new uhh2::MuonIsoScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, boost::none, true));
   sf_muon_id_dummy.reset(new uhh2::MuonIdScaleFactors(ctx, boost::none, boost::none, boost::none, boost::none, true));
@@ -767,7 +771,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_Zprime_PDFVariations_DNN_output0_NoTopTag_thetastar_bin4.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0_NoTopTag_thetastar_bin4"));
 
   // Book histograms
-  vector<string> histogram_tags = {"Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_TopTag_SF", "Weights_PS", "Corrections", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "NNInputsBeforeReweight", "TopTagVeto", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag", "DNN_output0_thetastar_bin1", "DNN_output0_thetastar_bin2", "DNN_output0_thetastar_bin3", "DNN_output0_thetastar_bin4", "DNN_output0_TopTag_thetastar_bin1", "DNN_output0_TopTag_thetastar_bin2", "DNN_output0_TopTag_thetastar_bin3", "DNN_output0_TopTag_thetastar_bin4", "DNN_output0_NoTopTag_thetastar_bin1", "DNN_output0_NoTopTag_thetastar_bin2", "DNN_output0_NoTopTag_thetastar_bin3", "DNN_output0_NoTopTag_thetastar_bin4"};
+  vector<string> histogram_tags = {"Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_TopTag_SF", "Weights_PS", "Corrections", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "TriggerEle_SF", "NNInputsBeforeReweight", "TopTagVeto", "DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag", "DNN_output0_thetastar_bin1", "DNN_output0_thetastar_bin2", "DNN_output0_thetastar_bin3", "DNN_output0_thetastar_bin4", "DNN_output0_TopTag_thetastar_bin1", "DNN_output0_TopTag_thetastar_bin2", "DNN_output0_TopTag_thetastar_bin3", "DNN_output0_TopTag_thetastar_bin4", "DNN_output0_NoTopTag_thetastar_bin1", "DNN_output0_NoTopTag_thetastar_bin2", "DNN_output0_NoTopTag_thetastar_bin3", "DNN_output0_NoTopTag_thetastar_bin4"};
   book_histograms(ctx, histogram_tags);
 
   h_MulticlassNN_output.reset(new ZprimeSemiLeptonicMulticlassNNHists(ctx, "MulticlassNN"));
@@ -1081,8 +1085,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     fill_histograms(event, "TriggerMuon_SF");
   }
   if(isElectron){
-    // TODO: implement electron trigger SFs (low + high pt)
-    // fill_histograms(event, "TriggerEle");
     sf_muon_trigger_dummy->process(event);
   }
 
@@ -1118,6 +1120,10 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     event.weight *= custom_sf;
   }
   fill_histograms(event, "AfterCustomBtagSF");
+  
+  //apply ele trigger sf
+  sf_ele_trigger->process(event);
+  fill_histograms(event, "TriggerEle_SF");
 
   CandidateBuilder->process(event);
   if(debug) cout << "CandidateBuilder: ok" << endl;
@@ -1155,20 +1161,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // Veto events with >= 2 TopTagged large-R jets
   if(!TopTagVetoSelection->passes(event)) return false;
   fill_histograms(event, "TopTagVeto");
+
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
-    fill_histograms(event, "DNN_output0");
-    h_Zprime_SystVariations_DNN_output0->fill(event);
-    h_Zprime_PDFVariations_DNN_output0->fill(event);
+    fill_histograms(event, "DNN_output0_beforeChi2Cut");
     if( ZprimeTopTag_selection->passes(event) ){
-      fill_histograms(event, "DNN_output0_TopTag");
-      h_Zprime_SystVariations_DNN_output0_TopTag->fill(event);
-      h_Zprime_PDFVariations_DNN_output0_TopTag->fill(event);
+      fill_histograms(event, "DNN_output0_TopTag_beforeChi2Cut");
     }
     else{
-      fill_histograms(event, "DNN_output0_NoTopTag");
-      h_Zprime_SystVariations_DNN_output0_NoTopTag->fill(event);
-      h_Zprime_PDFVariations_DNN_output0_NoTopTag->fill(event);
+      fill_histograms(event, "DNN_output0_NoTopTag_beforeChi2Cut");
+    }
+    if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
+      fill_histograms(event, "DNN_output0");
+      h_Zprime_SystVariations_DNN_output0->fill(event);
+      h_Zprime_PDFVariations_DNN_output0->fill(event);
+      if( ZprimeTopTag_selection->passes(event) ){
+        fill_histograms(event, "DNN_output0_TopTag");
+        h_Zprime_SystVariations_DNN_output0_TopTag->fill(event);
+        h_Zprime_PDFVariations_DNN_output0_TopTag->fill(event);
+      }
+      else{
+        fill_histograms(event, "DNN_output0_NoTopTag");
+        h_Zprime_SystVariations_DNN_output0_NoTopTag->fill(event);
+        h_Zprime_PDFVariations_DNN_output0_NoTopTag->fill(event);
+      }
     }
   }
 
