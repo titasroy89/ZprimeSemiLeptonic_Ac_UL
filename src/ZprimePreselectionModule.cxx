@@ -29,7 +29,6 @@
 
 #include <UHH2/ZprimeSemiLeptonic/include/ModuleBASE.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicSelections.h>
-//#include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicModules.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicPreselectionHists.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicGeneratorHists.h>
 #include <UHH2/ZprimeSemiLeptonic/include/CHSJetCorrections.h>
@@ -96,7 +95,7 @@ void ZprimePreselectionModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
-  debug = false;
+  debug = false; // true/false
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -120,8 +119,8 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
   double electron_pt(25.);
   double muon_pt(25.);
-  double jet1_pt(20.);
-  double jet2_pt(20.);
+  double jet1_pt(30.);
+  double jet2_pt(30.);
   double MET(20.);
 
 
@@ -153,7 +152,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   // common modules
   common.reset(new CommonModules());
   common->switch_jetlepcleaner(true);
-  common->disable_pvfilter();
+  // common->disable_pvfilter();
   common->disable_jetpfidfilter();
   common->switch_jetPtSorter(true);
   common->switch_metcorrection(true);
@@ -205,8 +204,8 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
 
   if(isHOTVR){
     hotvrjetCorr->process(event);
+    fill_histograms(event, "HOTVRCorrections");
   }
-  fill_histograms(event, "HOTVRCorrections");
 
   toppuppijetCorr->process(event);
   if(debug) cout << "TopPuppiJetCorrections: ok" << endl;
@@ -219,13 +218,17 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   }
   if(debug) cout << "GenFlavorSelection: ok" << endl;
 
+  // cout << "event.muons->size(): " << event.muons->size() << endl;
+  // cout << "event.electrons->size(): " << event.electrons->size() << endl;
   const bool pass_lep1 = ((event.muons->size() >= 1) || (event.electrons->size() >= 1));
+  // cout << "pass_lep1: " << pass_lep1 << endl;
   if(!pass_lep1) return false;
-
+  if(debug) cout << "≥1 leptons: ok" << endl;
   fill_histograms(event, "Lepton1");
 
   jet_IDcleaner->process(event);
   fill_histograms(event, "JetID");
+  if(debug) cout << "JetCleaner ID: ok" << endl;
 
   jet_cleaner1->process(event);
   sort_by_pt<Jet>(*event.jets);

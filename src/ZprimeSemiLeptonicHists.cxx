@@ -469,6 +469,7 @@ void ZprimeSemiLeptonicHists::init(){
   M_Zprime_rebin5          = book<TH1F>("M_Zprime_rebin5", "M_{t#bar{t}} [GeV]", bins_Zprime5.size()-1, &bins_Zprime5[0]);
   M_Zprime_rebin6          = book<TH1F>("M_Zprime_rebin6", "M_{t#bar{t}} [GeV]", bins_Zprime6.size()-1, &bins_Zprime6[0]);
   M_Zprime_rebin7          = book<TH1F>("M_Zprime_rebin7", "M_{t#bar{t}} [GeV]", bins_Zprime7.size()-1, &bins_Zprime7[0]);
+  M_Zprime_rebin8          = book<TH1F>("M_Zprime_rebin8", "M_{t#bar{t}} [GeV]", 400, 0, 10000);
   M_tophad                 = book<TH1F>("M_tophad", "M_{t}^{had} [GeV]", 70, 0, 700);
   M_toplep                 = book<TH1F>("M_toplep", "M_{t}^{lep} [GeV]", 70, 0, 700);
   chi2_Zprime              = book<TH1F>("chi2_Zprime", "#chi^{2}", 300, 0, 600);
@@ -512,6 +513,10 @@ void ZprimeSemiLeptonicHists::init(){
   M_Zprime_dr_rebin2       = book<TH1F>("M_Zprime_dr_rebin2", "M_{t#bar{t}} (correctly matched) [GeV]", 70, 0, 7000);
   M_Zprime_dr_rebin3       = book<TH1F>("M_Zprime_dr_rebin3", "M_{t#bar{t}} (correctly matched) [GeV]", 35, 0, 7000);
 
+  // 2D histogram of mttbar x cos(theta*) to optimize binning
+  mttbar_vs_costhetastar = book<TH2F>("mttbar_vs_costhetastar", "m_{t#bar{t}} vs cos(#theta*)", 20, -1, 1, 1000, 0, 10000);
+  costhetastar_vs_mttbar = book<TH2F>("costhetastar_vs_mttbar", "cos(#theta*) vs m_{t#bar{t}}", 1000, 0, 10000, 20, -1, 1);
+
   // Sphericity tensor
   S11 = book<TH1F>("S11", "S_{11}", 50, 0, 1);
   S12 = book<TH1F>("S12", "S_{12}", 50, 0, 1);
@@ -523,10 +528,11 @@ void ZprimeSemiLeptonicHists::init(){
   sum_event_weights = book<TH1F>("sum_event_weights", "counting experiment", 1, 0.5, 1.5);
 
   // define theta star angles wrt ttbar rest frame
-  hadtop_thetastar     = book<TH1F>("hadtop_thetastar", "hadtop #theta^*", 70, -3.5, 3.5);
+  // hadtop_thetastar     = book<TH1F>("hadtop_thetastar", "hadtop #theta^*", 70, -3.5, 3.5);
   cos_hadtop_thetastar = book<TH1F>("cos_hadtop_thetastar", "cos(hadtop #theta^*)", 100, -1.0, 1.0);
-  leptop_thetastar     = book<TH1F>("leptop_thetastar", "leptop #theta^*", 70, -3.5, 3.5);
+  // leptop_thetastar     = book<TH1F>("leptop_thetastar", "leptop #theta^*", 70, -3.5, 3.5);
   cos_leptop_thetastar = book<TH1F>("cos_leptop_thetastar", "cos(leptop #theta^*)", 100, -1.0, 1.0);
+  abs_cos_leptop_thetastar = book<TH1F>("abs_cos_leptop_thetastar", "|cos(leptop #theta^*)|", 50, 0., 1.0);
 
   // mttbar histograms from TOP-20-001: https://www.hepdata.net/record/ins1901295
   vector<float> bins_ditopmass_Fig19 = {250,400,480,560,640,720,800,900,1000,1150,1300,1500,1700,2000,2300,3500};
@@ -534,7 +540,7 @@ void ZprimeSemiLeptonicHists::init(){
   TOP_20_001_ditopmass_Fig19 = book<TH1F>("TOP_20_001_ditopmass_Fig19","m_{t#bar{t} [GeV]}",bins_ditopmass_Fig19.size()-1,&bins_ditopmass_Fig19[0]);
   TOP_20_001_ditopmass_Fig25 = book<TH1F>("TOP_20_001_ditopmass_Fig25","m_{t#bar{t} [GeV]}",bins_ditopmass_Fig25.size()-1,&bins_ditopmass_Fig25[0]);
 
-  // 2D sitributoin NJets/HT to extract custom btag SF
+  // 2D ditribution NJets/HT to extract custom btag SF
   N_Jets_vs_HT  = book<TH2F>("N_Jets_vs_HT", "N_Jets_vs_HT", 21, 0., 21., 50, 0., 7000.);
 
   // NN Hists
@@ -587,6 +593,7 @@ void ZprimeSemiLeptonicHists::init(){
   NN_Ak4_j6_btag      = book<TH1F>("NN_Ak4_j6_btag", "NN_Ak4_j6_btag", 50, 0, 1);
   NN_M_tt_weighted    = book<TH1F>("NN_M_tt_weighted", "NN_M_tt_weighted", 100, 0, 14000);
   NN_M_tt_notweighted = book<TH1F>("NN_M_tt_notweighted", "NN_M_tt_notweighted", 100, 0, 14000);
+  NN_chi2             = book<TH1F>("NN_chi2", "NN_chi2", 100, 0, 100);
   NN_N_HOTVR          = book<TH1F>("NN_N_HOTVR", "NN_N_HOTVR", 20, 0, 20);
   NN_HOTVR_j1_pt      = book<TH1F>("NN_HOTVR_j1_pt", "NN_HOTVR_j1_pt", 150, 0, 3000);
   NN_HOTVR_j1_eta     = book<TH1F>("NN_HOTVR_j1_eta", "NN_HOTVR_j1_eta", 50, -2.5, 2.5);
@@ -609,28 +616,31 @@ void ZprimeSemiLeptonicHists::init(){
   NN_HOTVR_j3_mSD     = book<TH1F>("NN_HOTVR_j3_mSD", "NN_HOTVR_j3_mSD", 50, 0, 500);
   NN_HOTVR_j3_tau21   = book<TH1F>("NN_HOTVR_j3_tau21", "NN_HOTVR_j3_tau21", 24, 0, 1.2);
   NN_HOTVR_j3_tau32   = book<TH1F>("NN_HOTVR_j3_tau32", "NN_HOTVR_j3_tau32", 24, 0, 1.2);
-  NN_N_Ak8         = book<TH1F>("NN_N_Ak8", "NN_N_Ak8", 20, 0, 20);
-  NN_Ak8_j1_pt     = book<TH1F>("NN_Ak8_j1_pt", "NN_Ak8_j1_pt", 150, 0, 3000);
-  NN_Ak8_j1_eta    = book<TH1F>("NN_Ak8_j1_eta", "NN_Ak8_j1_eta", 50, -2.5, 2.5);
-  NN_Ak8_j1_phi    = book<TH1F>("NN_Ak8_j1_phi", "NN_Ak8_j1_phi", 35, -3.5, 3.5);
-  NN_Ak8_j1_E      = book<TH1F>("NN_Ak8_j1_E", "NN_Ak8_j1_E", 100, 0, 5000);
-  NN_Ak8_j1_mSD    = book<TH1F>("NN_Ak8_j1_mSD", "NN_Ak8_j1_mSD", 50, 0, 500);
-  NN_Ak8_j1_tau21  = book<TH1F>("NN_Ak8_j1_tau21", "NN_Ak8_j1_tau21", 24, 0, 1.2);
-  NN_Ak8_j1_tau32  = book<TH1F>("NN_Ak8_j1_tau32", "NN_Ak8_j1_tau32", 24, 0, 1.2);
-  NN_Ak8_j2_pt     = book<TH1F>("NN_Ak8_j2_pt", "NN_Ak8_j2_pt", 150, 0, 3000);
-  NN_Ak8_j2_eta    = book<TH1F>("NN_Ak8_j2_eta", "NN_Ak8_j2_eta", 50, -2.5, 2.5);
-  NN_Ak8_j2_phi    = book<TH1F>("NN_Ak8_j2_phi", "NN_Ak8_j2_phi", 35, -3.5, 3.5);
-  NN_Ak8_j2_E      = book<TH1F>("NN_Ak8_j2_E", "NN_Ak8_j2_E", 100, 0, 5000);
-  NN_Ak8_j2_mSD    = book<TH1F>("NN_Ak8_j2_mSD", "NN_Ak8_j2_mSD", 50, 0, 500);
-  NN_Ak8_j2_tau21  = book<TH1F>("NN_Ak8_j2_tau21", "NN_Ak8_j2_tau21", 24, 0, 1.2);
-  NN_Ak8_j2_tau32  = book<TH1F>("NN_Ak8_j2_tau32", "NN_Ak8_j2_tau32", 24, 0, 1.2);
-  NN_Ak8_j3_pt     = book<TH1F>("NN_Ak8_j3_pt", "NN_Ak8_j3_pt", 150, 0, 3000);
-  NN_Ak8_j3_eta    = book<TH1F>("NN_Ak8_j3_eta", "NN_Ak8_j3_eta", 50, -2.5, 2.5);
-  NN_Ak8_j3_phi    = book<TH1F>("NN_Ak8_j3_phi", "NN_Ak8_j3_phi", 35, -3.5, 3.5);
-  NN_Ak8_j3_E      = book<TH1F>("NN_Ak8_j3_E", "NN_Ak8_j3_E", 100, 0, 5000);
-  NN_Ak8_j3_mSD    = book<TH1F>("NN_Ak8_j3_mSD", "NN_Ak8_j3_mSD", 50, 0, 500);
-  NN_Ak8_j3_tau21  = book<TH1F>("NN_Ak8_j3_tau21", "NN_Ak8_j3_tau21", 24, 0, 1.2);
-  NN_Ak8_j3_tau32  = book<TH1F>("NN_Ak8_j3_tau32", "NN_Ak8_j3_tau32", 24, 0, 1.2);
+  NN_N_Ak8            = book<TH1F>("NN_N_Ak8", "NN_N_Ak8", 20, 0, 20);
+  NN_Ak8_j1_pt        = book<TH1F>("NN_Ak8_j1_pt", "NN_Ak8_j1_pt", 150, 0, 3000);
+  NN_Ak8_j1_eta       = book<TH1F>("NN_Ak8_j1_eta", "NN_Ak8_j1_eta", 50, -2.5, 2.5);
+  NN_Ak8_j1_phi       = book<TH1F>("NN_Ak8_j1_phi", "NN_Ak8_j1_phi", 35, -3.5, 3.5);
+  NN_Ak8_j1_E         = book<TH1F>("NN_Ak8_j1_E", "NN_Ak8_j1_E", 100, 0, 5000);
+  NN_Ak8_j1_mSD       = book<TH1F>("NN_Ak8_j1_mSD", "NN_Ak8_j1_mSD", 50, 0, 500);
+  NN_Ak8_j1_tau21     = book<TH1F>("NN_Ak8_j1_tau21", "NN_Ak8_j1_tau21", 24, 0, 1.2);
+  NN_Ak8_j1_tau32     = book<TH1F>("NN_Ak8_j1_tau32", "NN_Ak8_j1_tau32", 24, 0, 1.2);
+  NN_Ak8_j1_ttag      = book<TH1F>("NN_Ak8_j1_ttag", "NN_Ak8_j1_ttag", 50, 0, 1);
+  NN_Ak8_j2_pt        = book<TH1F>("NN_Ak8_j2_pt", "NN_Ak8_j2_pt", 150, 0, 3000);
+  NN_Ak8_j2_eta       = book<TH1F>("NN_Ak8_j2_eta", "NN_Ak8_j2_eta", 50, -2.5, 2.5);
+  NN_Ak8_j2_phi       = book<TH1F>("NN_Ak8_j2_phi", "NN_Ak8_j2_phi", 35, -3.5, 3.5);
+  NN_Ak8_j2_E         = book<TH1F>("NN_Ak8_j2_E", "NN_Ak8_j2_E", 100, 0, 5000);
+  NN_Ak8_j2_mSD       = book<TH1F>("NN_Ak8_j2_mSD", "NN_Ak8_j2_mSD", 50, 0, 500);
+  NN_Ak8_j2_tau21     = book<TH1F>("NN_Ak8_j2_tau21", "NN_Ak8_j2_tau21", 24, 0, 1.2);
+  NN_Ak8_j2_tau32     = book<TH1F>("NN_Ak8_j2_tau32", "NN_Ak8_j2_tau32", 24, 0, 1.2);
+  NN_Ak8_j2_ttag      = book<TH1F>("NN_Ak8_j2_ttag", "NN_Ak8_j2_ttag", 50, 0, 1);
+  NN_Ak8_j3_pt        = book<TH1F>("NN_Ak8_j3_pt", "NN_Ak8_j3_pt", 150, 0, 3000);
+  NN_Ak8_j3_eta       = book<TH1F>("NN_Ak8_j3_eta", "NN_Ak8_j3_eta", 50, -2.5, 2.5);
+  NN_Ak8_j3_phi       = book<TH1F>("NN_Ak8_j3_phi", "NN_Ak8_j3_phi", 35, -3.5, 3.5);
+  NN_Ak8_j3_E         = book<TH1F>("NN_Ak8_j3_E", "NN_Ak8_j3_E", 100, 0, 5000);
+  NN_Ak8_j3_mSD       = book<TH1F>("NN_Ak8_j3_mSD", "NN_Ak8_j3_mSD", 50, 0, 500);
+  NN_Ak8_j3_tau21     = book<TH1F>("NN_Ak8_j3_tau21", "NN_Ak8_j3_tau21", 24, 0, 1.2);
+  NN_Ak8_j3_tau32     = book<TH1F>("NN_Ak8_j3_tau32", "NN_Ak8_j3_tau32", 24, 0, 1.2);
+  NN_Ak8_j3_ttag      = book<TH1F>("NN_Ak8_j3_ttag", "NN_Ak8_j3_ttag", 50, 0, 1);
 }
 
 
@@ -1336,12 +1346,35 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     else M_Zprime_rebin5->Fill(5050., weight);
     M_Zprime_rebin6->Fill(Mreco, weight);
     M_Zprime_rebin7->Fill(Mreco, weight);
+    M_Zprime_rebin8->Fill(Mreco, weight);
     chi2_Zprime->Fill(chi2, weight);
     chi2_Zprime_rebin->Fill(chi2, weight);
     chi2_Zprime_rebin2->Fill(chi2, weight);
 
     TOP_20_001_ditopmass_Fig19->Fill(Mreco, weight);
     TOP_20_001_ditopmass_Fig25->Fill(Mreco, weight);
+
+    LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
+    LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
+
+    TLorentzVector had_top_frame(0,0,0,0);
+    had_top_frame.SetPtEtaPhiE(had_top.pt(), had_top.eta(), had_top.phi(), had_top.E());
+    TLorentzVector lep_top_frame(0,0,0,0);
+    lep_top_frame.SetPtEtaPhiE(lep_top.pt(), lep_top.eta(), lep_top.phi(), lep_top.E());
+    TLorentzVector ttbar(0,0,0,0);
+    ttbar.SetPtEtaPhiE((had_top+lep_top).pt(), (had_top+lep_top).eta(), (had_top+lep_top).phi(), (had_top+lep_top).E());
+
+    had_top_frame.Boost(-ttbar.BoostVector());
+    lep_top_frame.Boost(-ttbar.BoostVector());
+    float costhetastar_had = ttbar.Vect().Dot(had_top_frame.Vect())/ttbar.P()/had_top_frame.P();
+    float costhetastar_lep = ttbar.Vect().Dot(lep_top_frame.Vect())/ttbar.P()/lep_top_frame.P();
+
+    cos_hadtop_thetastar->Fill(costhetastar_had, weight);
+    cos_leptop_thetastar->Fill(costhetastar_lep, weight);
+    abs_cos_leptop_thetastar->Fill(fabs(costhetastar_lep), weight);
+
+    mttbar_vs_costhetastar->Fill(costhetastar_lep, Mreco, weight);
+    costhetastar_vs_mttbar->Fill(Mreco, costhetastar_lep, weight);
 
     if(BestZprimeCandidate->is_toptag_reconstruction()){
       M_tophad->Fill(BestZprimeCandidate->tophad_topjet_ptr()->v4().M(), weight);
@@ -1444,198 +1477,174 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
   sum_event_weights->Fill(1., weight);
 
-  // theta star angle
-  if(is_zprime_reconstructed_chi2 & is_mc){ // added "is_mc" to blind data in theta star hists
-  float ang_hadtop_thetastar;
-  float ang_leptop_thetastar;
-  ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  N_Jets_vs_HT->Fill(Njets, st_jets, weight);
 
-  LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-  LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-
-  TLorentzVector had_top_frame(0,0,0,0);
-  had_top_frame.SetPtEtaPhiE(had_top.pt(), had_top.eta(), had_top.phi(), had_top.E());
-  TLorentzVector lep_top_frame(0,0,0,0);
-  lep_top_frame.SetPtEtaPhiE(lep_top.pt(), lep_top.eta(), lep_top.phi(), lep_top.E());
-  TLorentzVector ttbar(0,0,0,0);
-  ttbar.SetPtEtaPhiE((had_top+lep_top).pt(), (had_top+lep_top).eta(), (had_top+lep_top).phi(), (had_top+lep_top).E());
-
-  had_top_frame.Boost(-ttbar.BoostVector());
-  lep_top_frame.Boost(-ttbar.BoostVector());
-
-  ang_hadtop_thetastar = had_top_frame.Theta();
-  ang_leptop_thetastar = lep_top_frame.Theta();
-
-  hadtop_thetastar->Fill(ang_hadtop_thetastar, weight);
-  cos_hadtop_thetastar->Fill(TMath::Cos(ang_hadtop_thetastar), weight);
-  leptop_thetastar->Fill(ang_leptop_thetastar, weight);
-  cos_leptop_thetastar->Fill(TMath::Cos(ang_leptop_thetastar), weight);
-}
+  /*
+  ███    ██ ███    ██
+  ████   ██ ████   ██
+  ██ ██  ██ ██ ██  ██
+  ██  ██ ██ ██  ██ ██
+  ██   ████ ██   ████
+  */
 
 
-N_Jets_vs_HT->Fill(Njets, st_jets, weight);
-
-/*
-███    ██ ███    ██
-████   ██ ████   ██
-██ ██  ██ ██ ██  ██
-██  ██ ██ ██  ██ ██
-██   ████ ██   ████
-*/
-
-
-for(int i=0; i<Nmuons; i++){
-  NN_Mu_pt->Fill(muons->at(i).pt(),weight);
-  NN_Mu_eta->Fill(muons->at(i).eta(),weight);
-  NN_Mu_phi->Fill(muons->at(i).phi(),weight);
-  NN_Mu_E->Fill(muons->at(i).energy(),weight);
-}
-
-
-
-for(int i=0; i<Nelectrons; i++){
-  NN_Ele_pt->Fill(electrons->at(i).pt(),weight);
-  NN_Ele_eta->Fill(electrons->at(i).eta(),weight);
-  NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
-  NN_Ele_E->Fill(electrons->at(i).energy(),weight);
-}
-
-NN_MET_pt->Fill(event.met->pt(),weight);
-NN_MET_phi->Fill(event.met->phi(),weight);
-
-vector<Jet>* Ak4jets = event.jets;
-int NAk4jets = Ak4jets->size();
-NN_N_Ak4->Fill(NAk4jets,weight);
-
-for(int i=0; i<NAk4jets; i++){
-  if(i==0){
-    NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j1_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j1_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j1_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+  for(int i=0; i<Nmuons; i++){
+    NN_Mu_pt->Fill(muons->at(i).pt(),weight);
+    NN_Mu_eta->Fill(muons->at(i).eta(),weight);
+    NN_Mu_phi->Fill(muons->at(i).phi(),weight);
+    NN_Mu_E->Fill(muons->at(i).energy(),weight);
   }
-  if(i==1){
-    NN_Ak4_j2_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j2_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j2_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j2_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j2_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-  }
-  if(i==2){
-    NN_Ak4_j3_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j3_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j3_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j3_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j3_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-  }
-  if(i==3){
-    NN_Ak4_j4_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j4_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j4_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j4_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j4_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-  }
-  if(i==4){
-    NN_Ak4_j5_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j5_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j5_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j5_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j5_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-  }
-  if(i==5){
-    NN_Ak4_j6_pt->Fill(Ak4jets->at(i).pt(),weight);
-    NN_Ak4_j6_eta->Fill(Ak4jets->at(i).eta(),weight);
-    NN_Ak4_j6_phi->Fill(Ak4jets->at(i).phi(),weight);
-    NN_Ak4_j6_E->Fill(Ak4jets->at(i).energy(),weight);
-    NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
-    NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-  }
-}
 
-if(ishotvr){
-  vector<TopJet>* HOTVRjets = event.topjets;
-  int N_HOTVRjets = HOTVRjets->size();
-  NN_N_HOTVR->Fill(N_HOTVRjets,weight);
 
-  for(int i=0; i<N_HOTVRjets; i++){
+
+  for(int i=0; i<Nelectrons; i++){
+    NN_Ele_pt->Fill(electrons->at(i).pt(),weight);
+    NN_Ele_eta->Fill(electrons->at(i).eta(),weight);
+    NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
+    NN_Ele_E->Fill(electrons->at(i).energy(),weight);
+  }
+
+  NN_MET_pt->Fill(event.met->pt(),weight);
+  NN_MET_phi->Fill(event.met->phi(),weight);
+
+  vector<Jet>* Ak4jets = event.jets;
+  int NAk4jets = Ak4jets->size();
+  NN_N_Ak4->Fill(NAk4jets,weight);
+
+  for(int i=0; i<NAk4jets; i++){
     if(i==0){
-      NN_HOTVR_j1_pt->Fill(HOTVRjets->at(i).pt(),weight);
-      NN_HOTVR_j1_eta->Fill(HOTVRjets->at(i).eta(),weight);
-      NN_HOTVR_j1_phi->Fill(HOTVRjets->at(i).phi(),weight);
-      NN_HOTVR_j1_E->Fill(HOTVRjets->at(i).energy(),weight);
-      NN_HOTVR_j1_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-      NN_HOTVR_j1_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-      NN_HOTVR_j1_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j1_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j1_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j1_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==1){
-      NN_HOTVR_j2_pt->Fill(HOTVRjets->at(i).pt(),weight);
-      NN_HOTVR_j2_eta->Fill(HOTVRjets->at(i).eta(),weight);
-      NN_HOTVR_j2_phi->Fill(HOTVRjets->at(i).phi(),weight);
-      NN_HOTVR_j2_E->Fill(HOTVRjets->at(i).energy(),weight);
-      NN_HOTVR_j2_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-      NN_HOTVR_j2_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-      NN_HOTVR_j2_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      NN_Ak4_j2_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j2_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j2_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j2_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j2_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==2){
-      NN_HOTVR_j3_pt->Fill(HOTVRjets->at(i).pt(),weight);
-      NN_HOTVR_j3_eta->Fill(HOTVRjets->at(i).eta(),weight);
-      NN_HOTVR_j3_phi->Fill(HOTVRjets->at(i).phi(),weight);
-      NN_HOTVR_j3_E->Fill(HOTVRjets->at(i).energy(),weight);
-      NN_HOTVR_j3_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-      NN_HOTVR_j3_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-      NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      NN_Ak4_j3_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j3_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j3_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j3_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j3_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+    }
+    if(i==3){
+      NN_Ak4_j4_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j4_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j4_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j4_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j4_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+    }
+    if(i==4){
+      NN_Ak4_j5_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j5_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j5_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j5_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j5_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+    }
+    if(i==5){
+      NN_Ak4_j6_pt->Fill(Ak4jets->at(i).pt(),weight);
+      NN_Ak4_j6_eta->Fill(Ak4jets->at(i).eta(),weight);
+      NN_Ak4_j6_phi->Fill(Ak4jets->at(i).phi(),weight);
+      NN_Ak4_j6_E->Fill(Ak4jets->at(i).energy(),weight);
+      NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
+      NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
   }
-} // end hotvr mode
 
-if(isdeepAK8){
-  vector<TopJet>* Ak8jets = event.toppuppijets;
-  int NAk8jets = Ak8jets->size();
-  NN_N_Ak8->Fill(NAk8jets,weight);
+  if(ishotvr){
+    vector<TopJet>* HOTVRjets = event.topjets;
+    int N_HOTVRjets = HOTVRjets->size();
+    NN_N_HOTVR->Fill(N_HOTVRjets,weight);
 
-  for(int i=0; i<NAk8jets; i++){
-    if(i==0){
-      NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
-      NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
-      NN_Ak8_j1_phi->Fill(Ak8jets->at(i).phi(),weight);
-      NN_Ak8_j1_E->Fill(Ak8jets->at(i).energy(),weight);
-      NN_Ak8_j1_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-      NN_Ak8_j1_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-      NN_Ak8_j1_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+    for(int i=0; i<N_HOTVRjets; i++){
+      if(i==0){
+        NN_HOTVR_j1_pt->Fill(HOTVRjets->at(i).pt(),weight);
+        NN_HOTVR_j1_eta->Fill(HOTVRjets->at(i).eta(),weight);
+        NN_HOTVR_j1_phi->Fill(HOTVRjets->at(i).phi(),weight);
+        NN_HOTVR_j1_E->Fill(HOTVRjets->at(i).energy(),weight);
+        NN_HOTVR_j1_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+        NN_HOTVR_j1_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+        NN_HOTVR_j1_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      }
+      if(i==1){
+        NN_HOTVR_j2_pt->Fill(HOTVRjets->at(i).pt(),weight);
+        NN_HOTVR_j2_eta->Fill(HOTVRjets->at(i).eta(),weight);
+        NN_HOTVR_j2_phi->Fill(HOTVRjets->at(i).phi(),weight);
+        NN_HOTVR_j2_E->Fill(HOTVRjets->at(i).energy(),weight);
+        NN_HOTVR_j2_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+        NN_HOTVR_j2_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+        NN_HOTVR_j2_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      }
+      if(i==2){
+        NN_HOTVR_j3_pt->Fill(HOTVRjets->at(i).pt(),weight);
+        NN_HOTVR_j3_eta->Fill(HOTVRjets->at(i).eta(),weight);
+        NN_HOTVR_j3_phi->Fill(HOTVRjets->at(i).phi(),weight);
+        NN_HOTVR_j3_E->Fill(HOTVRjets->at(i).energy(),weight);
+        NN_HOTVR_j3_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+        NN_HOTVR_j3_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+        NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+      }
     }
-    if(i==1){
-      NN_Ak8_j2_pt->Fill(Ak8jets->at(i).pt(),weight);
-      NN_Ak8_j2_eta->Fill(Ak8jets->at(i).eta(),weight);
-      NN_Ak8_j2_phi->Fill(Ak8jets->at(i).phi(),weight);
-      NN_Ak8_j2_E->Fill(Ak8jets->at(i).energy(),weight);
-      NN_Ak8_j2_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-      NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-      NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+  } // end hotvr mode
+
+  if(isdeepAK8){
+    vector<TopJet>* Ak8jets = event.toppuppijets;
+    int NAk8jets = Ak8jets->size();
+    NN_N_Ak8->Fill(NAk8jets,weight);
+
+    for(int i=0; i<NAk8jets; i++){
+      if(i==0){
+        NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
+        NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
+        NN_Ak8_j1_phi->Fill(Ak8jets->at(i).phi(),weight);
+        NN_Ak8_j1_E->Fill(Ak8jets->at(i).energy(),weight);
+        NN_Ak8_j1_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+        NN_Ak8_j1_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+        NN_Ak8_j1_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+        NN_Ak8_j1_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+      }
+      if(i==1){
+        NN_Ak8_j2_pt->Fill(Ak8jets->at(i).pt(),weight);
+        NN_Ak8_j2_eta->Fill(Ak8jets->at(i).eta(),weight);
+        NN_Ak8_j2_phi->Fill(Ak8jets->at(i).phi(),weight);
+        NN_Ak8_j2_E->Fill(Ak8jets->at(i).energy(),weight);
+        NN_Ak8_j2_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+        NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+        NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+        NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+      }
+      if(i==2){
+        NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
+        NN_Ak8_j3_eta->Fill(Ak8jets->at(i).eta(),weight);
+        NN_Ak8_j3_phi->Fill(Ak8jets->at(i).phi(),weight);
+        NN_Ak8_j3_E->Fill(Ak8jets->at(i).energy(),weight);
+        NN_Ak8_j3_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+        NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+        NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+        NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+      }
     }
-    if(i==2){
-      NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
-      NN_Ak8_j3_eta->Fill(Ak8jets->at(i).eta(),weight);
-      NN_Ak8_j3_phi->Fill(Ak8jets->at(i).phi(),weight);
-      NN_Ak8_j3_E->Fill(Ak8jets->at(i).energy(),weight);
-      NN_Ak8_j3_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-      NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-      NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-    }
+  } // end deepAK8 mode
+
+  if(is_zprime_reconstructed_chi2){
+    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+    float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+    if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
+    if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
+    NN_chi2->Fill(chi2,weight);
   }
-} // end deepAK8 mode
-
-if(is_zprime_reconstructed_chi2){
-  ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-  float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-  NN_M_tt_weighted->Fill(Mass_tt,weight);
-  NN_M_tt_notweighted->Fill(Mass_tt);
-}
 
 
 } //Method

@@ -7,59 +7,59 @@ import shutil
 from collections import OrderedDict
 
 inputdirs = {
-    # "UL16": {
-    #     "electron": "",
-    #     "muon": ""
-    # },
-    # "UL17": {
-    #     "electron": "",
-    #     "muon": ""
-    # },
+    "UL16": {
+        "electron": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL16_electron/",
+        "muon": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL16_muon/"
+    },
+    "UL17": {
+        "electron": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL17_electron/",
+        "muon": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL17_muon/"
+    },
     "UL18": {
-        # "electron": "testdir",
-        "muon": "/nfs/dust/cms/user/jabuschh/ZprimeSemiLeptonic/RunII_106X_v2/UL18/muon/AnalysisDNN_withSyst/"
+        "electron": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL18_electron/",
+        "muon": "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL18_muon/"
     }
 }
 
-inputbasedir_pdf = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/uncertainties/hists_pdf/"
-inputbasedir_mcscale = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/uncertainties/hists_mcscale/"
+inputbasedir_pdf = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/PDF_hists/"
+inputbasedir_mcscale = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/Scale_hists/"
 
 process_prefix = "uhh2.AnalysisModuleRunner.MC."
 
-output_tag = "ALP_UL18_muon_withSyst"
+signal_name = "ALP"
 
 signals = [
-"ALP_ttbar_signal",
-"ALP_ttbar_interference",
+    "ALP_ttbar_signal",
+    "ALP_ttbar_interference"
 ]
 
 # bin edges of input histogram
 fas = [
-    # 400,
-    # 600,
-    # 800,
+    400,
+    600,
+    800,
     1000,
-    # 1200,
-    # 1400,
-    # 1600,
-    # 1800,
+    1200,
+    1400,
+    1600,
+    1800,
     2000,
-    # 2200,
-    # 2400,
-    # 2600,
-    # 2800,
+    2200,
+    2400,
+    2600,
+    2800,
     3000,
-    # 3200,
-    # 3400,
-    # 3600,
-    # 3800,
+    3200,
+    3400,
+    3600,
+    3800,
     4000,
-    # 4400,
-    # 4800,
-    # 5200,
-    # 5600,
+    4400,
+    4800,
+    5200,
+    5600,
     6000,
-    # 6100
+    6100
 ]
 
 backgrounds = [
@@ -90,11 +90,12 @@ vars = {
 }
 
 # normalization systematics
+# for now we decided to not use any rate uncertainties
 rates = OrderedDict()
-rates["ttbar_rate"] = 1.2
-rates["st_rate"] = 1.3
-rates["wjets_rate"] = 1.5
-rates["others_rate"] = 2.0
+# rates["ttbar_rate"] = 1.2
+# rates["st_rate"] = 1.3
+# rates["wjets_rate"] = 1.5
+# rates["others_rate"] = 2.0
 rates["lumi_13TeV_uncorrelated_UL16"] = 1.010
 rates["lumi_13TeV_uncorrelated_UL17"] = 1.020
 rates["lumi_13TeV_uncorrelated_UL18"] = 1.015
@@ -103,31 +104,31 @@ rates["lumi_13TeV_correlated_UL17_UL18"] = {"UL16": '-', "UL17": 1.006, "UL18": 
 
 # shape systematics: up/down variations
 shapes = OrderedDict()
-shapes["pdf"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # pdf uncertainty
-# shapes["mcscale"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # mcscale uncertainty: envelope of muR and muF up/down combinations
-# shapes["toppt_a"] = ["TTbar"] # top-pt reweighting parameter a: normalization only -> swallowed by mcscale
-shapes["toppt_b"] = ["TTbar"] # top-pt reweighting parameter b
-shapes["pu"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # pileup
-# TODO: add JEC + JER
-shapes["prefiring"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # prefiring
-shapes["mu_id"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon id
-shapes["mu_iso"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon isolation
-shapes["mu_reco"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon reconstruction
-shapes["mu_trigger"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon trigger
-shapes["ele_id"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # electron id
-shapes["ele_reco"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # electron reconstruction
-# TODO: add ele trigger
-# TODO: add top tagging
-shapes["btag_cferr1"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # charm jet uncertainty 1
-shapes["btag_cferr2"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # charm jet uncertainty 1
-shapes["btag_hf"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor purity uncertainty
-shapes["btag_hfstats1"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor statistical uncertainty
-shapes["btag_hfstats2"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor statistical uncertainty
-shapes["btag_lf"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor purity uncertainty
-shapes["btag_lfstats1"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor statistical uncertainty
-shapes["btag_lfstats2"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor statistical uncertainty
+shapes["pdf"]           = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # pdf uncertainty
+shapes["mcscale"]       = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # mcscale uncertainty: envelope of muR and muF up/down combinations
+shapes["pu"]            = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # pileup
+shapes["prefiring"]     = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # prefiring
+shapes["mu_id"]         = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon id
+shapes["mu_iso"]        = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon isolation
+shapes["mu_reco"]       = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon reconstruction
+shapes["mu_trigger"]    = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # muon trigger
+shapes["ele_id"]        = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # electron id
+shapes["ele_reco"]      = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # electron reconstruction
+shapes["ele_trigger"]   = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # electron trigger
+shapes["btag_cferr1"]   = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # charm jet uncertainty 1 (correlated)
+shapes["btag_cferr2"]   = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # charm jet uncertainty 1 (correlated)
+shapes["btag_hf"]       = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor purity uncertainty (correlated)
+shapes["btag_hfstats1"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor statistical uncertainty (uncorrelated)
+shapes["btag_hfstats2"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # heavy flavor statistical uncertainty (uncorrelated)
+shapes["btag_lf"]       = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor purity uncertainty (correlated)
+shapes["btag_lfstats1"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor statistical uncertainty (uncorrelated)
+shapes["btag_lfstats2"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # light flavor statistical uncertainty (uncorrelated)
 # shapes["isr"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # initial state radiation
 # shapes["fsr"] = ["TTbar","ST","WJets","others","ALP_ttbar_signal","ALP_ttbar_interference"] # final state radiation
+# TODO: add JEC + JER
+# TODO: add top tagging
+
+uncorrelated_shapes = ["btag_hfstats1","btag_hfstats2","btag_lfstats1","btag_lfstats2"]
 
 
 # characters per column
@@ -167,8 +168,8 @@ def createCombineInput():
 
         for fa in fas:
 
-            filename_out = year + "/" + channel + "/" + "inputHistograms_" + year + "_" + channel + "_fa" + str(fa) + ".root"
-            file_out = ROOT.TFile(filename_out, "RECREATE")
+            filename_out = "inputHistograms_" + signal_name + "_" + year + "_" + channel + "_fa" + str(fa) + ".root"
+            file_out = ROOT.TFile(signal_name + "/" + filename_out, "RECREATE")
 
             for region in regions:
                 for process in processes + data:
@@ -219,11 +220,25 @@ def createCombineInput():
                                 if process == "ALP_ttbar_interference":
                                     hist_syst_up_out.Scale(-1)
                                     hist_syst_down_out.Scale(-1)
-                                hist_syst_up_out.Write(region + "_" + process + "_" + shape + "Up")
-                                hist_syst_down_out.Write(region + "_" + process + "_" + shape + "Down")
+
+                                if "M_Zprime" in var:
+                                    for bin in range(Nbins):
+                                        if hist_syst_up_out.GetBinLowEdge(bin) >= fa:
+                                            hist_syst_up_out.SetBinContent(bin, 0.)
+                                            hist_syst_up_out.SetBinError(bin, 0.) # needed for combine to ignore this bin
+                                        if hist_syst_down_out.GetBinLowEdge(bin) >= fa:
+                                            hist_syst_down_out.SetBinContent(bin, 0.)
+                                            hist_syst_down_out.SetBinError(bin, 0.) # needed for combine to ignore this bin
+
+                                if shape in uncorrelated_shapes:
+                                    hist_syst_up_out.Write(region + "_" + process + "_" + shape + "_" + year + "Up")
+                                    hist_syst_down_out.Write(region + "_" + process + "_" + shape + "_" + year + "Down")
+                                else:
+                                    hist_syst_up_out.Write(region + "_" + process + "_" + shape + "Up")
+                                    hist_syst_down_out.Write(region + "_" + process + "_" + shape + "Down")
                         file_in.Close()
 
-            datacard_name = year + "/" + channel + "/" + "datacard_" + year + "_" + channel + "_fa" + str(fa) + ".dat"
+            datacard_name = signal_name + "/" + "datacard_" + signal_name + "_" + year + "_" + channel + "_fa" + str(fa) + ".dat"
             with open(datacard_name, 'w') as datacard:
                 datacard.write("# PARAMETERS\n")
                 datacard.write("imax " + str(len(regions)) + " number of regions\n")
@@ -262,7 +277,10 @@ def createCombineInput():
                 for shape in shapes:
                     if str(channel) == "muon" and shape.startswith("ele_"): continue
                     if str(channel) == "electron" and shape.startswith("mu_"): continue
-                    datacard.write(pad(shape, N1) + pad("shape", N2))
+                    if shape in uncorrelated_shapes:
+                        datacard.write(pad(shape + "_" + year, N1) + pad("shape", N2))
+                    else:
+                        datacard.write(pad(shape, N1) + pad("shape", N2))
                     for region in regions:
                         for process in processes:
                             if process in shapes[shape]:

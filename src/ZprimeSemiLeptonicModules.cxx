@@ -275,15 +275,15 @@ ZprimeChi2Discriminator::ZprimeChi2Discriminator(uhh2::Context& ctx){
   h_is_zprime_reconstructed_ = ctx.get_handle< bool >("is_zprime_reconstructed_chi2");
   h_BestCandidate_ = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
 
-  mtoplep_ = 175.0;
-  sigmatoplep_ = 23.3;
-  mtophad_ = 175.4;
-  sigmatophad_ = 20.7;
+  mtoplep_ = 173.6;
+  sigmatoplep_ = 24.6;
+  mtophad_ = 173.0;
+  sigmatophad_ = 21.2;
 
-  mtoplep_ttag_ = 172.2;
-  sigmatoplep_ttag_ = 21.7;
-  mtophad_ttag_ = 182.3;
-  sigmatophad_ttag_ = 16.1;
+  mtoplep_ttag_ = 171.4;
+  sigmatoplep_ttag_ = 22.0;
+  mtophad_ttag_ = 180.6;
+  sigmatophad_ttag_ = 15.6;
 
 }
 
@@ -319,7 +319,6 @@ bool ZprimeChi2Discriminator::process(uhh2::Event& event){
       chi2_had = pow((mhad - mtophad_) / sigmatophad_,2);
       chi2_lep = pow((mlep - mtoplep_) / sigmatoplep_,2);
     }
-
 
     float chi2 = chi2_had + chi2_lep;
 
@@ -405,15 +404,14 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
       continue;
     }
 
-    //if((!is_toptag_reconstruction && jets_had.size() > 3) || (is_toptag_reconstruction && jets_had.size() != 1)){
-    if(is_toptag_reconstruction && jets_had.size() != 1){
+    if((!is_toptag_reconstruction && jets_had.size() > 3) || (is_toptag_reconstruction && jets_had.size() != 1)){
       candidates.at(i).set_discriminators("correct_match", 9999999);
       // cout << "Not right amount of hadronic jets" << endl;
       continue;
     }
     float correct_dr = 0.;
     int idx;
-    float dr;  
+    float dr;
 
     // Match leptonic b-quark
     dr = match_dr(ttbargen.BLep(), jets_lep, idx);
@@ -459,11 +457,11 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
       correct_dr += dr;
       if(idx >= 0) n_matched++;
 
-      //if(n_matched != jets_had.size()){
-      //  candidates.at(i).set_discriminators("correct_match", 9999999);
-      //  // cout << "Not number of jets and matched equal" << endl;
-      //  continue;
-      //}
+      if(n_matched != jets_had.size()){
+        candidates.at(i).set_discriminators("correct_match", 9999999);
+        // cout << "Not number of jets and matched equal" << endl;
+        continue;
+      }
     }
     else{
       const TopJet* topjet = candidates.at(i).tophad_topjet_ptr();
@@ -602,35 +600,28 @@ bool HOTVRTopTagger::process(uhh2::Event& event){
 
 
 DeepAK8TopTagger::DeepAK8TopTagger(uhh2::Context& ctx){
-
   year = extract_year(ctx);
-
   h_DeepAK8TopTags_ = ctx.get_handle< std::vector<TopJet> >("DeepAK8TopTags");
   h_DeepAK8TopTagsPtr_ = ctx.get_handle< std::vector<const TopJet*> >("DeepAK8TopTagsPtr");
-
 }
 
 bool DeepAK8TopTagger::process(uhh2::Event& event){
-
-
-  // values from EOY
-  // twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/DeepAK8Tagging2018WPsSFs
-  // slides: https://indico.cern.ch/event/877167/contributions/3744193/attachments/1989744/3379280/DeepAK8_Top_W_SFs_V2.pdf
+  // values for UL: currently Christopher's private work
   double min_mSD = 105.;
   double max_mSD = 210.;
   double pt_min = 400.;
   double max_score;
 
-  if(year == Year::isUL16preVFP || year == Year::isUL16postVFP) max_score = 0.632;
-  else if(year == Year::isUL17) max_score = 0.554;
-  else if(year == Year::isUL18) max_score = 0.685;
+  if(year == Year::isUL16preVFP) max_score = 0.485;
+  else if(year == Year::isUL16postVFP) max_score = 0.475;
+  else if(year == Year::isUL17) max_score = 0.487;
+  else if(year == Year::isUL18) max_score = 0.477;
   else throw runtime_error("DeepAK8TopTagger: no valid year selected.");
 
   std::vector<TopJet> toptags;
   vector<const TopJet*> toptags_ptr;
 
   for(const TopJet & puppijet : *event.toppuppijets){
-
     // pT threshold
     if(!( puppijet.pt() > pt_min )) continue;
 
@@ -645,13 +636,11 @@ bool DeepAK8TopTagger::process(uhh2::Event& event){
 
     toptags.emplace_back(puppijet);
     toptags_ptr.emplace_back(&puppijet);
-
   }
 
   event.set(h_DeepAK8TopTags_, toptags);
   event.set(h_DeepAK8TopTagsPtr_, toptags_ptr);
   return (toptags.size() >= 1);
-
 }
 
 bool JetLeptonDeltaRCleaner::process(uhh2::Event& event){
@@ -892,124 +881,133 @@ Variables_NN::Variables_NN(uhh2::Context& ctx, TString mode): mode_(mode){
   h_eventweight = ctx.declare_event_output<float> ("eventweight");
 
   ///  MUONS
-  h_Mu_pt = ctx.declare_event_output<float> ("Mu_pt");
-  h_Mu_eta = ctx.declare_event_output<float> ("Mu_eta");
-  h_Mu_phi = ctx.declare_event_output<float> ("Mu_phi");
-  h_Mu_E = ctx.declare_event_output<float> ("Mu_E");
+  h_Mu_pt = ctx.declare_event_output<float>("Mu_pt");
+  h_Mu_eta = ctx.declare_event_output<float>("Mu_eta");
+  h_Mu_phi = ctx.declare_event_output<float>("Mu_phi");
+  h_Mu_E = ctx.declare_event_output<float>("Mu_E");
 
   ///  ELECTRONS
-  h_Ele_pt = ctx.declare_event_output<float> ("Ele_pt");
-  h_Ele_eta = ctx.declare_event_output<float> ("Ele_eta");
-  h_Ele_phi = ctx.declare_event_output<float> ("Ele_phi");
-  h_Ele_E = ctx.declare_event_output<float> ("Ele_E");
+  h_Ele_pt = ctx.declare_event_output<float>("Ele_pt");
+  h_Ele_eta = ctx.declare_event_output<float>("Ele_eta");
+  h_Ele_phi = ctx.declare_event_output<float>("Ele_phi");
+  h_Ele_E = ctx.declare_event_output<float>("Ele_E");
 
   ///  MET
-  h_MET_pt = ctx.declare_event_output<float> ("MET_pt");
-  h_MET_phi = ctx.declare_event_output<float> ("MET_phi");
+  h_MET_pt = ctx.declare_event_output<float>("MET_pt");
+  h_MET_phi = ctx.declare_event_output<float>("MET_phi");
 
   ///  AK4 JETS
-  h_N_Ak4 = ctx.declare_event_output<float> ("N_Ak4");
+  h_N_Ak4 = ctx.declare_event_output<float>("N_Ak4");
 
-  h_Ak4_j1_pt = ctx.declare_event_output<float> ("Ak4_j1_pt");
+  h_Ak4_j1_pt = ctx.declare_event_output<float>("Ak4_j1_pt");
   h_Ak4_j1_eta = ctx.declare_event_output<float>("Ak4_j1_eta");
   h_Ak4_j1_phi = ctx.declare_event_output<float>("Ak4_j1_phi");
-  h_Ak4_j1_E = ctx.declare_event_output<float>  ("Ak4_j1_E");
-  h_Ak4_j1_m = ctx.declare_event_output<float>  ("Ak4_j1_m");
-  h_Ak4_j1_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j1_deepjetbscore");
+  h_Ak4_j1_E = ctx.declare_event_output<float>("Ak4_j1_E");
+  h_Ak4_j1_m = ctx.declare_event_output<float>("Ak4_j1_m");
+  h_Ak4_j1_deepjetbscore = ctx.declare_event_output<float>("Ak4_j1_deepjetbscore");
 
-  h_Ak4_j2_pt = ctx.declare_event_output<float> ("Ak4_j2_pt");
+  h_Ak4_j2_pt = ctx.declare_event_output<float>("Ak4_j2_pt");
   h_Ak4_j2_eta = ctx.declare_event_output<float>("Ak4_j2_eta");
   h_Ak4_j2_phi = ctx.declare_event_output<float>("Ak4_j2_phi");
-  h_Ak4_j2_E = ctx.declare_event_output<float>  ("Ak4_j2_E");
-  h_Ak4_j2_m = ctx.declare_event_output<float>  ("Ak4_j2_m");
-  h_Ak4_j2_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j2_deepjetbscore");
+  h_Ak4_j2_E = ctx.declare_event_output<float>("Ak4_j2_E");
+  h_Ak4_j2_m = ctx.declare_event_output<float>("Ak4_j2_m");
+  h_Ak4_j2_deepjetbscore = ctx.declare_event_output<float>("Ak4_j2_deepjetbscore");
 
-  h_Ak4_j3_pt = ctx.declare_event_output<float> ("Ak4_j3_pt");
+  h_Ak4_j3_pt = ctx.declare_event_output<float>("Ak4_j3_pt");
   h_Ak4_j3_eta = ctx.declare_event_output<float>("Ak4_j3_eta");
   h_Ak4_j3_phi = ctx.declare_event_output<float>("Ak4_j3_phi");
-  h_Ak4_j3_E = ctx.declare_event_output<float>  ("Ak4_j3_E");
-  h_Ak4_j3_m = ctx.declare_event_output<float>  ("Ak4_j3_m");
-  h_Ak4_j3_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j3_deepjetbscore");
+  h_Ak4_j3_E = ctx.declare_event_output<float>("Ak4_j3_E");
+  h_Ak4_j3_m = ctx.declare_event_output<float>("Ak4_j3_m");
+  h_Ak4_j3_deepjetbscore = ctx.declare_event_output<float>("Ak4_j3_deepjetbscore");
 
-  h_Ak4_j4_pt = ctx.declare_event_output<float> ("Ak4_j4_pt");
+  h_Ak4_j4_pt = ctx.declare_event_output<float>("Ak4_j4_pt");
   h_Ak4_j4_eta = ctx.declare_event_output<float>("Ak4_j4_eta");
   h_Ak4_j4_phi = ctx.declare_event_output<float>("Ak4_j4_phi");
-  h_Ak4_j4_E = ctx.declare_event_output<float>  ("Ak4_j4_E");
-  h_Ak4_j4_m = ctx.declare_event_output<float>  ("Ak4_j4_m");
-  h_Ak4_j4_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j4_deepjetbscore");
+  h_Ak4_j4_E = ctx.declare_event_output<float>("Ak4_j4_E");
+  h_Ak4_j4_m = ctx.declare_event_output<float>("Ak4_j4_m");
+  h_Ak4_j4_deepjetbscore = ctx.declare_event_output<float>("Ak4_j4_deepjetbscore");
 
-  h_Ak4_j5_pt = ctx.declare_event_output<float> ("Ak4_j5_pt");
+  h_Ak4_j5_pt = ctx.declare_event_output<float>("Ak4_j5_pt");
   h_Ak4_j5_eta = ctx.declare_event_output<float>("Ak4_j5_eta");
   h_Ak4_j5_phi = ctx.declare_event_output<float>("Ak4_j5_phi");
-  h_Ak4_j5_E = ctx.declare_event_output<float>  ("Ak4_j5_E");
-  h_Ak4_j5_m = ctx.declare_event_output<float>  ("Ak4_j5_m");
-  h_Ak4_j5_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j5_deepjetbscore");
+  h_Ak4_j5_E = ctx.declare_event_output<float>("Ak4_j5_E");
+  h_Ak4_j5_m = ctx.declare_event_output<float>("Ak4_j5_m");
+  h_Ak4_j5_deepjetbscore = ctx.declare_event_output<float>("Ak4_j5_deepjetbscore");
 
-  h_Ak4_j6_pt = ctx.declare_event_output<float> ("Ak4_j6_pt");
+  h_Ak4_j6_pt = ctx.declare_event_output<float>("Ak4_j6_pt");
   h_Ak4_j6_eta = ctx.declare_event_output<float>("Ak4_j6_eta");
   h_Ak4_j6_phi = ctx.declare_event_output<float>("Ak4_j6_phi");
-  h_Ak4_j6_E = ctx.declare_event_output<float>  ("Ak4_j6_E");
-  h_Ak4_j6_m = ctx.declare_event_output<float>  ("Ak4_j6_m");
-  h_Ak4_j6_deepjetbscore = ctx.declare_event_output<float>  ("Ak4_j6_deepjetbscore");
+  h_Ak4_j6_E = ctx.declare_event_output<float>("Ak4_j6_E");
+  h_Ak4_j6_m = ctx.declare_event_output<float>("Ak4_j6_m");
+  h_Ak4_j6_deepjetbscore = ctx.declare_event_output<float>("Ak4_j6_deepjetbscore");
 
   /// AK8 JETS
   if(mode_ == "deepAK8"){
-    h_N_Ak8 = ctx.declare_event_output<float> ("N_Ak8");
+    h_N_Ak8 = ctx.declare_event_output<float>("N_Ak8");
 
-    h_Ak8_j1_pt = ctx.declare_event_output<float> ("Ak8_j1_pt");
+    h_Ak8_j1_pt = ctx.declare_event_output<float>("Ak8_j1_pt");
     h_Ak8_j1_eta = ctx.declare_event_output<float>("Ak8_j1_eta");
     h_Ak8_j1_phi = ctx.declare_event_output<float>("Ak8_j1_phi");
-    h_Ak8_j1_E = ctx.declare_event_output<float>  ("Ak8_j1_E");
+    h_Ak8_j1_E = ctx.declare_event_output<float>("Ak8_j1_E");
     h_Ak8_j1_mSD = ctx.declare_event_output<float>("Ak8_j1_mSD");
     h_Ak8_j1_tau21 = ctx.declare_event_output<float>("Ak8_j1_tau21");
     h_Ak8_j1_tau32 = ctx.declare_event_output<float>("Ak8_j1_tau32");
+    h_Ak8_j1_deepak8tscore = ctx.declare_event_output<float>("Ak8_j1_deepak8tscore");
 
-    h_Ak8_j2_pt = ctx.declare_event_output<float> ("Ak8_j2_pt");
+    h_Ak8_j2_pt = ctx.declare_event_output<float>("Ak8_j2_pt");
     h_Ak8_j2_eta = ctx.declare_event_output<float>("Ak8_j2_eta");
     h_Ak8_j2_phi = ctx.declare_event_output<float>("Ak8_j2_phi");
-    h_Ak8_j2_E = ctx.declare_event_output<float>  ("Ak8_j2_E");
+    h_Ak8_j2_E = ctx.declare_event_output<float>("Ak8_j2_E");
     h_Ak8_j2_mSD = ctx.declare_event_output<float>("Ak8_j2_mSD");
     h_Ak8_j2_tau21 = ctx.declare_event_output<float>("Ak8_j2_tau21");
     h_Ak8_j2_tau32 = ctx.declare_event_output<float>("Ak8_j2_tau32");
+    h_Ak8_j2_deepak8tscore = ctx.declare_event_output<float>("Ak8_j2_deepak8tscore");
 
-    h_Ak8_j3_pt = ctx.declare_event_output<float> ("Ak8_j3_pt");
+    h_Ak8_j3_pt = ctx.declare_event_output<float>("Ak8_j3_pt");
     h_Ak8_j3_eta = ctx.declare_event_output<float>("Ak8_j3_eta");
     h_Ak8_j3_phi = ctx.declare_event_output<float>("Ak8_j3_phi");
-    h_Ak8_j3_E = ctx.declare_event_output<float>  ("Ak8_j3_E");
+    h_Ak8_j3_E = ctx.declare_event_output<float>("Ak8_j3_E");
     h_Ak8_j3_mSD = ctx.declare_event_output<float>("Ak8_j3_mSD");
     h_Ak8_j3_tau21 = ctx.declare_event_output<float>("Ak8_j3_tau21");
     h_Ak8_j3_tau32 = ctx.declare_event_output<float>("Ak8_j3_tau32");
-  }else if(mode_ == "hotvr"){
+    h_Ak8_j3_deepak8tscore = ctx.declare_event_output<float>("Ak8_j3_deepak8tscore");
+  }
+  else if(mode_ == "hotvr"){
     ///  HOTVR JETS
     h_N_HOTVR = ctx.declare_event_output<float> ("N_HOTVR");
 
-    h_HOTVR_j1_pt = ctx.declare_event_output<float> ("HOTVR_j1_pt");
+    h_HOTVR_j1_pt = ctx.declare_event_output<float>("HOTVR_j1_pt");
     h_HOTVR_j1_eta = ctx.declare_event_output<float>("HOTVR_j1_eta");
     h_HOTVR_j1_phi = ctx.declare_event_output<float>("HOTVR_j1_phi");
-    h_HOTVR_j1_E = ctx.declare_event_output<float>  ("HOTVR_j1_E");
+    h_HOTVR_j1_E = ctx.declare_event_output<float>("HOTVR_j1_E");
     h_HOTVR_j1_mSD = ctx.declare_event_output<float>("HOTVR_j1_mSD");
     h_HOTVR_j1_tau21 = ctx.declare_event_output<float>("HOTVR_j1_tau21");
     h_HOTVR_j1_tau32 = ctx.declare_event_output<float>("HOTVR_j1_tau32");
 
-    h_HOTVR_j2_pt = ctx.declare_event_output<float> ("HOTVR_j2_pt");
+    h_HOTVR_j2_pt = ctx.declare_event_output<float>("HOTVR_j2_pt");
     h_HOTVR_j2_eta = ctx.declare_event_output<float>("HOTVR_j2_eta");
     h_HOTVR_j2_phi = ctx.declare_event_output<float>("HOTVR_j2_phi");
-    h_HOTVR_j2_E = ctx.declare_event_output<float>  ("HOTVR_j2_E");
+    h_HOTVR_j2_E = ctx.declare_event_output<float>("HOTVR_j2_E");
     h_HOTVR_j2_mSD = ctx.declare_event_output<float>("HOTVR_j2_mSD");
     h_HOTVR_j2_tau21 = ctx.declare_event_output<float>("HOTVR_j2_tau21");
     h_HOTVR_j2_tau32 = ctx.declare_event_output<float>("HOTVR_j2_tau32");
 
-    h_HOTVR_j3_pt = ctx.declare_event_output<float> ("HOTVR_j3_pt");
+    h_HOTVR_j3_pt = ctx.declare_event_output<float>("HOTVR_j3_pt");
     h_HOTVR_j3_eta = ctx.declare_event_output<float>("HOTVR_j3_eta");
     h_HOTVR_j3_phi = ctx.declare_event_output<float>("HOTVR_j3_phi");
-    h_HOTVR_j3_E = ctx.declare_event_output<float>  ("HOTVR_j3_E");
+    h_HOTVR_j3_E = ctx.declare_event_output<float>("HOTVR_j3_E");
     h_HOTVR_j3_mSD = ctx.declare_event_output<float>("HOTVR_j3_mSD");
     h_HOTVR_j3_tau21 = ctx.declare_event_output<float>("HOTVR_j3_tau21");
     h_HOTVR_j3_tau32 = ctx.declare_event_output<float>("HOTVR_j3_tau32");
   }
 
   ///  M ttbar
-  h_M_tt = ctx.declare_event_output<float> ("M_tt");
+  h_M_tt = ctx.declare_event_output<float>("M_tt");
+  // chi^2
+  h_chi2 = ctx.declare_event_output<float>("chi2");
+
+  // random number for k-fold validation
+  h_uniform_random = ctx.declare_event_output<float>("uniform_random");
 
 }
 
@@ -1195,6 +1193,7 @@ bool Variables_NN::process(uhh2::Event& evt){
     evt.set(h_Ak8_j1_mSD, -10);
     evt.set(h_Ak8_j1_tau21, -10);
     evt.set(h_Ak8_j1_tau32, -10);
+    evt.set(h_Ak8_j1_deepak8tscore, -10);
 
     evt.set(h_Ak8_j2_pt, -10);
     evt.set(h_Ak8_j2_eta, -10);
@@ -1203,6 +1202,7 @@ bool Variables_NN::process(uhh2::Event& evt){
     evt.set(h_Ak8_j2_mSD, -10);
     evt.set(h_Ak8_j2_tau21, -10);
     evt.set(h_Ak8_j2_tau32, -10);
+    evt.set(h_Ak8_j2_deepak8tscore, -10);
 
     evt.set(h_Ak8_j3_pt, -10);
     evt.set(h_Ak8_j3_eta, -10);
@@ -1211,6 +1211,7 @@ bool Variables_NN::process(uhh2::Event& evt){
     evt.set(h_Ak8_j3_mSD, -10);
     evt.set(h_Ak8_j3_tau21, -10);
     evt.set(h_Ak8_j3_tau32, -10);
+    evt.set(h_Ak8_j3_deepak8tscore, -10);
 
     vector<TopJet>* Ak8jets = evt.toppuppijets;
     int NAk8jets = Ak8jets->size();
@@ -1225,6 +1226,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j1_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j1_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j1_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
+        evt.set(h_Ak8_j1_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==1){
         evt.set(h_Ak8_j2_pt, Ak8jets->at(i).pt());
@@ -1234,6 +1236,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j2_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j2_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j2_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
+        evt.set(h_Ak8_j2_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==2){
         evt.set(h_Ak8_j3_pt, Ak8jets->at(i).pt());
@@ -1243,9 +1246,10 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j3_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j3_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j3_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
+        evt.set(h_Ak8_j3_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
     }
-  }// end deepAK8 mode
+  } // end deepAK8 mode
 
   /////////   HOTVR JETS
   if(mode_ == "hotvr"){
@@ -1313,14 +1317,20 @@ bool Variables_NN::process(uhh2::Event& evt){
 
   // ttbar mass
   evt.set(h_M_tt, -10);
+  evt.set(h_chi2, -10);
   bool is_zprime_reconstructed_chi2 = evt.get(h_is_zprime_reconstructed_chi2);
   if(is_zprime_reconstructed_chi2){
     ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     evt.set(h_M_tt, Mass_tt);
+    evt.set(h_chi2, chi2);
   }
 
-
+  // random generator with eta-dependend random seed for k-fold validation
+  double leading_jet_phi = Ak4jets->at(0).v4().phi();
+  std::srand((int)(1000 * leading_jet_phi));
+  evt.set(h_uniform_random, ((double) rand()) / RAND_MAX);
 
   return true;
 }
@@ -1554,9 +1564,9 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
     is_mc = ctx.get("dataset_type") == "MC";
     is_Muon = ctx.get("channel") == "muon";
 
-    h_muonrecSF_nominal = ctx.declare_event_output<float> ("muonrecSF_nominal");
-    h_muonrecSF_up      = ctx.declare_event_output<float> ("muonrecSF_up");
-    h_muonrecSF_down    = ctx.declare_event_output<float> ("muonrecSF_down");
+    h_muonrecSF_nominal = ctx.declare_event_output<float> ("weight_sfmu_reco");
+    h_muonrecSF_up      = ctx.declare_event_output<float> ("weight_sfmu_reco_up");
+    h_muonrecSF_down    = ctx.declare_event_output<float> ("weight_sfmu_reco_down");
 
   }
 

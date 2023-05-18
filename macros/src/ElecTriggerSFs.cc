@@ -18,7 +18,7 @@ Int_t run;
 Int_t lumin;
 Int_t eventnr;
 bool passed, passed_elec, passed_photon;
-bool debug = false;
+bool debug = true;
 TString weighttag;
 TString year, year_v;
 
@@ -59,14 +59,15 @@ int argc = 2;
 
   //year = "UL16preVFP";
   //lumi_plot = 19.5;
-  //year = "UL16postVFP";
-  //lumi_plot = 16.8;
-  //year = "UL17";
-  //lumi_plot = 41.5;
-  year = "UL18";
-  lumi_plot = 59.8;
+  year = "UL16postVFP";
+  lumi_plot = 16.8;
+  // year = "UL17";
+  // lumi_plot = 41.5;
+  //year = "UL18";
+  //lumi_plot = 59.8;
   TString fdir;
-  fdir = "/nfs/dust/cms/user/deleokse/RunII_106_v2/DiLepton_TriggerModule/Analysis_" + year +"_dilepton_Trigger/";
+  fdir = "/nfs/dust/cms/group/zprime-uhh/Analysis_" + year + "/dilepton_TriggerModule/";
+  // fdir = "/nfs/dust/cms/user/deleokse/RunII_106_v2/DiLepton_TriggerModule/Analysis_" + year +"_dilepton_Trigger/";
   //year = argv[1];
   //TString fdir;
   //if(year.EqualTo("2016")){year_v = "_2016v3"; lumi_plot = 35.9; fdir = "no";}
@@ -177,12 +178,16 @@ int argc = 2;
   // claculating MC trigger efficiency in ttbar MC
   TFile *f_tt=new TFile(fdir+"uhh2.AnalysisModuleRunner.MC.TTbar.root");
   //TFile *f_tt=new TFile(fdir+"uhh2.AnalysisModuleRunner.MC.MC.root");
-  //TFile *f_tt=new TFile(fdir+"uhh2.AnalysisModuleRunner.MC.TTbar_2L2Nu.root");  
+  //TFile *f_tt=new TFile(fdir+"uhh2.AnalysisModuleRunner.MC.TTbar_2L2Nu.root");
   fill_pteta((TTree *) f_tt->Get("AnalysisTree"), h_pt_mc, h_eta_mc);
   fill_control((TTree *) f_tt->Get("AnalysisTree"), h_pt_tt, h_eta_tt);
   fill_control((TTree *) f_tt->Get("AnalysisTree"), h_pt_mc_control, h_eta_mc_control);
 
   AdjustBinContent(h_pt_mc[1], h_pt_mc[0], "pt - ");
+  AdjustBinContent(h_eta_mc[1], h_eta_mc[0], "eta - ");
+  AdjustBinContent(h_eta_mc[3], h_eta_mc[2], "eta - ");
+  AdjustBinContent(h_eta_mc[5], h_eta_mc[4], "eta - ");
+  AdjustBinContent(h_eta_mc[7], h_eta_mc[6], "eta - ");
 
   if(debug) cout << "Plots Hists ... " << endl;
   if(debug) cout << "\n\t ... data" << endl;

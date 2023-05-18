@@ -1,9 +1,8 @@
 {
-  TString input_directory = "/nfs/dust/cms/user/jabuschh/ZprimeSemiLeptonic/RunII_106X_v2/UL18/muon/AnalysisDNN_withSyst/";
+  TString input_directory = "/nfs/dust/cms/user/deleokse/RunII_106_v2/DNN_UL18_muon/";
   TString root_directory = "Zprime_SystVariations_DNN_output0"; // SR (TTbar node of DNN)
-  TString save_directory = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/uncertainties/plots/";
+  TString save_directory = "/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/uncertainties/plots_new/";
   TString hist_name = "M_Zprime";
-
   TString systematic = "prefiring";
 
   vector<TString> v_samples = {
@@ -12,8 +11,24 @@
     "WJets",
     "others", // DY + Diboson + QCD
     "DY",
-    "Diboson",
     "QCD",
+    "ZPrimeToTT_M500_W50",
+    "ZPrimeToTT_M1000_W100",
+    "ZPrimeToTT_M1400_W140",
+    "ZPrimeToTT_M2000_W200",
+    "ZPrimeToTT_M2500_W250",
+    "ZPrimeToTT_M3000_W300",
+    "ZPrimeToTT_M3500_W350",
+    "ZPrimeToTT_M4000_W400",
+    "ZPrimeToTT_M4500_W450",
+    "ZPrimeToTT_M5000_W500",
+    "ZPrimeToTT_M6000_W600",
+    "HscalarToTTTo1L1Nu2J_m400_w10p0_res",
+    "HscalarToTTTo1L1Nu2J_m400_w10p0_int_pos",
+    "HscalarToTTTo1L1Nu2J_m400_w10p0_int_neg",
+    "HpseudoToTTTo1L1Nu2J_m1000_w250p0_res",
+    "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_pos",
+    "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_neg",
     "ALP_ttbar_signal",
     "ALP_ttbar_interference"
   };
@@ -81,8 +96,8 @@
     legend->AddEntry(h_down,"prefiring_down","le");
 
     // draw
-    h_up->Draw("hist e");
-    h_down->Draw("hist e same");
+    h_up->Draw("hist");
+    h_down->Draw("hist same");
     legend->Draw();
 
     // x axis
@@ -92,8 +107,7 @@
     // y axis
     h_up->GetYaxis()->SetTitle("variation/nominal");
     h_up->GetYaxis()->SetTitleOffset(1.7);
-    h_
-    up->GetYaxis()->SetRangeUser(0.9,1.1);
+    h_up->GetYaxis()->SetRangeUser(0.98,1.03);
 
     c1->Modified();
 
