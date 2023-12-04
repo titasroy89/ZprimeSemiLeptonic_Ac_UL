@@ -1,0 +1,28 @@
+imax 1 number of bins
+jmax 2 number of processes minus 1
+kmax * number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+#shapes data_obs * ../output_combine/UL18/muon/750_900/DeltaY.root $PROCESS
+shapes data_obs muon_UL18_750_900 second_step/DeltaY.root $PROCESS
+#shapes * muon_UL18_750_900 second_step/DeltaY.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes TTbar_1 * second_step/DeltaY.root $PROCESS 
+#shapes TTbar_2 * second_step/DeltaY.root $PROCESS 
+shapes * * second_step/DeltaY.root $PROCESS 
+#shapes qcd * second_step/DeltaY.root $PROCESS 
+#shapes dy * second_step/DeltaY.root $PROCESS 
+#shapes Diboson * second_step/DeltaY.root $PROCESS 
+#shapes ST * second_step/DeltaY.root $PROCESS 
+----------------------------------------------------------------------------------------------------------------------------------
+bin          muon_UL18_750_900     
+observation  -1               
+----------------------------------------------------------------------------------------------------------------------------------
+#bin                     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900
+#process                 TTbar_1               TTbar_2               WJets                 QCD                   DY                    Diboson               ST
+#process                 -1                    0                     1                     2                     3                     4                     5
+#rate                    -1                    -1                    -1                    -1                    -1                    -1                    -1
+
+bin                     muon_UL18_750_900     muon_UL18_750_900     muon_UL18_750_900 
+process                 dy_nominal               wjets_nominal                    qcd_nominal               
+process                 1                     2                     3                   
+rate                    -1                    -1                    -1
+

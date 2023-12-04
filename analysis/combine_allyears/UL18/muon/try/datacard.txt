@@ -1,0 +1,30 @@
+imax 1 number of bins
+jmax 5 number of processes minus 1
+kmax * number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *                  *  DeltaY.root $PROCESS_nominal $PROCESS_$SYSTEMATIC
+shapes data_obs           muon_2018_750_900  DeltaY.root $PROCESS
+----------------------------------------------------------------------------------------------------------------------------------
+bin          muon_2018_750_900 
+observation  -1                             
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                  muon_2018_750_900  muon_2018_750_900  muon_2018_750_900  muon_2018_750_900  muon_2018_750_900  muon_2018_750_900  
+process                              Ttbar_1            Ttbar_2            dy                 wjets              qcd                singletop          
+process                              -1                 0                  1                  2                  3                  4                
+rate                                 -1                 -1                 -1                 -1                 -1                 -1                 
+----------------------------------------------------------------------------------------------------------------------------------
+#luminosity_161718       lnN          1.02               1.02               1.02               1.02               1.02               1.02               
+#luminosity_1718         lnN          1.002              1.002              1.002              1.002              1.002              1.002              
+#luminosity_2016         lnN          -                  -                  -                  -                  -                  -                  
+#luminosity_2017         lnN          -                  -                  -                  -                  -                  -                  
+#luminosity_2018         lnN          1.015              1.015              1.015              1.015              1.015              1.015              
+#muHLT                   shape        1.0                1.0                1.0                1.0                1.0                1.0                
+#muID                    shape        1.0                1.0                1.0                1.0                1.0                1.0                
+pileup                  shape        1.0                1.0                1.0                1.0                1.0                1.0                
+#xsec_Ttbar              lnN          1.05               1.05               -                  -                  -                  -                  
+#xsec_dy                 lnN          -                  -                  1.3                -                  -                  -                  
+#xsec_qcd                lnN          -                  -                  -                  -                  1.3                -                  
+#xsec_singletop          lnN          -                  -                  -                  -                  -                  1.3               
+#xsec_wjets              lnN          -                  -                  -                  1.3                -                  -                  
+
+muon_2018_750_900 autoMCStats 1e+06 1 1
