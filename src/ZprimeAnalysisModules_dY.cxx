@@ -644,12 +644,6 @@ ZprimeAnalysisModule_dY::ZprimeAnalysisModule_dY(uhh2::Context& ctx){
   h_DeltaY_N_P_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_P_750Inf_ele"); //-beren
   h_DeltaY_N_N_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_N_750Inf_ele"); //-beren
 
-
-
-
-
-
-
   h_DeltaY_gen_ele = ctx.declare_event_output<float> ("DeltaY_gen_ele"); //-beren DeltaY 
   h_DeltaY_gen_muon = ctx.declare_event_output<float> ("DeltaY_gen_muon"); //-beren DeltaY 
   h_topQuarkCount = ctx.declare_event_output<float> ("topQuarkCount"); 

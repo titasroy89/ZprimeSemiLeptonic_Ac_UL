@@ -599,7 +599,7 @@ protected:
 
   std::unique_ptr<NeuralNetworkModule> NNModule;
 
-  bool isEleTriggerMeasurement;
+  // bool isEleTriggerMeasurement;
 
 };
 
@@ -649,7 +649,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   if(isUL18) year = "UL18";
 
   isPhoton = (ctx.get("dataset_version").find("SinglePhoton") != std::string::npos);
-  isEleTriggerMeasurement = (ctx.get("is_EleTriggerMeasurement") == "true");
+  // isEleTriggerMeasurement = (ctx.get("is_EleTriggerMeasurement") == "true");
 
   // Lepton IDs
   ElectronId eleID_low  = ElectronTagID(Electron::mvaEleID_Fall17_iso_V2_wp80);
@@ -779,7 +779,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
 
-  if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
+  // if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
 
   // Top Taggers
   TopTaggerHOTVR.reset(new HOTVRTopTagger(ctx));
@@ -2710,7 +2710,7 @@ if(debug) cout << "20" << endl;
     }
   }
 
-  if(!isEleTriggerMeasurement) SystematicsModule->process(event);
+  // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
 
 
   return true;
