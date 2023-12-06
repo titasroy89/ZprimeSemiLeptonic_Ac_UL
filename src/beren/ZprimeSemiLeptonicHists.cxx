@@ -39,9 +39,10 @@ Hists(ctx, dirname) {
 }
 
 void ZprimeSemiLeptonicHists::init(){
+  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta y_reco",2,-2.5,2.5);
 
   // jets
-  N_jets   = book<TH1F>("N_jets", "N_{jets}", 21, -0.5, 20.5);
+  N_jets   = book<TH1F>("N_jets", "N_{jets}", 11, -0.5, 10.5);
   pt_jet   = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
   pt_jet1  = book<TH1F>("pt_jet1", "p_{T}^{jet 1} [GeV]", 45, 0, 900);
   pt_jet2  = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 45, 0, 900);
@@ -441,30 +442,30 @@ void ZprimeSemiLeptonicHists::init(){
   STlep_rebin3  = book<TH1F>("STlep_rebin3", "S_{T}^{lep} [GeV]", 15, 0, 1500);
 
   // Zprime reconstruction
-  toplep_pt         = book<TH1F>("toplep_pt", "p_{T}^{t,lep} [GeV]", 70, 0, 7000);
+  toplep_pt         = book<TH1F>("toplep_pt", "p_{T}^{t,lep} [GeV]", 50, 0, 3000);
   toplep_eta        = book<TH1F>("toplep_eta", "#eta^{t,lep}", 60, -3.0, 3.0);
   toplep_phi        = book<TH1F>("toplep_phi", "#phi^{t,lep}", 70, -3.5, 3.5);
   toplep_m          = book<TH1F>("toplep_m", "m^{t,lep} [GeV]", 70, 0, 7000);
-  tophad_pt         = book<TH1F>("tophad_pt", "p_{T}^{t,had} [GeV]", 70, 0, 7000);
+  tophad_pt         = book<TH1F>("tophad_pt", "p_{T}^{t,had} [GeV]", 50, 0, 3000);
   tophad_eta        = book<TH1F>("tophad_eta", "#eta^{t,had}", 60, -3.0, 3.0);
   tophad_phi        = book<TH1F>("tophad_phi", "#phi^{t,had}", 70, -3.5, 3.5);
   tophad_m          = book<TH1F>("tophad_m", "m^{t,had} [GeV]", 70, 0, 7000);
-  ditop_mass        = book<TH1F>("ditop_mass", "m_{t#bar{t}} [GeV]", 70, 0, 7000);
+  ditop_mass        = book<TH1F>("ditop_mass", "m_{t#bar{t}} [GeV]", 20, 0, 3000);
   ditop_absDeltaPhi = book<TH1F>("ditop_absDeltaPhi", "|#Delta#phi(t,#bar{t})|", 35, 0, 3.5);
   ditop_deltaEta    = book<TH1F>("ditop_deltaEta", "#Delta#eta(t,#bar{t})", 120, -6.0, 6.0);
   ditop_absDeltaEta = book<TH1F>("ditop_absDeltaEta", "|#Delta#eta(t,#bar{t})|", 60, 0, 6.0);
   ditop_deltaR      = book<TH1F>("ditop_deltaR", "#DeltaR(t,#bar{t})", 100, 0, 10.0);
-  DeltaY            = book<TH1F>("DeltaY", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+
 
 
   vector<float> bins_Zprime4 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200,3400,3600,3800,4000,4400,4800,5200,5600,6000,6100};
   vector<float> bins_Zprime5 = {0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3300,3600,3900,4200,4500,5000,5100};
   vector<float> bins_Zprime6 = {0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3300,3600,3900,4200,4500,5000};
   vector<float> bins_Zprime7 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,5000};
-  M_Zprime                 = book<TH1F>("M_Zprime", "M_{t#bar{t}} [GeV]", 280, 0, 7000);
+  M_Zprime                 = book<TH1F>("M_Zprime", "M_{t#bar{t}} [GeV]", 280, 0, 3000);
   M_Zprime_rebin           = book<TH1F>("M_Zprime_rebin", "M_{t#bar{t}} [GeV]", 140, 0, 7000);
   M_Zprime_rebin2          = book<TH1F>("M_Zprime_rebin2", "M_{t#bar{t}} [GeV]", 70, 0, 7000);
-  M_Zprime_rebin3          = book<TH1F>("M_Zprime_rebin3", "M_{t#bar{t}} [GeV]", 35, 0, 7000);
+  M_Zprime_rebin3          = book<TH1F>("M_Zprime_rebin3", "M_{t#bar{t}} [GeV]", 35, 0, 3000);
   M_Zprime_rebin4          = book<TH1F>("M_Zprime_rebin4", "M_{t#bar{t}} [GeV]", bins_Zprime4.size()-1, &bins_Zprime4[0]);
   M_Zprime_rebin5          = book<TH1F>("M_Zprime_rebin5", "M_{t#bar{t}} [GeV]", bins_Zprime5.size()-1, &bins_Zprime5[0]);
   M_Zprime_rebin6          = book<TH1F>("M_Zprime_rebin6", "M_{t#bar{t}} [GeV]", bins_Zprime6.size()-1, &bins_Zprime6[0]);
@@ -472,7 +473,7 @@ void ZprimeSemiLeptonicHists::init(){
   M_Zprime_rebin8          = book<TH1F>("M_Zprime_rebin8", "M_{t#bar{t}} [GeV]", 400, 0, 10000);
   M_tophad                 = book<TH1F>("M_tophad", "M_{t}^{had} [GeV]", 70, 0, 700);
   M_toplep                 = book<TH1F>("M_toplep", "M_{t}^{lep} [GeV]", 70, 0, 700);
-  chi2_Zprime              = book<TH1F>("chi2_Zprime", "#chi^{2}", 300, 0, 600);
+  chi2_Zprime              = book<TH1F>("chi2_Zprime", "#chi^{2}", 300, 0, 100);
   chi2_Zprime_rebin        = book<TH1F>("chi2_Zprime_rebin", "#chi^{2}", 20, 0, 100);
   chi2_Zprime_rebin2       = book<TH1F>("chi2_Zprime_rebin2", "#chi^{2}", 15, 0, 30);
   M_Zprime_ak4             = book<TH1F>("M_Zprime_ak4", "M_{t#bar{t}} (AK4 reconstruction) [GeV]", 280, 0, 7000);
@@ -591,9 +592,9 @@ void ZprimeSemiLeptonicHists::init(){
   NN_Ak4_j6_E         = book<TH1F>("NN_Ak4_j6_E", "NN_Ak4_j6_E", 100, 0, 5000);
   NN_Ak4_j6_m         = book<TH1F>("NN_Ak4_j6_m", "NN_Ak4_j6_m", 50, 0, 300);
   NN_Ak4_j6_btag      = book<TH1F>("NN_Ak4_j6_btag", "NN_Ak4_j6_btag", 50, 0, 1);
-  NN_M_tt_weighted    = book<TH1F>("NN_M_tt_weighted", "NN_M_tt_weighted", 100, 0, 14000);
+  NN_M_tt_weighted    = book<TH1F>("NN_M_tt_weighted", "NN_M_tt_weighted", 100, 0, 3000);
   NN_M_tt_notweighted = book<TH1F>("NN_M_tt_notweighted", "NN_M_tt_notweighted", 100, 0, 14000);
-  NN_chi2             = book<TH1F>("NN_chi2", "NN_chi2", 100, 0, 100);
+  NN_chi2             = book<TH1F>("NN_chi2", "NN_chi2", 20, 0, 100);
   NN_N_HOTVR          = book<TH1F>("NN_N_HOTVR", "NN_N_HOTVR", 20, 0, 20);
   NN_HOTVR_j1_pt      = book<TH1F>("NN_HOTVR_j1_pt", "NN_HOTVR_j1_pt", 150, 0, 3000);
   NN_HOTVR_j1_eta     = book<TH1F>("NN_HOTVR_j1_eta", "NN_HOTVR_j1_eta", 50, -2.5, 2.5);
@@ -1316,10 +1317,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
-    
-    float deltay = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+
+    float deltay = (TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))));
     DeltaY->Fill(deltay, weight);
-    
+
     LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
     LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
 
@@ -1359,7 +1360,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
     LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-    
+
     TLorentzVector had_top_frame(0,0,0,0);
     had_top_frame.SetPtEtaPhiE(had_top.pt(), had_top.eta(), had_top.phi(), had_top.E());
     TLorentzVector lep_top_frame(0,0,0,0);
@@ -1482,6 +1483,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   sum_event_weights->Fill(1., weight);
 
   N_Jets_vs_HT->Fill(Njets, st_jets, weight);
+  
 
   /*
   ███    ██ ███    ██
@@ -1644,6 +1646,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   if(is_zprime_reconstructed_chi2){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+    // cout << " \ninvariant mass 2: " << Mass_tt << endl; 
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
     if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
