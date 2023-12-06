@@ -133,146 +133,146 @@ protected:
   Event::Handle<float> h_lep1_pt; Event::Handle<float> h_lep1_eta;
   Event::Handle<float> h_ak4jet1_pt; Event::Handle<float> h_ak4jet1_eta;
   Event::Handle<float> h_ak8jet1_pt; Event::Handle<float> h_ak8jet1_eta;
-  
-  Event::Handle<float> h_DeltaY_gen_ele; //-beren 
-  Event::Handle<float> h_DeltaY_gen_muon; //-beren 
-  Event::Handle<float> h_DeltaY_gen_mass; //-beren
-  Event::Handle<float> h_topQuarkCount;
-
-  Event::Handle<float> h_DeltaY_N_gen_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_pt_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_pt_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_eta_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_eta_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_2d_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_2d_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_met_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_met_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_gen_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_pt_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_pt_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_eta_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_eta_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_2d_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_2d_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_met_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_met_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_N_gen_jet_pt_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_jet_pt_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_jet_pt_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_jet_pt_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_jet_eta_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_jet_eta_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_jet_eta_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_jet_eta_muon; //-beren
-
-  Event::Handle<float> h_DeltaR_leptonic_genparticle; //-beren
-  Event::Handle<float> h_DeltaR_hadronic_genparticle; //-beren
-
-  Event::Handle<float> h_not_reconstructed_muon; //-beren
-  Event::Handle<float> h_not_reconstructed_0_500_muon; //-beren
-  Event::Handle<float> h_not_reconstructed_500_750_muon; //-beren
-  Event::Handle<float> h_not_reconstructed_750_1000_muon; //-beren
-  Event::Handle<float> h_not_reconstructed_1000_1500_muon; //-beren
-  Event::Handle<float> h_not_reconstructed_1500Inf_muon; //-beren
-
-  Event::Handle<float> h_not_reconstructed_ele; //-beren
-  Event::Handle<float> h_not_reconstructed_0_500_ele; //-beren
-  Event::Handle<float> h_not_reconstructed_500_750_ele; //-beren
-  Event::Handle<float> h_not_reconstructed_750_1000_ele; //-beren
-  Event::Handle<float> h_not_reconstructed_1000_1500_ele; //-beren
-  Event::Handle<float> h_not_reconstructed_1500Inf_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_reco; //-beren
-  Event::Handle<float> h_DeltaY_reco_mass; //-beren
-  Event::Handle<float> h_DeltaY_N_reco; //-beren
-  Event::Handle<float> h_DeltaY_P_reco; //-beren
-  Event::Handle<float> h_DeltaY_N_reco_nomass; //-beren
-  Event::Handle<float> h_DeltaY_P_reco_nomass; //-beren
-  Event::Handle<float> h_DeltaY_gen; //-beren 
-  Event::Handle<float> h_DeltaY_N_gen; //-beren
-  Event::Handle<float> h_DeltaY_N_gen_nomass; //-beren
-  Event::Handle<float> h_DeltaY_P_gen; //-beren
-  Event::Handle<float> h_DeltaY_P_gen_nomass; //-beren
-  Event::Handle<float> h_DeltaY_P_P; //-beren
-  Event::Handle<float> h_DeltaY_P_N; //-beren
-  Event::Handle<float> h_DeltaY_N_P; //-beren
-  Event::Handle<float> h_DeltaY_N_N; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_nomass_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_nomass_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_nomass_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_nomass_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_N_0_500_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_P_0_500_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_0_500_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_0_500_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_500_750_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_500_750_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_500_750_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_500_750_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_750_1000_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_750_1000_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_750_1000_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_750_1000_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_1000_1500_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_1000_1500_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_1000_1500_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_1000_1500_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_1500Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_1500Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_1500Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_1500Inf_muon; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_750Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_P_N_750Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_P_750Inf_muon; //-beren
-  Event::Handle<float> h_DeltaY_N_N_750Inf_muon; //-beren
-
-
-  Event::Handle<float> h_DeltaY_P_P_nomass_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_nomass_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_nomass_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_nomass_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_N_0_500_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_P_0_500_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_0_500_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_0_500_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_500_750_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_500_750_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_500_750_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_500_750_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_750_1000_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_750_1000_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_750_1000_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_750_1000_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_1000_1500_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_1000_1500_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_1000_1500_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_1000_1500_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_1500Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_1500Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_1500Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_1500Inf_ele; //-beren
-
-  Event::Handle<float> h_DeltaY_P_P_750Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_P_N_750Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_P_750Inf_ele; //-beren
-  Event::Handle<float> h_DeltaY_N_N_750Inf_ele; //-beren
+//  
+//  Event::Handle<float> h_DeltaY_gen_ele; //-beren 
+//  Event::Handle<float> h_DeltaY_gen_muon; //-beren 
+//  Event::Handle<float> h_DeltaY_gen_mass; //-beren
+//  Event::Handle<float> h_topQuarkCount;
+//
+//  Event::Handle<float> h_DeltaY_N_gen_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_pt_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_pt_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_eta_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_eta_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_2d_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_2d_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_met_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_met_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_gen_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_pt_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_pt_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_eta_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_eta_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_2d_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_2d_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_met_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_met_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_N_gen_jet_pt_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_jet_pt_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_jet_pt_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_jet_pt_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_jet_eta_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_jet_eta_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_jet_eta_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_jet_eta_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaR_leptonic_genparticle; //-beren
+//  Event::Handle<float> h_DeltaR_hadronic_genparticle; //-beren
+//
+//  Event::Handle<float> h_not_reconstructed_muon; //-beren
+//  Event::Handle<float> h_not_reconstructed_0_500_muon; //-beren
+//  Event::Handle<float> h_not_reconstructed_500_750_muon; //-beren
+//  Event::Handle<float> h_not_reconstructed_750_1000_muon; //-beren
+//  Event::Handle<float> h_not_reconstructed_1000_1500_muon; //-beren
+//  Event::Handle<float> h_not_reconstructed_1500Inf_muon; //-beren
+//
+//  Event::Handle<float> h_not_reconstructed_ele; //-beren
+//  Event::Handle<float> h_not_reconstructed_0_500_ele; //-beren
+//  Event::Handle<float> h_not_reconstructed_500_750_ele; //-beren
+//  Event::Handle<float> h_not_reconstructed_750_1000_ele; //-beren
+//  Event::Handle<float> h_not_reconstructed_1000_1500_ele; //-beren
+//  Event::Handle<float> h_not_reconstructed_1500Inf_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_reco; //-beren
+//  Event::Handle<float> h_DeltaY_reco_mass; //-beren
+//  Event::Handle<float> h_DeltaY_N_reco; //-beren
+//  Event::Handle<float> h_DeltaY_P_reco; //-beren
+//  Event::Handle<float> h_DeltaY_N_reco_nomass; //-beren
+//  Event::Handle<float> h_DeltaY_P_reco_nomass; //-beren
+//  Event::Handle<float> h_DeltaY_gen; //-beren 
+//  Event::Handle<float> h_DeltaY_N_gen; //-beren
+//  Event::Handle<float> h_DeltaY_N_gen_nomass; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen; //-beren
+//  Event::Handle<float> h_DeltaY_P_gen_nomass; //-beren
+//  Event::Handle<float> h_DeltaY_P_P; //-beren
+//  Event::Handle<float> h_DeltaY_P_N; //-beren
+//  Event::Handle<float> h_DeltaY_N_P; //-beren
+//  Event::Handle<float> h_DeltaY_N_N; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_nomass_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_nomass_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_nomass_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_nomass_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_N_0_500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_P_0_500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_0_500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_0_500_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_500_750_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_500_750_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_500_750_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_500_750_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_750_1000_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_750_1000_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_750_1000_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_750_1000_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_1000_1500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_1000_1500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_1000_1500_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_1000_1500_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_1500Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_1500Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_1500Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_1500Inf_muon; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_750Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_750Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_750Inf_muon; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_750Inf_muon; //-beren
+//
+//
+//  Event::Handle<float> h_DeltaY_P_P_nomass_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_nomass_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_nomass_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_nomass_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_N_0_500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_P_0_500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_0_500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_0_500_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_500_750_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_500_750_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_500_750_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_500_750_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_750_1000_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_750_1000_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_750_1000_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_750_1000_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_1000_1500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_1000_1500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_1000_1500_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_1000_1500_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_1500Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_1500Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_1500Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_1500Inf_ele; //-beren
+//
+//  Event::Handle<float> h_DeltaY_P_P_750Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_P_N_750Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_P_750Inf_ele; //-beren
+//  Event::Handle<float> h_DeltaY_N_N_750Inf_ele; //-beren
 
 
 
@@ -555,153 +555,153 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   h_is_zprime_reconstructed_correctmatch = ctx.get_handle<bool>("is_zprime_reconstructed_correctmatch");
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   
-  h_DeltaY_reco = ctx.declare_event_output<float> ("DeltaY_reco"); //-beren DeltaY
-  h_DeltaY_reco_mass = ctx.declare_event_output<float> ("DeltaY_reco_mass"); //-beren DeltaY
-  h_DeltaY_N_reco = ctx.declare_event_output<float> ("DeltaY_N_reco"); //-beren DeltaY
-  h_DeltaY_P_reco = ctx.declare_event_output<float> ("DeltaY_P_reco"); //-beren DeltaY
-  h_DeltaY_N_reco_nomass = ctx.declare_event_output<float> ("DeltaY_N_reco_nomass"); //-beren DeltaY
-  h_DeltaY_P_reco_nomass = ctx.declare_event_output<float> ("DeltaY_P_reco_nomass"); //-beren DeltaY
-  h_DeltaY_gen = ctx.declare_event_output<float> ("DeltaY_gen"); //-beren DeltaY 
-  h_DeltaY_gen_mass = ctx.declare_event_output<float> ("DeltaY_gen_mass"); //-beren
-  h_DeltaY_N_gen = ctx.declare_event_output<float> ("DeltaY_N_gen"); //-beren DeltaY
-  h_DeltaY_N_gen_nomass = ctx.declare_event_output<float> ("DeltaY_N_gen_nomass"); //-beren DeltaY
-  h_DeltaY_P_gen = ctx.declare_event_output<float> ("DeltaY_P_gen"); //-beren DeltaY
-  h_DeltaY_P_gen_nomass = ctx.declare_event_output<float> ("DeltaY_P_gen_nomass"); //-beren DeltaY
-  h_DeltaY_P_P = ctx.declare_event_output<float> ("DeltaY_P_P"); //-beren DeltaY
-  h_DeltaY_P_N = ctx.declare_event_output<float> ("DeltaY_P_N"); //-beren DeltaY
-  h_DeltaY_N_P = ctx.declare_event_output<float> ("DeltaY_N_P"); //-beren DeltaY
-  h_DeltaY_N_N = ctx.declare_event_output<float> ("DeltaY_N_N"); //-beren DeltaY
-
-  h_DeltaY_P_P_nomass_muon = ctx.declare_event_output<float> ("DeltaY_P_P_nomass_muon"); //-beren DeltaY
-  h_DeltaY_P_N_nomass_muon = ctx.declare_event_output<float> ("DeltaY_P_N_nomass_muon"); //-beren DeltaY
-  h_DeltaY_N_P_nomass_muon = ctx.declare_event_output<float> ("DeltaY_N_P_nomass_muon"); //-beren DeltaY
-  h_DeltaY_N_N_nomass_muon = ctx.declare_event_output<float> ("DeltaY_N_N_nomass_muon"); //-beren DeltaY
-
-  h_DeltaY_P_P_0_500_muon = ctx.declare_event_output<float> ("DeltaY_P_P_0_500_muon"); //-beren
-  h_DeltaY_P_N_0_500_muon = ctx.declare_event_output<float> ("DeltaY_P_N_0_500_muon"); //-beren
-  h_DeltaY_N_P_0_500_muon = ctx.declare_event_output<float> ("DeltaY_N_P_0_500_muon"); //-beren
-  h_DeltaY_N_N_0_500_muon = ctx.declare_event_output<float> ("DeltaY_N_N_0_500_muon"); //-beren
-
-  h_DeltaY_P_P_500_750_muon = ctx.declare_event_output<float> ("DeltaY_P_P_500_750_muon"); //-beren
-  h_DeltaY_P_N_500_750_muon = ctx.declare_event_output<float> ("DeltaY_P_N_500_750_muon"); //-beren
-  h_DeltaY_N_P_500_750_muon = ctx.declare_event_output<float> ("DeltaY_N_P_500_750_muon"); //-beren
-  h_DeltaY_N_N_500_750_muon = ctx.declare_event_output<float> ("DeltaY_N_N_500_750_muon"); //-beren 
-
-  h_DeltaY_P_P_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_P_P_750_1000_muon"); //-beren
-  h_DeltaY_P_N_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_P_N_750_1000_muon"); //-beren
-  h_DeltaY_N_P_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_N_P_750_1000_muon"); //-beren
-  h_DeltaY_N_N_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_N_N_750_1000_muon"); //-beren
-
-  h_DeltaY_P_P_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_P_P_1000_1500_muon"); //-beren
-  h_DeltaY_P_N_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_P_N_1000_1500_muon"); //-beren
-  h_DeltaY_N_P_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_N_P_1000_1500_muon"); //-beren
-  h_DeltaY_N_N_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_N_N_1000_1500_muon"); //-beren 
-
-  h_DeltaY_P_P_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_P_1500Inf_muon"); //-beren
-  h_DeltaY_P_N_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_N_1500Inf_muon"); //-beren
-  h_DeltaY_N_P_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_P_1500Inf_muon"); //-beren
-  h_DeltaY_N_N_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_N_1500Inf_muon"); //-beren
-
-  h_DeltaY_P_P_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_P_750Inf_muon"); //-beren
-  h_DeltaY_P_N_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_N_750Inf_muon"); //-beren
-  h_DeltaY_N_P_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_P_750Inf_muon"); //-beren
-  h_DeltaY_N_N_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_N_750Inf_muon"); //-beren 
-
-  ///=====//
-
-  h_DeltaY_P_P_nomass_ele = ctx.declare_event_output<float> ("DeltaY_P_P_nomass_ele"); //-beren DeltaY
-  h_DeltaY_P_N_nomass_ele = ctx.declare_event_output<float> ("DeltaY_P_N_nomass_ele"); //-beren DeltaY
-  h_DeltaY_N_P_nomass_ele = ctx.declare_event_output<float> ("DeltaY_N_P_nomass_ele"); //-beren DeltaY
-  h_DeltaY_N_N_nomass_ele = ctx.declare_event_output<float> ("DeltaY_N_N_nomass_ele"); //-beren DeltaY
-
-  h_DeltaY_P_P_0_500_ele = ctx.declare_event_output<float> ("DeltaY_P_P_0_500_ele"); //-beren
-  h_DeltaY_P_N_0_500_ele = ctx.declare_event_output<float> ("DeltaY_P_N_0_500_ele"); //-beren
-  h_DeltaY_N_P_0_500_ele = ctx.declare_event_output<float> ("DeltaY_N_P_0_500_ele"); //-beren
-  h_DeltaY_N_N_0_500_ele = ctx.declare_event_output<float> ("DeltaY_N_N_0_500_ele"); //-beren
-
-  h_DeltaY_P_P_500_750_ele = ctx.declare_event_output<float> ("DeltaY_P_P_500_750_ele"); //-beren
-  h_DeltaY_P_N_500_750_ele = ctx.declare_event_output<float> ("DeltaY_P_N_500_750_ele"); //-beren
-  h_DeltaY_N_P_500_750_ele = ctx.declare_event_output<float> ("DeltaY_N_P_500_750_ele"); //-beren
-  h_DeltaY_N_N_500_750_ele = ctx.declare_event_output<float> ("DeltaY_N_N_500_750_ele"); //-beren 
-
-  h_DeltaY_P_P_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_P_P_750_1000_ele"); //-beren
-  h_DeltaY_P_N_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_P_N_750_1000_ele"); //-beren
-  h_DeltaY_N_P_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_N_P_750_1000_ele"); //-beren
-  h_DeltaY_N_N_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_N_N_750_1000_ele"); //-beren
-
-  h_DeltaY_P_P_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_P_P_1000_1500_ele"); //-beren
-  h_DeltaY_P_N_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_P_N_1000_1500_ele"); //-beren
-  h_DeltaY_N_P_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_N_P_1000_1500_ele"); //-beren
-  h_DeltaY_N_N_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_N_N_1000_1500_ele"); //-beren 
-
-  h_DeltaY_P_P_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_P_1500Inf_ele"); //-beren
-  h_DeltaY_P_N_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_N_1500Inf_ele"); //-beren
-  h_DeltaY_N_P_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_P_1500Inf_ele"); //-beren
-  h_DeltaY_N_N_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_N_1500Inf_ele"); //-beren
-
-  h_DeltaY_P_P_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_P_750Inf_ele"); //-beren
-  h_DeltaY_P_N_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_N_750Inf_ele"); //-beren
-  h_DeltaY_N_P_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_P_750Inf_ele"); //-beren
-  h_DeltaY_N_N_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_N_750Inf_ele"); //-beren
-
-
-
-
-
-
-
-  h_DeltaY_gen_ele = ctx.declare_event_output<float> ("DeltaY_gen_ele"); //-beren DeltaY 
-  h_DeltaY_gen_muon = ctx.declare_event_output<float> ("DeltaY_gen_muon"); //-beren DeltaY 
-  h_topQuarkCount = ctx.declare_event_output<float> ("topQuarkCount"); 
-
-  h_DeltaY_N_gen_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_muon"); //-beren DeltaY
-  h_DeltaY_N_gen_pt_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_pt_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_pt_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_pt_muon"); //-beren DeltaY
-  h_DeltaY_N_gen_eta_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_eta_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_eta_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_eta_muon"); //-beren DeltaY
-  h_DeltaY_N_gen_2d_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_2d_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_2d_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_2d_muon"); //-beren DeltaY
-  h_DeltaY_N_gen_met_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_met_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_met_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_met_muon"); //-beren DeltaY
-
-  h_DeltaY_P_gen_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_muon"); //-beren DeltaY
-  h_DeltaY_P_gen_pt_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_pt_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_pt_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_pt_muon"); //-beren DeltaY
-  h_DeltaY_P_gen_eta_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_eta_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_eta_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_eta_muon"); //-beren DeltaY
-  
-  h_DeltaY_P_gen_2d_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_2d_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_2d_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_2d_muon"); //-beren DeltaY
-  h_DeltaY_P_gen_met_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_met_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_met_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_met_muon"); //-beren DeltaY
-
-  h_DeltaY_N_gen_jet_pt_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_pt_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_jet_pt_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_pt_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_jet_pt_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_pt_muon"); //-beren DeltaY
-  h_DeltaY_P_gen_jet_pt_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_pt_muon"); //-beren DeltaY
-
-  h_DeltaY_N_gen_jet_eta_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_eta_ele"); //-beren DeltaY
-  h_DeltaY_P_gen_jet_eta_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_eta_ele"); //-beren DeltaY
-  h_DeltaY_N_gen_jet_eta_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_eta_muon"); //-beren DeltaY
-  h_DeltaY_P_gen_jet_eta_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_eta_muon"); //-beren DeltaY
-  h_DeltaR_leptonic_genparticle = ctx.declare_event_output<float> ("DeltaR_leptonic_genparticle"); //-beren DeltaY
-  h_DeltaR_hadronic_genparticle = ctx.declare_event_output<float> ("DeltaR_hadronic_genparticle"); //-beren DeltaY
-
-  h_not_reconstructed_muon = ctx.declare_event_output<float> ("not_reconstructed"); //-beren DeltaY
-  h_not_reconstructed_0_500_muon = ctx.declare_event_output<float> ("not_reconstructed_0_500"); //-beren DeltaY
-  h_not_reconstructed_500_750_muon = ctx.declare_event_output<float> ("not_reconstructed_500_750"); //-beren DeltaY
-  h_not_reconstructed_750_1000_muon = ctx.declare_event_output<float> ("not_reconstructed_750_1000"); //-beren DeltaY
-  h_not_reconstructed_1000_1500_muon = ctx.declare_event_output<float> ("not_reconstructed_1000_1500"); //-beren DeltaY
-  h_not_reconstructed_1500Inf_muon = ctx.declare_event_output<float> ("not_reconstructed_1500Inf"); //-beren DeltaY
-
-  h_not_reconstructed_ele = ctx.declare_event_output<float> ("not_reconstructed"); //-beren DeltaY
-  h_not_reconstructed_0_500_ele = ctx.declare_event_output<float> ("not_reconstructed_0_500"); //-beren DeltaY
-  h_not_reconstructed_500_750_ele = ctx.declare_event_output<float> ("not_reconstructed_500_750"); //-beren DeltaY
-  h_not_reconstructed_750_1000_ele = ctx.declare_event_output<float> ("not_reconstructed_750_1000"); //-beren DeltaY
-  h_not_reconstructed_1000_1500_ele = ctx.declare_event_output<float> ("not_reconstructed_1000_1500"); //-beren DeltaY
-  h_not_reconstructed_1500Inf_ele = ctx.declare_event_output<float> ("not_reconstructed_1500Inf"); //-beren DeltaY
+//  h_DeltaY_reco = ctx.declare_event_output<float> ("DeltaY_reco"); //-beren DeltaY
+//  h_DeltaY_reco_mass = ctx.declare_event_output<float> ("DeltaY_reco_mass"); //-beren DeltaY
+//  h_DeltaY_N_reco = ctx.declare_event_output<float> ("DeltaY_N_reco"); //-beren DeltaY
+//  h_DeltaY_P_reco = ctx.declare_event_output<float> ("DeltaY_P_reco"); //-beren DeltaY
+//  h_DeltaY_N_reco_nomass = ctx.declare_event_output<float> ("DeltaY_N_reco_nomass"); //-beren DeltaY
+//  h_DeltaY_P_reco_nomass = ctx.declare_event_output<float> ("DeltaY_P_reco_nomass"); //-beren DeltaY
+//  h_DeltaY_gen = ctx.declare_event_output<float> ("DeltaY_gen"); //-beren DeltaY 
+//  h_DeltaY_gen_mass = ctx.declare_event_output<float> ("DeltaY_gen_mass"); //-beren
+//  h_DeltaY_N_gen = ctx.declare_event_output<float> ("DeltaY_N_gen"); //-beren DeltaY
+//  h_DeltaY_N_gen_nomass = ctx.declare_event_output<float> ("DeltaY_N_gen_nomass"); //-beren DeltaY
+//  h_DeltaY_P_gen = ctx.declare_event_output<float> ("DeltaY_P_gen"); //-beren DeltaY
+//  h_DeltaY_P_gen_nomass = ctx.declare_event_output<float> ("DeltaY_P_gen_nomass"); //-beren DeltaY
+//  h_DeltaY_P_P = ctx.declare_event_output<float> ("DeltaY_P_P"); //-beren DeltaY
+//  h_DeltaY_P_N = ctx.declare_event_output<float> ("DeltaY_P_N"); //-beren DeltaY
+//  h_DeltaY_N_P = ctx.declare_event_output<float> ("DeltaY_N_P"); //-beren DeltaY
+//  h_DeltaY_N_N = ctx.declare_event_output<float> ("DeltaY_N_N"); //-beren DeltaY
+//
+//  h_DeltaY_P_P_nomass_muon = ctx.declare_event_output<float> ("DeltaY_P_P_nomass_muon"); //-beren DeltaY
+//  h_DeltaY_P_N_nomass_muon = ctx.declare_event_output<float> ("DeltaY_P_N_nomass_muon"); //-beren DeltaY
+//  h_DeltaY_N_P_nomass_muon = ctx.declare_event_output<float> ("DeltaY_N_P_nomass_muon"); //-beren DeltaY
+//  h_DeltaY_N_N_nomass_muon = ctx.declare_event_output<float> ("DeltaY_N_N_nomass_muon"); //-beren DeltaY
+//
+//  h_DeltaY_P_P_0_500_muon = ctx.declare_event_output<float> ("DeltaY_P_P_0_500_muon"); //-beren
+//  h_DeltaY_P_N_0_500_muon = ctx.declare_event_output<float> ("DeltaY_P_N_0_500_muon"); //-beren
+//  h_DeltaY_N_P_0_500_muon = ctx.declare_event_output<float> ("DeltaY_N_P_0_500_muon"); //-beren
+//  h_DeltaY_N_N_0_500_muon = ctx.declare_event_output<float> ("DeltaY_N_N_0_500_muon"); //-beren
+//
+//  h_DeltaY_P_P_500_750_muon = ctx.declare_event_output<float> ("DeltaY_P_P_500_750_muon"); //-beren
+//  h_DeltaY_P_N_500_750_muon = ctx.declare_event_output<float> ("DeltaY_P_N_500_750_muon"); //-beren
+//  h_DeltaY_N_P_500_750_muon = ctx.declare_event_output<float> ("DeltaY_N_P_500_750_muon"); //-beren
+//  h_DeltaY_N_N_500_750_muon = ctx.declare_event_output<float> ("DeltaY_N_N_500_750_muon"); //-beren 
+//
+//  h_DeltaY_P_P_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_P_P_750_1000_muon"); //-beren
+//  h_DeltaY_P_N_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_P_N_750_1000_muon"); //-beren
+//  h_DeltaY_N_P_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_N_P_750_1000_muon"); //-beren
+//  h_DeltaY_N_N_750_1000_muon = ctx.declare_event_output<float> ("DeltaY_N_N_750_1000_muon"); //-beren
+//
+//  h_DeltaY_P_P_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_P_P_1000_1500_muon"); //-beren
+//  h_DeltaY_P_N_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_P_N_1000_1500_muon"); //-beren
+//  h_DeltaY_N_P_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_N_P_1000_1500_muon"); //-beren
+//  h_DeltaY_N_N_1000_1500_muon = ctx.declare_event_output<float> ("DeltaY_N_N_1000_1500_muon"); //-beren 
+//
+//  h_DeltaY_P_P_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_P_1500Inf_muon"); //-beren
+//  h_DeltaY_P_N_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_N_1500Inf_muon"); //-beren
+//  h_DeltaY_N_P_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_P_1500Inf_muon"); //-beren
+//  h_DeltaY_N_N_1500Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_N_1500Inf_muon"); //-beren
+//
+//  h_DeltaY_P_P_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_P_750Inf_muon"); //-beren
+//  h_DeltaY_P_N_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_P_N_750Inf_muon"); //-beren
+//  h_DeltaY_N_P_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_P_750Inf_muon"); //-beren
+//  h_DeltaY_N_N_750Inf_muon = ctx.declare_event_output<float> ("DeltaY_N_N_750Inf_muon"); //-beren 
+//
+//  ///=====//
+//
+//  h_DeltaY_P_P_nomass_ele = ctx.declare_event_output<float> ("DeltaY_P_P_nomass_ele"); //-beren DeltaY
+//  h_DeltaY_P_N_nomass_ele = ctx.declare_event_output<float> ("DeltaY_P_N_nomass_ele"); //-beren DeltaY
+//  h_DeltaY_N_P_nomass_ele = ctx.declare_event_output<float> ("DeltaY_N_P_nomass_ele"); //-beren DeltaY
+//  h_DeltaY_N_N_nomass_ele = ctx.declare_event_output<float> ("DeltaY_N_N_nomass_ele"); //-beren DeltaY
+//
+//  h_DeltaY_P_P_0_500_ele = ctx.declare_event_output<float> ("DeltaY_P_P_0_500_ele"); //-beren
+//  h_DeltaY_P_N_0_500_ele = ctx.declare_event_output<float> ("DeltaY_P_N_0_500_ele"); //-beren
+//  h_DeltaY_N_P_0_500_ele = ctx.declare_event_output<float> ("DeltaY_N_P_0_500_ele"); //-beren
+//  h_DeltaY_N_N_0_500_ele = ctx.declare_event_output<float> ("DeltaY_N_N_0_500_ele"); //-beren
+//
+//  h_DeltaY_P_P_500_750_ele = ctx.declare_event_output<float> ("DeltaY_P_P_500_750_ele"); //-beren
+//  h_DeltaY_P_N_500_750_ele = ctx.declare_event_output<float> ("DeltaY_P_N_500_750_ele"); //-beren
+//  h_DeltaY_N_P_500_750_ele = ctx.declare_event_output<float> ("DeltaY_N_P_500_750_ele"); //-beren
+//  h_DeltaY_N_N_500_750_ele = ctx.declare_event_output<float> ("DeltaY_N_N_500_750_ele"); //-beren 
+//
+//  h_DeltaY_P_P_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_P_P_750_1000_ele"); //-beren
+//  h_DeltaY_P_N_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_P_N_750_1000_ele"); //-beren
+//  h_DeltaY_N_P_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_N_P_750_1000_ele"); //-beren
+//  h_DeltaY_N_N_750_1000_ele = ctx.declare_event_output<float> ("DeltaY_N_N_750_1000_ele"); //-beren
+//
+//  h_DeltaY_P_P_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_P_P_1000_1500_ele"); //-beren
+//  h_DeltaY_P_N_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_P_N_1000_1500_ele"); //-beren
+//  h_DeltaY_N_P_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_N_P_1000_1500_ele"); //-beren
+//  h_DeltaY_N_N_1000_1500_ele = ctx.declare_event_output<float> ("DeltaY_N_N_1000_1500_ele"); //-beren 
+//
+//  h_DeltaY_P_P_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_P_1500Inf_ele"); //-beren
+//  h_DeltaY_P_N_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_N_1500Inf_ele"); //-beren
+//  h_DeltaY_N_P_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_P_1500Inf_ele"); //-beren
+//  h_DeltaY_N_N_1500Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_N_1500Inf_ele"); //-beren
+//
+//  h_DeltaY_P_P_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_P_750Inf_ele"); //-beren
+//  h_DeltaY_P_N_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_P_N_750Inf_ele"); //-beren
+//  h_DeltaY_N_P_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_P_750Inf_ele"); //-beren
+//  h_DeltaY_N_N_750Inf_ele = ctx.declare_event_output<float> ("DeltaY_N_N_750Inf_ele"); //-beren
+//
+//
+//
+//
+//
+//
+//
+//  h_DeltaY_gen_ele = ctx.declare_event_output<float> ("DeltaY_gen_ele"); //-beren DeltaY 
+//  h_DeltaY_gen_muon = ctx.declare_event_output<float> ("DeltaY_gen_muon"); //-beren DeltaY 
+//  h_topQuarkCount = ctx.declare_event_output<float> ("topQuarkCount"); 
+//
+//  h_DeltaY_N_gen_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_muon"); //-beren DeltaY
+//  h_DeltaY_N_gen_pt_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_pt_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_pt_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_pt_muon"); //-beren DeltaY
+//  h_DeltaY_N_gen_eta_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_eta_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_eta_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_eta_muon"); //-beren DeltaY
+//  h_DeltaY_N_gen_2d_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_2d_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_2d_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_2d_muon"); //-beren DeltaY
+//  h_DeltaY_N_gen_met_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_met_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_met_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_met_muon"); //-beren DeltaY
+//
+//  h_DeltaY_P_gen_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_muon"); //-beren DeltaY
+//  h_DeltaY_P_gen_pt_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_pt_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_pt_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_pt_muon"); //-beren DeltaY
+//  h_DeltaY_P_gen_eta_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_eta_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_eta_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_eta_muon"); //-beren DeltaY
+//  
+//  h_DeltaY_P_gen_2d_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_2d_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_2d_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_2d_muon"); //-beren DeltaY
+//  h_DeltaY_P_gen_met_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_met_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_met_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_met_muon"); //-beren DeltaY
+//
+//  h_DeltaY_N_gen_jet_pt_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_pt_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_jet_pt_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_pt_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_jet_pt_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_pt_muon"); //-beren DeltaY
+//  h_DeltaY_P_gen_jet_pt_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_pt_muon"); //-beren DeltaY
+//
+//  h_DeltaY_N_gen_jet_eta_ele = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_eta_ele"); //-beren DeltaY
+//  h_DeltaY_P_gen_jet_eta_ele = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_eta_ele"); //-beren DeltaY
+//  h_DeltaY_N_gen_jet_eta_muon = ctx.declare_event_output<float> ("DeltaY_N_gen_jet_eta_muon"); //-beren DeltaY
+//  h_DeltaY_P_gen_jet_eta_muon = ctx.declare_event_output<float> ("DeltaY_P_gen_jet_eta_muon"); //-beren DeltaY
+//  h_DeltaR_leptonic_genparticle = ctx.declare_event_output<float> ("DeltaR_leptonic_genparticle"); //-beren DeltaY
+//  h_DeltaR_hadronic_genparticle = ctx.declare_event_output<float> ("DeltaR_hadronic_genparticle"); //-beren DeltaY
+//
+//  h_not_reconstructed_muon = ctx.declare_event_output<float> ("not_reconstructed"); //-beren DeltaY
+//  h_not_reconstructed_0_500_muon = ctx.declare_event_output<float> ("not_reconstructed_0_500"); //-beren DeltaY
+//  h_not_reconstructed_500_750_muon = ctx.declare_event_output<float> ("not_reconstructed_500_750"); //-beren DeltaY
+//  h_not_reconstructed_750_1000_muon = ctx.declare_event_output<float> ("not_reconstructed_750_1000"); //-beren DeltaY
+//  h_not_reconstructed_1000_1500_muon = ctx.declare_event_output<float> ("not_reconstructed_1000_1500"); //-beren DeltaY
+//  h_not_reconstructed_1500Inf_muon = ctx.declare_event_output<float> ("not_reconstructed_1500Inf"); //-beren DeltaY
+//
+//  h_not_reconstructed_ele = ctx.declare_event_output<float> ("not_reconstructed"); //-beren DeltaY
+//  h_not_reconstructed_0_500_ele = ctx.declare_event_output<float> ("not_reconstructed_0_500"); //-beren DeltaY
+//  h_not_reconstructed_500_750_ele = ctx.declare_event_output<float> ("not_reconstructed_500_750"); //-beren DeltaY
+//  h_not_reconstructed_750_1000_ele = ctx.declare_event_output<float> ("not_reconstructed_750_1000"); //-beren DeltaY
+//  h_not_reconstructed_1000_1500_ele = ctx.declare_event_output<float> ("not_reconstructed_1000_1500"); //-beren DeltaY
+//  h_not_reconstructed_1500Inf_ele = ctx.declare_event_output<float> ("not_reconstructed_1500Inf"); //-beren DeltaY
 
 
   h_chi2 = ctx.declare_event_output<float> ("rec_chi2");
@@ -806,9 +806,9 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   event.set(h_NPV,-100);
   event.set(h_weight,-100);
 
-  event.set(h_DeltaY_reco,-100); //-beren
+  //event.set(h_DeltaY_reco,-100); //-beren
 
-  event.set(h_DeltaY_gen,-100); //-beren
+  //event.set(h_DeltaY_gen,-100); //-beren
  
 
 

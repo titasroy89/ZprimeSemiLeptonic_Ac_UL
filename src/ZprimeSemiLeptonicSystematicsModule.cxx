@@ -8,12 +8,13 @@ using namespace uhh2;
 
 void ZprimeSemiLeptonicSystematicsModule::book_histograms(Context& ctx, vector<string> v_tags){
   for(const auto & tag : v_tags){
-    // cout << "booking histograms with tag: " << tag << endl;
+     cout << "booking histograms with tag: " << tag << endl;
     book_HFolder(tag, new ZprimeSemiLeptonicHists(ctx, tag));
   }
 }
 
 void ZprimeSemiLeptonicSystematicsModule::fill_histograms(Event& event, string tag){
+  cout << "filling histograms with tag: " << tag << endl;
   HFolder(tag)->fill(event);
 }
 
@@ -128,6 +129,7 @@ bool ZprimeSemiLeptonicSystematicsModule::process(Event& event){
         float weight_systvar = event.get(v_systhandles_var[index]);
         event.weight = weight_nominal * weight_systvar / weight_systnominal;
         TString tag = v_systs[i] + "_" + v_variations[j];
+        cout << " filling syst variations:"<< v_systs[i]<<endl;
         fill_histograms(event, (string) tag);
       }
     }
