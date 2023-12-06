@@ -45,7 +45,7 @@
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeCandidate.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ElecTriggerSF.h>
 #include <UHH2/ZprimeSemiLeptonic/include/TopTagScaleFactor.h>
-#include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicSystematicsModule.h>
+//#include <UHH2/ZprimeSemiLeptonic/include/TopMistagScaleFactor.h>
 
 #include <UHH2/common/include/TTbarGen.h>
 #include <UHH2/common/include/TTbarReconstruction.h>
@@ -327,7 +327,7 @@ protected:
   unique_ptr<Selection> AbsThetaStar_selection_bin1, AbsThetaStar_selection_bin2, AbsThetaStar_selection_bin3, AbsThetaStar_selection_bin4, AbsThetaStar_selection_bin5;
 
   // systematics handles
-  unique_ptr<ZprimeSemiLeptonicSystematicsModule> SystematicsModule;
+ // unique_ptr<ZprimeSemiLeptonicSystematicsModule> SystematicsModule;
 
   // NN variables handles
   unique_ptr<Variables_NN> Variables_module;
@@ -348,16 +348,17 @@ protected:
   std::unique_ptr<Hists> h_MulticlassNN_output;
 
   // Hists with systematics variations
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output0;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output1;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output2;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output0_TopTag;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output1_TopTag;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output2_TopTag;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output0_NoTopTag;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output1_NoTopTag;
-  std::unique_ptr<Hists> h_Zprime_SystVariations_DNN_output2_NoTopTag;
-  
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0_TopTag;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1_TopTag;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2_TopTag;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0_NoTopTag;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1_NoTopTag;
+  std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2_NoTopTag;
+ 
+  std::unique_ptr<Hists> h_MistagHists; 
 
   
   // Configuration
@@ -599,7 +600,7 @@ protected:
 
   std::unique_ptr<NeuralNetworkModule> NNModule;
 
-  // bool isEleTriggerMeasurement;
+   //bool isEleTriggerMeasurement;
 
 };
 
@@ -779,7 +780,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
 
-  // if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
+ //  if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
 
   // Top Taggers
   TopTaggerHOTVR.reset(new HOTVRTopTagger(ctx));
@@ -805,15 +806,15 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   sel_2btag.reset(new NJetSelection(2,-1, id_btag));
 
   // Hist with Syst Variations
-  h_Zprime_SystVariations_DNN_output0.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output0"));
-  h_Zprime_SystVariations_DNN_output1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output1"));
-  h_Zprime_SystVariations_DNN_output2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output2"));
-  h_Zprime_SystVariations_DNN_output0_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output0_TopTag"));
-  h_Zprime_SystVariations_DNN_output1_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output1_TopTag"));
-  h_Zprime_SystVariations_DNN_output2_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output2_TopTag"));
-  h_Zprime_SystVariations_DNN_output0_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output0_NoTopTag"));
-  h_Zprime_SystVariations_DNN_output1_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output1_NoTopTag"));
-  h_Zprime_SystVariations_DNN_output2_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "Zprime_SystVariations_DNN_output2_NoTopTag"));
+  DeltaY_SystVariations_DNN_output0.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0"));
+  DeltaY_SystVariations_DNN_output1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1"));
+  DeltaY_SystVariations_DNN_output2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2"));
+  DeltaY_SystVariations_DNN_output0_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0_TopTag"));
+  DeltaY_SystVariations_DNN_output1_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1_TopTag"));
+  DeltaY_SystVariations_DNN_output2_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2_TopTag"));
+  DeltaY_SystVariations_DNN_output0_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0_NoTopTag"));
+  DeltaY_SystVariations_DNN_output1_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1_NoTopTag"));
+  DeltaY_SystVariations_DNN_output2_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2_NoTopTag"));
 
   h_DeltaY_reco = ctx.declare_event_output<float> ("DeltaY_reco"); //-beren DeltaY
   h_DeltaY_reco_mass = ctx.declare_event_output<float> ("DeltaY_reco_mass"); //-beren DeltaY
@@ -962,7 +963,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_not_reconstructed_750_1000_ele = ctx.declare_event_output<float> ("not_reconstructed_750_1000"); //-beren DeltaY
   h_not_reconstructed_1000_1500_ele = ctx.declare_event_output<float> ("not_reconstructed_1000_1500"); //-beren DeltaY
   h_not_reconstructed_1500Inf_ele = ctx.declare_event_output<float> ("not_reconstructed_1500Inf"); //-beren DeltaY
-
+  
+  h_MistagHists.reset(new ZprimeSemiLeptonicMistagHists(ctx, "Mistag"));
   
   // Book histograms
   vector<string> histogram_tags = {"BeforeCuts", "AfterBaseline", "AfterDNN", "AfterChi2", "Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_TopTag_SF", "Weights_PS", "NLOCorrections", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "TriggerEle_SF", "NNInputsBeforeReweight", "TopTagVeto", "DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag", "DNN_output0_abs_thetastar_bin1", "DNN_output0_abs_thetastar_bin2", "DNN_output0_abs_thetastar_bin3", "DNN_output0_abs_thetastar_bin4", "DNN_output0_abs_thetastar_bin5", "DNN_output0_TopTag_abs_thetastar_bin1", "DNN_output0_TopTag_abs_thetastar_bin2", "DNN_output0_TopTag_abs_thetastar_bin3", "DNN_output0_TopTag_abs_thetastar_bin4", "DNN_output0_TopTag_abs_thetastar_bin5", "DNN_output0_NoTopTag_abs_thetastar_bin1", "DNN_output0_NoTopTag_abs_thetastar_bin2", "DNN_output0_NoTopTag_abs_thetastar_bin3", "DNN_output0_NoTopTag_abs_thetastar_bin4", "DNN_output0_NoTopTag_abs_thetastar_bin5", "DNN_output0_thetastar_bin1", "DNN_output0_thetastar_bin2", "DNN_output0_thetastar_bin3", "DNN_output0_thetastar_bin4", "DNN_output0_thetastar_bin5", "DNN_output0_thetastar_bin6", "DNN_output0_TopTag_thetastar_bin1", "DNN_output0_TopTag_thetastar_bin2", "DNN_output0_TopTag_thetastar_bin3", "DNN_output0_TopTag_thetastar_bin4", "DNN_output0_TopTag_thetastar_bin5", "DNN_output0_TopTag_thetastar_bin6", "DNN_output0_NoTopTag_thetastar_bin1", "DNN_output0_NoTopTag_thetastar_bin2", "DNN_output0_NoTopTag_thetastar_bin3", "DNN_output0_NoTopTag_thetastar_bin4", "DNN_output0_NoTopTag_thetastar_bin5", "DNN_output0_NoTopTag_thetastar_bin6",
@@ -1543,16 +1545,17 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     }
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       fill_histograms(event, "DNN_output0");
-      h_Zprime_SystVariations_DNN_output0->fill(event);
+      cout << "fill systematics 0"<<endl;
+      DeltaY_SystVariations_DNN_output0->fill(event);
       // h_Zprime_PDFVariations_DNN_output0->fill(event);
       if( ZprimeTopTag_selection->passes(event) ){
         fill_histograms(event, "DNN_output0_TopTag");
-        h_Zprime_SystVariations_DNN_output0_TopTag->fill(event);
+        DeltaY_SystVariations_DNN_output0_TopTag->fill(event);
         // h_Zprime_PDFVariations_DNN_output0_TopTag->fill(event);
       }
       else{
         fill_histograms(event, "DNN_output0_NoTopTag");
-        h_Zprime_SystVariations_DNN_output0_NoTopTag->fill(event);
+        DeltaY_SystVariations_DNN_output0_NoTopTag->fill(event);
         // h_Zprime_PDFVariations_DNN_output0_NoTopTag->fill(event);
       }
     }
@@ -1560,31 +1563,32 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   if( out1 == max_score ){
     fill_histograms(event, "DNN_output1");
-    h_Zprime_SystVariations_DNN_output1->fill(event);
+    cout << "fill systematics 1"<<endl;
+    DeltaY_SystVariations_DNN_output1->fill(event);
     // h_Zprime_PDFVariations_DNN_output1->fill(event);
     if( ZprimeTopTag_selection->passes(event) ){
       fill_histograms(event, "DNN_output1_TopTag");
-      h_Zprime_SystVariations_DNN_output1_TopTag->fill(event);
+      DeltaY_SystVariations_DNN_output1_TopTag->fill(event);
       // h_Zprime_PDFVariations_DNN_output1_TopTag->fill(event);
     }else{
       fill_histograms(event, "DNN_output1_NoTopTag");
-      h_Zprime_SystVariations_DNN_output1_NoTopTag->fill(event);
+      DeltaY_SystVariations_DNN_output1_NoTopTag->fill(event);
       // h_Zprime_PDFVariations_DNN_output1_NoTopTag->fill(event);
     }
   }
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
-    h_Zprime_SystVariations_DNN_output2->fill(event);
+    DeltaY_SystVariations_DNN_output2->fill(event);
     // h_Zprime_PDFVariations_DNN_output2->fill(event);
     // h_MistagHists->fill(event);
     if( ZprimeTopTag_selection->passes(event) ){
       fill_histograms(event, "DNN_output2_TopTag");
-      h_Zprime_SystVariations_DNN_output2_TopTag->fill(event);
+      DeltaY_SystVariations_DNN_output2_TopTag->fill(event);
       // h_Zprime_PDFVariations_DNN_output2_TopTag->fill(event);
     }else{
       fill_histograms(event, "DNN_output2_NoTopTag");
-      h_Zprime_SystVariations_DNN_output2_NoTopTag->fill(event);
+      DeltaY_SystVariations_DNN_output2_NoTopTag->fill(event);
       // h_Zprime_PDFVariations_DNN_output2_NoTopTag->fill(event);
     }
   }
