@@ -1511,7 +1511,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // NN module
   NNModule->process(event);
   std::vector<tensorflow::Tensor> NNoutputs = NNModule->GetOutputs();
-
+  ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  //float Mttbar_reco =inv_mass(BestZprimeCandidate->BestZprimeCandidate->top_leptonic_v4()+BestZprimeCandidate->BestZprimeCandidate->top_hadronic_v4());
+  //cout << "what is Mttbar:" << Mttbar_reco<<endl;
   event.set(h_NNoutput0, (double)(NNoutputs[0].tensor<float, 2>()(0,0)));
   event.set(h_NNoutput1, (double)(NNoutputs[0].tensor<float, 2>()(0,1)));
   event.set(h_NNoutput2, (double)(NNoutputs[0].tensor<float, 2>()(0,2)));
@@ -1547,6 +1549,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       fill_histograms(event, "DNN_output0");
       cout << "fill systematics 0"<<endl;
       DeltaY_SystVariations_DNN_output0->fill(event);
+      
       // h_Zprime_PDFVariations_DNN_output0->fill(event);
       if( ZprimeTopTag_selection->passes(event) ){
         fill_histograms(event, "DNN_output0_TopTag");
