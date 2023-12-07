@@ -239,14 +239,10 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     //float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
-    cout << "deltay nominal is : "<< deltay <<endl;
     DeltaY->Fill(deltay, weight);
 
     // up/down variations
     for(unsigned int i=0; i<names.size(); i++){
-      cout << "names.size is : "<< names.size() <<endl;
-      cout << "sys.up"<< syst_up.at(i) <<endl;
-      cout << "sys.nominal"<< syst_nominal.at(i) <<endl;
       hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
       hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
     }
