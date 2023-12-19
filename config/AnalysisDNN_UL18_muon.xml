@@ -61,7 +61,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_UL18_muon_sys"/>
+<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_UL18_muon_sys_all"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -69,11 +69,11 @@
 	<Package Name="SUHH2ZprimeSemiLeptonic.par"/>
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
-<!--
+
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunA&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunA; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunB&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunB; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunC&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunC; <InputTree Name="AnalysisTree"/> </InputData>
-		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunD; <InputTree Name="AnalysisTree"/> </InputData> -->
+		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunD; <InputTree Name="AnalysisTree"/> </InputData>
 
 		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
