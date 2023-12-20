@@ -2,15 +2,15 @@ imax 1 number of bins
 jmax 6 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes data_obs     muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS
-shapes *            *       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes TTbar_1      muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes TTbar_2      muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes WJets        muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes QCD          muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes DY           muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes Diboson      muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
-#shapes ST           muon_2018_750_900       second_step/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+shapes data_obs     muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS
+shapes *            *       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes TTbar_1      muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes TTbar_2      muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes WJets        muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes QCD          muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes DY           muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes Diboson      muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
+#shapes ST           muon_2018_750_900       combine_input/dY_UL18_muon_750_900.root $PROCESS $PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          muon_UL18_750_900     
 observation  -1               
@@ -27,10 +27,33 @@ lumi_uncorr_17      lnN     -         -         -         -         -         - 
 lumi_uncorr_16      lnN     -         -         -         -         -         -         - 
 lumi                lnN     1.016     1.016     1.016     1.016     1.016     1.016     1.016
 pu                  shape   1         1         1         1         1         1         1
-#muonReco           shape   1         1         1         1         1         1         1
+muonReco            shape   1         1         1         1         1         1         1
 prefiringWeight     shape   1         1         1         1         1         1         1
 muonID              shape   1         1         1         1         1         1         1
 muonTrigger         shape   1         1         1         1         1         1         1
+electronReco        shape   1         1         1         1         1         1         1
+electronID          shape   1         1         1         1         1         1         1
+electronTrigger     shape   1         1         1         1         1         1         1
+murmufUp            shape   1         1         1         1         1         1         1
+murmufNone          shape   1         1         1         1         1         1         1
+murmufDown          shape   1         1         1         1         1         1         1
+isr                 shape   1         1         1         1         1         1         1
+fsr                 shape   1         1         1         1         1         1         1
+btagCferr1          shape   1         1         1         1         1         1         1
+btagCferr2          shape   1         1         1         1         1         1         1
+btagHf              shape   1         1         1         1         1         1         1
+btagHfstats1        shape   1         1         1         1         1         1         1
+btagHfstats2        shape   1         1         1         1         1         1         1
+btagLf              shape   1         1         1         1         1         1         1
+btagLfstats1        shape   1         1         1         1         1         1         1
+btagLfstats2        shape   1         1         1         1         1         1         1
+ttagCorr            shape   1         1         1         1         1         1         1
+ttagUncorr          shape   1         1         1         1         1         1         1
+mistag              shape   1         1         1         1         1         1         1
+MurMuf              shape   1         1         1         1         1         1         1
+jer                 shape   1         1         1         1         1         1         1
+jec                 shape   1         1         1         1         1         1         1
+pdf                 shape   1         1         1         1         1         1         1
 TTbar_1_norm        lnN     1.05      -         -         -         -         -         -       
 TTbar_2_norm        lnN     -         1.05      -         -         -         -         -
 Wjets_norm          lnN     -         -         1.3       -         -         -         -
