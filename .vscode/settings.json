@@ -83,6 +83,7 @@
         "Matrix_0_500.C": "cpp",
         "tdrstyle.C": "cpp",
         "tdrstyle_Titas.C": "cpp",
-        "plotLikelihoodScan.C": "cpp"
+        "plotLikelihoodScan.C": "cpp",
+        "envelope.C": "cpp"
     }
 }
