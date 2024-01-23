@@ -454,7 +454,10 @@ void ZprimeSemiLeptonicHists::init(){
   ditop_deltaEta    = book<TH1F>("ditop_deltaEta", "#Delta#eta(t,#bar{t})", 120, -6.0, 6.0);
   ditop_absDeltaEta = book<TH1F>("ditop_absDeltaEta", "|#Delta#eta(t,#bar{t})|", 60, 0, 6.0);
   ditop_deltaR      = book<TH1F>("ditop_deltaR", "#DeltaR(t,#bar{t})", 100, 0, 10.0);
-  DeltaY            = book<TH1F>("DeltaY", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  
+  // DeltaY
+  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
 
 
   vector<float> bins_Zprime4 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200,3400,3600,3800,4000,4400,4800,5200,5600,6000,6100};
@@ -662,6 +665,13 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
+
+  // for(unsigned int i=0; i<jets->size(); i++){
+  //   cout << "Jet pt: " << jets->at(i).pt() << endl
+  // }
+  // cout << "Jet1 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet2 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet3 pt: " << jets->at(0).pt() << endl;
 
   for(unsigned int i=0; i<jets->size(); i++){
     pt_jet->Fill(jets->at(i).pt(),weight);
@@ -1316,8 +1326,25 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
-    float deltay = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
-    DeltaY->Fill(deltay, weight);
+
+
+    vector<GenParticle>* genparticles = event.genparticles;
+    GenParticle top, antitop;
+    for(const GenParticle & gp : *event.genparticles){
+
+      if(gp.pdgId() == 6){
+        top = gp;
+      }
+      else if(gp.pdgId() == -6){
+        antitop = gp;
+      }
+    }
+
+    float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+
+    float dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+    DeltaY_reco->Fill(dyreco, weight);
+    DeltaY_gen->Fill(dygen, weight);
     
     LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
     LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
