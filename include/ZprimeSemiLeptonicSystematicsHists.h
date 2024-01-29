@@ -79,6 +79,9 @@ protected:
   uhh2::Event::Handle<float> h_ttag_corr_down;
   uhh2::Event::Handle<float> h_ttag_uncorr_up;
   uhh2::Event::Handle<float> h_ttag_uncorr_down;
+  uhh2::Event::Handle<float> h_tmistag;
+  uhh2::Event::Handle<float> h_tmistag_up;
+  uhh2::Event::Handle<float> h_tmistag_down;
 
   TH1F *DeltaY;
   TH1F *DeltaY_mu_reco_up;
@@ -129,6 +132,8 @@ protected:
   TH1F *DeltaY_ttag_corr_down;
   TH1F *DeltaY_ttag_uncorr_up;
   TH1F *DeltaY_ttag_uncorr_down;
+  TH1F *DeltaY_tmistag_up;
+  TH1F *DeltaY_tmistag_down;
 
   uhh2::Event::Handle<bool> h_is_zprime_reconstructed_chi2;
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
