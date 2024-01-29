@@ -47,7 +47,8 @@ systematic_name_mapping = {
     "btag_lfstats1": "btagLfstats1",
     "btag_lfstats2": "btagLfstats2", 
     "ttag_corr": "ttagCorr", 
-    "ttag_uncorr": "ttagUncorr"
+    "ttag_uncorr": "ttagUncorr",
+    "tmistag': "tmistag"  
 }
 
 # reads nominal histograms and computes projections for the "TTbar" sample. 

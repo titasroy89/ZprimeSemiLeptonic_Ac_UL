@@ -7,16 +7,12 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-c", "--channel", dest="channel", default="muon", type='str', help="Specify which channel Mu or Ele? default is Mu")
 
-year = ["UL18"] #["UL18", "UL17", "preUL16", "postUL16"]
-mass_range = ["750_1000"] #["0_500", "500_750", "750_1000", "1000_1500"]
-lepton_flavor = ["muon"] #["electron", "muon"]
-
 (options, args) = parser.parse_args()
 finalState = options.channel
 inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/"
 stackList = {"TTbar", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
 Mttbar = "750_1000"
-combine_file = TFile('dY_{}_{}_{}.root'.format(year, lepton_flavor, mass_range), 'RECREATE')
+combine_file = TFile('dY_%s_%s.root' % (finalState, Mttbar), 'RECREATE')
 # deltaYDir = combine_file.mkdir("DeltaY")
 
 
@@ -36,6 +32,8 @@ systematic_name_mapping = {
     "ele_id" : "electronID", 
     "ele_trigger": "electronTrigger",
     "ele_reco": "electronReco",
+    # "murmuf_up": "murmufUp", 
+    # "murmuf_down": "murmufDown", 
     "isr": "isr", 
     "fsr": "fsr", 
     "btag_cferr1": "btagCferr1", 
@@ -54,26 +52,26 @@ systematic_name_mapping = {
 # for other samples, it reads nominal histograms and writes them to the output file. 
 # It also processes and writes systematic variations, using systematic_name_mapping
 for sample in stackList:
-    inFile = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon/nominal/" + sample + ".root", "READ")
+    inFile = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/" + sample + ".root", "READ")
     if not inFile:
         print("Input file for {} not found.".format(sample))
         continue
     
     combine_file.cd()
     
-    if sample == "DATA":
-        print("Processing sample for other sys: ", sample)
-        data_obs = inFile.Get("DeltaY_reco_750_1000_muon_data_General/DeltaY_reco").Clone("data_obs")
-        data_obs.Write("data_obs")
+    # if sample == "DATA":
+    #     print("Processing sample for other sys: ", sample)
+    #     data_obs = inFile.Get("DeltaY_reco_750_1000_muon_data_General/DeltaY").Clone("data_obs")
+    #     data_obs.Write("data_obs")
         
-    elif sample == "TTbar":
+    if sample == "TTbar":
         print("Processing sample for other sys: ", sample)
         h_nominal = inFile.Get("DeltaY_reco_SystVariations_750_1000_muon/DeltaY").Clone(sample)
         
-        h_PP = inFile.Get("DY_P_P_750_1000_muon_General/DeltaY_reco").Clone()
-        h_PN = inFile.Get("DY_P_N_750_1000_muon_General/DeltaY_reco").Clone()
-        h_NP = inFile.Get("DY_N_P_750_1000_muon_General/DeltaY_reco").Clone()
-        h_NN = inFile.Get("DY_N_N_750_1000_muon_General/DeltaY_reco").Clone()
+        h_PP = inFile.Get("DeltaY_reco_SystVariations_P_P_750_1000_muon/DeltaY").Clone()
+        h_PN = inFile.Get("DeltaY_reco_SystVariations_P_N_750_1000_muon/DeltaY").Clone()
+        h_NP = inFile.Get("DeltaY_reco_SystVariations_N_P_750_1000_muon/DeltaY").Clone()
+        h_NN = inFile.Get("DeltaY_reco_SystVariations_N_N_750_1000_muon/DeltaY").Clone()
 
         Matrix = TH2D("Matrix","", 2, -2.5, 2.5, 2, -2.5, 2.5)
 
@@ -96,7 +94,6 @@ for sample in stackList:
         
         
         for sys, new_sys_name in systematic_name_mapping.items():
-            print sys
             for variation in ["up", "down"]:
                 h_PP = inFile.Get("DeltaY_reco_SystVariations_P_P_750_1000_muon/DeltaY_{}_{}".format(sys, variation))
                 h_PN = inFile.Get("DeltaY_reco_SystVariations_P_N_750_1000_muon/DeltaY_{}_{}".format(sys, variation))
@@ -125,22 +122,22 @@ for sample in stackList:
                 ProjX_1.Write(output_hist_1)
                 ProjX_2.Write(output_hist_2)
 
-    else:
-        print("Processing sample for other sys: ", sample)
+    # else:
+    #     print("Processing sample for other sys: ", sample)
         
-        h_nominal = inFile.Get("DeltaY_reco_SystVariations_750_1000_muon/DeltaY").Clone(sample)
-        h_nominal.Write(sample)
+    #     h_nominal = inFile.Get("DeltaY_reco_SystVariations_750_1000_muon/DeltaY").Clone(sample)
+    #     h_nominal.Write(sample)
         
         
-        for sys, new_sys_name in systematic_name_mapping.items():
-            print sys
+    #     for sys, new_sys_name in systematic_name_mapping.items():
+    #         print sys
             
-            for variation in ["up", "down"]:
-                sys_hist_name = "DeltaY_{}_{}".format(sys, variation)
-                sys_hist = inFile.Get("DeltaY_reco_SystVariations_750_1000_muon/" + sys_hist_name)
-                if sys_hist:
-                    output_hist_name = "{}_{}{}".format(sample, new_sys_name, variation.capitalize())
-                    sys_hist.Clone(output_hist_name).Write()
+    #         for variation in ["up", "down"]:
+    #             sys_hist_name = "DeltaY_{}_{}".format(sys, variation)
+    #             sys_hist = inFile.Get("DeltaY_reco_SystVariations_750_1000_muon/" + sys_hist_name)
+    #             if sys_hist:
+    #                 output_hist_name = "{}_{}{}".format(sample, new_sys_name, variation.capitalize())
+    #                 sys_hist.Clone(output_hist_name).Write()
             
          
     inFile.Close()
@@ -164,7 +161,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
     
 
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon/nominal/" + sample + ".root", "READ")
+        inFile = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/" + sample + ".root", "READ")
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -261,109 +258,16 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
 
 
 
-############ 
-# ----------------- PDFs (100) ----------------
-############ 
-
-def processPDF(inputDir, v_samples, combine_file):
-    for sample in v_samples:
-        inFile = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon/nominal/" + sample + ".root", "READ")
-        if not inFile:
-            print("Input file for {} not found.".format(sample))
-            continue
-        combine_file.cd()
-
-        if sample == "TTbar":
-            print("Processing TTbar for PDF: ", sample)
-            for i in range(1, 101):  # PDF variations from 1 to 100
-                Matrix = TH2D("Matrix_PDF_{}".format(i), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
-                for quadrant in ["P_P", "P_N", "N_P", "N_N"]:
-                    hist_name = "DeltaY_reco_PDFVariations_{}_750_1000_muon/DeltaY_PDF_{}".format(quadrant, i)
-                    h_var = inFile.Get(hist_name)
-                    if h_var:
-                        Matrix.SetBinContent(1 if "N" in quadrant else 2, 1 if quadrant.endswith("N") else 2, h_var.Integral())
-                    else:
-                        print("Missing histogram for PDF variation: {}".format(hist_name))
-                        continue
-
-                ProjX_1 = Matrix.ProjectionX("px1_PDF_{}".format(i), 1, 1)
-                ProjX_2 = Matrix.ProjectionX("px2_PDF_{}".format(i), 2, 2)
-                ProjX_1.Write("TTbar_1_PDF{}".format(i))
-                ProjX_2.Write("TTbar_2_PDF{}".format(i))
-        else:
-            print("Processing {} for PDF ".format(sample), sample)
-            for i in range(1, 101):
-                pdf_hist_name = "DeltaY_reco_PDFVariations_750_1000_muon/DeltaY_PDF_{}".format(i)
-                pdf_hist = inFile.Get(pdf_hist_name)
-                if pdf_hist:
-                    pdf_hist.Clone("{}_PDF{}".format(sample, i)).Write()
-                else:
-                    print("Missing histogram for PDF variation: {}".format(pdf_hist_name))
-        inFile.Close()
-
-
-############ 
-# ----------------- JER/JEC ----------------
-############ 
-
-
-def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
-    for sys_variation in sys_variations: 
-        for sample in v_samples:
-            sys_file = TFile.Open(inputDir + "muon/workdir_AnalysisDNN_UL18_muon_{}/nominal/{}.root".format(sys_variation, sample), "READ")
-            if not sys_file:
-                print("Input file for {} variation {} not found.".format(sample, sys_variation))
-                continue
-            
-            combine_file.cd()
-
-            if sample == "TTbar":
-                print("Processing TTbar for {} ".format(sys_variation))
-                
-                Matrix = TH2D("Matrix_{}".format(sys_variation), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
-                
-                for quadrant in ["P_P", "P_N", "N_P", "N_N"]:
-                    hist_name = "DY_{}_750_1000_muon_General/DeltaY".format(quadrant)
-                    h_var = sys_file.Get(hist_name)
-                    if h_var:
-                        Matrix.SetBinContent(1 if "N" in quadrant else 2, 1 if quadrant.endswith("N") else 2, h_var.Integral())
-                    else:
-                        print("Missing histogram for {}: {}".format(sys_variation, hist_name))
-
-                ProjX_1 = Matrix.ProjectionX("px1_{}".format(sys_variation), 1, 1)
-                ProjX_2 = Matrix.ProjectionX("px2_{}".format(sys_variation), 2, 2)
-
-                output_name_1 = "TTbar_1_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].upper())
-                output_name_2 = "TTbar_2_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].upper())
-
-                ProjX_1.Write(output_name_1)
-                ProjX_2.Write(output_name_2)
-                
-            else:
-                print("Processing {} for {} ".format(sample, sys_variation))
-                hist_name = "DeltaY_reco_750_1000_muon_General/DeltaY"
-                jer_jec_hist = sys_file.Get(hist_name)
-                if jer_jec_hist:
-                    jer_jec_hist.Clone("{}_{}".format(sample, sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].upper())).Write()
-                else:
-                    print("Missing histogram for {}: {}".format(sample, hist_name))
-            sys_file.Close()
 
 
 
-sys_variations = ["JEC_up", "JEC_down", "JER_up", "JER_down"]
 
 v_samples = ["TTbar", "WJets", "ST", "QCD", "DY", "Diboson"]
 v_variations = ["upup", "upnone", "noneup", "nonedown", "downnone", "downdown"]
 
 getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_projections)
 
-processPDF(inputDir, v_samples, combine_file)
-
-processJERJEC(inputDir, v_samples, combine_file, sys_variations)
-
 combine_file.Close()
-
 
 
 #  For TTbar samples, the nominal histograms are not directly in the input file. The projection histograms I making in the script will be my 2 nominal histograms (TTbar_1 and TTbar_2). I want to save these histograms in the output file as nominal histograms. Additionally, I would like to apply the w
