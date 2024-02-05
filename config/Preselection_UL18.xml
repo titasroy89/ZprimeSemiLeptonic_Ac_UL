@@ -2,8 +2,8 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi "59830.0">
-<!-- <!ENTITY PRESELdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_gen/UL18/muon/"> -->
-<!ENTITY PRESELdir "/nfs/dust/cms/group/zprime-uhh/Presel_Beren">
+<!ENTITY PRESELdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/Preselection/">
+<!-- <!ENTITY PRESELdir "/nfs/dust/cms/group/zprime-uhh/Presel_Beren"> -->
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT "-1">
 <!ENTITY YEARsuffix "_UL18">
@@ -59,7 +59,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="50" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18_new"/>
+<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
