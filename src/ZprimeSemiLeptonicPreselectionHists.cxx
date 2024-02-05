@@ -274,6 +274,10 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   sum_event_weights_fsr_up = book<TH1F>("sum_event_weights_fsr_up", "counting experiment", 1, 0.5, 1.5);
   sum_event_weights_fsr_down = book<TH1F>("sum_event_weights_fsr_down", "counting experiment", 1, 0.5, 1.5);
 
+  // DeltaY
+  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+
   // calculate sum of event weights with PDF replicas
   for(int i=0; i<100; i++){
     std::stringstream ss_name;
@@ -297,44 +301,42 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
 //-beren Delta Y
 
-  GenParticle electron, antielectron, muon, antimuon;
 
-  for (const GenParticle& gp : *event.genparticles) {
+  GenParticle top, antitop;
+  for(const GenParticle & gp : *event.genparticles){
 
-      // cout << "Size of genparticle vector: " << genparticles.size() << endl; 
-      if (gp.pdgId() == 11) {
-          electron = gp;
-      }
-      else if (gp.pdgId() == -11) {
-          antielectron = gp;
-      }
-      else if (gp.pdgId() == 13) {
-          muon = gp;
-      }
-      else if (gp.pdgId() == -13) {
-          antimuon = gp;
-      }
+    if(gp.pdgId() == 6){
+      top = gp;
+    }
+    else if(gp.pdgId() == -6){
+      antitop = gp;
+    }
   }
 
-  double_t DeltaY_gen_ele = TMath::Abs(0.5*TMath::Log((electron.energy() + electron.pt()*TMath::SinH(electron.eta()))/(electron.energy() - electron.pt()*TMath::SinH(electron.eta())))) - TMath::Abs(0.5*TMath::Log((antielectron.energy() + antielectron.pt()*TMath::SinH(antielectron.eta()))/(antielectron.energy() - antielectron.pt()*TMath::SinH(antielectron.eta()))));
-  double_t DeltaY_gen_muon= TMath::Abs(0.5*TMath::Log((muon.energy() + muon.pt()*TMath::SinH(muon.eta()))/(muon.energy() - muon.pt()*TMath::SinH(muon.eta())))) - TMath::Abs(0.5*TMath::Log((antimuon.energy() + antimuon.pt()*TMath::SinH(antimuon.eta()))/(antimuon.energy() - antimuon.pt()*TMath::SinH(antimuon.eta()))));
+  float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+
+  DeltaY_gen->Fill(dygen, weight);
+
   
-  DeltaY_ele->Fill(DeltaY_gen_ele);
-  DeltaY_muon->Fill(DeltaY_gen_muon);
+  // double_t DeltaY_gen_ele = TMath::Abs(0.5*TMath::Log((electron.energy() + electron.pt()*TMath::SinH(electron.eta()))/(electron.energy() - electron.pt()*TMath::SinH(electron.eta())))) - TMath::Abs(0.5*TMath::Log((antielectron.energy() + antielectron.pt()*TMath::SinH(antielectron.eta()))/(antielectron.energy() - antielectron.pt()*TMath::SinH(antielectron.eta()))));
+  // double_t DeltaY_gen_muon= TMath::Abs(0.5*TMath::Log((muon.energy() + muon.pt()*TMath::SinH(muon.eta()))/(muon.energy() - muon.pt()*TMath::SinH(muon.eta())))) - TMath::Abs(0.5*TMath::Log((antimuon.energy() + antimuon.pt()*TMath::SinH(antimuon.eta()))/(antimuon.energy() - antimuon.pt()*TMath::SinH(antimuon.eta()))));
+  
+  // DeltaY_ele->Fill(DeltaY_gen_ele);
+  // DeltaY_muon->Fill(DeltaY_gen_muon);
 
-  if(DeltaY_gen_ele <0){
-    DeltaY_N_ele->Fill(DeltaY_gen_ele,weight);
-  }
-  else if(DeltaY_gen_ele>0){
-    DeltaY_P_ele->Fill(DeltaY_gen_ele,weight);
-  }
+  // if(DeltaY_gen_ele <0){
+  //   DeltaY_N_ele->Fill(DeltaY_gen_ele,weight);
+  // }
+  // else if(DeltaY_gen_ele>0){
+  //   DeltaY_P_ele->Fill(DeltaY_gen_ele,weight);
+  // }
 
-  if(DeltaY_gen_muon <0){
-    DeltaY_N_muon->Fill(DeltaY_gen_muon,weight);
-  }
-  else if(DeltaY_gen_muon>0){
-    DeltaY_P_muon->Fill(DeltaY_gen_muon,weight);
-  }
+  // if(DeltaY_gen_muon <0){
+  //   DeltaY_N_muon->Fill(DeltaY_gen_muon,weight);
+  // }
+  // else if(DeltaY_gen_muon>0){
+  //   DeltaY_P_muon->Fill(DeltaY_gen_muon,weight);
+  // }
 
 
  /// -beren Delta Y

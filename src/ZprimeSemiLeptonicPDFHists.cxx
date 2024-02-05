@@ -46,7 +46,7 @@ Hists(ctx, dirname){
  
     hist_names[i] = s_name;
 
-    book<TH1F>(char_name, char_title,  400, 0, 10000);
+    book<TH1F>(char_name, char_title,  2, -2, 2);
 
   }
 }

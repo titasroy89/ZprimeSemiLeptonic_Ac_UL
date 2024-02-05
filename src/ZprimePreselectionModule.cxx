@@ -273,7 +273,11 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   "muon_gen_N_0_250","muon_N_Pt_0_250","muon_N_Pt_Eta_0_250","muon_N_JetPt_0_250","muon_N_JetPt_Eta_0_250","muon_gen_N_250_500","muon_N_Pt_250_500","muon_N_Pt_Eta_250_500","muon_N_JetPt_250_500","muon_N_JetPt_Eta_250_500", "muon_gen_N_500_750","muon_N_Pt_500_750","muon_N_Pt_Eta_500_750","muon_N_JetPt_500_750","muon_N_JetPt_Eta_500_750","muon_gen_N_750_900","muon_N_Pt_750_900","muon_N_Pt_Eta_750_900","muon_N_JetPt_750_900","muon_N_JetPt_Eta_750_900","muon_gen_N_900Inf","muon_N_Pt_900Inf","muon_N_Pt_Eta_900Inf","muon_N_JetPt_900Inf","muon_N_JetPt_Eta_900Inf", 
   "muon_gen_P_0_250","muon_P_Pt_0_250","muon_P_Pt_Eta_0_250","muon_P_JetPt_0_250","muon_P_JetPt_Eta_0_250","muon_gen_P_250_500","muon_P_Pt_250_500","muon_P_Pt_Eta_250_500","muon_P_JetPt_250_500","muon_P_JetPt_Eta_250_500", "muon_gen_P_500_750","muon_P_Pt_500_750","muon_P_Pt_Eta_500_750","muon_P_JetPt_500_750","muon_P_JetPt_Eta_500_750","muon_gen_P_750_900","muon_P_Pt_750_900","muon_P_Pt_Eta_750_900","muon_P_JetPt_750_900","muon_P_JetPt_Eta_750_900","muon_gen_P_900Inf","muon_P_Pt_900Inf","muon_P_Pt_Eta_900Inf","muon_P_JetPt_900Inf","muon_P_JetPt_Eta_900Inf", 
   
-  "DeltaY_gen", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET"};
+  "DeltaY_gen", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET",
+  
+  "DY_0_500", "DY_500_750", "DY_750_1000", "DY_1000_1500", "DY_1500Inf"
+  };
+  
   book_histograms(ctx, histogram_tags);
 
   lumihists.reset(new LuminosityHists(ctx, "lumi"));
@@ -1299,6 +1303,26 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(!pass_met) return false;
   if(debug) cout << "METCut: ok" << endl;
   // fill_histograms(event, "MET");
+
+  if(m_ttbar>=0 &&  m_ttbar<500){
+    fill_histograms(event, "DY_0_500");
+  }
+
+  if(m_ttbar>=500 &&  m_ttbar<750){
+    fill_histograms(event, "DY_500_750");
+  }
+
+  if(m_ttbar>=750 &&  m_ttbar<1000){
+    fill_histograms(event, "DY_750_1000");
+  }
+
+  if(m_ttbar>=1000 &&  m_ttbar<1500){
+    fill_histograms(event, "DY_1000_1500");
+  }
+
+  if(m_ttbar>=1500){
+    fill_histograms(event, "DY_1500Inf");
+  }
 
   return true;
 }
