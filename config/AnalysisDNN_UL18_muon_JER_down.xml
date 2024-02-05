@@ -14,7 +14,6 @@
 <!ENTITY CHANNEL "muon">
 <!ENTITY OUTPUTdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/&CHANNEL;/">
 
-
 <!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL18_muon_JER_down/MC_TTToSemiLeptonic_UL18.xml">
 <!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL18_muon_JER_down/MC_TTToHadronic_UL18.xml">
 <!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL18_muon_JER_down/MC_TTTo2L2Nu_UL18.xml">
