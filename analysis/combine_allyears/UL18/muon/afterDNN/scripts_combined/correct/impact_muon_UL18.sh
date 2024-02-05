@@ -1,18 +1,13 @@
 #!/usr/bin/env bash
 date
 
-# rm comb*
-# rm higgs*
-# rm Ac.pdf
-# rm r_neg.pdf
-# rm impacts.json
 
 declare -a POIS=(
   "r_neg"
   "Ac"
 )
 
-export WORKSPACE=Ac_UL18_muon_750_900.root
+export WORKSPACE=Ac_UL18_muon_750_1000.root
 export VERBOSITY=0
 
 export SetParameters="rgx{r.+}=1,Ac=0.7"
@@ -24,7 +19,6 @@ export redefineSignalPOIs="Ac,r_neg"
 
 export ASIMOV="-t -1"
 
-# combine -M MultiDimFit -d $WORKSPACE --algo grid --points 100 -P Ac --floatOtherPOIs 1 --setParameterRanges Ac=-30,4 -n AcScan
 
 ###IMPACTS
 echo
@@ -34,8 +28,6 @@ echo
 echo
 combine -M MultiDimFit --algo singles -d $WORKSPACE -n .part3E.snapshot -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges $SetParameterRanges --setParameters $SetParametersExplicit --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125 --saveWorkspace $ASIMOV
 mv higgsCombine.part3E.snapshot.MultiDimFit.mH125.root higgsCombine_initialFit_Test.MultiDimFit.mH125.root
-
-# combine -M MultiDimFit --algo grid --points 100 -d $WORKSPACE -n .AcScan -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges Ac=-5,5 --setParameters $SetParameters --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125
 
 
 
