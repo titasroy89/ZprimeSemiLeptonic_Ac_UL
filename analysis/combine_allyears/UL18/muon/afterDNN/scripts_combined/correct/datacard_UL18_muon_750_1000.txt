@@ -2,8 +2,8 @@ imax 1 number of bins
 jmax 6 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes data_obs     muon_UL18_750_1000       scripts/dY_UL18_muon_750_1000.root $PROCESS
-shapes *            *       scripts/dY_UL18_muon_750_1000.root $PROCESS $PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_750_1000       combine_input/dY_UL18_muon_750_1000.root $PROCESS
+shapes *            *       combine_input/dY_UL18_muon_750_1000.root $PROCESS $PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          muon_UL18_750_1000
 observation  -1
@@ -42,7 +42,7 @@ ttagCorr            shape   1         1         1         1         1         1 
 ttagUncorr          shape   1         1         1         1         1         1         1
 tmistag             shape   1         1         1         1         1         1         1
 murmuf              shape   1         1         1         1         1         1         1
-pdf                 shape   -         -         1         1         1         -         1
+pdf                 shape   1         1         1         1         1         -         1
 jer                 shape   1         1         1         1         1         1         1
 jec                 shape   1         1         1         1         1         1         1
 TTbar_norm          lnN     1.05      1.05      -         -         -         -         - 

@@ -45,8 +45,7 @@ murmuf              shape   1         1         1         1         1         1 
 pdf                 shape   -         -         1         1         1         -         1
 jer                 shape   1         1         1         1         1         1         1
 jec                 shape   1         1         1         1         1         1         1
-TTbar_1_norm        lnN     1.05      -         -         -         -         -         - 
-TTbar_2_norm        lnN     -         1.05      -         -         -         -         -
+TTbar_norm          lnN     1.05      1.05      -         -         -         -         - 
 Wjets_norm          lnN     -         -         1.3       -         -         -         -
 QCD_norm            lnN     -         -         -         1.5       -         -         -
 DY_norm             lnN     -         -         -         -         1.3       -         -

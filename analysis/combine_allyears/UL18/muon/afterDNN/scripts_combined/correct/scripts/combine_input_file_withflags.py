@@ -53,6 +53,7 @@ systematic_name_mapping = {
     "ttag_corr": "ttagCorr", 
     "ttag_uncorr": "ttagUncorr", 
     "tmistag": "tmistag"  
+    
 }
 
 # reads nominal histograms and computes projections for the "TTbar" sample. 
@@ -62,7 +63,7 @@ systematic_name_mapping = {
 print(" ----------------- all systematics except PDF, JER/JEC, murmuf ----------------")
 
 for sample in stackList:
-    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
     if not inFile:
         print("Input file for {} not found.".format(sample))
         continue
@@ -174,7 +175,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
     print(" ----------------- murmuf processing ----------------")
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -282,7 +283,7 @@ def processPDF(inputDir, v_samples, combine_file):
     
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -306,14 +307,6 @@ def processPDF(inputDir, v_samples, combine_file):
             
             # Step 1: make projection histograms for nominal and PDF variations
             
-            # projection from nominal foler
-            
-            # h_PP = TH1F("h_PP", "","", projection_1_nominal.GetXaxis().GetXmin(), projection_1_nominal.GetXaxis().GetXmax())
-            # h_PN = TH1F("h_PN", "", projection_1_nominal.GetNbinsX(), projection_1_nominal.GetXaxis().GetXmin(), projection_1_nominal.GetXaxis().GetXmax())
-            # h_NP = TH1F("h_NP", "", projection_2_nominal.GetNbinsX(), projection_2_nominal.GetXaxis().GetXmin(), projection_2_nominal.GetXaxis().GetXmax())
-            # h_NN = TH1F("h_NN", "", projection_2_nominal.GetNbinsX(), projection_2_nominal.GetXaxis().GetXmin(), projection_2_nominal.GetXaxis().GetXmax())
-
-            
             h_PP = inFile.Get("DY_P_P_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor))
             h_PN = inFile.Get("DY_P_N_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor))
             h_NP = inFile.Get("DY_N_P_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor))
@@ -329,13 +322,10 @@ def processPDF(inputDir, v_samples, combine_file):
             projection_1_nominal = Matrix_nominal.ProjectionX("px1_nominal", 1, 1)
             projection_2_nominal = Matrix_nominal.ProjectionX("px2_nominal", 2, 2)
             
-            
-
-            
-            # projection from PDF folder
+ 
+            # projection from PDF folders
             pdf_projections_1 = []
             pdf_projections_2 = []
-
 
             for i in range(1, 101):
                 Matrix_pdf = TH2D("Matrix_PDF_{}".format(i), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
@@ -353,35 +343,55 @@ def processPDF(inputDir, v_samples, combine_file):
                 pdf_projections_1.append(Matrix_pdf.ProjectionX("px1_pdf_{}".format(i), 1, 1))
                 pdf_projections_2.append(Matrix_pdf.ProjectionX("px2_pdf_{}".format(i), 2, 2))
 
-
-            
             
             # Step 2: normalization & rms calculation
             
-            hist_pdfUp_1 = TH1F("TTbar_1_pdfUp", "",  2, -2, 2)
-            hist_pdfDown_1 = TH1F("TTbar_1_pdfDown", "",  2, -2, 2)
-            hist_pdfUp_2 = TH1F("TTbar_2_pdfUp", "",  2, -2, 2)
-            hist_pdfDown_2 = TH1F("TTbar_2_pdfDown", "", 2, -2, 2)
+            norm_scales_1 = []
+            norm_scales_2 = []
+            
+            for i in range(100):
+                norm_scale_1 = pdf_projections_1[i].GetBinContent(1) / projection_1_nominal.GetBinContent(1)
+                norm_scales_1.append(norm_scale_1)
+                pdf_projections_1[i].Scale(1. / norm_scale_1)
+                
+                norm_scale_2 = pdf_projections_2[i].GetBinContent(1) / projection_2_nominal.GetBinContent(1)
+                norm_scales_2.append(norm_scale_2)
+                pdf_projections_2[i].Scale(1. / norm_scale_2)
+                
+            hist_pdfUp_1 = TH1D("TTbar_1_pdfUp", "", projection_1_nominal.GetNbinsX(), projection_1_nominal.GetXaxis().GetXmin(), projection_1_nominal.GetXaxis().GetXmax())
+            hist_pdfDown_1 = TH1D("TTbar_1_pdfDown", "", projection_1_nominal.GetNbinsX(), projection_1_nominal.GetXaxis().GetXmin(), projection_1_nominal.GetXaxis().GetXmax())
+            hist_pdfUp_2 = TH1D("TTbar_2_pdfUp", "", projection_2_nominal.GetNbinsX(), projection_2_nominal.GetXaxis().GetXmin(), projection_2_nominal.GetXaxis().GetXmax())
+            hist_pdfDown_2 = TH1D("TTbar_2_pdfDown", "", projection_2_nominal.GetNbinsX(), projection_2_nominal.GetXaxis().GetXmin(), projection_2_nominal.GetXaxis().GetXmax())
+
 
             for bin_idx in range(1, projection_1_nominal.GetNbinsX() + 1):
-                sum_bins_1 = sum_bins_2 = 0.
+                sum_bins_1 = 0.
                 for i in range(100):
                     bin_content_1_pdf = pdf_projections_1[i].GetBinContent(bin_idx)
-                    bin_content_2_pdf = pdf_projections_2[i].GetBinContent(bin_idx)
                     sum_bins_1 += (bin_content_1_pdf - projection_1_nominal.GetBinContent(bin_idx)) ** 2
-                    sum_bins_2 += (bin_content_2_pdf - projection_2_nominal.GetBinContent(bin_idx)) ** 2
                 rms_1 = math.sqrt(sum_bins_1 / 100)
-                rms_2 = math.sqrt(sum_bins_2 / 100)
                 
+        
                 value_up_1 = projection_1_nominal.GetBinContent(bin_idx) + rms_1
                 value_down_1 = projection_1_nominal.GetBinContent(bin_idx) - rms_1
-                value_up_2 = projection_2_nominal.GetBinContent(bin_idx) + rms_1
-                value_down_2 = projection_2_nominal.GetBinContent(bin_idx) - rms_1
                 
-                hist_pdfUp_1.SetBinContent(bin_idx, value_up_1 );
-                hist_pdfDown_1.SetBinContent(bin_idx, value_down_1);
-                hist_pdfUp_2.SetBinContent(bin_idx, value_up_2);
-                hist_pdfDown_2.SetBinContent(bin_idx, value_down_2);
+                hist_pdfUp_1.SetBinContent(bin_idx, value_up_1 )
+                hist_pdfDown_1.SetBinContent(bin_idx, value_down_1)
+            
+            for bin_idx in range(1, projection_2_nominal.GetNbinsX() + 1):
+                sum_bins_2 = 0.
+                for i in range(100):
+                    bin_content_2_pdf = pdf_projections_2[i].GetBinContent(bin_idx)
+                    sum_bins_2 += (bin_content_2_pdf - projection_2_nominal.GetBinContent(bin_idx)) ** 2
+                
+                rms_2 = math.sqrt(sum_bins_2 / 100)
+                
+                value_up_2 = projection_2_nominal.GetBinContent(bin_idx) + rms_2
+                value_down_2 = projection_2_nominal.GetBinContent(bin_idx) - rms_2
+                
+                hist_pdfUp_2.SetBinContent(bin_idx, value_up_2)
+                hist_pdfDown_2.SetBinContent(bin_idx, value_down_2)
+
 
                 print("Number of entries in h_PP:", h_PP.GetEntries())
                 print("Number of entries in h_PP_pdf:", h_PP_pdf.GetEntries())
@@ -415,13 +425,17 @@ def processPDF(inputDir, v_samples, combine_file):
             
             print("Processing PDF: ", sample)
             
+            # getting the nominal histogram
             nominal = inFile.Get("DeltaY_reco_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            
             if not nominal:
                 print("Nominal histogram for {} not found.".format(sample))
                 continue
 
             # normalization scales for each PDF variation
             v_pdf_norm = []
+            
+            # getting 100 PDFs histograms
             for i in range(1, 101):
                 pdf_hist = inFile.Get("DeltaY_reco_PDFVariations_{}_{}/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
                 if pdf_hist:
@@ -471,7 +485,7 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
     for sys_variation in sys_variations: 
         print(" --- passed to another JER/JEC variation ---")
         for sample in v_samples:
-            sys_file = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_{}/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sys_variation, sample), "READ")
+            sys_file = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_{}_dY/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sys_variation, sample), "READ")
             if not sys_file:
                 print("Input file for {} variation {} not found.".format(sample, sys_variation))
                 continue
