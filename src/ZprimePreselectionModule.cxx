@@ -96,7 +96,7 @@ void ZprimePreselectionModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
-  debug = true; // true/false
+  debug = false; // true/false
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -204,8 +204,9 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
 
   if(debug) cout << "Passed 1" << event.event << endl;
 
-//   fill_histograms(event, "Input");
+  fill_histograms(event, "Input");
   if(debug) cout << "Passed 2" << event.event << endl;
+
 
   bool commonResult = common->process(event);
   if(debug) cout << "Passed 3" << event.event << endl;

@@ -277,9 +277,9 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       hists_scale.at(i)->Fill(deltay, weight * syst_scale.at(i));
     }
     // btag variations
-    for(unsigned int i=0; i<hists_btag.size(); i++){
-      hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-    }
+    // for(unsigned int i=0; i<hists_btag.size(); i++){
+    //   hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
+    // }
     // ttag variations!
     for(unsigned int i=0; i<hists_ttag.size(); i++){
       hists_ttag.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);

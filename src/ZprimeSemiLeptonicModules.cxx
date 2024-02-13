@@ -640,7 +640,7 @@ bool DeepAK8TopTagger::process(uhh2::Event& event){
     if(!(min_mSD < mSD && mSD < max_mSD)) continue;
 
     // cut on score
-    if( !(puppijet.btag_MassDecorrelatedDeepBoosted_TvsQCD() >= max_score ) ) continue;
+    // if( !(puppijet.btag_MassDecorrelatedDeepBoosted_TvsQCD() >= max_score ) ) continue;
 
     toptags.emplace_back(puppijet);
     toptags_ptr.emplace_back(&puppijet);
@@ -1168,27 +1168,27 @@ bool Variables_NN::process(uhh2::Event& evt){
   }
 
   // save b-tag score of matched CHS jet
-  vector<Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);
-  for(unsigned int i=0; i<AK4CHSjets_matched.size(); i++){
-    if(i==0){
-      evt.set(h_Ak4_j1_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==1){
-      evt.set(h_Ak4_j2_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==2){
-      evt.set(h_Ak4_j3_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==3){
-      evt.set(h_Ak4_j4_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==4){
-      evt.set(h_Ak4_j5_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==5){
-      evt.set(h_Ak4_j6_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-  }
+  // vector<Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);
+  // for(unsigned int i=0; i<AK4CHSjets_matched.size(); i++){
+  //   if(i==0){
+  //     evt.set(h_Ak4_j1_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==1){
+  //     evt.set(h_Ak4_j2_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==2){
+  //     evt.set(h_Ak4_j3_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==3){
+  //     evt.set(h_Ak4_j4_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==4){
+  //     evt.set(h_Ak4_j5_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==5){
+  //     evt.set(h_Ak4_j6_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  // }
 
   /////////   AK8 JETS
   if(mode_ == "deepAK8"){
@@ -1234,7 +1234,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j1_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j1_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j1_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j1_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j1_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==1){
         evt.set(h_Ak8_j2_pt, Ak8jets->at(i).pt());
@@ -1244,7 +1244,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j2_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j2_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j2_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j2_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j2_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==2){
         evt.set(h_Ak8_j3_pt, Ak8jets->at(i).pt());
@@ -1254,7 +1254,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j3_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j3_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j3_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j3_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j3_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
     }
   } // end deepAK8 mode

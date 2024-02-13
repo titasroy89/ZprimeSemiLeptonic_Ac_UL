@@ -20,6 +20,7 @@ using namespace uhh2;
 ZprimeSemiLeptonicPreselectionHists::ZprimeSemiLeptonicPreselectionHists(uhh2::Context& ctx, const std::string& dirname):
 Hists(ctx, dirname) {
 
+
   is_mc = ctx.get("dataset_type") == "MC";
   is_dy = ctx.get("dataset_version").find("DYJets") == 0;
   is_wjets = ctx.get("dataset_version").find("WJets") == 0;
@@ -68,8 +69,8 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   Eta_ttbar         = book<TH1F>("Eta_ttbar", "#eta^{T}^{t#bar{t}, gen} [GeV]", 50, -3, 3);
   Eta_top           = book<TH1F>("Eta_top", "#eta^{t, gen} [GeV]", 50, -3, 3);
   Eta_antitop       = book<TH1F>("Eta_antitop", "#eta^{#bar{t}, gen} [GeV]", 50, -3, 3);
+  //Mttbar - gen particles
   //-beren
-
 
   // leptons
   N_mu              = book<TH1F>("N_mu", "N^{#mu}", 11, -0.5, 10.5);
@@ -280,6 +281,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
 
   // calculate sum of event weights with PDF replicas
   for(int i=0; i<100; i++){
+    
     std::stringstream ss_name;
     ss_name << "sum_event_weights_PDF_" << i+1;
     stringstream ss_title;
@@ -317,7 +319,6 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
   DeltaY_gen->Fill(dygen, weight);
 
-  
   // double_t DeltaY_gen_ele = TMath::Abs(0.5*TMath::Log((electron.energy() + electron.pt()*TMath::SinH(electron.eta()))/(electron.energy() - electron.pt()*TMath::SinH(electron.eta())))) - TMath::Abs(0.5*TMath::Log((antielectron.energy() + antielectron.pt()*TMath::SinH(antielectron.eta()))/(antielectron.energy() - antielectron.pt()*TMath::SinH(antielectron.eta()))));
   // double_t DeltaY_gen_muon= TMath::Abs(0.5*TMath::Log((muon.energy() + muon.pt()*TMath::SinH(muon.eta()))/(muon.energy() - muon.pt()*TMath::SinH(muon.eta())))) - TMath::Abs(0.5*TMath::Log((antimuon.energy() + antimuon.pt()*TMath::SinH(antimuon.eta()))/(antimuon.energy() - antimuon.pt()*TMath::SinH(antimuon.eta()))));
   
@@ -391,7 +392,6 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   vector<TopJet>* HOTVRjets = event.topjets;
   unsigned int NHOTVRjets = HOTVRjets->size();
   N_HOTVRjets->Fill(NHOTVRjets, weight);
-
   for(unsigned int i=0; i<NHOTVRjets; i++){
     double tau21 = HOTVRjets->at(i).tau2_groomed() / HOTVRjets->at(i).tau1_groomed();
     double tau32 = HOTVRjets->at(i).tau3_groomed() / HOTVRjets->at(i).tau2_groomed();
@@ -760,10 +760,13 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
       }
     }
     // isr, fsr
-    sum_event_weights_isr_up->Fill(1., weight * event.genInfo->weights().at(27) / event.genInfo->weights().at(0));
-    sum_event_weights_isr_down->Fill(1., weight * event.genInfo->weights().at(26) / event.genInfo->weights().at(0));
-    sum_event_weights_fsr_up->Fill(1., weight * event.genInfo->weights().at(5) / event.genInfo->weights().at(0));
-    sum_event_weights_fsr_down->Fill(1., weight * event.genInfo->weights().at(4) / event.genInfo->weights().at(0));
+
+
+    // sum_event_weights_isr_up->Fill(1., weight * event.genInfo->weights().at(27) / event.genInfo->weights().at(0));
+    // sum_event_weights_isr_down->Fill(1., weight * event.genInfo->weights().at(26) / event.genInfo->weights().at(0));
+    // sum_event_weights_fsr_up->Fill(1., weight * event.genInfo->weights().at(5) / event.genInfo->weights().at(0));
+    // sum_event_weights_fsr_down->Fill(1., weight * event.genInfo->weights().at(4) / event.genInfo->weights().at(0));
+    
     // pdf
     int MY_FIRST_INDEX = 9;
     if(is_dy || is_wjets || is_qcd_HTbinned || is_alps || is_azh || is_htott_scalar || is_htott_pseudo || is_zprimetott) MY_FIRST_INDEX = 47;
@@ -777,6 +780,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
     }
   }
 } //Method
+
 
 
 

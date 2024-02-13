@@ -19,7 +19,11 @@
 using namespace std;
 using namespace uhh2;
 
+
+
 ZprimeSemiLeptonicHists::ZprimeSemiLeptonicHists(uhh2::Context& ctx, const std::string& dirname):
+  
+
 Hists(ctx, dirname) {
   is_mc = ctx.get("dataset_type") == "MC";
   ishotvr = (ctx.get("is_hotvr") == "true");
@@ -649,6 +653,8 @@ void ZprimeSemiLeptonicHists::init(){
 
 void ZprimeSemiLeptonicHists::fill(const Event & event){
 
+  bool debug = false;
+
   double weight = event.weight;
 
 
@@ -665,43 +671,47 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
+  if(debug) cout << "filling jets plots" << endl;
 
   // for(unsigned int i=0; i<jets->size(); i++){
-  //   cout << "Jet pt: " << jets->at(i).pt() << endl
+  //   if(debug) cout << "Jet pt: " << jets->at(i).pt() << endl
   // }
-  // cout << "Jet1 pt: " << jets->at(0).pt() << endl;
-  // cout << "Jet2 pt: " << jets->at(0).pt() << endl;
-  // cout << "Jet3 pt: " << jets->at(0).pt() << endl;
+  // if(debug) cout << "Jet1 pt: " << jets->at(0).pt() << endl;
+  // if(debug) cout << "Jet2 pt: " << jets->at(0).pt() << endl;
+  // if(debug) cout << "Jet3 pt: " << jets->at(0).pt() << endl;
 
   for(unsigned int i=0; i<jets->size(); i++){
     pt_jet->Fill(jets->at(i).pt(),weight);
     eta_jet->Fill(jets->at(i).eta(),weight);
     phi_jet->Fill(jets->at(i).phi(),weight);
     m_jet->Fill(jets->at(i).v4().M(),weight);
-    deepjetbscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
+    // deepjetbscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
+    if(debug) cout << "jet pt" << endl;
+    
 
     if(i==0){
       pt_jet1->Fill(jets->at(i).pt(),weight);
       eta_jet1->Fill(jets->at(i).eta(),weight);
       phi_jet1->Fill(jets->at(i).phi(),weight);
       m_jet1->Fill(jets->at(i).v4().M(),weight);
-      deepjetbscore_jet1->Fill(jets->at(i).btag_DeepJet(), weight);
+      // deepjetbscore_jet1->Fill(jets->at(i).btag_DeepJet(), weight);
     }
     else if(i==1){
       pt_jet2->Fill(jets->at(i).pt(),weight);
       eta_jet2->Fill(jets->at(i).eta(),weight);
       phi_jet2->Fill(jets->at(i).phi(),weight);
       m_jet2->Fill(jets->at(i).v4().M(),weight);
-      deepjetbscore_jet2->Fill(jets->at(i).btag_DeepJet(), weight);
+      // deepjetbscore_jet2->Fill(jets->at(i).btag_DeepJet(), weight);
     }
     else if(i==2){
       pt_jet3->Fill(jets->at(i).pt(),weight);
       eta_jet3->Fill(jets->at(i).eta(),weight);
       phi_jet3->Fill(jets->at(i).phi(),weight);
       m_jet3->Fill(jets->at(i).v4().M(),weight);
-      deepjetbscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
+      // deepjetbscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
     }
   }
+  if(debug) cout << "passed 1" << endl;
 
 
   int NbjetsDeepJet_loose = 0, NbjetsDeepJet_medium = 0, NbjetsDeepJet_tight = 0;
@@ -714,10 +724,12 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     if(BtagDeepJet_medium(jets->at(i),event)) NbjetsDeepJet_medium++;
     if(BtagDeepJet_tight(jets->at(i),event))  NbjetsDeepJet_tight++;
   }
+  if(debug) cout << "passed 2" << endl;
 
   N_bJetsDeepJet_loose->Fill(NbjetsDeepJet_loose,weight);
   N_bJetsDeepJet_med->Fill(NbjetsDeepJet_medium,weight);
   N_bJetsDeepJet_tight->Fill(NbjetsDeepJet_tight,weight);
+  if(debug) cout << "passed 3" << endl;
 
   /*
   █ ██   ██    █████  ██████ ██    ██   █████
@@ -731,6 +743,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     vector<TopJet>* HOTVRjets = event.topjets;
     unsigned int NHOTVRjets = HOTVRjets->size();
     N_HOTVRjets->Fill(NHOTVRjets, weight);
+    if(debug) cout << "passed 4" << endl;
 
     for(unsigned int i=0; i<NHOTVRjets; i++){
       double tau21 = HOTVRjets->at(i).tau2_groomed() / HOTVRjets->at(i).tau1_groomed();
@@ -898,6 +911,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     N_HOTVRjets->Fill(NHOTVRjets, weight);
     N_HOTVRTaggedjets->Fill(NHOTVRTaggedjets, weight);
+    if(debug) cout << "passed 5" << endl;
 
   }//end hotvr mode
 
@@ -910,27 +924,29 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   */
 
   if(isdeepAK8){
+    if(debug) cout << "passed 6" << endl;
     vector<TopJet>* AK8Puppijets = event.toppuppijets;
     unsigned int NAK8Puppijets = 0;
     for(unsigned int i=0; i<AK8Puppijets->size(); i++){
+      if(debug) cout << "passed in AK8" << endl;
       if(AK8Puppijets->at(i).numberOfDaughters()<2) continue;
       NAK8Puppijets++;
 
       double tau21 = AK8Puppijets->at(i).tau2() / AK8Puppijets->at(i).tau1();
       double tau32 = AK8Puppijets->at(i).tau3() / AK8Puppijets->at(i).tau2();
 
-      deepjet_topscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
-      deepjet_wscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
-      deepjet_zscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
-      deepjet_higgsscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
-      deepjet_qcdscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
-      massdecordeepjet_topscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-      massdecordeepjet_wscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
-      massdecordeepjet_zscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
-      massdecordeepjet_higgsscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
-      massdecordeepjet_qcdscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
-      deepjet_TvsQCD_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
-      massdecordeepjet_TvsQCD_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+      // deepjet_topscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
+      // deepjet_wscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
+      // deepjet_zscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
+      // deepjet_higgsscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
+      // deepjet_qcdscore_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
+      // massdecordeepjet_topscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+      // massdecordeepjet_wscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
+      // massdecordeepjet_zscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
+      // massdecordeepjet_higgsscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
+      // massdecordeepjet_qcdscore_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
+      // deepjet_TvsQCD_jet->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
+      // massdecordeepjet_TvsQCD_jet->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
 
       // Distance to AK8
       double dRmin_ak8 = 99999;
@@ -959,6 +975,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       tau3_AK8Puppijet->Fill(AK8Puppijets->at(i).tau3(), weight);
       tau21_AK8Puppijet->Fill(tau21, weight);
       tau32_AK8Puppijet->Fill(tau32, weight);
+      if(debug) cout << "AK8fills" << endl;
 
       if(i==0){
         pt_AK8Puppijet1->Fill(AK8Puppijets->at(i).pt(), weight);
@@ -974,18 +991,18 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8Puppijet1->Fill(AK8Puppijets->at(i).tau3(), weight);
         tau21_AK8Puppijet1->Fill(tau21, weight);
         tau32_AK8Puppijet1->Fill(tau32, weight);
-        deepjet_topscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_wscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
-        deepjet_zscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
-        deepjet_higgsscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
-        deepjet_qcdscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
-        massdecordeepjet_topscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        massdecordeepjet_wscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
-        massdecordeepjet_zscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
-        massdecordeepjet_higgsscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
-        massdecordeepjet_qcdscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
-        deepjet_TvsQCD_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // deepjet_topscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_wscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
+        // deepjet_zscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
+        // deepjet_higgsscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
+        // deepjet_qcdscore_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
+        // massdecordeepjet_topscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // massdecordeepjet_wscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
+        // massdecordeepjet_zscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
+        // massdecordeepjet_higgsscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
+        // massdecordeepjet_qcdscore_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
+        // deepjet_TvsQCD_jet1->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_jet1->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
       else if(i==1){
         pt_AK8Puppijet2->Fill(AK8Puppijets->at(i).pt(), weight);
@@ -1001,18 +1018,18 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8Puppijet2->Fill(AK8Puppijets->at(i).tau3(), weight);
         tau21_AK8Puppijet2->Fill(tau21, weight);
         tau32_AK8Puppijet2->Fill(tau32, weight);
-        deepjet_topscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_wscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
-        deepjet_zscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
-        deepjet_higgsscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
-        deepjet_qcdscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
-        massdecordeepjet_topscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        massdecordeepjet_wscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
-        massdecordeepjet_zscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
-        massdecordeepjet_higgsscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
-        massdecordeepjet_qcdscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
-        deepjet_TvsQCD_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // deepjet_topscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_wscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_w(), weight);
+        // deepjet_zscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_z(), weight);
+        // deepjet_higgsscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_h(), weight);
+        // deepjet_qcdscore_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_qcd(), weight);
+        // massdecordeepjet_topscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // massdecordeepjet_wscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_w(), weight);
+        // massdecordeepjet_zscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_z(), weight);
+        // massdecordeepjet_higgsscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_h(), weight);
+        // massdecordeepjet_qcdscore_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_qcd(), weight);
+        // deepjet_TvsQCD_jet2->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_jet2->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
       else if(i==2){
         pt_AK8Puppijet3->Fill(AK8Puppijets->at(i).pt(), weight);
@@ -1028,10 +1045,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8Puppijet3->Fill(AK8Puppijets->at(i).tau3(), weight);
         tau21_AK8Puppijet3->Fill(tau21, weight);
         tau32_AK8Puppijet3->Fill(tau32, weight);
-        massdecordeepjet_topscore_jet3->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        deepjet_topscore_jet3->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_TvsQCD_jet3->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_jet3->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_topscore_jet3->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // deepjet_topscore_jet3->Fill(AK8Puppijets->at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_TvsQCD_jet3->Fill(AK8Puppijets->at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_jet3->Fill(AK8Puppijets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
     }
 
@@ -1040,6 +1057,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     int NAK8PuppiTaggedjets = 0;
     for(unsigned int i=0; i<AK8PuppiTopTags.size(); i++){
       NAK8PuppiTaggedjets++;
+      if(debug) cout << "in AK8top tag" << endl;
 
       double tau21 = AK8PuppiTopTags.at(i).tau2() / AK8PuppiTopTags.at(i).tau1();
       double tau32 = AK8PuppiTopTags.at(i).tau3() / AK8PuppiTopTags.at(i).tau2();
@@ -1071,10 +1089,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       tau3_AK8PuppiTaggedjet->Fill(AK8PuppiTopTags.at(i).tau3(), weight);
       tau21_AK8PuppiTaggedjet->Fill(tau21, weight);
       tau32_AK8PuppiTaggedjet->Fill(tau32, weight);
-      massdecordeepjet_topscore_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-      deepjet_topscore_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
-      deepjet_TvsQCD_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
-      massdecordeepjet_TvsQCD_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+      // massdecordeepjet_topscore_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+      // deepjet_topscore_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
+      // deepjet_TvsQCD_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
+      // massdecordeepjet_TvsQCD_Taggedjet->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
 
       if(i==0){
         pt_AK8PuppiTaggedjet1->Fill(AK8PuppiTopTags.at(i).pt(), weight);
@@ -1090,10 +1108,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8PuppiTaggedjet1->Fill(AK8PuppiTopTags.at(i).tau3(), weight);
         tau21_AK8PuppiTaggedjet1->Fill(tau21, weight);
         tau32_AK8PuppiTaggedjet1->Fill(tau32, weight);
-        massdecordeepjet_topscore_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        deepjet_topscore_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_TvsQCD_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_topscore_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // deepjet_topscore_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_TvsQCD_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_Taggedjet1->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
       else if(i==1){
         pt_AK8PuppiTaggedjet2->Fill(AK8PuppiTopTags.at(i).pt(), weight);
@@ -1109,10 +1127,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8PuppiTaggedjet2->Fill(AK8PuppiTopTags.at(i).tau3(), weight);
         tau21_AK8PuppiTaggedjet2->Fill(tau21, weight);
         tau32_AK8PuppiTaggedjet2->Fill(tau32, weight);
-        massdecordeepjet_topscore_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        deepjet_topscore_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_topscore_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // deepjet_topscore_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
       else if(i==2){
         pt_AK8PuppiTaggedjet3->Fill(AK8PuppiTopTags.at(i).pt(), weight);
@@ -1128,16 +1146,17 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         tau3_AK8PuppiTaggedjet3->Fill(AK8PuppiTopTags.at(i).tau3(), weight);
         tau21_AK8PuppiTaggedjet3->Fill(tau21, weight);
         tau32_AK8PuppiTaggedjet3->Fill(tau32, weight);
-        massdecordeepjet_topscore_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
-        deepjet_topscore_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
-        deepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
-        massdecordeepjet_TvsQCD_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_topscore_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_raw_score_top(), weight);
+        // deepjet_topscore_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_raw_score_top(), weight);
+        // deepjet_TvsQCD_Taggedjet2->Fill(AK8PuppiTopTags.at(i).btag_DeepBoosted_TvsQCD(), weight);
+        // massdecordeepjet_TvsQCD_Taggedjet3->Fill(AK8PuppiTopTags.at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(), weight);
       }
 
     }
 
     N_AK8Puppijets->Fill(NAK8Puppijets, weight);
     N_AK8PuppiTaggedjets->Fill(NAK8PuppiTaggedjets, weight);
+    if(debug) cout << "passed 7" << endl;
 
   }//end deepak8 mode
 
@@ -1155,28 +1174,32 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Muon>* muons = event.muons;
   int Nmuons = muons->size();
   N_mu->Fill(Nmuons, weight);
+  if(debug) cout << "passed 8" << endl;
   for(int i=0; i<Nmuons; i++){
 
     pt_mu->Fill(muons->at(i).pt(),weight);
+    if(debug) cout << "passed mu pt" << endl;
     eta_mu->Fill(muons->at(i).eta(),weight);
     phi_mu->Fill(muons->at(i).phi(),weight);
     reliso_mu->Fill(muons->at(i).relIso(),weight);
     reliso_mu_rebin->Fill(muons->at(i).relIso(),weight);
-    dRmin_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
-    dRmin_mu_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
-    ptrel_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
-    dRmin_ptrel_mu->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+    // dRmin_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
+    // if(debug) cout << "in for 4" << endl;
+    // dRmin_mu_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
+    // ptrel_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+    // dRmin_ptrel_mu->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
     if(i==0){
       pt_mu1->Fill(muons->at(i).pt(),weight);
       eta_mu1->Fill(muons->at(i).eta(),weight);
       phi_mu1->Fill(muons->at(i).phi(),weight);
       reliso_mu1->Fill(muons->at(i).relIso(),weight);
       reliso_mu1_rebin->Fill(muons->at(i).relIso(),weight);
-      dRmin_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
-      dRmin_mu1_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
-      ptrel_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
-      dRmin_ptrel_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+      // dRmin_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
+      // dRmin_mu1_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
+      // ptrel_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+      // dRmin_ptrel_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
     }
+    
     else if(i==1){
       pt_mu2->Fill(muons->at(i).pt(),weight);
       eta_mu2->Fill(muons->at(i).eta(),weight);
@@ -1202,6 +1225,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_mumu->Fill((muons->at(i).v4() + muons->at(j).v4()).M() ,weight);
     }
   }
+  if(debug) cout << "passed 9" << endl;
 
   /*
   ███████ ██      ███████  ██████ ████████ ██████   ██████  ███    ██ ███████
@@ -1222,10 +1246,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     phi_ele->Fill(electrons->at(i).phi(),weight);
     reliso_ele->Fill(electrons->at(i).relIso(),weight);
     reliso_ele_rebin->Fill(electrons->at(i).relIso(),weight);
-    dRmin_ele_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), weight);
-    dRmin_ele_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
-    ptrel_ele_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
-    dRmin_ptrel_ele->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+    // dRmin_ele_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), weight);
+    // dRmin_ele_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
+    // ptrel_ele_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+    // dRmin_ptrel_ele->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
     if(electrons->at(i).pt()<120){
       pt_ele_lowpt->Fill(electrons->at(i).pt(),weight);
       eta_ele_lowpt->Fill(electrons->at(i).eta(),weight);
@@ -1247,10 +1271,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       phi_ele1->Fill(electrons->at(i).phi(),weight);
       reliso_ele1->Fill(electrons->at(i).relIso(),weight);
       reliso_ele1_rebin->Fill(electrons->at(i).relIso(),weight);
-      dRmin_ele1_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), weight);
-      dRmin_ele1_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
-      ptrel_ele1_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
-      dRmin_ptrel_ele1->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+      // dRmin_ele1_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), weight);
+      // dRmin_ele1_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
+      // ptrel_ele1_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+      // dRmin_ptrel_ele1->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
     }
     else if(i==1){
       pt_ele2->Fill(electrons->at(i).pt(),weight);
@@ -1291,6 +1315,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
   int Npvs = event.pvs->size();
   NPV->Fill(Npvs, weight);
+  if(debug) cout << "passed 10" << endl;
 
   double met = event.met->pt();
   double st = 0., st_jets = 0., st_lep = 0.;
@@ -1317,18 +1342,22 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   STlep_rebin->Fill(ht_lep, weight);
   STlep_rebin2->Fill(ht_lep, weight);
   STlep_rebin3->Fill(ht_lep, weight);
+  if(debug) cout << "passed 11" << endl;
+
 
   // Zprime reco
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
+
   bool is_zprime_reconstructed_correctmatch = event.get(h_is_zprime_reconstructed_correctmatch);
   // added "is_mc" to blind data in mttbar hists
   if(is_zprime_reconstructed_chi2 && is_mc){
+    if(debug) cout << "in general zprime chi" << endl;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
 
-
-    vector<GenParticle>* genparticles = event.genparticles;
+    
+    // vector<GenParticle>* genparticles = event.genparticles;
     GenParticle top, antitop;
     for(const GenParticle & gp : *event.genparticles){
 
@@ -1359,8 +1388,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     tophad_phi->Fill(tophad.Phi(), weight);
     tophad_m->Fill(tophad.M(), weight);
 
+    if(debug) cout << "passed general 0" << endl;
     ditop_mass->Fill(Mreco, weight);
+    if(debug) cout << "passed general 1" << endl;
     ditop_absDeltaPhi->Fill(deltaPhi(toplep, tophad), weight);
+    if(debug) cout << "passed general 2" << endl;
     ditop_deltaEta->Fill(toplep.Eta()-tophad.Eta(), weight);
     ditop_absDeltaEta->Fill(abs(toplep.Eta()-tophad.Eta()), weight);
     ditop_deltaR->Fill(deltaR(toplep,tophad), weight);
@@ -1404,7 +1436,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     mttbar_vs_costhetastar->Fill(costhetastar_lep, Mreco, weight);
     costhetastar_vs_mttbar->Fill(Mreco, costhetastar_lep, weight);
-    
 
     if(BestZprimeCandidate->is_toptag_reconstruction()){
       M_tophad->Fill(BestZprimeCandidate->tophad_topjet_ptr()->v4().M(), weight);
@@ -1456,13 +1487,14 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_toplep_ak4->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
     }
   }
+  if(debug) cout << "passed 12" << endl;
   if(is_zprime_reconstructed_correctmatch){
-    // cout << "Correct match is filled" << endl;
+    // if(debug) cout << "Correct match is filled" << endl;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateCorrectMatch);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float dr = BestZprimeCandidate->discriminator("correct_match");
     if(dr < 10.){
-      // cout << "dr < 10" << endl;
+      // if(debug) cout << "dr < 10" << endl;
       if(BestZprimeCandidate->is_toptag_reconstruction()){
         M_tophad_dr_ttag->Fill(BestZprimeCandidate->tophad_topjet_ptr()->softdropmass(), weight);
         M_toplep_dr_ttag->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
@@ -1478,6 +1510,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_Zprime_dr_rebin3->Fill(Mreco, weight);
     }
   }
+  if(debug) cout << "passed 13" << endl;
 
   // Sphericity tensor
   double s11 = -1., s12 = -1., s13 = -1., s22 = -1., s23 = -1., s33 = -1., mag = -1.;
@@ -1504,10 +1537,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   S22->Fill(s22, weight);
   S23->Fill(s23, weight);
   S33->Fill(s33, weight);
+  if(debug) cout << "passed general 1" << endl;
 
   sum_event_weights->Fill(1., weight);
 
-  N_Jets_vs_HT->Fill(Njets, st_jets, weight);
+  // N_Jets_vs_HT->Fill(Njets, st_jets, weight);
 
   /*
   ███    ██ ███    ██
@@ -1524,6 +1558,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     NN_Mu_phi->Fill(muons->at(i).phi(),weight);
     NN_Mu_E->Fill(muons->at(i).energy(),weight);
   }
+  if(debug) cout << "passed 14" << endl;
 
 
 
@@ -1533,6 +1568,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
     NN_Ele_E->Fill(electrons->at(i).energy(),weight);
   }
+  if(debug) cout << "passed 15" << endl;
 
   NN_MET_pt->Fill(event.met->pt(),weight);
   NN_MET_phi->Fill(event.met->phi(),weight);
@@ -1540,15 +1576,17 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Jet>* Ak4jets = event.jets;
   int NAk4jets = Ak4jets->size();
   NN_N_Ak4->Fill(NAk4jets,weight);
+  if(debug) cout << "passed NN 10" << endl;
 
   for(int i=0; i<NAk4jets; i++){
+    if(debug) cout << "passed NN 1" << endl;
     if(i==0){
       NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
       NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
       NN_Ak4_j1_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j1_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j1_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==1){
       NN_Ak4_j2_pt->Fill(Ak4jets->at(i).pt(),weight);
@@ -1556,7 +1594,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j2_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j2_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j2_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==2){
       NN_Ak4_j3_pt->Fill(Ak4jets->at(i).pt(),weight);
@@ -1564,7 +1602,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j3_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j3_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j3_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==3){
       NN_Ak4_j4_pt->Fill(Ak4jets->at(i).pt(),weight);
@@ -1572,7 +1610,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j4_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j4_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j4_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==4){
       NN_Ak4_j5_pt->Fill(Ak4jets->at(i).pt(),weight);
@@ -1580,7 +1618,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j5_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j5_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j5_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
     if(i==5){
       NN_Ak4_j6_pt->Fill(Ak4jets->at(i).pt(),weight);
@@ -1588,11 +1626,13 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j6_phi->Fill(Ak4jets->at(i).phi(),weight);
       NN_Ak4_j6_E->Fill(Ak4jets->at(i).energy(),weight);
       NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      // NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
+    if(debug) cout << "passed NN 2" << endl;
   }
 
   if(ishotvr){
+    if(debug) cout << "passed 16" << endl;
     vector<TopJet>* HOTVRjets = event.topjets;
     int N_HOTVRjets = HOTVRjets->size();
     NN_N_HOTVR->Fill(N_HOTVRjets,weight);
@@ -1626,14 +1666,17 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
       }
     }
+    if(debug) cout << "passed 17" << endl;
   } // end hotvr mode
 
   if(isdeepAK8){
     vector<TopJet>* Ak8jets = event.toppuppijets;
     int NAk8jets = Ak8jets->size();
     NN_N_Ak8->Fill(NAk8jets,weight);
+    if(debug) cout << "passed 18" << endl;
 
     for(int i=0; i<NAk8jets; i++){
+      if(debug) cout << "passed deepAk8 1" << endl;
       if(i==0){
         NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
         NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
@@ -1642,7 +1685,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_Ak8_j1_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
         NN_Ak8_j1_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
         NN_Ak8_j1_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j1_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        // NN_Ak8_j1_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
       }
       if(i==1){
         NN_Ak8_j2_pt->Fill(Ak8jets->at(i).pt(),weight);
@@ -1652,7 +1695,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_Ak8_j2_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
         NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
         NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        // NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        if(debug) cout << "passed deepAk8 2" << endl;
       }
       if(i==2){
         NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
@@ -1662,21 +1706,27 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_Ak8_j3_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
         NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
         NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        // NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        if(debug) cout << "passed deepAk8 3" << endl;
       }
+      if(debug) cout << "passed deepAk8 final" << endl;
     }
+    if(debug) cout << "passed 19" << endl;
   } // end deepAK8 mode
-
+  if(debug) cout << "passed 20" << endl;
   if(is_zprime_reconstructed_chi2){
+    if(debug) cout << "passed 21" << endl;
+
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
     if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
     NN_chi2->Fill(chi2,weight);
+    if(debug) cout << "passed 22" << endl;
   }
 
-
+if(debug) cout << "passed 23" << endl;
 } //Method
 
 
