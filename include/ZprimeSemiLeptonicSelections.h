@@ -105,7 +105,44 @@ namespace uhh2 {
   private:
     float min_htlep_, max_htlep_;
   };
-  ////
+  //// beren
+
+  class HTJetCut : public Selection  {
+
+  public:
+      explicit HTJetCut(float, float max_ht=infinity);
+      virtual bool passes(const Event&) override;
+
+  private:
+      float min_ht_;
+      float max_ht_;
+  };
+
+  class HTGenJetCut : public Selection  {
+
+  public:
+      explicit HTGenJetCut(float, float min_htgen=infinity);
+      virtual bool passes(const Event&) override;
+
+  private:
+      float min_htgen_;
+      float max_htgen_;
+  };
+
+  class GenJetPtCut : public Selection  {
+
+  public:
+      explicit GenJetPtCut(float, float min_genjetpt=infinity);
+      virtual bool passes(const Event&) override;
+
+  private:
+      float min_genjetpt_;
+      float max_genjetpt_;
+  };
+
+
+
+  /// beren
 
   class METCut : public Selection {
 

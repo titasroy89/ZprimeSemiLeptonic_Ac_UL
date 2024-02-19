@@ -29,6 +29,8 @@ protected:
 
 TH1F *DeltaY,*DeltaY_reco, *DeltaY_gen, *DeltaY_ele, *DeltaY_N_ele, *DeltaY_P_ele, *DeltaY_muon, *DeltaY_N_muon, *DeltaY_P_muon, *M_top, *M_antitop, *Pt_ttbar, *Pt_top, *Pt_antitop, *Eta_ttbar, *Eta_top, *Eta_antitop; //-beren # of events gen info
 
+TH1F *leadingJetPtHist, *mttbar, *topgen_pt, *topgen_eta, *antitopgen_pt, *antitopgen_eta, *leptongen_pt, *leptongen_eta, *muongen_pt, *muongen_eta, *electrongen_pt, *electrongen_eta, *bquarkgen_pt, *bquarkgen_eta;
+
 TH1F *N_jets, *pt_jet, *pt_jet1, *pt_jet2, *pt_jet3, *eta_jet, *eta_jet1, *eta_jet2, *eta_jet3, *phi_jet, *phi_jet1, *phi_jet2, *phi_jet3, *m_jet, *m_jet1, *m_jet2, *m_jet3, *csv_jet, *csv_jet1, *csv_jet2, *csv_jet3, *N_bJets_loose, *N_bJets_med, *N_bJets_tight;
 
 TH1F *N_mu, *pt_mu, *pt_mu1, *pt_mu2, *eta_mu, *eta_mu1, *eta_mu2, *phi_mu, *phi_mu1, *phi_mu2, *reliso_mu, *reliso_mu1, *reliso_mu2, *reliso_mu_rebin, *reliso_mu1_rebin, *reliso_mu2_rebin;
