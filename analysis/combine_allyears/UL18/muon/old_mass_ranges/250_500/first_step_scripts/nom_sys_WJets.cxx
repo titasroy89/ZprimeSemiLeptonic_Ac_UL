@@ -24,13 +24,10 @@
 #include "TRandom3.h"
 #include "TFile.h"
 #include "TMath.h"
-#include "TKey.h"
-#include "TSystem.h"
-#include "TDirectory.h"
 
 using namespace RooFit ;
 
-void nom_sys_TTbar()
+void nom_sys_WJets()
 
 {
 
@@ -42,33 +39,22 @@ void nom_sys_TTbar()
 
     TChain *reco = new TChain("AnalysisTree","");
 
-    reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/TTbar.root");
-    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_AnalysisDNN_UL18_muon_combine/nominal/Others.root");
-   
+    reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Analysis_UL18_muon_combine/nominal/WJets.root");
+
     TTree *treereco = (TTree*) reco;
 
     cout << "Number of Events:"<< treereco-> GetEntries()<<endl;
 
     
     // TH1D DeltaY Plots
-    
 
-    // POSITIVE gen, POSITIVE reco, with mass cut
-    TH1D *h_DY_P_P_750_1000_muon = new TH1D("DY_P_P_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} > 0, #Delta_Y_{reco} > 0 ",1,0,2.5);
-    // POSITIVE gen, NEGATIVE reco, with mass cut
-    TH1D *h_DY_P_N_750_1000_muon = new TH1D("DY_P_N_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} > 0, #Delta_Y_{reco} < 0",1,-2.5,0);
-    // NEGATIVE gen, POSITIVE reco, with mass cut
-    TH1D *h_DY_N_P_750_1000_muon = new TH1D("h_DY_N_P_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} < 0, #Delta_Y_{reco} > 0",1,0,2.5);
-    // NEAGATIVE gen, NEGATIVE reco, without mass cut
-    TH1D *h_DY_N_N_750_1000_muon = new TH1D("h_DY_N_N_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} < 0, #Delta_Y_{reco} < 0",1,-2.5,0);
+  
+    //DeltaY reco 
+  
+    TFile *file = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Analysis_UL18_muon_combine/nominal/WJets.root"); 
+    TH1D *h_DeltaY_reco = (TH1D*) file->Get("DeltaY_reco_250_500_muon_General/DeltaY_reco");
 
-    // TH1D Projection Plots
 
-    TH1D *ProjY_1 = new TH1D("ProjY_1","Project along Y , #Delta_Y_{reco} < 0 ",2,-2.5,2.5);
-    TH1D *ProjY_2 = new TH1D("ProjY_2","Project along Y , #Delta_Y_{reco} > 0 ",2,-2.5,2.5);
-
-    TH1D *ProjX_1 = new TH1D("ProjX_1","Project along X , #Delta_Y_{gen} < 0 ",2,-2.5,2.5);
-    TH1D *ProjX_2 = new TH1D("ProjX_2","Project along X ,#Delta_Y_{gen} > 0 ",2,-2.5,2.5);
 
    // TH1F Pileup 
     
@@ -175,23 +161,6 @@ void nom_sys_TTbar()
     
 
 
-    // TH2D Matrix 
-    TH2D *Matrix = new TH2D("Matrix","", 2,-2.5,2.5,2,-2.5,2.5);
-
-    float DY_P_P_750_1000_muon;
-    float DY_P_N_750_1000_muon;
-    float DY_N_P_750_1000_muon;
-    float DY_N_N_750_1000_muon;
-
-    float DY_N_N;
-    float DY_N_P;
-    float DY_P_N;
-    float DY_P_P;
-    float DY_N_N_nomass;
-    float DY_N_P_nomass;
-    float DY_P_N_nomass;
-    float DY_P_P_nomass;
-    
     float weight_pu;
     float weight_pu_down;
     float weight_pu_up;
@@ -274,12 +243,7 @@ void nom_sys_TTbar()
     float weight_murmuf_dyn4_upnone;
     float weight_murmuf_dyn4_upup;
     
-
-    treereco->SetBranchAddress("DY_P_P_750_1000_muon",&DY_P_P_750_1000_muon);
-    treereco->SetBranchAddress("DY_P_N_750_1000_muon",&DY_P_N_750_1000_muon);
-    treereco->SetBranchAddress("DY_N_P_750_1000_muon",&DY_N_P_750_1000_muon);
-    treereco->SetBranchAddress("DY_N_N_750_1000_muon",&DY_N_N_750_1000_muon);
-
+  
     treereco->SetBranchAddress("weight_pu", &weight_pu);
     treereco->SetBranchAddress("weight_pu_down", &weight_pu_down);
     treereco->SetBranchAddress("weight_pu_up", &weight_pu_up);
@@ -359,17 +323,10 @@ void nom_sys_TTbar()
 
 
     for (Int_t i = 0; i < treereco->GetEntries(); i++){
-    // for (Int_t i = 0; i < 10000; i++){
 
         treereco->GetEntry(i);
         if (i%1000000 == 0) std::cout << "--- ... Processing event: " << i <<std::endl;
        
-    
-
-       h_DY_P_P_750_1000_muon->Fill(DY_P_P_750_1000_muon);
-       h_DY_P_N_750_1000_muon->Fill(DY_P_N_750_1000_muon);
-       h_DY_N_P_750_1000_muon->Fill(DY_N_P_750_1000_muon);
-       h_DY_N_N_750_1000_muon->Fill(DY_N_N_750_1000_muon);
         
         h_weight_pu->Fill(weight_pu);
         h_weight_pu_down->Fill(weight_pu_down);
@@ -452,44 +409,13 @@ void nom_sys_TTbar()
         
     }
 
-    double integral [2][2] = {{h_DY_N_N_750_1000_muon->Integral(),h_DY_P_N_750_1000_muon->Integral()},{h_DY_N_P_750_1000_muon->Integral(),h_DY_P_P_750_1000_muon->Integral()}};
-
-     for(int i=0; i<2; i++){
-        for(int j=0; j<2; j++){
-              Matrix->SetBinContent(i+1,j+1,integral[i][j]);
-       }
-    }
-
-    
-  
-    ProjY_1->GetXaxis()->SetTitle("#Delta_Y_{gen}");
-    ProjY_2->GetXaxis()->SetTitle("#Delta_Y_{gen}");
-    ProjX_1->GetXaxis()->SetTitle("#Delta_Y_{reco}");
-    ProjX_2->GetXaxis()->SetTitle("#Delta_Y_{reco}");
-
-    ProjY_1 = Matrix->ProjectionY("py1",1,1);
-    ProjY_2 = Matrix->ProjectionY("py2",2,2);
-
-    ProjX_1 = Matrix->ProjectionX("px1",1,1);
-    ProjX_2 = Matrix->ProjectionX("px2", 2,2);
-
 
   // --------------- Output File ------------------
 
-    TFile* myFile = new TFile("dY_UL18_muon_750_1000_TTbar.root", "RECREATE");
- 
+    TFile* myFile = new TFile("dY_UL18_muon_250_500_WJets.root", "RECREATE");
 
-    h_DY_P_P_750_1000_muon->Write();
-    h_DY_P_N_750_1000_muon->Write();
-    h_DY_N_P_750_1000_muon->Write();
-    h_DY_N_N_750_1000_muon->Write();
 
-    Matrix->Write();
-
-    ProjY_1->Write();
-    ProjY_2->Write();
-    ProjX_1->Write();
-    ProjX_2->Write();
+    h_DeltaY_reco->Write();
 
     h_weight_pu->Write();
     h_weight_pu_down->Write();
@@ -569,52 +495,8 @@ void nom_sys_TTbar()
     h_weight_murmuf_dyn4_upnone->Write();
     h_weight_murmuf_dyn4_upup->Write();
 
+ myFile->Close();
 
 }
-void mergeRootFiles() {
-    TFile *inputFile1 = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/TTbar.root", "READ");   
-    // TFile *inputFile2 = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_AnalysisDNN_UL18_muon_combine/nominal/Others.root", "READ");
-
-    TFile *outputFile = TFile::Open("dY_UL18_muon_750_1000_TTbar.root", "RECREATE");
-
-    const char* dirsToCopy[] = {"Middle", "Last"};
-
-    auto copyObjects = [](TDirectory* source, TDirectory* destination) {
-        if (source && destination) {
-            destination->cd();
-            TList* list = source->GetListOfKeys();
-            TIter next(list);
-            TKey* key;
-            while ((key = (TKey*)next())) {
-                TObject* obj = key->ReadObj();
-                obj->Write();
-                delete obj;
-            }
-        }
-    };
-
-    for (const char* dirName : dirsToCopy) {
-        TDirectory* dir1 = (TDirectory*)inputFile1->Get(dirName);
-        // TDirectory* dir2 = (TDirectory*)inputFile2->Get(dirName);
-
-        outputFile->cd();
-        TDirectory* newDir = outputFile->mkdir(dirName);
-
-        copyObjects(dir1, newDir);
-        // copyObjects(dir2, newDir);
-    }
-
-    inputFile1->Close();
-    // inputFile2->Close();
-    outputFile->Close();
-}
-
-int main() {
-    mergeRootFiles();
-    return 0;
-}
-
-
-
 
 

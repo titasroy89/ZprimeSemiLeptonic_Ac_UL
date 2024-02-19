@@ -1,3 +1,4 @@
+
 //  importing libraries
 
 #include <algorithm>
@@ -24,13 +25,10 @@
 #include "TRandom3.h"
 #include "TFile.h"
 #include "TMath.h"
-#include "TKey.h"
-#include "TSystem.h"
-#include "TDirectory.h"
 
 using namespace RooFit ;
 
-void nom_sys_TTbar()
+void nom_sys_DATA()
 
 {
 
@@ -42,25 +40,70 @@ void nom_sys_TTbar()
 
     TChain *reco = new TChain("AnalysisTree","");
 
-    reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/TTbar.root");
-    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_AnalysisDNN_UL18_muon_combine/nominal/Others.root");
-   
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_ttbar/nominal/uhh2.AnalysisModuleRunner.ttbar1.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_ttbar/nominal/uhh2.AnalysisModuleRunner.ttbar2.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_ttbar/nominal/uhh2.AnalysisModuleRunner.ttbar3.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_ttbar/nominal/uhh2.AnalysisModuleRunner.ttbar4.root");
+
+    reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Analysis_UL18_muon_Combine_allMtt/nominal/DATA.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_latest/WJets/nominal/uhh2.AnalysisModuleRunner.WJets.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_latest/DY/nominal/uhh2.AnalysisModuleRunner.DY.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_latest/Diboson/nominal/uhh2.AnalysisModuleRunner.Diboson.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_latest/ST/nominal/uhh2.AnalysisModuleRunner.ST.root");
+    // reco-> Add("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Zprime_Analysis_UL18_muon_combine_latest/QCD/nominal/uhh2.AnalysisModuleRunner.QCD.root");
+
     TTree *treereco = (TTree*) reco;
 
     cout << "Number of Events:"<< treereco-> GetEntries()<<endl;
 
     
     // TH1D DeltaY Plots
-    
 
+    //DeltaY gen without mass cut
+    TH1D *h_DeltaY_gen = new TH1D("DeltaY_gen","#Delta_Y_{gen}",10,-2.5,2.5);
+    //DeltaY gen with mass cut
+    TH1D *h_DeltaY_gen_mass = new TH1D("DeltaY_gen_mass","(#Delta_Y)_{gen}, M > 750",10,-2.5,2.5);
+    //POSITIVE gen without mass
+    TH1D *h_DeltaY_P_gen_nomass = new TH1D("DeltaY_P_gen_nomass","#Delta_Y_{gen}>0",1,0,2.5);
+    //POSITIVE gen with mass
+    TH1D *h_DeltaY_P_gen = new TH1D("DeltaY_P_gen","#Delta_Y_{gen}>0, M > 750",1,0,2.5);
+    //NEGATIVE gen without mass
+    TH1D *h_DeltaY_N_gen_nomass = new TH1D("DeltaY_N_gen_nomass","#Delta_Y_{gen} < 0",1,-2.5,0);
+    //NEGATIVE gen with mass
+    TH1D *h_DeltaY_N_gen = new TH1D("DeltaY_N_gen","(#Delta_Y_{gen} < 0, M > 750",1,-2.5,0);
+
+    //DeltaY reco without mass cut
+    TH1D *h_DeltaY_reco = new TH1D("DeltaY_reco","#Delta_Y_{reco}",2,-2.5,2.5);
+    //DeltaY with mass cut
+    TH1D *h_DeltaY_reco_mass = new TH1D("DeltaY_reco_mass","(#Delta_Y)_{reco}, M > 750",2,-2.5,2.5);
+    //POSITIVE reco without mass
+    TH1D *h_DeltaY_P_reco_nomass = new TH1D("DeltaY_P_reco_nomass","#Delta_Y_{reco}>0",1,0,2.5);
+    //POSITIVE reco with mass
+    TH1D *h_DeltaY_P_reco = new TH1D("DeltaY_P_reco","#Delta_Y_{reco}>0, M>750",1,0,2.5);
+    //NEGATIVE reco without mass
+    TH1D *h_DeltaY_N_reco_nomass = new TH1D("DeltaY_N_reco_nomass","#Delta_Y_{reco}<0",1,-2.5,0);
+    //NEGATIVE reco with mass
+    TH1D *h_DeltaY_N_reco = new TH1D("DeltaY_N_reco","#Delta_Y_{reco}<0, M>750",1,-2.5,0);
+
+
+
+    // POSITIVE gen, POSITIVE reco, without mass cut
+    TH1D *h_DeltaY_P_P_nomass = new TH1D("DeltaY_P_P_nomass","#Delta_Y_{gen} > 0, #Delta_Y_{reco} > 0 ",1,0,2.5);
     // POSITIVE gen, POSITIVE reco, with mass cut
-    TH1D *h_DY_P_P_750_1000_muon = new TH1D("DY_P_P_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} > 0, #Delta_Y_{reco} > 0 ",1,0,2.5);
+    TH1D *h_DeltaY_P_P = new TH1D("DeltaY_P_P","#Delta_Y_{gen} > 0, #Delta_Y_{reco} > 0, M >750",1,0,2.5);
+    // POSITIVE gen, NEGATIVE reco, without mass cut
+    TH1D *h_DeltaY_P_N_nomass = new TH1D("DeltaY_P_N_nomass","#Delta_Y_{gen} > 0, #Delta_Y_{reco} < 0",1,-2.5,2.5);
     // POSITIVE gen, NEGATIVE reco, with mass cut
-    TH1D *h_DY_P_N_750_1000_muon = new TH1D("DY_P_N_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} > 0, #Delta_Y_{reco} < 0",1,-2.5,0);
+    TH1D *h_DeltaY_P_N = new TH1D("DeltaY_P_N","#Delta_Y_{gen} > 0, #Delta_Y_{reco} < 0, M >750",1,-2.5,2.5);
+    // NEAGATIVE gen, POSITIVE reco, without mass cut
+    TH1D *h_DeltaY_N_P_nomass = new TH1D("DeltaY_N_P_nomass","#Delta_Y_{gen} < 0, #Delta_Y_{reco} > 0",1,-2.5,2.5);
     // NEGATIVE gen, POSITIVE reco, with mass cut
-    TH1D *h_DY_N_P_750_1000_muon = new TH1D("h_DY_N_P_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} < 0, #Delta_Y_{reco} > 0",1,0,2.5);
-    // NEAGATIVE gen, NEGATIVE reco, without mass cut
-    TH1D *h_DY_N_N_750_1000_muon = new TH1D("h_DY_N_N_750_1000_muon","0<Mtt<250, #Delta_Y_{gen} < 0, #Delta_Y_{reco} < 0",1,-2.5,0);
+    TH1D *h_DeltaY_N_P = new TH1D("DeltaY_N_P","#Delta_Y_{gen} < 0, #Delta_Y_{reco} > 0, M >750",1,-2.5,2.5);
+    // NEGATIVE gen, NEGATIVE reco, without mass cut
+    TH1D *h_DeltaY_N_N_nomass = new TH1D("DeltaY_N_N_nomass","#Delta_Y_{gen} < 0, #Delta_Y_{reco} < 0",1,-2.5,0);
+    // NEGATIVE gen, NEGATIVE reco, with mass cut
+    TH1D *h_DeltaY_N_N = new TH1D("DeltaY_N_N","#Delta_Y_{gen} < 0, #Delta_Y_{reco} < 0, M >750",1,-2.5,0);
+    
 
     // TH1D Projection Plots
 
@@ -120,7 +163,7 @@ void nom_sys_TTbar()
     TH1D *h_prefiringWeightUp = new TH1D("prefiringWeightUp","prefiringWeightUp",1,-1,1);
 
 
- //Btagging Discriminator
+     //Btagging Discriminator
 
     TH1D *h_weight_btagdisc_central = new TH1D("weight_btagdisc_central","weight_btagdisc_central",1,-1,1);
     TH1D *h_weight_btagdisc_cferr1_down = new TH1D("weight_btagdisc_cferr1_down","weight_btagdisc_cferr1_down",1,-1,1);
@@ -178,19 +221,28 @@ void nom_sys_TTbar()
     // TH2D Matrix 
     TH2D *Matrix = new TH2D("Matrix","", 2,-2.5,2.5,2,-2.5,2.5);
 
-    float DY_P_P_750_1000_muon;
-    float DY_P_N_750_1000_muon;
-    float DY_N_P_750_1000_muon;
-    float DY_N_N_750_1000_muon;
+    float DeltaY_gen;
+    float DeltaY_gen_mass;
+    float DeltaY_P_gen;
+    float DeltaY_P_gen_nomass;
+    float DeltaY_N_gen;
+    float DeltaY_N_gen_nomass;
+    
+    float DeltaY_reco;
+    float DeltaY_reco_mass;
+    float DeltaY_P_reco;
+    float DeltaY_P_reco_nomass;
+    float DeltaY_N_reco;
+    float DeltaY_N_reco_nomass;
 
-    float DY_N_N;
-    float DY_N_P;
-    float DY_P_N;
-    float DY_P_P;
-    float DY_N_N_nomass;
-    float DY_N_P_nomass;
-    float DY_P_N_nomass;
-    float DY_P_P_nomass;
+    float DeltaY_N_N;
+    float DeltaY_N_P;
+    float DeltaY_P_N;
+    float DeltaY_P_P;
+    float DeltaY_N_N_nomass;
+    float DeltaY_N_P_nomass;
+    float DeltaY_P_N_nomass;
+    float DeltaY_P_P_nomass;
     
     float weight_pu;
     float weight_pu_down;
@@ -275,10 +327,29 @@ void nom_sys_TTbar()
     float weight_murmuf_dyn4_upup;
     
 
-    treereco->SetBranchAddress("DY_P_P_750_1000_muon",&DY_P_P_750_1000_muon);
-    treereco->SetBranchAddress("DY_P_N_750_1000_muon",&DY_P_N_750_1000_muon);
-    treereco->SetBranchAddress("DY_N_P_750_1000_muon",&DY_N_P_750_1000_muon);
-    treereco->SetBranchAddress("DY_N_N_750_1000_muon",&DY_N_N_750_1000_muon);
+
+    treereco->SetBranchAddress("DeltaY_gen", &DeltaY_gen);
+    treereco->SetBranchAddress("DeltaY_gen_mass", &DeltaY_gen_mass);
+    treereco->SetBranchAddress("DeltaY_P_gen", &DeltaY_P_gen);
+    treereco->SetBranchAddress("DeltaY_P_gen_nomass", &DeltaY_P_gen_nomass);
+    treereco->SetBranchAddress("DeltaY_N_gen", &DeltaY_N_gen);
+    treereco->SetBranchAddress("DeltaY_N_gen_nomass", &DeltaY_N_gen_nomass);
+
+    treereco->SetBranchAddress("DeltaY_reco", &DeltaY_reco);
+    treereco->SetBranchAddress("DeltaY_reco_mass", &DeltaY_reco_mass);
+    treereco->SetBranchAddress("DeltaY_P_reco", &DeltaY_P_reco);
+    treereco->SetBranchAddress("DeltaY_P_reco_nomass", &DeltaY_P_reco_nomass);
+    treereco->SetBranchAddress("DeltaY_N_reco", &DeltaY_N_reco);
+    treereco->SetBranchAddress("DeltaY_N_reco_nomass", &DeltaY_N_reco_nomass);
+
+    treereco->SetBranchAddress("DeltaY_N_N", &DeltaY_N_N);
+    treereco->SetBranchAddress("DeltaY_N_P", &DeltaY_N_P);
+    treereco->SetBranchAddress("DeltaY_P_P", &DeltaY_P_P);
+    treereco->SetBranchAddress("DeltaY_P_N", &DeltaY_P_N);
+    // treereco->SetBranchAddress("DeltaY_N_N_nomass", &DeltaY_N_N_nomass);
+    // treereco->SetBranchAddress("DeltaY_N_P_nomass", &DeltaY_N_P_nomass);
+    // treereco->SetBranchAddress("DeltaY_P_N_nomass", &DeltaY_P_N_nomass);
+    // treereco->SetBranchAddress("DeltaY_P_P_nomass", &DeltaY_P_P_nomass);
 
     treereco->SetBranchAddress("weight_pu", &weight_pu);
     treereco->SetBranchAddress("weight_pu_down", &weight_pu_down);
@@ -287,6 +358,10 @@ void nom_sys_TTbar()
     treereco->SetBranchAddress("weight_sfmu_id", &weight_sfmu_id);
     treereco->SetBranchAddress("weight_sfmu_id_down", &weight_sfmu_id_down);
     treereco->SetBranchAddress("weight_sfmu_id_up", &weight_sfmu_id_up);
+
+    // treereco->SetBranchAddress("muonrecSF_nominal", &muonrecSF_nominal);
+    // treereco->SetBranchAddress("muonrecSF_down", &muonrecSF_down);
+    // treereco->SetBranchAddress("muonrecSF_up", &muonrecSF_up);
 
     treereco->SetBranchAddress("weight_sfmu_trigger", &weight_sfmu_trigger);
     treereco->SetBranchAddress("weight_sfmu_trigger_down", &weight_sfmu_trigger_down);
@@ -364,12 +439,28 @@ void nom_sys_TTbar()
         treereco->GetEntry(i);
         if (i%1000000 == 0) std::cout << "--- ... Processing event: " << i <<std::endl;
        
-    
+        h_DeltaY_gen->Fill(DeltaY_gen);
+        h_DeltaY_gen_mass->Fill(DeltaY_gen_mass);
+        h_DeltaY_P_gen_nomass->Fill(DeltaY_P_gen_nomass);
+        h_DeltaY_P_gen->Fill(DeltaY_P_gen);
+        h_DeltaY_N_gen_nomass->Fill(DeltaY_N_gen_nomass);
+        h_DeltaY_N_gen->Fill(DeltaY_N_gen);
 
-       h_DY_P_P_750_1000_muon->Fill(DY_P_P_750_1000_muon);
-       h_DY_P_N_750_1000_muon->Fill(DY_P_N_750_1000_muon);
-       h_DY_N_P_750_1000_muon->Fill(DY_N_P_750_1000_muon);
-       h_DY_N_N_750_1000_muon->Fill(DY_N_N_750_1000_muon);
+        h_DeltaY_reco->Fill(DeltaY_reco);
+        h_DeltaY_reco_mass->Fill(DeltaY_reco_mass);
+        h_DeltaY_P_reco_nomass->Fill(DeltaY_P_reco_nomass);
+        h_DeltaY_P_reco->Fill(DeltaY_P_reco);
+        h_DeltaY_N_reco_nomass->Fill(DeltaY_N_reco_nomass);
+        h_DeltaY_N_reco->Fill(DeltaY_N_reco);
+
+        h_DeltaY_P_P->Fill(DeltaY_P_P);
+        h_DeltaY_P_N->Fill(DeltaY_P_N);
+        h_DeltaY_N_N->Fill(DeltaY_N_N);
+        h_DeltaY_N_P->Fill(DeltaY_N_P);
+        // h_DeltaY_P_P_nomass->Fill(DeltaY_P_P_nomass);
+        // h_DeltaY_P_N_nomass->Fill(DeltaY_P_N_nomass);
+        // h_DeltaY_N_P_nomass->Fill(DeltaY_N_P_nomass);
+        // h_DeltaY_N_N_nomass->Fill(DeltaY_N_N_nomass);
         
         h_weight_pu->Fill(weight_pu);
         h_weight_pu_down->Fill(weight_pu_down);
@@ -378,6 +469,10 @@ void nom_sys_TTbar()
         h_weight_sfmu_id->Fill(weight_sfmu_id);
         h_weight_sfmu_id_down->Fill(weight_sfmu_id_down);
         h_weight_sfmu_id_up->Fill(weight_sfmu_id_up);
+
+        // h_muonrecSF_nominal->Fill(muonrecSF_nominal);
+        // h_muonrecSF_down->Fill(muonrecSF_down); 
+        // h_muonrecSF_up->Fill(muonrecSF_up);
 
         h_weight_sfmu_trigger->Fill(weight_sfmu_trigger); 
         h_weight_sfmu_trigger_down->Fill(weight_sfmu_trigger_down); 
@@ -452,7 +547,7 @@ void nom_sys_TTbar()
         
     }
 
-    double integral [2][2] = {{h_DY_N_N_750_1000_muon->Integral(),h_DY_P_N_750_1000_muon->Integral()},{h_DY_N_P_750_1000_muon->Integral(),h_DY_P_P_750_1000_muon->Integral()}};
+    double integral [2][2] = {{h_DeltaY_N_N->Integral(),h_DeltaY_P_N->Integral()},{h_DeltaY_N_P->Integral(),h_DeltaY_P_P->Integral()}};
 
      for(int i=0; i<2; i++){
         for(int j=0; j<2; j++){
@@ -476,13 +571,30 @@ void nom_sys_TTbar()
 
   // --------------- Output File ------------------
 
-    TFile* myFile = new TFile("dY_UL18_muon_750_1000_TTbar.root", "RECREATE");
- 
+    TFile* myFile = new TFile("dY_UL18_muon_750_900_DATA.root", "RECREATE");
 
-    h_DY_P_P_750_1000_muon->Write();
-    h_DY_P_N_750_1000_muon->Write();
-    h_DY_N_P_750_1000_muon->Write();
-    h_DY_N_N_750_1000_muon->Write();
+    h_DeltaY_gen->Write();
+    h_DeltaY_gen_mass->Write();
+    h_DeltaY_P_gen_nomass->Write();
+    h_DeltaY_P_gen->Write();
+    h_DeltaY_N_gen_nomass->Write();
+    h_DeltaY_N_gen->Write();
+
+    h_DeltaY_reco->Write();
+    h_DeltaY_reco_mass->Write();
+    h_DeltaY_P_reco_nomass->Write();
+    h_DeltaY_P_reco->Write();
+    h_DeltaY_N_reco_nomass->Write();
+    h_DeltaY_N_reco->Write();  
+    
+    h_DeltaY_P_P->Write();
+    h_DeltaY_P_N->Write();
+    h_DeltaY_N_P->Write();
+    h_DeltaY_N_N->Write();
+    // h_DeltaY_P_P_nomass->Write();
+    // h_DeltaY_P_N_nomass->Write();
+    // h_DeltaY_N_P_nomass->Write();
+    // h_DeltaY_N_N_nomass->Write();
 
     Matrix->Write();
 
@@ -498,6 +610,10 @@ void nom_sys_TTbar()
     h_weight_sfmu_id->Write();
     h_weight_sfmu_id_down->Write();
     h_weight_sfmu_id_up->Write();
+
+    // h_muonrecSF_nominal->Write();
+    // h_muonrecSF_down->Write();
+    // h_muonrecSF_up->Write();
 
     h_weight_sfmu_trigger->Write();
     h_weight_sfmu_trigger_down->Write(); 
@@ -569,52 +685,8 @@ void nom_sys_TTbar()
     h_weight_murmuf_dyn4_upnone->Write();
     h_weight_murmuf_dyn4_upup->Write();
 
+ myFile->Close();
 
 }
-void mergeRootFiles() {
-    TFile *inputFile1 = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/muon/workdir_AnalysisDNN_UL18_muon_sys_all/nominal/TTbar.root", "READ");   
-    // TFile *inputFile2 = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_AnalysisDNN_UL18_muon_combine/nominal/Others.root", "READ");
-
-    TFile *outputFile = TFile::Open("dY_UL18_muon_750_1000_TTbar.root", "RECREATE");
-
-    const char* dirsToCopy[] = {"Middle", "Last"};
-
-    auto copyObjects = [](TDirectory* source, TDirectory* destination) {
-        if (source && destination) {
-            destination->cd();
-            TList* list = source->GetListOfKeys();
-            TIter next(list);
-            TKey* key;
-            while ((key = (TKey*)next())) {
-                TObject* obj = key->ReadObj();
-                obj->Write();
-                delete obj;
-            }
-        }
-    };
-
-    for (const char* dirName : dirsToCopy) {
-        TDirectory* dir1 = (TDirectory*)inputFile1->Get(dirName);
-        // TDirectory* dir2 = (TDirectory*)inputFile2->Get(dirName);
-
-        outputFile->cd();
-        TDirectory* newDir = outputFile->mkdir(dirName);
-
-        copyObjects(dir1, newDir);
-        // copyObjects(dir2, newDir);
-    }
-
-    inputFile1->Close();
-    // inputFile2->Close();
-    outputFile->Close();
-}
-
-int main() {
-    mergeRootFiles();
-    return 0;
-}
-
-
-
 
 

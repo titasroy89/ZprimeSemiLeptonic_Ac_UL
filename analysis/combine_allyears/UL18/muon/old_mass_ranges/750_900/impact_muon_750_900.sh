@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 date
 
-# rm comb*
-# rm higgs*
-# rm Ac.pdf
-# rm r_neg.pdf
-# rm impacts.json
+rm comb*
+rm higgs*
+rm Ac.pdf
+rm r_neg.pdf
+rm impacts.json
 
 declare -a POIS=(
   "r_neg"
   "Ac"
 )
 
-export WORKSPACE=Ac_UL18_muon_750_900.root
+export WORKSPACE=Ac_muon_750_900.root
 export VERBOSITY=0
 
 export SetParameters="rgx{r.+}=1,Ac=0.7"
