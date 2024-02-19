@@ -18,7 +18,7 @@
 <!ENTITY SingleMuon_RunC SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/data/UL18/SingleMuon_Run2018C-UL2018_MiniAODv2_GT36-v2.xml">
 <!ENTITY SingleMuon_RunD SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/data/UL18/SingleMuon_Run2018D-UL2018_MiniAODv2_GT36-v1.xml"> -->
 
-<!ENTITY TTToSemiLeptonic SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToSemiLeptonic_CP5_powheg-pythia8_Summer20UL18_v2_copy.xml">
+<!ENTITY TTToSemiLeptonic SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToSemiLeptonic_CP5_powheg-pythia8_Summer20UL18_v2.xml">
 <!-- <!ENTITY TTToHadronic SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToHadronic_CP5_powheg-pythia8_Summer20UL18_v1.xml"> -->
 <!-- <!ENTITY TTTo2L2Nu SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTTo2L2Nu_CP5_powheg-pythia8_Summer20UL18_v1.xml"> -->
 <!--<!ENTITY WJetsToLNu_HT-70To100 SYSTEM "../../common/UHH2-datasets/RunII_106X_v2/SM/UL18/WJetsToLNu_HT-70To100_CP5_madgraphMLM-pythia8_Summer20UL18_v1.xml">
@@ -59,7 +59,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="50" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18_powheg_HT800_finalversion_moreplots"/>
+<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18_powheg_HT800_finalversion_"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">

@@ -11,16 +11,17 @@
 <!ENTITY IS_DEEPAK8 "true">
 <!ENTITY IS_LOOSER_SELECTION "false">
 <!ENTITY IS_ELE_TRIGGER "false">
-<!ENTITY CHANNEL "electron">
-<!ENTITY OUTPUTdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFTvsUL/output_UL/">
+<!ENTITY CHANNEL "muon">
+<!ENTITY OUTPUTdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFTvsUL/output_DNN/UL18/&CHANNEL;/">
 
 
-<!ENTITY EFT_sample SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_EFT_samples/EFT_sample.xml">
+<!ENTITY EFT_sample SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_afterpreselection/MC_EFT_sample.xml">
+<!ENTITY TTToSemiLeptonic SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_preselection/MC_TTToSemiLeptonic_UL18.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="5" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_EFTsamples_Analysis_electron"/>
+<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Analysis_muon_madgraphEFT"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -30,8 +31,9 @@
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
 		
-		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="EFT_sample&YEARsuffix;" Cacheable="&b_Cacheable;"> &EFT_sample; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-		
+		<!-- <InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="EFT_sample&YEARsuffix;" Cacheable="&b_Cacheable;"> &EFT_sample; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> -->
+		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+
 		<UserConfig>
 			<Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>
 			<Item Name="GenParticleCollection" Value="GenParticles"/>
