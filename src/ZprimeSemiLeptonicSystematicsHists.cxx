@@ -85,6 +85,13 @@ Hists(ctx, dirname) {
   h_ttag_corr_down     = ctx.get_handle<float>("weight_toptagsf_corr_down");
   h_ttag_uncorr_up     = ctx.get_handle<float>("weight_toptagsf_uncorr_up");
   h_ttag_uncorr_down   = ctx.get_handle<float>("weight_toptagsf_uncorr_down");
+  h_tmistag            = ctx.get_handle<float>("weight_topmistagsf");
+  h_tmistag_up         = ctx.get_handle<float>("weight_topmistagsf_up");
+  h_tmistag_down       = ctx.get_handle<float>("weight_topmistagsf_down");
+  // h_toppt              = ctx.get_handle<float>("weight_toppt");
+  // h_toppt_up           = ctx.get_handle<float>("weight_toppt_up");
+  // h_toppt_down         = ctx.get_handle<float>("weight_toppt_down");
+
 
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
@@ -143,6 +150,11 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_ttag_corr_down     = book<TH1F>("DeltaY_ttag_corr_down", "#DeltaY_{t#bar{t}} ttag_corr_down",          2, -2, 2);
   DeltaY_ttag_uncorr_up     = book<TH1F>("DeltaY_ttag_uncorr_up", "#DeltaY_{t#bar{t}} ttag_uncorr_up",          2, -2, 2);
   DeltaY_ttag_uncorr_down   = book<TH1F>("DeltaY_ttag_uncorr_down", "#DeltaY_{t#bar{t}} ttag_counrr_down",      2, -2, 2);
+  DeltaY_tmistag_up         = book<TH1F>("DeltaY_tmistag_up", "#DeltaY_{t#bar{t}} [GeV] tmistag_up",            2, -2, 2);
+  DeltaY_tmistag_down       = book<TH1F>("DeltaY_tmistag_down", "#DeltaY_{t#bar{t}} [GeV] tmistag_down",        2, -2, 2);
+  // DeltaY_toppt_up           = book<TH1F>("DeltaY_toppt_up", "#DeltaY_{t#bar{t}} [GeV] toppt_up",                2, -2, 2);
+  // DeltaY_toppt_down         = book<TH1F>("DeltaY_toppt_down", "#DeltaY_{t#bar{t}} [GeV] toppt_down",            2, -2, 2); 
+
 }
 
 
@@ -208,6 +220,12 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   float ttag_corr_down     = event.get(h_ttag_corr_down);
   float ttag_uncorr_up     = event.get(h_ttag_uncorr_up);
   float ttag_uncorr_down   = event.get(h_ttag_uncorr_down);
+  float tmistag_nominal    = event.get(h_tmistag);
+  float tmistag_up         = event.get(h_tmistag_up);
+  float tmistag_down       = event.get(h_tmistag_down);
+  // float toppt_nominal      = event.get(h_toppt);
+  // float toppt_up           = event.get(h_toppt_up);
+  // float toppt_down         = event.get(h_toppt_down);
 
   // only up/down variations
   vector<string> names       = {"ele_reco", "ele_id", "ele_trigger", "mu_reco", "mu_iso", "mu_id", "mu_trigger", "pu", "prefiring"};
@@ -228,7 +246,15 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   // ttag variations need special treatment
   vector<float> syst_ttag = {ttag_corr_up, ttag_corr_down, ttag_uncorr_up, ttag_uncorr_down};
   vector<TH1F*> hists_ttag = {DeltaY_ttag_corr_up, DeltaY_ttag_corr_down, DeltaY_ttag_uncorr_up, DeltaY_ttag_uncorr_down};
+  
+  // tmistag variations need special treatment
+  vector<float> syst_tmistag = {tmistag_up, tmistag_down};
+  vector<TH1F*> hists_tmistag = {DeltaY_tmistag_up, DeltaY_tmistag_down};
 
+  // toppt variations need special treatment
+  // vector<float> syst_toppt  = {toppt_up, toppt_down};
+  // vector<TH1F*> hists_toppt = {DeltaY_toppt_up, DeltaY_toppt_down};
+  
   // parton shower variations (ISR, FSR) need special treatment
   vector<float> syst_ps = {isr_up, isr_down, fsr_up, fsr_down};
   vector<TH1F*> hists_ps = {DeltaY_isr_up, DeltaY_isr_down, DeltaY_fsr_up, DeltaY_fsr_down};
@@ -237,7 +263,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
   if(is_zprime_reconstructed_chi2 && is_mc){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-    //float Mreco = BestZprimeCandidate->Zprime_v4().M();
+    // float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
     DeltaY->Fill(deltay, weight);
 
@@ -258,6 +284,14 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
     for(unsigned int i=0; i<hists_ttag.size(); i++){
       hists_ttag.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
     }
+    // tmistag variations
+    for(unsigned int i=0; i<hists_tmistag.size(); i++){
+      hists_tmistag.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
+    }
+    // toppt variations
+    // for(unsigned int i=0; i<hists_toppt.size(); i++){
+    //   hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i)/toppt_nominal);
+    // }
     // ps variations
     for(unsigned int i=0; i<hists_ps.size(); i++){
      hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));

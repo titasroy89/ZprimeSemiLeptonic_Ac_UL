@@ -2,11 +2,11 @@
 #where UHH2 code installed
 pathGL_code=/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/
 #where (NOT MERGED) trees after preselection stored
-path_data=/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_unfolding/UL18/preselection/workdir_Preselection_UL18_NumberOfEvents_new/uhh2.AnalysisModuleRunner.
+path_data=/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/Preselection/workdir_Preselection_UL18_HT800/uhh2.AnalysisModuleRunner.
 #path_data=/nfs/dust/cms/group/zprime-uhh/Analysis_UL18/electron/workdir_Zprime_Analysis_UL18_electron/uhh2.AnalysisModuleRunner.
 
-mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_numberofevents
-cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_numberofevents
+mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_HT800
+cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_HT800
 #mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_electron
 #cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_electron
 

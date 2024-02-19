@@ -103,27 +103,27 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
     eta_jet->Fill(jets->at(i).eta(),weight);
     phi_jet->Fill(jets->at(i).phi(),weight);
     m_jet->Fill(jets->at(i).v4().M(),weight);
-    bscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
+    // bscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
     if(i==0){
       pt_jet1->Fill(jets->at(i).pt(),weight);
       eta_jet1->Fill(jets->at(i).eta(),weight);
       phi_jet1->Fill(jets->at(i).phi(),weight);
       m_jet1->Fill(jets->at(i).v4().M(),weight);
-      bscore_jet1->Fill(jets->at(i).btag_DeepJet(), weight);
+      // bscore_jet1->Fill(jets->at(i).btag_DeepJet(), weight);
     }
     else if(i==1){
       pt_jet2->Fill(jets->at(i).pt(),weight);
       eta_jet2->Fill(jets->at(i).eta(),weight);
       phi_jet2->Fill(jets->at(i).phi(),weight);
       m_jet2->Fill(jets->at(i).v4().M(),weight);
-      bscore_jet2->Fill(jets->at(i).btag_DeepJet(), weight);
+      // bscore_jet2->Fill(jets->at(i).btag_DeepJet(), weight);
     }
     else if(i==2){
       pt_jet3->Fill(jets->at(i).pt(),weight);
       eta_jet3->Fill(jets->at(i).eta(),weight);
       phi_jet3->Fill(jets->at(i).phi(),weight);
       m_jet3->Fill(jets->at(i).v4().M(),weight);
-      bscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
+      // bscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
     }
   }
 
@@ -162,27 +162,27 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
     CHS_matched_eta_jet->Fill(AK4CHSjets_matched.at(i).eta(),weight);
     CHS_matched_phi_jet->Fill(AK4CHSjets_matched.at(i).phi(),weight);
     CHS_matched_m_jet->Fill(AK4CHSjets_matched.at(i).v4().M(),weight);
-    CHS_matched_bscore_jet->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
+    // CHS_matched_bscore_jet->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
     if(i==0){
       CHS_matched_pt_jet1->Fill(AK4CHSjets_matched.at(i).pt(),weight);
       CHS_matched_eta_jet1->Fill(AK4CHSjets_matched.at(i).eta(),weight);
       CHS_matched_phi_jet1->Fill(AK4CHSjets_matched.at(i).phi(),weight);
       CHS_matched_m_jet1->Fill(AK4CHSjets_matched.at(i).v4().M(),weight);
-      CHS_matched_bscore_jet1->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
+      // CHS_matched_bscore_jet1->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
     }
     else if(i==1){
       CHS_matched_pt_jet2->Fill(AK4CHSjets_matched.at(i).pt(),weight);
       CHS_matched_eta_jet2->Fill(AK4CHSjets_matched.at(i).eta(),weight);
       CHS_matched_phi_jet2->Fill(AK4CHSjets_matched.at(i).phi(),weight);
       CHS_matched_m_jet2->Fill(AK4CHSjets_matched.at(i).v4().M(),weight);
-      CHS_matched_bscore_jet2->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
+      // CHS_matched_bscore_jet2->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
     }
     else if(i==2){
       CHS_matched_pt_jet3->Fill(AK4CHSjets_matched.at(i).pt(),weight);
       CHS_matched_eta_jet3->Fill(AK4CHSjets_matched.at(i).eta(),weight);
       CHS_matched_phi_jet3->Fill(AK4CHSjets_matched.at(i).phi(),weight);
       CHS_matched_m_jet3->Fill(AK4CHSjets_matched.at(i).v4().M(),weight);
-      CHS_matched_bscore_jet3->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
+      // CHS_matched_bscore_jet3->Fill(AK4CHSjets_matched.at(i).btag_DeepJet(), weight);
     }
   }
 

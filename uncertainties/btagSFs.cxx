@@ -195,32 +195,32 @@
     //h_lfstats1_down->Draw("hist e same");
     //h_lfstats2_up->Draw("hist e same");
     //h_lfstats2_down->Draw("hist e same");
-    h_cferr1_up->Draw("hist");
-    h_cferr1_down->Draw("hist same");
-    h_cferr2_up->Draw("hist same");
-    h_cferr2_down->Draw("hist same");
-    h_hf_up->Draw("hist same");
-    h_hf_down->Draw("hist same");
-    h_hfstats1_up->Draw("hist same");
-    h_hfstats1_down->Draw("hist same");
-    h_hfstats2_up->Draw("hist same");
-    h_hfstats2_down->Draw("hist same");
-    h_lf_up->Draw("hist same");
-    h_lf_down->Draw("hist same");
-    h_lfstats1_up->Draw("hist same");
-    h_lfstats1_down->Draw("hist same");
-    h_lfstats2_up->Draw("hist same");
-    h_lfstats2_down->Draw("hist same");
-    legend->Draw();
+    // h_cferr1_up->Draw("hist");
+    // h_cferr1_down->Draw("hist same");
+    // h_cferr2_up->Draw("hist same");
+    // h_cferr2_down->Draw("hist same");
+    // h_hf_up->Draw("hist same");
+    // h_hf_down->Draw("hist same");
+    // h_hfstats1_up->Draw("hist same");
+    // h_hfstats1_down->Draw("hist same");
+    // h_hfstats2_up->Draw("hist same");
+    // h_hfstats2_down->Draw("hist same");
+    // h_lf_up->Draw("hist same");
+    // h_lf_down->Draw("hist same");
+    // h_lfstats1_up->Draw("hist same");
+    // h_lfstats1_down->Draw("hist same");
+    // h_lfstats2_up->Draw("hist same");
+    // h_lfstats2_down->Draw("hist same");
+    // legend->Draw();
 
     // x axis
-    h_cferr1_up->GetXaxis()->SetTitle("m_{t#bar{t}} [GeV]");
-    h_cferr1_up->GetXaxis()->SetTitleOffset(1.3);
-    h_cferr1_up->GetXaxis()->SetLimits(0,6000);
-    // y axis
-    h_cferr1_up->GetYaxis()->SetTitle("variation/nominal");
-    h_cferr1_up->GetYaxis()->SetTitleOffset(1.7);
-    h_cferr1_up->GetYaxis()->SetRangeUser(0.5,1.5);
+    // h_cferr1_up->GetXaxis()->SetTitle("m_{t#bar{t}} [GeV]");
+    // h_cferr1_up->GetXaxis()->SetTitleOffset(1.3);
+    // h_cferr1_up->GetXaxis()->SetLimits(0,6000);
+    // // y axis
+    // h_cferr1_up->GetYaxis()->SetTitle("variation/nominal");
+    // h_cferr1_up->GetYaxis()->SetTitleOffset(1.7);
+    // h_cferr1_up->GetYaxis()->SetRangeUser(0.5,1.5);
 
     c1->Modified();
 

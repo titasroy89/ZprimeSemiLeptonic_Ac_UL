@@ -424,6 +424,64 @@ bool uhh2::HTlepCut::passes(const uhh2::Event& event){
 }
 ////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
+
+uhh2::HTJetCut::HTJetCut(float min_ht, float max_ht):
+min_ht_(min_ht), max_ht_(max_ht) {}
+
+// for(const auto & jet : *event.jets)
+bool uhh2::HTJetCut::passes(const uhh2::Event& event){
+  float ht = 0;
+
+  // Sum over all jets' pt to calculate HT
+  if(event.jets) {
+    for(const auto & jet : *event.jets) {
+        ht += jet.pt();
+    }
+  }
+  return (ht > min_ht_) && (ht < max_ht_);
+}
+////////////////////////////////////////////////////////
+
+uhh2::HTGenJetCut::HTGenJetCut(float min_htgen, float max_htgen):
+min_htgen_(min_htgen), max_htgen_(max_htgen) {}
+
+bool uhh2::HTGenJetCut::passes(const uhh2::Event& event){
+  const vector<GenParticle> & genparticles = *(event.genparticles);
+  float genHT = 0;
+  for (const auto& particle : genparticles) {
+    if (particle.status() == 1 && 
+      (std::abs(particle.pdgId()) < 6 || std::abs(particle.pdgId()) == 21) &&
+      particle.mother1() != 6 && particle.mother1() != 24 &&
+      particle.mother2() != 6 && particle.mother2() != 24) {
+        genHT += particle.pt();
+    }
+  }
+  return genHT;
+  
+
+}
+
+
+////////////////////////////////////////////////////////
+
+
+uhh2::GenJetPtCut::GenJetPtCut(float min_genjetpt, float max_genjetpt) : 
+min_genjetpt_(min_genjetpt), max_genjetpt_(max_genjetpt) {}
+
+bool uhh2::GenJetPtCut::passes(const uhh2::Event& event){
+  if (!event.genjets) return false; // Return false if there are no genjets
+  
+  for (const auto& genjet : *event.genjets) {
+    if (genjet.pt() <= min_genjetpt_) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+////////////////////////////////////////////////////////
 uhh2::METCut::METCut(float min_met, float max_met):
 min_met_(min_met), max_met_(max_met) {}
 
