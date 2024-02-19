@@ -64,7 +64,7 @@ Hists(ctx, dirname) {
   h_fsr_up             = ctx.get_handle<float>("weight_fsr_2_up");
   h_fsr_down           = ctx.get_handle<float>("weight_fsr_2_down");
   h_btag               = ctx.get_handle<float>("weight_btagdisc_central");
-  h_btag_cferr1_up     = ctx.get_handle<float>("weight_btagdisc_cferr1_up");
+  h_btag_c1ferr_up     = ctx.get_handle<float>("weight_btagdisc_cferr1_up");
   h_btag_cferr1_down   = ctx.get_handle<float>("weight_btagdisc_cferr1_down");
   h_btag_cferr2_up     = ctx.get_handle<float>("weight_btagdisc_cferr2_up");
   h_btag_cferr2_down   = ctx.get_handle<float>("weight_btagdisc_cferr2_down");

@@ -65,6 +65,9 @@ protected:
   std::unique_ptr<uhh2::Selection> jet1_sel;
   std::unique_ptr<uhh2::Selection> jet2_sel;
   std::unique_ptr<uhh2::Selection> met_sel;
+  std::unique_ptr<uhh2::Selection> ht_sel;
+  std::unique_ptr<uhh2::Selection> htgen_sel;
+  std::unique_ptr<uhh2::Selection> genjet_sel;
   unique_ptr<Selection> SignSplit;
 
   bool isMC, isHOTVR;
@@ -74,6 +77,7 @@ protected:
   TString METcollection;
 
   bool isUL16preVFP, isUL16postVFP, isUL17, isUL18;
+  
 
   // additional branch with AK4 CHS jets -> for b-tagging
   Event::Handle<vector<Jet>> h_CHSjets;
@@ -114,7 +118,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
 
   // lepton IDs
-    ElectronId eleID_veto = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp90);
+  ElectronId eleID_veto = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp90);
   MuonId     muID_veto  = MuonID(Muon::CutBasedIdTight);
 
   double electron_pt(25.);
@@ -122,6 +126,11 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   double jet1_pt(30.);
   double jet2_pt(30.);
   double MET(20.);
+  double HT_cut(800);
+  double HTGen_cut;
+  double genjet_pt;
+  HTGen_cut = 800;
+  genjet_pt = 10;
 
 
   // GEN Flavor selection [W+jets flavor-splitting]
@@ -181,6 +190,11 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   jet2_sel.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
   met_sel.reset(new METCut(MET, uhh2::infinity));
 
+  ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
+  htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity ));
+  genjet_sel.reset(new GenJetPtCut(genjet_pt,uhh2::infinity));
+
+
   // additional branch with Ak4 CHS jets
   h_CHSjets = ctx.get_handle<vector<Jet>>("jetsAk4CHS");
 
@@ -197,6 +211,20 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
   if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
 
+  const vector<GenParticle> & genparticles = *(event.genparticles);
+  float genHT = 0;
+  for (unsigned int i = 0; i < genparticles.size(); ++i) {
+    
+    const GenParticle &genp = genparticles[i];
+    if (genp.status() == 1 && 
+      (std::abs(genp.pdgId()) < 6 || std::abs(genp.pdgId()) == 21) &&
+      genp.mother1() != 6 && genp.mother1() != 24 &&
+      genp.mother2() != 6 && genp.mother2() != 24) {
+        genHT += genp.pt();
+        cout << "found a jet:" << genp.pt() << genp.status() << genp.mother2() << genp.mother1() << genp.pdgId() << endl;
+    }
+  }
+  
   if(!event.isRealData){
     if(debug) cout << "in split if" << event.event << endl;
     if(!SignSplit->passes(event)) return false;
@@ -296,12 +324,27 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   const bool pass_jet2 = jet2_sel->passes(event);
   if(!pass_jet2) return false;
   if(debug) cout << "NJetSelection2: ok" << endl;
-  fill_histograms(event, "Jet2");
+  // fill_histograms(event, "Jet2");
 
   // MET selection
   const bool pass_met = met_sel->passes(event);
   if(!pass_met) return false;
   if(debug) cout << "METCut: ok" << endl;
+  // fill_histograms(event, "MET");
+
+  //HT selection
+  // const bool pass_ht = ht_sel->passes(event);
+  // if(!pass_ht) return false;
+  // if(!htgen_sel->passes(event)) return false;
+
+  
+
+
+  if(debug) cout << "HT cut: ok" << endl;
+  fill_histograms(event, "Jet2");
+
+  if(!genjet_sel->passes(event)) return false;
+  
   fill_histograms(event, "MET");
 
   return true;

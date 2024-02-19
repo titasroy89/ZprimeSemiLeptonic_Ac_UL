@@ -37,9 +37,9 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
 
   // jets
   N_jets            = book<TH1F>("N_jets", "N_{jets}", 21, -0.5, 20.5);
-  pt_jet            = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 50, 0, 1500);
-  pt_jet1           = book<TH1F>("pt_jet1", "p_{T}^{jet 1} [GeV]", 50, 0, 1500);
-  pt_jet2           = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 50, 0, 1500);
+  pt_jet            = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 50, 0, 2000);
+  pt_jet1           = book<TH1F>("pt_jet1", "p_{T}^{jet 1} [GeV]", 200, 0, 2000);
+  pt_jet2           = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 200, 0, 2000);
   pt_jet3           = book<TH1F>("pt_jet3", "p_{T}^{jet 3} [GeV]", 50, 0, 1500);
   eta_jet           = book<TH1F>("eta_jet", "#eta^{jets}", 50, -2.5, 2.5);
   eta_jet1          = book<TH1F>("eta_jet1", "#eta^{jet 1}", 50, -2.5, 2.5);
@@ -74,7 +74,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
 
   // leptons
   N_mu              = book<TH1F>("N_mu", "N^{#mu}", 11, -0.5, 10.5);
-  pt_mu             = book<TH1F>("pt_mu", "p_{T}^{#mu} [GeV]", 50, 0, 1500);
+  pt_mu             = book<TH1F>("pt_mu", "p_{T}^{#mu} [GeV]", 140, 0, 700);
   pt_mu1            = book<TH1F>("pt_mu1", "p_{T}^{#mu 1} [GeV]", 50, 0, 1500);
   pt_mu2            = book<TH1F>("pt_mu2", "p_{T}^{#mu 2} [GeV]", 50, 0, 1500);
   eta_mu            = book<TH1F>("eta_mu", "#eta^{#mu}", 50, -2.5, 2.5);
@@ -90,7 +90,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   reliso_mu1_rebin  = book<TH1F>("reliso_mu1_rebin", "#mu 1 rel. Iso ", 400, 0, 5);
   reliso_mu2_rebin  = book<TH1F>("reliso_mu2_rebin", "#mu 2 rel. Iso ", 400, 0, 5);
   N_ele             = book<TH1F>("N_ele", "N^{e}", 11, -0.5, 10.5);
-  pt_ele            = book<TH1F>("pt_ele", "p_{T}^{e} [GeV]", 50, 0, 1500);
+  pt_ele            = book<TH1F>("pt_ele", "p_{T}^{e} [GeV]", 140, 0, 700);
   pt_ele1           = book<TH1F>("pt_ele1", "p_{T}^{e 1} [GeV]", 50, 0, 1500);
   pt_ele2           = book<TH1F>("pt_ele2", "p_{T}^{e 2} [GeV]", 50, 0, 1500);
   eta_ele           = book<TH1F>("eta_ele", "#eta^{e}", 50, -2.5, 2.5);
@@ -279,6 +279,23 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
   DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
 
+  //Gen plots
+  mttbar          = book<TH1F>("mttbar", "M_{tt} in gen",1000, 0, 5000);
+  topgen_pt       = book<TH1F>("topgen_pt", "p_{T}^{top} [GeV] in gen",100, 0, 3000);
+  topgen_eta      = book<TH1F>("topgen_eta", "#eta^{top} in gen",50, -2.5, 2.5);
+  antitopgen_pt   = book<TH1F>("antitopgen_pt", "p_{antiT}^{top} [GeV] in gen",100, 0, 3000);
+  antitopgen_eta  = book<TH1F>("antitopgen_eta", "#eta^{antiT}",50, -2.5, 2.5);
+  leptongen_pt    = book<TH1F>("leptongen_pt", "p_{T}^{lepton} [GeV] in gen",100, 0, 3000);
+  leptongen_eta   = book<TH1F>("leptongen_eta", "#eta^{lepton} in gen",50, -2.5, 2.5);
+  muongen_pt      = book<TH1F>("muongen_pt", "p_{T}^{muon} [GeV] in gen",1000, 0, 3000);
+  muongen_eta     = book<TH1F>("muongen_eta", "#eta^{muon} in gen"      ,50, -2.5, 2.5);
+  electrongen_pt  = book<TH1F>("electrongen_pt", "p_{T}^{electron} [GeV] in gen",100, 0, 3000);
+  electrongen_eta = book<TH1F>("electrongen_eta", "#eta^{electron} in gen",50, -2.5, 2.5);
+  bquarkgen_pt    = book<TH1F>("bquarkgen_pt", "p_{bquark} [GeV] in gen",100, 0, 3000);
+  bquarkgen_eta   = book<TH1F>("bquarkgen_eta", "#eta^{bquark} in gen",100, -2.5, 2.5);
+  leadingJetPtHist= book<TH1F>("leadingJetPtHist", "p_{leading jet} [GeV] in gen",1000, 0, 3000);
+
+
   // calculate sum of event weights with PDF replicas
   for(int i=0; i<100; i++){
     
@@ -304,20 +321,151 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 //-beren Delta Y
 
 
-  GenParticle top, antitop;
+  
+
+  const GenParticle* top = nullptr;
+  const GenParticle* antitop = nullptr;
+
+// Loop to identify top and antitop quarks
+  for (const GenParticle& genp : *(event.genparticles)) {
+      if (genp.pdgId() == 6) {
+          top = &genp;
+      } else if (genp.pdgId() == -6) {
+          antitop = &genp;
+      }
+  }
+
+
+  if (top && antitop) { 
+    auto top_v4 = top->v4();
+    auto antitop_v4 = antitop->v4();
+
+    double energy = top_v4.energy() + antitop_v4.energy();
+    double px = top_v4.Px() + antitop_v4.Px();
+    double py = top_v4.Py() + antitop_v4.Py();
+    double pz = top_v4.Pz() + antitop_v4.Pz();
+
+    double ttbar_mass = sqrt(energy*energy - (px*px + py*py + pz*pz));
+    // cout<< "mttbar:"<< ttbar_mass << endl; 
+    mttbar->Fill(ttbar_mass);
+
+  }
+
+  GenParticle topgen, antitopgen;
   for(const GenParticle & gp : *event.genparticles){
 
     if(gp.pdgId() == 6){
-      top = gp;
+      topgen = gp;
     }
     else if(gp.pdgId() == -6){
-      antitop = gp;
+      antitopgen = gp;
     }
   }
 
-  float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+  float dygen= TMath::Abs(0.5*TMath::Log((topgen.energy() + topgen.pt()*TMath::SinH(topgen.eta()))/(topgen.energy() - topgen.pt()*TMath::SinH(topgen.eta())))) - TMath::Abs(0.5*TMath::Log((antitopgen.energy() + antitopgen.pt()*TMath::SinH(antitopgen.eta()))/(antitopgen.energy() - antitopgen.pt()*TMath::SinH(antitopgen.eta()))));
 
   DeltaY_gen->Fill(dygen, weight);
+
+   // leptonic leg of ttbar definition
+    const vector<GenParticle> & genparticles = *(event.genparticles);
+    for (unsigned int i = 0; i < genparticles.size(); ++i) {
+      const GenParticle &genp = genparticles[i];
+      if (abs(genp.pdgId()) == 6) {
+        if (genp.pdgId() == 6) {
+          // cout<< "top is found" << endl;
+          topgen_pt->Fill(genp.pt());
+          topgen_eta->Fill(genp.eta());
+        } else if (genp.pdgId() == -6) {
+          // cout<< "antitop is found" << endl;
+          antitopgen_pt->Fill(genp.pt());
+          antitopgen_eta->Fill(genp.eta());
+        }
+
+        const GenParticle* w = nullptr;
+        const GenParticle* b = nullptr;
+
+        for (unsigned int j = 0; j < genparticles.size(); ++j) {
+            const GenParticle &gp = genparticles[j];
+            auto m1 = gp.mother(&genparticles, 1);
+            auto m2 = gp.mother(&genparticles, 2);
+            bool has_top_mother = (m1 && m1->index() == genp.index()) || (m2 && m2->index() == genp.index());
+
+            if (has_top_mother) {
+                if (abs(gp.pdgId()) == 24) { // W boson
+                    w = &gp;
+                    // cout<< "w is found" << endl;
+                } 
+                else if (abs(gp.pdgId()) == 5) { // b quark
+                    b = &gp;
+                    // cout<< "b is found" << endl;
+                }
+            }
+        }
+
+        // Check W boson decays leptonically
+        if (w) {
+          // bool isLeptonic = false;
+          // const GenParticle* lepton = nullptr;
+          // const GenParticle* neutrino = nullptr;
+          for (unsigned int k = 0; k < genparticles.size(); ++k) {
+            const GenParticle &daught = genparticles[k];
+            auto m1 = daught.mother(&genparticles, 1);
+            auto m2 = daught.mother(&genparticles, 2);
+            bool has_w_mother = (m1 && m1->index() == w->index()) || (m2 && m2->index() == w->index());
+
+            if (has_w_mother) {
+                int pdgId = abs(daught.pdgId());
+
+                if (pdgId == 11 || pdgId == 13) {
+                    // isLeptonic = true;
+                    // lepton = &daught;
+                    leptongen_pt->Fill(daught.pt());
+                    leptongen_eta->Fill(daught.eta());
+                    // cout<< "lepton is found" << endl;
+
+                    if (pdgId == 11) { // Electron
+                        electrongen_pt->Fill(daught.pt());
+                        electrongen_eta->Fill(daught.eta());
+                        // cout<< "electron is found" << endl;
+                    } else if (pdgId == 13) { // Muon
+                        muongen_pt->Fill(daught.pt());
+                        muongen_eta->Fill(daught.eta());
+                        // cout<< "muon is found" << endl;
+                    }
+                } 
+                // else if (pdgId == 12 || pdgId == 14) { // Neutrino
+                //     // isLeptonic = true;
+                //     neutrino = &daught;
+                // }
+            }
+          }
+        }
+
+        if (b) {
+          bquarkgen_pt->Fill(b->pt());
+          bquarkgen_eta->Fill(b->eta());
+        }
+      }
+    }
+    // gen histograms filling end
+
+
+    double maxPt = 0;
+    const GenJet* leadingJet = nullptr; 
+
+    if(event.genjets) {
+      for(const auto & genjet : *event.genjets) {
+        if (genjet.pt() > maxPt) {
+            maxPt = genjet.pt(); 
+            leadingJet = &genjet;
+        }
+      }
+      if (leadingJet != nullptr) {
+          leadingJetPtHist->Fill(leadingJet->pt());
+      }
+    }
+  
+  
 
   // double_t DeltaY_gen_ele = TMath::Abs(0.5*TMath::Log((electron.energy() + electron.pt()*TMath::SinH(electron.eta()))/(electron.energy() - electron.pt()*TMath::SinH(electron.eta())))) - TMath::Abs(0.5*TMath::Log((antielectron.energy() + antielectron.pt()*TMath::SinH(antielectron.eta()))/(antielectron.energy() - antielectron.pt()*TMath::SinH(antielectron.eta()))));
   // double_t DeltaY_gen_muon= TMath::Abs(0.5*TMath::Log((muon.energy() + muon.pt()*TMath::SinH(muon.eta()))/(muon.energy() - muon.pt()*TMath::SinH(muon.eta())))) - TMath::Abs(0.5*TMath::Log((antimuon.energy() + antimuon.pt()*TMath::SinH(antimuon.eta()))/(antimuon.energy() - antimuon.pt()*TMath::SinH(antimuon.eta()))));

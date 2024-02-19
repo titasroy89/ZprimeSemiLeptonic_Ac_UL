@@ -57,9 +57,9 @@ ZprimeSemiLeptonicSystematicsModule::ZprimeSemiLeptonicSystematicsModule(Context
         else if(v_variations[j] == "down") handlename_shift = handlename_shift + "Down";
         else throw runtime_error("In ZprimeSemiLeptonicSystematicsModule.cxx: Variation is neither up nor down.");
       }
-      // else if(v_systs[i].Contains("btag")){ // all btag variations have the same nominal
-      //   handlename_nominal = "weight_btagdisc_central";
-      // }
+      else if(v_systs[i].Contains("btag")){ // all btag variations have the same nominal
+        handlename_nominal = "weight_btagdisc_central";
+      }
       else if(v_systs[i].Contains("ttag")){ // ttag variations have the same nominal
         handlename_nominal = "weight_toptagsf";
       }
