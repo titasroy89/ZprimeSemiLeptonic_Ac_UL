@@ -2,13 +2,13 @@ imax 1 number of bins
 jmax 6 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes data_obs     muon_UL18_750_1000       combine_input/dY_UL18_muon_750_1000.root $PROCESS
-shapes *            *       combine_input/dY_UL18_muon_750_1000.root $PROCESS $PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_0_500       ./dY_UL18_muon_0_500.root $PROCESS
+shapes *            *       ./dY_UL18_muon_0_500.root $PROCESS $PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
-bin          muon_UL18_750_1000
+bin          muon_UL18_0_500
 observation  -1
 ----------------------------------------------------------------------------------------------------------------------------------
-bin                     muon_UL18_750_1000     muon_UL18_750_1000     muon_UL18_750_1000     muon_UL18_750_1000     muon_UL18_750_1000     muon_UL18_750_1000     muon_UL18_750_1000
+bin                     muon_UL18_0_500     muon_UL18_0_500     muon_UL18_0_500     muon_UL18_0_500     muon_UL18_0_500     muon_UL18_0_500     muon_UL18_0_500
 process                 TTbar_1               TTbar_2               WJets                 QCD                   DY                    Diboson               ST
 process                 -1                    0                     1                     2                     3                     4                     5
 rate                    -1                    -1                    -1                    -1                    -1                    -1                    -1
@@ -51,4 +51,4 @@ QCD_norm            lnN     -         -         -         1.5       -         - 
 DY_norm             lnN     -         -         -         -         1.3       -         -
 Diboson_norm        lnN     -         -         -         -         -         1.3       -
 ST_norm             lnN     -         -         -         -         -         -         1.3
-muon_UL18_750_1000 autoMCStats 0 1 1
+muon_UL18_0_500 autoMCStats 0 1 1

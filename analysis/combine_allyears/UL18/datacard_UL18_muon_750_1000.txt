@@ -2,8 +2,8 @@ imax 1 number of bins
 jmax 6 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes data_obs     muon_UL18_750_1000       combine_input/dY_UL18_muon_750_1000.root $PROCESS
-shapes *            *       combine_input/dY_UL18_muon_750_1000.root $PROCESS $PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_750_1000       ./dY_UL18_muon_750_1000.root $PROCESS
+shapes *            *       ./dY_UL18_muon_750_1000.root $PROCESS $PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
 bin          muon_UL18_750_1000
 observation  -1

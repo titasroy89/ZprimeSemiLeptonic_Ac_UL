@@ -343,7 +343,6 @@ def processPDF(inputDir, v_samples, combine_file):
                 pdf_projections_1.append(Matrix_pdf.ProjectionX("px1_pdf_{}".format(i), 1, 1))
                 pdf_projections_2.append(Matrix_pdf.ProjectionX("px2_pdf_{}".format(i), 2, 2))
 
-            
             # Step 2: normalization & rms calculation
             
             norm_scales_1 = []
