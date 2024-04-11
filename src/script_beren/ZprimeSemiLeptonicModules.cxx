@@ -77,10 +77,11 @@ vector<LorentzVector> reconstruct_neutrino(const LorentzVector & lepton, const L
   }
   return solutions;
 }
-
+bool debug = false;
 
 ZprimeCandidateBuilder::ZprimeCandidateBuilder(uhh2::Context& ctx, TString mode, float minDR) : minDR_(minDR), mode_(mode){
-
+  
+    if(debug) cout << "CandidateBuilder" << endl;
   h_ZprimeCandidates_ = ctx.get_handle< vector<ZprimeCandidate> >("ZprimeCandidates");
 
   if(mode_ == "deepAK8"){
@@ -90,6 +91,8 @@ ZprimeCandidateBuilder::ZprimeCandidateBuilder(uhh2::Context& ctx, TString mode,
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("HOTVRTopTags");
     h_AK8TopTagsPtr = ctx.get_handle<std::vector<const TopJet*>>("HOTVRTopTagsPtr");
   }
+
+      if(debug) cout << "CandidateBuilder:after mode" << endl;
 
   if(mode_ != "hotvr" && mode_ != "deepAK8") throw runtime_error("In ZprimeCandidateBuilder::ZprimeCandidateBuilder(): 'mode' must be 'hotvr' or 'deepAK8'");
 
@@ -200,6 +203,7 @@ bool ZprimeCandidateBuilder::process(uhh2::Event& event){
       neutrinoidx++;
     }
   }
+  if(debug) cout << "Before top reconstruction" << endl;
   else{ // TopTag reconstruction
     for(const auto & neutrino_v4 : neutrinos) {
       for (unsigned int j=0; j < TopTags.size(); j++) {
@@ -264,6 +268,7 @@ bool ZprimeCandidateBuilder::process(uhh2::Event& event){
   }
   // Set the handle with all candidates
   event.set(h_ZprimeCandidates_, candidates);
+  if(debug) cout << "After Zprime Builder" << endl;
 
   return true;
 }
@@ -285,6 +290,12 @@ ZprimeChi2Discriminator::ZprimeChi2Discriminator(uhh2::Context& ctx){
   mtophad_ttag_ = 180.6;
   sigmatophad_ttag_ = 15.6;
 
+  mtoplep_ttag_ = 172.2;
+  sigmatoplep_ttag_ = 21.7;
+  mtophad_ttag_ = 182.3;
+  sigmatophad_ttag_ = 16.1;
+
+  
 }
 
 bool ZprimeChi2Discriminator::process(uhh2::Event& event){
@@ -334,6 +345,7 @@ bool ZprimeChi2Discriminator::process(uhh2::Event& event){
   event.set(h_BestCandidate_, bestCand);
   event.set(h_is_zprime_reconstructed_, true);
   return true;
+  if(debug) cout << "Chi2" << endl;
 }
 
 // match particle p to one of the jets (Delta R < 0.3); return the deltaR
@@ -361,6 +373,7 @@ ZprimeCorrectMatchDiscriminator::ZprimeCorrectMatchDiscriminator(uhh2::Context& 
 
   is_mc = ctx.get("dataset_type") == "MC";
   if(is_mc) ttgenprod.reset(new TTbarGenProducer(ctx));
+  
 }
 
 bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
@@ -404,7 +417,8 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
       continue;
     }
 
-    if((!is_toptag_reconstruction && jets_had.size() > 3) || (is_toptag_reconstruction && jets_had.size() != 1)){
+    //if((!is_toptag_reconstruction && jets_had.size() > 3) || (is_toptag_reconstruction && jets_had.size() != 1)){
+    if(is_toptag_reconstruction && jets_had.size() != 1){
       candidates.at(i).set_discriminators("correct_match", 9999999);
       // cout << "Not right amount of hadronic jets" << endl;
       continue;
@@ -457,11 +471,11 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
       correct_dr += dr;
       if(idx >= 0) n_matched++;
 
-      if(n_matched != jets_had.size()){
-        candidates.at(i).set_discriminators("correct_match", 9999999);
-        // cout << "Not number of jets and matched equal" << endl;
-        continue;
-      }
+      //if(n_matched != jets_had.size()){
+      //  candidates.at(i).set_discriminators("correct_match", 9999999);
+      //  // cout << "Not number of jets and matched equal" << endl;
+      //  continue;
+      //}
     }
     else{
       const TopJet* topjet = candidates.at(i).tophad_topjet_ptr();
@@ -526,6 +540,7 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
   event.set(h_BestCandidate_, bestCand);
   event.set(h_is_zprime_reconstructed_, true);
   return true;
+  if(debug) cout << "ZprimeCorrectMatchDiscriminator" << endl;
 }
 
 AK8PuppiTopTagger::AK8PuppiTopTagger(uhh2::Context& ctx, int min_num_daughters, float max_dR, float min_mass, float max_mass, float max_tau32) : min_num_daughters_(min_num_daughters), max_dR_(max_dR), min_mass_(min_mass), max_mass_(max_mass), max_tau32_(max_tau32) {
@@ -571,6 +586,9 @@ bool AK8PuppiTopTagger::process(uhh2::Event& event){
   event.set(h_AK8PuppiTopTags_, toptags);
   event.set(h_AK8PuppiTopTagsPtr_, toptags_ptr);
   return (toptags.size() >= 1);
+
+    if(debug) cout << "AK8PuppiTopTagger" << endl;
+
 }
 
 
@@ -610,13 +628,13 @@ bool DeepAK8TopTagger::process(uhh2::Event& event){
   double min_mSD = 105.;
   double max_mSD = 210.;
   double pt_min = 400.;
-  double max_score;
+  // double max_score;
 
-  if(year == Year::isUL16preVFP) max_score = 0.485;
-  else if(year == Year::isUL16postVFP) max_score = 0.475;
-  else if(year == Year::isUL17) max_score = 0.487;
-  else if(year == Year::isUL18) max_score = 0.477;
-  else throw runtime_error("DeepAK8TopTagger: no valid year selected.");
+  // if(year == Year::isUL16preVFP) max_score = 0.485;
+  // else if(year == Year::isUL16postVFP) max_score = 0.475;
+  // else if(year == Year::isUL17) max_score = 0.487;
+  // else if(year == Year::isUL18) max_score = 0.477;
+  // else throw runtime_error("DeepAK8TopTagger: no valid year selected.");
 
   std::vector<TopJet> toptags;
   vector<const TopJet*> toptags_ptr;
@@ -632,7 +650,7 @@ bool DeepAK8TopTagger::process(uhh2::Event& event){
     if(!(min_mSD < mSD && mSD < max_mSD)) continue;
 
     // cut on score
-    if( !(puppijet.btag_MassDecorrelatedDeepBoosted_TvsQCD() >= max_score ) ) continue;
+    // if( !(puppijet.btag_MassDecorrelatedDeepBoosted_TvsQCD() >= max_score ) ) continue;
 
     toptags.emplace_back(puppijet);
     toptags_ptr.emplace_back(&puppijet);
@@ -641,6 +659,9 @@ bool DeepAK8TopTagger::process(uhh2::Event& event){
   event.set(h_DeepAK8TopTags_, toptags);
   event.set(h_DeepAK8TopTagsPtr_, toptags_ptr);
   return (toptags.size() >= 1);
+
+    if(debug) cout << "DeepAK8TopTagger" << endl;
+
 }
 
 bool JetLeptonDeltaRCleaner::process(uhh2::Event& event){
@@ -671,6 +692,8 @@ bool JetLeptonDeltaRCleaner::process(uhh2::Event& event){
   for(const auto& j : cleaned_jets) event.jets->push_back(j);
 
   return true;
+
+    if(debug) cout << "JetLeptonDeltaRCleaner" << endl;
 }
 ////
 
@@ -702,6 +725,9 @@ bool TopJetLeptonDeltaRCleaner::process(uhh2::Event& event){
   for(const auto& j : cleaned_topjets) event.topjets->push_back(j);
 
   return true;
+
+  if(debug) cout << "TopJetLeptonDeltaRCleaner" << endl;
+
 }
 ////
 
@@ -866,7 +892,7 @@ bool MEPartonFinder::process(uhh2::Event& evt){
   }
 
   evt.set(h_meps_, std::move(mep_refs));
-
+  if(debug) cout << "MEPartonFinder" << endl;
   return true;
 }
 
@@ -875,6 +901,8 @@ bool MEPartonFinder::process(uhh2::Event& evt){
 //////////////////////////////////////////////////////////////
 
 Variables_NN::Variables_NN(uhh2::Context& ctx, TString mode): mode_(mode){
+    if(debug) cout << "Variables_NN beginning" << endl;
+
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
   h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
@@ -1012,6 +1040,8 @@ Variables_NN::Variables_NN(uhh2::Context& ctx, TString mode): mode_(mode){
 }
 
 bool Variables_NN::process(uhh2::Event& evt){
+      if(debug) cout << "Variables_NN process beginning" << endl;
+
 
   double weight = evt.weight;
   evt.set(h_eventweight, -10);
@@ -1160,27 +1190,27 @@ bool Variables_NN::process(uhh2::Event& evt){
   }
 
   // save b-tag score of matched CHS jet
-  vector<Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);
-  for(unsigned int i=0; i<AK4CHSjets_matched.size(); i++){
-    if(i==0){
-      evt.set(h_Ak4_j1_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==1){
-      evt.set(h_Ak4_j2_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==2){
-      evt.set(h_Ak4_j3_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==3){
-      evt.set(h_Ak4_j4_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==4){
-      evt.set(h_Ak4_j5_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-    if(i==5){
-      evt.set(h_Ak4_j6_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
-    }
-  }
+  // vector<Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);
+  // for(unsigned int i=0; i<AK4CHSjets_matched.size(); i++){
+  //   if(i==0){
+  //     evt.set(h_Ak4_j1_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==1){
+  //     evt.set(h_Ak4_j2_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==2){
+  //     evt.set(h_Ak4_j3_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==3){
+  //     evt.set(h_Ak4_j4_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==4){
+  //     evt.set(h_Ak4_j5_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  //   if(i==5){
+  //     evt.set(h_Ak4_j6_deepjetbscore, AK4CHSjets_matched.at(i).btag_DeepJet());
+  //   }
+  // }
 
   /////////   AK8 JETS
   if(mode_ == "deepAK8"){
@@ -1226,7 +1256,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j1_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j1_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j1_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j1_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j1_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==1){
         evt.set(h_Ak8_j2_pt, Ak8jets->at(i).pt());
@@ -1236,7 +1266,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j2_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j2_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j2_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j2_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j2_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
       if(i==2){
         evt.set(h_Ak8_j3_pt, Ak8jets->at(i).pt());
@@ -1246,7 +1276,7 @@ bool Variables_NN::process(uhh2::Event& evt){
         evt.set(h_Ak8_j3_mSD, Ak8jets->at(i).softdropmass());
         evt.set(h_Ak8_j3_tau21, Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1());
         evt.set(h_Ak8_j3_tau32, Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2());
-        evt.set(h_Ak8_j3_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
+        // evt.set(h_Ak8_j3_deepak8tscore, Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD());
       }
     }
   } // end deepAK8 mode
@@ -1331,6 +1361,9 @@ bool Variables_NN::process(uhh2::Event& evt){
   double leading_jet_phi = Ak4jets->at(0).v4().phi();
   std::srand((int)(1000 * leading_jet_phi));
   evt.set(h_uniform_random, ((double) rand()) / RAND_MAX);
+
+        if(debug) cout << "Variables_NN process beginning" << endl;
+
 
   return true;
 }

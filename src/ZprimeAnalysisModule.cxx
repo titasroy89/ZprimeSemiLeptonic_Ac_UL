@@ -259,8 +259,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   string trigger_ele_A, trigger_ele_B;
   string trigger_ph_A;
   double MET_cut, HT_lep_cut;
-  double HT_cut;
-  double HTGen_cut;
+  // double HT_cut;
+  // double HTGen_cut;
   isMuon = false; isElectron = false;
   channel = ctx.get("channel");
   if(channel == "muon") isMuon = true;
@@ -283,8 +283,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     // jet2_pt = 50;
     MET_cut = 70;
     HT_lep_cut = 0;
-    HT_cut = 800;
-    HTGen_cut = 800;
+    // HT_cut = 800;
+    // HTGen_cut = 800;
   }
   if(isElectron){ // semileptonic electron channel
     trigger_ele_B = "HLT_Ele115_CaloIdVT_GsfTrkIdT_v*";
@@ -306,8 +306,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     // jet2_pt = 40;
     MET_cut = 60;
     HT_lep_cut = 0;
-    HT_cut = 800;
-    HTGen_cut = 800;
+    // HT_cut = 800;
+    // HTGen_cut = 800;
   }
 
 
@@ -383,8 +383,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   Jet2_selection.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
   met_sel.reset(new METCut  (MET_cut   , uhh2::infinity));
   htlep_sel.reset(new HTlepCut(HT_lep_cut, uhh2::infinity));
-  ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
-  htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity ));
+  // ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
+  // htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity ));
 
   Chi2_selection.reset(new Chi2Cut(ctx, 0., chi2_max));
   TTbarMatchable_selection.reset(new TTbarSemiLepMatchableSelection());
@@ -915,12 +915,12 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(debug) cout << "MET: ok" << endl;
   fill_histograms(event, "MET");
   lumihists_MET->fill(event);
-  if(isMuon){
-    if(!htlep_sel->passes(event)) return false;
-    fill_histograms(event, "HTlep");
-    lumihists_HTlep->fill(event);
-    if(debug) cout << "HTlep: ok" << endl;
-  }
+  // if(isMuon){
+  //   if(!htlep_sel->passes(event)) return false;
+  //   fill_histograms(event, "HTlep");
+  //   lumihists_HTlep->fill(event);
+  //   if(debug) cout << "HTlep: ok" << endl;
+  // }
 
   // if(event.genjets) {
   //   for(const auto & genjet : *event.genjets) {
@@ -933,9 +933,9 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
 
   // if(!ht_sel->passes(event)) return false;
   // if(debug) cout << "HT cut: ok" << endl;
-  float gen_ht = 0;
-  if(!htgen_sel->passes(event)) return false;
-  if(debug) cout << "HT Gen cut: ok" << endl;
+  // float gen_ht = 0;
+  // if(!htgen_sel->passes(event)) return false;
+  // if(debug) cout << "HT Gen cut: ok" << endl;
 
   // if(event.genjets) {
   //   for(const auto & genjet : *event.genjets) {

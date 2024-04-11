@@ -276,8 +276,13 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   sum_event_weights_fsr_down = book<TH1F>("sum_event_weights_fsr_down", "counting experiment", 1, 0.5, 1.5);
 
   // DeltaY
-  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
-  DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_reco           = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_gen_0_500      = book<TH1F>("DeltaY_gen_0_500", "#Delta Y_{(t,#bar{t})} Mttbar[0,500]",2,-2,2);
+  DeltaY_gen_500_750    = book<TH1F>("DeltaY_gen_500_750", "#Delta Y_{(t,#bar{t})} Mttbar[500, 750]",2,-2,2);
+  DeltaY_gen_750_1000   = book<TH1F>("DeltaY_gen_750_1000", "#Delta Y_{(t,#bar{t})} Mttbar[750,1000]",2,-2,2);
+  DeltaY_gen_1000_1500  = book<TH1F>("DeltaY_gen_1000_1500", "#Delta Y_{(t,#bar{t}) Mttbar[1000,1500]}",2,-2,2);
+  DeltaY_gen_1500Inf    = book<TH1F>("DeltaY_gen_1500Inf", "#Delta Y_{(t,#bar{t})} Mttbar[1500, Inf)",2,-2,2);
 
   //Gen plots
   mttbar          = book<TH1F>("mttbar", "M_{tt} in gen",1000, 0, 5000);
@@ -294,6 +299,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   bquarkgen_pt    = book<TH1F>("bquarkgen_pt", "p_{bquark} [GeV] in gen",100, 0, 3000);
   bquarkgen_eta   = book<TH1F>("bquarkgen_eta", "#eta^{bquark} in gen",100, -2.5, 2.5);
   leadingJetPtHist= book<TH1F>("leadingJetPtHist", "p_{leading jet} [GeV] in gen",1000, 0, 3000);
+  genHT_dist      = book<TH1F>("genHT_dist", "HT_{sum of gen jet pt} [GeV]",1000, 0, 3000);
 
 
   // calculate sum of event weights with PDF replicas
@@ -323,148 +329,188 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
   
 
-  const GenParticle* top = nullptr;
-  const GenParticle* antitop = nullptr;
+  // const GenParticle* top = nullptr;
+  // const GenParticle* antitop = nullptr;
 
 // Loop to identify top and antitop quarks
-  for (const GenParticle& genp : *(event.genparticles)) {
-      if (genp.pdgId() == 6) {
-          top = &genp;
-      } else if (genp.pdgId() == -6) {
-          antitop = &genp;
-      }
-  }
+  // for (const GenParticle& genp : *(event.genparticles)) {
+  //     if (genp.pdgId() == 6) {
+  //         top = &genp;
+  //     } else if (genp.pdgId() == -6) {
+  //         antitop = &genp;
+  //     }
+  // }
 
 
-  if (top && antitop) { 
-    auto top_v4 = top->v4();
-    auto antitop_v4 = antitop->v4();
+  // if (top && antitop) { 
+  //   auto top_v4 = top->v4();
+  //   auto antitop_v4 = antitop->v4();
 
-    double energy = top_v4.energy() + antitop_v4.energy();
-    double px = top_v4.Px() + antitop_v4.Px();
-    double py = top_v4.Py() + antitop_v4.Py();
-    double pz = top_v4.Pz() + antitop_v4.Pz();
+  //   double energy = top_v4.energy() + antitop_v4.energy();
+  //   double px = top_v4.Px() + antitop_v4.Px();
+  //   double py = top_v4.Py() + antitop_v4.Py();
+  //   double pz = top_v4.Pz() + antitop_v4.Pz();
 
-    double ttbar_mass = sqrt(energy*energy - (px*px + py*py + pz*pz));
-    // cout<< "mttbar:"<< ttbar_mass << endl; 
-    mttbar->Fill(ttbar_mass);
+  //   double ttbar_mass = sqrt(energy*energy - (px*px + py*py + pz*pz));
+  //   // // cout<< "mttbar:"<< ttbar_mass << endl; 
+  //   // mttbar->Fill(ttbar_mass);
 
-  }
+  // }
 
-  GenParticle topgen, antitopgen;
+
+    // Define variables to store the top quark and the antitop quark
+  GenParticle top, antitop;
+    // Loop over all generated particles in the event
   for(const GenParticle & gp : *event.genparticles){
 
     if(gp.pdgId() == 6){
-      topgen = gp;
+      top = gp;
     }
     else if(gp.pdgId() == -6){
-      antitopgen = gp;
-    }
+    antitop = gp;
+      }
   }
 
-  float dygen= TMath::Abs(0.5*TMath::Log((topgen.energy() + topgen.pt()*TMath::SinH(topgen.eta()))/(topgen.energy() - topgen.pt()*TMath::SinH(topgen.eta())))) - TMath::Abs(0.5*TMath::Log((antitopgen.energy() + antitopgen.pt()*TMath::SinH(antitopgen.eta()))/(antitopgen.energy() - antitopgen.pt()*TMath::SinH(antitopgen.eta()))));
+  // Calculate the invariant mass of the top-antitop pair using their 4-momenta
+  float ttbar_mass = inv_mass(top.v4() + antitop.v4());
+
+  
+
+  float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
 
   DeltaY_gen->Fill(dygen, weight);
 
-   // leptonic leg of ttbar definition
-    const vector<GenParticle> & genparticles = *(event.genparticles);
-    for (unsigned int i = 0; i < genparticles.size(); ++i) {
-      const GenParticle &genp = genparticles[i];
-      if (abs(genp.pdgId()) == 6) {
-        if (genp.pdgId() == 6) {
-          // cout<< "top is found" << endl;
-          topgen_pt->Fill(genp.pt());
-          topgen_eta->Fill(genp.eta());
-        } else if (genp.pdgId() == -6) {
-          // cout<< "antitop is found" << endl;
-          antitopgen_pt->Fill(genp.pt());
-          antitopgen_eta->Fill(genp.eta());
-        }
+  if(ttbar_mass>=0 && ttbar_mass < 500){
+    DeltaY_gen_0_500->Fill(dygen, weight);
+  }
+  if(ttbar_mass>=500 && ttbar_mass < 750){
+    DeltaY_gen_500_750->Fill(dygen, weight);
+  }
+  if(ttbar_mass>=750 && ttbar_mass < 1000){
+    DeltaY_gen_750_1000->Fill(dygen, weight);
+  }
+  if(ttbar_mass>=1000 && ttbar_mass < 1500){
+    DeltaY_gen_1000_1500->Fill(dygen, weight);
+  }
+  if(ttbar_mass>=1500){
+     DeltaY_gen_1500Inf->Fill(dygen, weight);
+  }
 
-        const GenParticle* w = nullptr;
-        const GenParticle* b = nullptr;
 
-        for (unsigned int j = 0; j < genparticles.size(); ++j) {
-            const GenParticle &gp = genparticles[j];
-            auto m1 = gp.mother(&genparticles, 1);
-            auto m2 = gp.mother(&genparticles, 2);
-            bool has_top_mother = (m1 && m1->index() == genp.index()) || (m2 && m2->index() == genp.index());
 
-            if (has_top_mother) {
-                if (abs(gp.pdgId()) == 24) { // W boson
-                    w = &gp;
-                    // cout<< "w is found" << endl;
-                } 
-                else if (abs(gp.pdgId()) == 5) { // b quark
-                    b = &gp;
-                    // cout<< "b is found" << endl;
-                }
-            }
-        }
 
-        // Check W boson decays leptonically
-        if (w) {
-          // bool isLeptonic = false;
-          // const GenParticle* lepton = nullptr;
-          // const GenParticle* neutrino = nullptr;
-          for (unsigned int k = 0; k < genparticles.size(); ++k) {
-            const GenParticle &daught = genparticles[k];
-            auto m1 = daught.mother(&genparticles, 1);
-            auto m2 = daught.mother(&genparticles, 2);
-            bool has_w_mother = (m1 && m1->index() == w->index()) || (m2 && m2->index() == w->index());
 
-            if (has_w_mother) {
-                int pdgId = abs(daught.pdgId());
 
-                if (pdgId == 11 || pdgId == 13) {
-                    // isLeptonic = true;
-                    // lepton = &daught;
-                    leptongen_pt->Fill(daught.pt());
-                    leptongen_eta->Fill(daught.eta());
-                    // cout<< "lepton is found" << endl;
+  //  // leptonic leg of ttbar definition
+  //   const vector<GenParticle> & genparticles = *(event.genparticles);
+  //   for (unsigned int i = 0; i < genparticles.size(); ++i) {
+  //     const GenParticle &genp = genparticles[i];
+  //     if (abs(genp.pdgId()) == 6) {
+  //       if (genp.pdgId() == 6) {
+  //         // cout<< "top is found" << endl;
+  //         topgen_pt->Fill(genp.pt());
+  //         topgen_eta->Fill(genp.eta());
+  //       } else if (genp.pdgId() == -6) {
+  //         // cout<< "antitop is found" << endl;
+  //         antitopgen_pt->Fill(genp.pt());
+  //         antitopgen_eta->Fill(genp.eta());
+  //       }
 
-                    if (pdgId == 11) { // Electron
-                        electrongen_pt->Fill(daught.pt());
-                        electrongen_eta->Fill(daught.eta());
-                        // cout<< "electron is found" << endl;
-                    } else if (pdgId == 13) { // Muon
-                        muongen_pt->Fill(daught.pt());
-                        muongen_eta->Fill(daught.eta());
-                        // cout<< "muon is found" << endl;
-                    }
-                } 
-                // else if (pdgId == 12 || pdgId == 14) { // Neutrino
-                //     // isLeptonic = true;
-                //     neutrino = &daught;
-                // }
-            }
-          }
-        }
+  //       const GenParticle* w = nullptr;
+  //       const GenParticle* b = nullptr;
 
-        if (b) {
-          bquarkgen_pt->Fill(b->pt());
-          bquarkgen_eta->Fill(b->eta());
-        }
-      }
-    }
+  //       for (unsigned int j = 0; j < genparticles.size(); ++j) {
+  //           const GenParticle &gp = genparticles[j];
+  //           auto m1 = gp.mother(&genparticles, 1);
+  //           auto m2 = gp.mother(&genparticles, 2);
+  //           bool has_top_mother = (m1 && m1->index() == genp.index()) || (m2 && m2->index() == genp.index());
+
+  //           if (has_top_mother) {
+  //               if (abs(gp.pdgId()) == 24) { // W boson
+  //                   w = &gp;
+  //                   // cout<< "w is found" << endl;
+  //               } 
+  //               else if (abs(gp.pdgId()) == 5) { // b quark
+  //                   b = &gp;
+  //                   // cout<< "b is found" << endl;
+  //               }
+  //           }
+  //       }
+
+  //       // Check W boson decays leptonically
+  //       const GenParticle* leadingJet = nullptr;
+  //       float leadingJetPt = 0;
+  //       if (w) {
+  //         // bool isLeptonic = false;
+  //         // const GenParticle* lepton = nullptr;
+  //         // const GenParticle* neutrino = nullptr;
+  //         for (unsigned int k = 0; k < genparticles.size(); ++k) {
+  //           const GenParticle &daught = genparticles[k];
+  //           auto m1 = daught.mother(&genparticles, 1);
+  //           auto m2 = daught.mother(&genparticles, 2);
+  //           bool has_w_mother = (m1 && m1->index() == w->index()) || (m2 && m2->index() == w->index());
+
+  //           if (has_w_mother) {
+  //             int pdgId = abs(daught.pdgId());
+
+  //             if (pdgId == 11 || pdgId == 13) {
+  //               // isLeptonic = true;
+  //               // lepton = &daught;
+  //               leptongen_pt->Fill(daught.pt());
+  //               leptongen_eta->Fill(daught.eta());
+  //               // cout<< "lepton is found" << endl;
+
+  //               if (pdgId == 11) { // Electron
+  //                   electrongen_pt->Fill(daught.pt());
+  //                   electrongen_eta->Fill(daught.eta());
+  //                   // cout<< "electron is found" << endl;
+  //               } else if (pdgId == 13) { // Muon
+  //                   muongen_pt->Fill(daught.pt());
+  //                   muongen_eta->Fill(daught.eta());
+  //                   // cout<< "muon is found" << endl;
+  //               }
+  //             } 
+
+  //             if (pdgId < 6 || pdgId == 21) {
+  //               if (daught.pt() > leadingJetPt) {
+  //                   leadingJetPt = daught.pt(); 
+  //                   leadingJet = &daught;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+
+  //       if (leadingJet) {
+  //         leadingJetPtHist->Fill(leadingJet->pt());
+  //         // cout << "Leading jet pt: " << leadingJet->pt() << ", pdgId: " << leadingJet->pdgId() << endl;
+  //       }
+
+  //       if (b) {
+  //         bquarkgen_pt->Fill(b->pt());
+  //         bquarkgen_eta->Fill(b->eta());
+  //       }
+  //     }
+  //   }
+    
+
+  //   float genHT = 0;
+  //   for(const GenParticle & gp : *event.genparticles){
+  //     // the particle is a light quark or a gluon
+  //     if (std::abs(gp.pdgId()) < 6 || std::abs(gp.pdgId()) == 21){
+  //       // the particle is not a decay product of top quarks or W bosons
+  //       if(gp.mother1() != 6 && gp.mother1() != 24 && gp.mother2() != 6 && gp.mother2() != 24) {
+  //         // include particles with pt > 10 GeV and status 23 in the genHT calculation
+  //         if (gp.pt() > 10 && gp.status() == 23) {
+  //           genHT += gp.pt();
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   genHT_dist->Fill(genHT);
+    
     // gen histograms filling end
-
-
-    double maxPt = 0;
-    const GenJet* leadingJet = nullptr; 
-
-    if(event.genjets) {
-      for(const auto & genjet : *event.genjets) {
-        if (genjet.pt() > maxPt) {
-            maxPt = genjet.pt(); 
-            leadingJet = &genjet;
-        }
-      }
-      if (leadingJet != nullptr) {
-          leadingJetPtHist->Fill(leadingJet->pt());
-      }
-    }
-  
   
 
   // double_t DeltaY_gen_ele = TMath::Abs(0.5*TMath::Log((electron.energy() + electron.pt()*TMath::SinH(electron.eta()))/(electron.energy() - electron.pt()*TMath::SinH(electron.eta())))) - TMath::Abs(0.5*TMath::Log((antielectron.energy() + antielectron.pt()*TMath::SinH(antielectron.eta()))/(antielectron.energy() - antielectron.pt()*TMath::SinH(antielectron.eta()))));

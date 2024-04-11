@@ -326,12 +326,8 @@ protected:
   std::unique_ptr<uhh2::Selection> met_sel;
   std::unique_ptr<uhh2::Selection> htlep_sel;
   std::unique_ptr<Selection> sel_1btag, sel_2btag;
-  std::unique_ptr<Selection> HEM_selection;
+  std::unique_ptr<Selection> HEM_selection, DeltaEta_selection;
   unique_ptr<Selection> ThetaStar_selection_bin1, ThetaStar_selection_bin2, ThetaStar_selection_bin3, ThetaStar_selection_bin4, ThetaStar_selection_bin5, ThetaStar_selection_bin6;
-  unique_ptr<Selection> AbsThetaStar_selection_bin1, AbsThetaStar_selection_bin2, AbsThetaStar_selection_bin3, AbsThetaStar_selection_bin4, AbsThetaStar_selection_bin5;
-
-  // systematics handles
- // unique_ptr<ZprimeSemiLeptonicSystematicsModule> SystematicsModule;
 
   // NN variables handles
   unique_ptr<Variables_NN> Variables_module;
@@ -361,6 +357,17 @@ protected:
   std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0_NoTopTag;
   std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1_NoTopTag;
   std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2_NoTopTag;
+
+  // Hists with PDF variations
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0_TopTag;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1_TopTag;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2_TopTag;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0_NoTopTag;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1_NoTopTag;
+  std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2_NoTopTag;
 
   //muon
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_muon;
@@ -780,6 +787,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   HEM_selection.reset(new HEMSelection(ctx)); // HEM issue in 2018, veto on leptons and jets
 
+  DeltaEta_selection.reset(new DeltaEtaSelection()); // Cut on DeltaEta(j1,j2)<3. to reduce QCD spikes
+
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
 
  //  if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
@@ -960,46 +969,63 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
     //electron//
 
+  // Hist with PDF variations
+  h_Zprime_PDFVariations_DNN_output0.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0"));
+  h_Zprime_PDFVariations_DNN_output1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1"));
+  h_Zprime_PDFVariations_DNN_output2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2"));
+  h_Zprime_PDFVariations_DNN_output0_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0_TopTag"));
+  h_Zprime_PDFVariations_DNN_output1_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1_TopTag"));
+  h_Zprime_PDFVariations_DNN_output2_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2_TopTag"));
+  h_Zprime_PDFVariations_DNN_output0_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0_NoTopTag"));
+  h_Zprime_PDFVariations_DNN_output1_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1_NoTopTag"));
+  h_Zprime_PDFVariations_DNN_output2_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2_NoTopTag"));
+
   
   // h_MistagHists.reset(new ZprimeSemiLeptonicMistagHists(ctx, "Mistag"));
   
   // Book histograms
-  vector<string> histogram_tags = {"BeforeCuts", "AfterBaseline", "AfterDNN", "AfterChi2", "Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_TopTag_SF", "Weights_PS", "NLOCorrections", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "TriggerEle_SF", "NNInputsBeforeReweight", "TopTagVeto", "DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag", "DNN_output0_abs_thetastar_bin1", "DNN_output0_abs_thetastar_bin2", "DNN_output0_abs_thetastar_bin3", "DNN_output0_abs_thetastar_bin4", "DNN_output0_abs_thetastar_bin5", "DNN_output0_TopTag_abs_thetastar_bin1", "DNN_output0_TopTag_abs_thetastar_bin2", "DNN_output0_TopTag_abs_thetastar_bin3", "DNN_output0_TopTag_abs_thetastar_bin4", "DNN_output0_TopTag_abs_thetastar_bin5", "DNN_output0_NoTopTag_abs_thetastar_bin1", "DNN_output0_NoTopTag_abs_thetastar_bin2", "DNN_output0_NoTopTag_abs_thetastar_bin3", "DNN_output0_NoTopTag_abs_thetastar_bin4", "DNN_output0_NoTopTag_abs_thetastar_bin5", "DNN_output0_thetastar_bin1", "DNN_output0_thetastar_bin2", "DNN_output0_thetastar_bin3", "DNN_output0_thetastar_bin4", "DNN_output0_thetastar_bin5", "DNN_output0_thetastar_bin6", "DNN_output0_TopTag_thetastar_bin1", "DNN_output0_TopTag_thetastar_bin2", "DNN_output0_TopTag_thetastar_bin3", "DNN_output0_TopTag_thetastar_bin4", "DNN_output0_TopTag_thetastar_bin5", "DNN_output0_TopTag_thetastar_bin6", "DNN_output0_NoTopTag_thetastar_bin1", "DNN_output0_NoTopTag_thetastar_bin2", "DNN_output0_NoTopTag_thetastar_bin3", "DNN_output0_NoTopTag_thetastar_bin4", "DNN_output0_NoTopTag_thetastar_bin5", "DNN_output0_NoTopTag_thetastar_bin6",
+vector<string> histogram_tags = {
+  // "BeforeCuts", "AfterBaseline", "AfterDNN", 
+  "AfterChi2", 
+  // "Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_TopTag_SF", "Weights_PS", "NLOCorrections", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "TriggerEle_SF", "TopTagVeto",
+  "NNInputsBeforeReweight",  
+  "DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag",
+  //  "DNN_output0_abs_thetastar_bin1", "DNN_output0_abs_thetastar_bin2", "DNN_output0_abs_thetastar_bin3", "DNN_output0_abs_thetastar_bin4", "DNN_output0_abs_thetastar_bin5", "DNN_output0_TopTag_abs_thetastar_bin1", "DNN_output0_TopTag_abs_thetastar_bin2", "DNN_output0_TopTag_abs_thetastar_bin3", "DNN_output0_TopTag_abs_thetastar_bin4", "DNN_output0_TopTag_abs_thetastar_bin5", "DNN_output0_NoTopTag_abs_thetastar_bin1", "DNN_output0_NoTopTag_abs_thetastar_bin2", "DNN_output0_NoTopTag_abs_thetastar_bin3", "DNN_output0_NoTopTag_abs_thetastar_bin4", "DNN_output0_NoTopTag_abs_thetastar_bin5", "DNN_output0_thetastar_bin1", "DNN_output0_thetastar_bin2", "DNN_output0_thetastar_bin3", "DNN_output0_thetastar_bin4", "DNN_output0_thetastar_bin5", "DNN_output0_thetastar_bin6", "DNN_output0_TopTag_thetastar_bin1", "DNN_output0_TopTag_thetastar_bin2", "DNN_output0_TopTag_thetastar_bin3", "DNN_output0_TopTag_thetastar_bin4", "DNN_output0_TopTag_thetastar_bin5", "DNN_output0_TopTag_thetastar_bin6", "DNN_output0_NoTopTag_thetastar_bin1", "DNN_output0_NoTopTag_thetastar_bin2", "DNN_output0_NoTopTag_thetastar_bin3", "DNN_output0_NoTopTag_thetastar_bin4", "DNN_output0_NoTopTag_thetastar_bin5", "DNN_output0_NoTopTag_thetastar_bin6",
    "Initial", "Middle", "Last",
-    "DeltaY_gen_0_500", "DeltaY_gen_500_750","DeltaY_gen_750_1000","DeltaY_gen_1000_1500","DeltaY_gen_1500Inf", 
-   "DeltaY_gen_N", "DeltaY_N_gen_0_500","DeltaY_N_gen_500_750", "DeltaY_N_gen_750_1000", "DeltaY_N_gen_1000_1500", "DeltaY_N_gen_1500Inf", 
-   "DeltaY_gen_P", "DeltaY_P_gen_0_500", "DeltaY_P_gen_500_750", "DeltaY_P_gen_750_1000", "DeltaY_P_gen_1000_1500", "DeltaY_P_gen_1500Inf", 
+  // "DeltaY_gen_0_500", "DeltaY_gen_500_750","DeltaY_gen_750_1000","DeltaY_gen_1000_1500","DeltaY_gen_1500Inf", 
+  //  "DeltaY_gen_N", "DeltaY_N_gen_0_500","DeltaY_N_gen_500_750", "DeltaY_N_gen_750_1000", "DeltaY_N_gen_1000_1500", "DeltaY_N_gen_1500Inf", 
+  //  "DeltaY_gen_P", "DeltaY_P_gen_0_500", "DeltaY_P_gen_500_750", "DeltaY_P_gen_750_1000", "DeltaY_P_gen_1000_1500", "DeltaY_P_gen_1500Inf", 
    "DeltaY_reco_1500Inf_muon" ,"DeltaY_reco_1000_1500_muon" ,"DeltaY_reco_750_1000_muon" ,"DeltaY_reco_500_750_muon", "DeltaY_reco_0_500_muon",
    "DeltaY_reco_N_muon", "DeltaY_N_reco_1500Inf_muon" ,"DeltaY_N_reco_1000_1500_muon" ,"DeltaY_N_reco_750_1000_muon" ,"DeltaY_N_reco_500_750_muon", "DeltaY_N_reco_0_500_muon", 
    "DeltaY_reco_P_muon", "DeltaY_P_reco_1500Inf_muon" ,"DeltaY_P_reco_1000_1500_muon" ,"DeltaY_P_reco_750_1000_muon" ,"DeltaY_P_reco_500_750_muon", "DeltaY_P_reco_0_500_muon",
-   "Not_reco_gens_muon", "Not_reco_gens_0_500_muon", "Not_reco_gens_500_750_muon", "Not_reco_gens_750_1000_muon", "Not_reco_gens_1000_1500_muon", "Not_reco_gens_1500Inf_muon",
-   "DY_P_equal_gen_muon", "DY_N_equal_gen_muon" , "DY_P_equal_reco_muon", "DY_N_equal_reco_muon",
+  //  "Not_reco_gens_muon", "Not_reco_gens_0_500_muon", "Not_reco_gens_500_750_muon", "Not_reco_gens_750_1000_muon", "Not_reco_gens_1000_1500_muon", "Not_reco_gens_1500Inf_muon",
+  //  "DY_P_equal_gen_muon", "DY_N_equal_gen_muon" , "DY_P_equal_reco_muon", "DY_N_equal_reco_muon",
    "DY_P_P_muon", "DY_P_P_0_500_muon", "DY_P_P_500_750_muon", "DY_P_P_750_1000_muon", "DY_P_P_1000_1500_muon", "DY_P_P_1500Inf_muon", "DY_P_P_750Inf_muon", 
    "DY_P_N_muon", "DY_P_N_0_500_muon", "DY_P_N_500_750_muon", "DY_P_N_750_1000_muon", "DY_P_N_1000_1500_muon", "DY_P_N_1500Inf_muon", "DY_P_N_750Inf_muon", 
    "DY_N_P_muon", "DY_N_P_0_500_muon", "DY_N_P_500_750_muon", "DY_N_P_750_1000_muon", "DY_N_P_1000_1500_muon", "DY_N_P_1500Inf_muon", "DY_N_P_750Inf_muon", 
    "DY_N_N_muon", "DY_N_N_0_500_muon", "DY_N_N_500_750_muon", "DY_N_N_750_1000_muon", "DY_N_N_1000_1500_muon", "DY_N_N_1500Inf_muon", "DY_N_N_750Inf_muon", 
-   "DY_0_500_recogenmatch_muon", "DY_Match_N_N_0_500_muon", "DY_Match_N_P_0_500_muon", "DY_Match_P_N_0_500_muon", "DY_Match_P_P_0_500_muon", "UnMatched_0_500_muon", 
-   "DY_500_750_recogenmatch_muon", "DY_Match_N_N_500_750_muon", "DY_Match_N_P_500_750_muon", "DY_Match_P_N_500_750_muon", "DY_Match_P_P_500_750_muon", "UnMatched_500_750_muon", 
-   "DY_750_1000_recogenmatch_muon", "DY_Match_N_N_750_1000_muon", "DY_Match_N_P_750_1000_muon", "DY_Match_P_N_750_1000_muon", "DY_Match_P_P_750_1000_muon", "UnMatched_750_1000_muon", 
-   "DY_1000_1500_recogenmatch_muon", "DY_Match_N_N_1000_1500_muon", "DY_Match_N_P_1000_1500_muon", "DY_Match_P_N_1000_1500_muon", "DY_Match_P_P_1000_1500_muon", "UnMatched_1000_1500_muon", 
-   "DY_1500Inf_recogenmatch_muon", "DY_Match_N_N_1500Inf_muon", "DY_Match_N_P_1500Inf_muon", "DY_Match_P_N_1500Inf_muon", "DY_Match_P_P_1500Inf_muon", "UnMatched_1500Inf_muon", 
-   "DY_Mass_0_500_NOT_reco_muon", "DY_Mass_500_750_NOT_reco_muon", "DY_Mass_750_1000_NOT_reco_muon", "DY_Mass_1000_1500_NOT_reco_muon", "DY_Mass_1500Inf_NOT_reco_muon",  
-   "GenTop",
+  //  "DY_0_500_recogenmatch_muon", "DY_Match_N_N_0_500_muon", "DY_Match_N_P_0_500_muon", "DY_Match_P_N_0_500_muon", "DY_Match_P_P_0_500_muon", "UnMatched_0_500_muon", 
+  //  "DY_500_750_recogenmatch_muon", "DY_Match_N_N_500_750_muon", "DY_Match_N_P_500_750_muon", "DY_Match_P_N_500_750_muon", "DY_Match_P_P_500_750_muon", "UnMatched_500_750_muon", 
+  //  "DY_750_1000_recogenmatch_muon", "DY_Match_N_N_750_1000_muon", "DY_Match_N_P_750_1000_muon", "DY_Match_P_N_750_1000_muon", "DY_Match_P_P_750_1000_muon", "UnMatched_750_1000_muon", 
+  //  "DY_1000_1500_recogenmatch_muon", "DY_Match_N_N_1000_1500_muon", "DY_Match_N_P_1000_1500_muon", "DY_Match_P_N_1000_1500_muon", "DY_Match_P_P_1000_1500_muon", "UnMatched_1000_1500_muon", 
+  //  "DY_1500Inf_recogenmatch_muon", "DY_Match_N_N_1500Inf_muon", "DY_Match_N_P_1500Inf_muon", "DY_Match_P_N_1500Inf_muon", "DY_Match_P_P_1500Inf_muon", "UnMatched_1500Inf_muon", 
+  //  "DY_Mass_0_500_NOT_reco_muon", "DY_Mass_500_750_NOT_reco_muon", "DY_Mass_750_1000_NOT_reco_muon", "DY_Mass_1000_1500_NOT_reco_muon", "DY_Mass_1500Inf_NOT_reco_muon",  
+  //  "GenTop",
    "DeltaY_reco_1500Inf_ele" ,"DeltaY_reco_1000_1500_ele" ,"DeltaY_reco_750_1000_ele" ,"DeltaY_reco_500_750_ele", "DeltaY_reco_0_500_ele",
    "DeltaY_reco_N_ele", "DeltaY_N_reco_1500Inf_ele" ,"DeltaY_N_reco_1000_1500_ele" ,"DeltaY_N_reco_750_1000_ele" ,"DeltaY_N_reco_500_750_ele", "DeltaY_N_reco_0_500_ele", 
    "DeltaY_reco_P_ele", "DeltaY_P_reco_1500Inf_ele" ,"DeltaY_P_reco_1000_1500_ele" ,"DeltaY_P_reco_750_1000_ele" ,"DeltaY_P_reco_500_750_ele", "DeltaY_P_reco_0_500_ele",
-   "Not_reco_gens_ele", "Not_reco_gens_0_500_ele", "Not_reco_gens_500_750_ele", "Not_reco_gens_750_1000_ele", "Not_reco_gens_1000_1500_ele", "Not_reco_gens_1500Inf_ele",
-   "DY_P_equal_gen_ele", "DY_N_equal_gen_ele" , "DY_P_equal_reco_ele", "DY_N_equal_reco_ele",
+  //  "Not_reco_gens_ele", "Not_reco_gens_0_500_ele", "Not_reco_gens_500_750_ele", "Not_reco_gens_750_1000_ele", "Not_reco_gens_1000_1500_ele", "Not_reco_gens_1500Inf_ele",
+  //  "DY_P_equal_gen_ele", "DY_N_equal_gen_ele" , "DY_P_equal_reco_ele", "DY_N_equal_reco_ele",
    "DY_P_P_ele", "DY_P_P_0_500_ele", "DY_P_P_500_750_ele", "DY_P_P_750_1000_ele", "DY_P_P_1000_1500_ele", "DY_P_P_1500Inf_ele", "DY_P_P_750Inf_ele", 
    "DY_P_N_ele", "DY_P_N_0_500_ele", "DY_P_N_500_750_ele", "DY_P_N_750_1000_ele", "DY_P_N_1000_1500_ele", "DY_P_N_1500Inf_ele", "DY_P_N_750Inf_ele", 
    "DY_N_P_ele", "DY_N_P_0_500_ele", "DY_N_P_500_750_ele", "DY_N_P_750_1000_ele", "DY_N_P_1000_1500_ele", "DY_N_P_1500Inf_ele", "DY_N_P_750Inf_ele", 
    "DY_N_N_ele", "DY_N_N_0_500_ele", "DY_N_N_500_750_ele", "DY_N_N_750_1000_ele", "DY_N_N_1000_1500_ele", "DY_N_N_1500Inf_ele", "DY_N_N_750Inf_ele", 
-   "DY_0_500_recogenmatch_ele", "DY_Match_N_N_0_500_ele", "DY_Match_N_P_0_500_ele", "DY_Match_P_N_0_500_ele", "DY_Match_P_P_0_500_ele", "UnMatched_0_500_ele", 
-   "DY_500_750_recogenmatch_ele", "DY_Match_N_N_500_750_ele", "DY_Match_N_P_500_750_ele", "DY_Match_P_N_500_750_ele", "DY_Match_P_P_500_750_ele", "UnMatched_500_750_ele", 
-   "DY_750_1000_recogenmatch_ele", "DY_Match_N_N_750_1000_ele", "DY_Match_N_P_750_1000_ele", "DY_Match_P_N_750_1000_ele", "DY_Match_P_P_750_1000_ele", "UnMatched_750_1000_ele", 
-   "DY_1000_1500_recogenmatch_ele", "DY_Match_N_N_1000_1500_ele", "DY_Match_N_P_1000_1500_ele", "DY_Match_P_N_1000_1500_ele", "DY_Match_P_P_1000_1500_ele", "UnMatched_1000_1500_ele", 
-   "DY_1500Inf_recogenmatch_ele", "DY_Match_N_N_1500Inf_ele", "DY_Match_N_P_1500Inf_ele", "DY_Match_P_N_1500Inf_ele", "DY_Match_P_P_1500Inf_ele", "UnMatched_1500Inf_ele", 
-   "DY_Mass_0_500_NOT_reco_ele", "DY_Mass_500_750_NOT_reco_ele", "DY_Mass_750_1000_NOT_reco_ele", "DY_Mass_1000_1500_NOT_reco_ele", "DY_Mass_1500Inf_NOT_reco_ele",
+  //  "DY_0_500_recogenmatch_ele", "DY_Match_N_N_0_500_ele", "DY_Match_N_P_0_500_ele", "DY_Match_P_N_0_500_ele", "DY_Match_P_P_0_500_ele", "UnMatched_0_500_ele", 
+  //  "DY_500_750_recogenmatch_ele", "DY_Match_N_N_500_750_ele", "DY_Match_N_P_500_750_ele", "DY_Match_P_N_500_750_ele", "DY_Match_P_P_500_750_ele", "UnMatched_500_750_ele", 
+  //  "DY_750_1000_recogenmatch_ele", "DY_Match_N_N_750_1000_ele", "DY_Match_N_P_750_1000_ele", "DY_Match_P_N_750_1000_ele", "DY_Match_P_P_750_1000_ele", "UnMatched_750_1000_ele", 
+  //  "DY_1000_1500_recogenmatch_ele", "DY_Match_N_N_1000_1500_ele", "DY_Match_N_P_1000_1500_ele", "DY_Match_P_N_1000_1500_ele", "DY_Match_P_P_1000_1500_ele", "UnMatched_1000_1500_ele", 
+  //  "DY_1500Inf_recogenmatch_ele", "DY_Match_N_N_1500Inf_ele", "DY_Match_N_P_1500Inf_ele", "DY_Match_P_N_1500Inf_ele", "DY_Match_P_P_1500Inf_ele", "UnMatched_1500Inf_ele", 
+  //  "DY_Mass_0_500_NOT_reco_ele", "DY_Mass_500_750_NOT_reco_ele", "DY_Mass_750_1000_NOT_reco_ele", "DY_Mass_1000_1500_NOT_reco_ele", "DY_Mass_1500Inf_NOT_reco_ele",
     "DeltaY_reco_0_500_muon_data", "DeltaY_reco_500_750_muon_data", "DeltaY_reco_750_1000_muon_data", "DeltaY_reco_1000_1500_muon_data", "DeltaY_reco_1500Inf_muon_data",
     "DeltaY_reco_0_500_ele_data", "DeltaY_reco_500_750_ele_data", "DeltaY_reco_750_1000_ele_data", "DeltaY_reco_1000_1500_ele_data", "DeltaY_reco_1500Inf_ele_data"
 
@@ -1156,9 +1182,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   if(debug) cout<<"Top Tagger ok"<<endl;
 
-  fill_histograms(event, "BeforeCuts");
+  // fill_histograms(event, "BeforeCuts");
   if(debug)  cout<<"BeforeCuts"<<endl;
-  fill_histograms(event, "Weights_Init");
+  // fill_histograms(event, "Weights_Init");
   if(debug)  cout<<"Weights_Init"<<endl;
   lumihists_Weights_Init->fill(event);
   if(debug)  cout<<"lumi_Weights_Init"<<endl;
@@ -1169,18 +1195,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(!isMC) return false;
     else event.weight = event.weight*(1-0.64774715284); // calculated following instructions ar https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2018Analysis
   }
-  fill_histograms(event, "Weights_HEM");
+  // fill_histograms(event, "Weights_HEM");
 
   // pileup weight
   PUWeight_module->process(event);
   if(debug)  cout<<"PUWeight ok"<<endl;
-  fill_histograms(event, "Weights_PU");
+  // fill_histograms(event, "Weights_PU");
   lumihists_Weights_PU->fill(event);
 
   // lumi weight
   LumiWeight_module->process(event);
   if(debug)  cout<<"LumiWeight ok"<<endl;
-  fill_histograms(event, "Weights_Lumi");
+  // fill_histograms(event, "Weights_Lumi");
   lumihists_Weights_Lumi->fill(event);
 
   // top pt reweighting
@@ -1191,7 +1217,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   // MC scale
   MCScale_module->process(event);
-  fill_histograms(event, "Weights_MCScale");
+  // fill_histograms(event, "Weights_MCScale");
   lumihists_Weights_MCScale->fill(event);
 
   // Prefiring weights
@@ -1200,17 +1226,17 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if (Prefiring_direction == "up") event.weight *= event.prefiringWeightUp;
     else if (Prefiring_direction == "down") event.weight *= event.prefiringWeightDown;
   }
-  fill_histograms(event, "Weights_Prefiring");
+  // fill_histograms(event, "Weights_Prefiring");
 
   // Write PSWeights from genInfo to own branch in output tree
   ps_weights->process(event);
-  fill_histograms(event, "Weights_PS");
+  // fill_histograms(event, "Weights_PS");
   lumihists_Weights_PS->fill(event);
 
   // DeepAK8 TopTag SFs
   if(isdeepAK8) sf_toptag->process(event);
   if(debug) cout << "Weights_TopTag_SF: ok" << endl;
-  fill_histograms(event, "Weights_TopTag_SF");
+  // fill_histograms(event, "Weights_TopTag_SF");
   if(isdeepAK8) sf_topmistag->process(event);
 
   //Clean muon collection with ID based on muon pT
@@ -1258,7 +1284,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if(ele_is_high){
       sf_ele_id_high->process(event);
     }
-    fill_histograms(event, "IdEle_SF");
+    // fill_histograms(event, "IdEle_SF");
   }
 
   // apply muon isolation scale factors (low pT only)
@@ -1269,7 +1295,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if(muon_is_high){
       sf_muon_iso_low_dummy->process(event);
     }
-    fill_histograms(event, "IsoMuon_SF");
+    // fill_histograms(event, "IsoMuon_SF");
   }
   if(isElectron){
     sf_muon_iso_low_dummy->process(event);
@@ -1282,7 +1308,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if(muon_is_high){
       sf_muon_id_high->process(event);
     }
-    fill_histograms(event, "IdMuon_SF");
+    // fill_histograms(event, "IdMuon_SF");
   }
   if(isElectron){
     sf_muon_id_dummy->process(event);
@@ -1294,12 +1320,12 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   if(isElectron){
     sf_ele_reco->process(event);
-    fill_histograms(event, "RecoEle_SF");
+    // fill_histograms(event, "RecoEle_SF");
   }
 
   // apply muon reco scale factors
   sf_muon_reco->process(event);
-  fill_histograms(event, "MuonReco_SF");
+  // fill_histograms(event, "MuonReco_SF");
 
 
   // apply lepton trigger scale factors
@@ -1310,19 +1336,19 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(muon_is_high){
       sf_muon_trigger_high->process(event);
     }
-    fill_histograms(event, "TriggerMuon_SF");
+    // fill_histograms(event, "TriggerMuon_SF");
   }
   if(isElectron){
     sf_muon_trigger_dummy->process(event);
   }
 
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
-  fill_histograms(event, "BeforeBtagSF");
+  // fill_histograms(event, "BeforeBtagSF");
 
   // btag shape sf (Ak4 chs jets)
   // new: using new modules, with PUPPI-CHS matching
   sf_btagging->process(event);
-  fill_histograms(event, "AfterBtagSF");
+  // fill_histograms(event, "AfterBtagSF");
 
   // apply custom SF to correct for BTag SF shape effects on NJets/HT
   if(isMC && isMuon){
@@ -1347,16 +1373,16 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
     event.weight *= custom_sf;
   }
-  fill_histograms(event, "AfterCustomBtagSF");
+  // fill_histograms(event, "AfterCustomBtagSF");
 
   // Higher order corrections - EWK & QCD NLO
   NLOCorrections_module->process(event);
-  fill_histograms(event, "NLOCorrections");
+  // fill_histograms(event, "NLOCorrections");
 
   //apply ele trigger sf
   sf_ele_trigger->process(event);
-  fill_histograms(event, "TriggerEle_SF");
-  fill_histograms(event, "AfterBaseline");
+  // fill_histograms(event, "TriggerEle_SF");
+  // fill_histograms(event, "AfterBaseline");
 
   CandidateBuilder->process(event);
   if(debug) cout << "CandidateBuilder: ok" << endl;
@@ -1396,72 +1422,88 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   // Veto events with >= 2 TopTagged large-R jets
   if(!TopTagVetoSelection->passes(event)) return false;
-  fill_histograms(event, "TopTagVeto");
+  // fill_histograms(event, "TopTagVeto");
 
+  if(debug) cout << "TopTagVetoSelection: ok" << endl;
+
+  if(!DeltaEta_selection->passes(event)) return false;
+  // fill_histograms(event, "DeltaEtaCut");
+
+  // cout << "TopTagVetoSelection"<<endl;
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
+    if(debug) cout << "output 0"<<endl;
     fill_histograms(event, "DNN_output0_beforeChi2Cut");
     if( ZprimeTopTag_selection->passes(event) ){
+      if(debug) cout << "Top Tag output0"<<endl;
       fill_histograms(event, "DNN_output0_TopTag_beforeChi2Cut");
     }
     else{
+      if(debug) cout << "No Top Tag output0"<<endl;
       fill_histograms(event, "DNN_output0_NoTopTag_beforeChi2Cut");
     }
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       fill_histograms(event, "DNN_output0");
-      //cout << "fill systematics 0"<<endl;
+      if(debug) cout << "output 0 after chi2"<<endl;
       DeltaY_SystVariations_DNN_output0->fill(event);
-      
-      // h_Zprime_PDFVariations_DNN_output0->fill(event);
+      h_Zprime_PDFVariations_DNN_output0->fill(event);
+
       if( ZprimeTopTag_selection->passes(event) ){
+        if(debug) cout << "Top Tag output0 after chi2"<<endl;
         fill_histograms(event, "DNN_output0_TopTag");
         DeltaY_SystVariations_DNN_output0_TopTag->fill(event);
-        // h_Zprime_PDFVariations_DNN_output0_TopTag->fill(event);
+        h_Zprime_PDFVariations_DNN_output0_TopTag->fill(event);
       }
       else{
+        if(debug) cout << "No Top Tag output0 after chi2"<<endl;
         fill_histograms(event, "DNN_output0_NoTopTag");
         DeltaY_SystVariations_DNN_output0_NoTopTag->fill(event);
-        // h_Zprime_PDFVariations_DNN_output0_NoTopTag->fill(event);
+        h_Zprime_PDFVariations_DNN_output0_NoTopTag->fill(event);
       }
     }
   }
+  if(debug) cout << "out0 == max_score: ok" << endl;
 
   if( out1 == max_score ){
     fill_histograms(event, "DNN_output1");
-   // cout << "fill systematics 1"<<endl;
+    if(debug) cout << "fill systematics 1"<<endl;
     DeltaY_SystVariations_DNN_output1->fill(event);
-    // h_Zprime_PDFVariations_DNN_output1->fill(event);
+    h_Zprime_PDFVariations_DNN_output1->fill(event);
     if( ZprimeTopTag_selection->passes(event) ){
       fill_histograms(event, "DNN_output1_TopTag");
       DeltaY_SystVariations_DNN_output1_TopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output1_TopTag->fill(event);
+      h_Zprime_PDFVariations_DNN_output1_TopTag->fill(event);
     }else{
       fill_histograms(event, "DNN_output1_NoTopTag");
       DeltaY_SystVariations_DNN_output1_NoTopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output1_NoTopTag->fill(event);
+      h_Zprime_PDFVariations_DNN_output1_NoTopTag->fill(event);
     }
   }
+  if(debug) cout << "out1 == max_score: ok" << endl;
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
+    if(debug) cout << "fill systematics 2"<<endl;
     DeltaY_SystVariations_DNN_output2->fill(event);
-    // h_Zprime_PDFVariations_DNN_output2->fill(event);
+    h_Zprime_PDFVariations_DNN_output2->fill(event);
     // h_MistagHists->fill(event);
     if( ZprimeTopTag_selection->passes(event) ){
       fill_histograms(event, "DNN_output2_TopTag");
       DeltaY_SystVariations_DNN_output2_TopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output2_TopTag->fill(event);
+      h_Zprime_PDFVariations_DNN_output2_TopTag->fill(event);
     }else{
       fill_histograms(event, "DNN_output2_NoTopTag");
       DeltaY_SystVariations_DNN_output2_NoTopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output2_NoTopTag->fill(event);
+      h_Zprime_PDFVariations_DNN_output2_NoTopTag->fill(event);
     }
   }
 
+  if(debug) cout << "out2 == max_score: ok" << endl;
   fill_histograms(event, "AfterChi2");
 
   if(out0 == max_score){
     if(Chi2_selection->passes(event)){
+      cout << "fill  DY"<<endl;
 
       ////DeltaY lines start here
 
@@ -1478,68 +1520,68 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
         }
 
-        float m_ttbar = inv_mass(top.v4() + antitop.v4());
+        // float m_ttbar = inv_mass(top.v4() + antitop.v4());
 
-        double_t DeltaY_gen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+        // double_t DeltaY_gen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
       
         //Number of deltaY gen events
-        if(m_ttbar>=0 && m_ttbar < 500){
-          fill_histograms(event, "DeltaY_gen_0_500");
-        }
-        if(m_ttbar>=500 && m_ttbar < 750){
-          fill_histograms(event, "DeltaY_gen_500_750");
-        }
-        if(m_ttbar>=750 && m_ttbar < 1000){
-          fill_histograms(event, "DeltaY_gen_750_1000");
-        }
-        if(m_ttbar>=1000 && m_ttbar < 1500){
-          fill_histograms(event, "DeltaY_gen_1000_1500");
-        }
-        if(m_ttbar>=1500){
-          fill_histograms(event, "DeltaY_gen_1500Inf");
-        }
+        // if(m_ttbar>=0 && m_ttbar < 500){
+        //   fill_histograms(event, "DeltaY_gen_0_500");
+        // }
+        // if(m_ttbar>=500 && m_ttbar < 750){
+        //   fill_histograms(event, "DeltaY_gen_500_750");
+        // }
+        // if(m_ttbar>=750 && m_ttbar < 1000){
+        //   fill_histograms(event, "DeltaY_gen_750_1000");
+        // }
+        // if(m_ttbar>=1000 && m_ttbar < 1500){
+        //   fill_histograms(event, "DeltaY_gen_1000_1500");
+        // }
+        // if(m_ttbar>=1500){
+        //   fill_histograms(event, "DeltaY_gen_1500Inf");
+        // }
         
         //Number of deltaY gen events with NEGATIVE DY
-        if (DeltaY_gen<0){
-          fill_histograms(event, "DeltaY_gen_N");
+        // if (DeltaY_gen<0){
+        //   fill_histograms(event, "DeltaY_gen_N");
 
-          if(m_ttbar>=0 && m_ttbar < 500){
-            fill_histograms(event, "DeltaY_N_gen_0_500");
-          }
-          if(m_ttbar>=500 && m_ttbar < 750){
-            fill_histograms(event, "DeltaY_N_gen_500_750");
-          }
-          if(m_ttbar>=750 && m_ttbar < 1000){
-            fill_histograms(event, "DeltaY_N_gen_750_1000");
-          }
-          if(m_ttbar>=1000 && m_ttbar < 1500){
-            fill_histograms(event, "DeltaY_N_gen_1000_1500");
-          }
-          if(m_ttbar>=1500){
-            fill_histograms(event, "DeltaY_N_gen_1500Inf");
-          }
-        }
+        //   if(m_ttbar>=0 && m_ttbar < 500){
+        //     fill_histograms(event, "DeltaY_N_gen_0_500");
+        //   }
+        //   if(m_ttbar>=500 && m_ttbar < 750){
+        //     fill_histograms(event, "DeltaY_N_gen_500_750");
+        //   }
+        //   if(m_ttbar>=750 && m_ttbar < 1000){
+        //     fill_histograms(event, "DeltaY_N_gen_750_1000");
+        //   }
+        //   if(m_ttbar>=1000 && m_ttbar < 1500){
+        //     fill_histograms(event, "DeltaY_N_gen_1000_1500");
+        //   }
+        //   if(m_ttbar>=1500){
+        //     fill_histograms(event, "DeltaY_N_gen_1500Inf");
+        //   }
+        // }
 
         //Number of deltaY gen events with POSITIVE DY
-        if (DeltaY_gen>0){
-          fill_histograms(event, "DeltaY_gen_P");
+        // if (DeltaY_gen>0){
+        //   fill_histograms(event, "DeltaY_gen_P");
 
-          if(m_ttbar>=0 && m_ttbar < 500){
-            fill_histograms(event, "DeltaY_P_gen_0_500");
-          }
-          if(m_ttbar>=500 && m_ttbar < 750){
-            fill_histograms(event, "DeltaY_P_gen_500_750");
-          }
-          if(m_ttbar>=750 && m_ttbar < 1000){
-            fill_histograms(event, "DeltaY_P_gen_750_1000");
-          }
-          if(m_ttbar>=1000 && m_ttbar < 1500){
-            fill_histograms(event, "DeltaY_P_gen_1000_1500");
-          }
-          if(m_ttbar>=1500){
-            fill_histograms(event, "DeltaY_P_gen_1500Inf");
-          }
-        }
+        //   if(m_ttbar>=0 && m_ttbar < 500){
+        //     fill_histograms(event, "DeltaY_P_gen_0_500");
+        //   }
+        //   if(m_ttbar>=500 && m_ttbar < 750){
+        //     fill_histograms(event, "DeltaY_P_gen_500_750");
+        //   }
+        //   if(m_ttbar>=750 && m_ttbar < 1000){
+        //     fill_histograms(event, "DeltaY_P_gen_750_1000");
+        //   }
+        //   if(m_ttbar>=1000 && m_ttbar < 1500){
+        //     fill_histograms(event, "DeltaY_P_gen_1000_1500");
+        //   }
+        //   if(m_ttbar>=1500){
+        //     fill_histograms(event, "DeltaY_P_gen_1500Inf");
+        //   }
+        // }
 
         // ========= MUON ========
 
@@ -1727,30 +1769,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
             // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
           
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6) {
+            //     if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
                   
-                  fill_histograms(event, "Not_reco_gens_muon");
+            //       fill_histograms(event, "Not_reco_gens_muon");
 
-                  if (0 < m_ttbar && m_ttbar < 500) {
-                    fill_histograms(event, "Not_reco_gens_0_500_muon");
-                  } 
-                  else if (500 <= m_ttbar && m_ttbar < 750) {
-                    fill_histograms(event, "Not_reco_gens_500_750_muon");
-                  }
-                  else if (750 <= m_ttbar && m_ttbar < 1000) {
-                    fill_histograms(event, "Not_reco_gens_750_1000_muon");
-                  }
-                  else if (1000 <= m_ttbar && m_ttbar < 1500) {
-                    fill_histograms(event, "Not_reco_gens_1000_1500_muon");
-                  }
-                  else if (1500 <= m_ttbar ) {
-                    fill_histograms(event, "Not_reco_gens_1500Inf_muon");
-                  }
-                }
-              }
-            }
+            //       if (0 < m_ttbar && m_ttbar < 500) {
+            //         fill_histograms(event, "Not_reco_gens_0_500_muon");
+            //       } 
+            //       else if (500 <= m_ttbar && m_ttbar < 750) {
+            //         fill_histograms(event, "Not_reco_gens_500_750_muon");
+            //       }
+            //       else if (750 <= m_ttbar && m_ttbar < 1000) {
+            //         fill_histograms(event, "Not_reco_gens_750_1000_muon");
+            //       }
+            //       else if (1000 <= m_ttbar && m_ttbar < 1500) {
+            //         fill_histograms(event, "Not_reco_gens_1000_1500_muon");
+            //       }
+            //       else if (1500 <= m_ttbar ) {
+            //         fill_histograms(event, "Not_reco_gens_1500Inf_muon");
+            //       }
+            //     }
+            //   }
+            // }
 
             // Explanation:
             //A histogram of the ΔR distances between the jets and their matched genparticles. 
@@ -1798,18 +1840,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
 
             // in order to check how many 0 dY there are
-            if(DeltaY_gen_best>=0){
-                fill_histograms(event, "DY_P_equal_gen_muon");
-            }
-            if(DeltaY_gen_best<=0){
-                fill_histograms(event, "DY_N_equal_gen_muon");
-            }
-            if(DeltaY_reco_best>=0){
-                fill_histograms(event, "DY_P_equal_reco_muon");
-            }
-            if(DeltaY_reco_best<=0){
-                fill_histograms(event, "DY_N_equal_reco_muon");
-            }
+            // if(DeltaY_gen_best>=0){
+            //     fill_histograms(event, "DY_P_equal_gen_muon");
+            // }
+            // if(DeltaY_gen_best<=0){
+            //     fill_histograms(event, "DY_N_equal_gen_muon");
+            // }
+            // if(DeltaY_reco_best>=0){
+            //     fill_histograms(event, "DY_P_equal_reco_muon");
+            // }
+            // if(DeltaY_reco_best<=0){
+            //     fill_histograms(event, "DY_N_equal_reco_muon");
+            // }
           
 
             /// ------ RECO & GEN P_N -----
@@ -1931,143 +1973,143 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             // ----- IN DeltaY GEN BUT NOT IN RECO - Double check------
 
           
-            int topQuarkCount = 0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6){
-                topQuarkCount++;
+            // int topQuarkCount = 0;
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6){
+            //     topQuarkCount++;
 
-                int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
-                int recoBin;
+            //     int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
+            //     int recoBin;
 
-                // Checking if the gen particle is associated with a top (leptonic or hadronic)
-                if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
-                  recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
-                  int binNumber = 2 * genBin + recoBin;
+            //     // Checking if the gen particle is associated with a top (leptonic or hadronic)
+            //     if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
+            //       recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
+            //       int binNumber = 2 * genBin + recoBin;
 
-                  if(Mass_tt<500 && Mass_tt>=0 ){
-                    fill_histograms(event, "DY_0_500_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_0_500_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_0_500_muon"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_0_500_muon");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_0_500_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_0_500_muon"); 
-                      }
-                  }
+                  // if(Mass_tt<500 && Mass_tt>=0 ){
+                  //   fill_histograms(event, "DY_0_500_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_0_500_muon");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_0_500_muon"); 
+                  //     }
+                  // }
 
-                  if( Mass_tt>=500 && Mass_tt<750 ){
-                    fill_histograms(event, "DY_500_750_recogenmatch_muon");
+                  // if( Mass_tt>=500 && Mass_tt<750 ){
+                  //   fill_histograms(event, "DY_500_750_recogenmatch_muon");
 
-                    if(binNumber == 0) {
-                    fill_histograms(event, "DY_Match_N_N_500_750_muon"); 
+                  //   if(binNumber == 0) {
+                  //   fill_histograms(event, "DY_Match_N_N_500_750_muon"); 
 
-                    }
-                    else if(binNumber == 1) {
-                      fill_histograms(event, "DY_Match_N_P_500_750_muon"); 
-                    }
-                    else if(binNumber == 2) {
-                      fill_histograms(event, "DY_Match_P_N_500_750_muon");
-                    }
-                    else if(binNumber == 3) {
-                      fill_histograms(event, "DY_Match_P_P_500_750_muon"); 
-                    }
-                    else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                      fill_histograms(event, "UnMatched_500_750_muon"); 
-                    }
-                  }
+                  //   }
+                  //   else if(binNumber == 1) {
+                  //     fill_histograms(event, "DY_Match_N_P_500_750_muon"); 
+                  //   }
+                  //   else if(binNumber == 2) {
+                  //     fill_histograms(event, "DY_Match_P_N_500_750_muon");
+                  //   }
+                  //   else if(binNumber == 3) {
+                  //     fill_histograms(event, "DY_Match_P_P_500_750_muon"); 
+                  //   }
+                  //   else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //     fill_histograms(event, "UnMatched_500_750_muon"); 
+                  //   }
+                  // }
 
-                  if( Mass_tt>=750 && Mass_tt<1000 ){
-                      fill_histograms(event, "DY_750_1000_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_750_1000_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_750_1000_muon"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_750_1000_muon");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_750_1000_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_750_1000_muon"); 
-                      }
-                  }
+                  // if( Mass_tt>=750 && Mass_tt<1000 ){
+                  //     fill_histograms(event, "DY_750_1000_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_750_1000_muon");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_750_1000_muon"); 
+                  //     }
+                  // }
                         
-                  if( Mass_tt>=1000 && Mass_tt<1500 ){
-                      fill_histograms(event, "DY_1000_1500_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1000_1500_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1000_1500_muon");   
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1000_1500_muon"); 
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1000_1500_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1000_1500_muon"); 
-                      }
-                  }
+                  // if( Mass_tt>=1000 && Mass_tt<1500 ){
+                  //     fill_histograms(event, "DY_1000_1500_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1000_1500_muon");   
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1000_1500_muon"); 
+                  //     }
+                  // }
 
 
-                  if( Mass_tt>=1500){
-                      fill_histograms(event, "DY_1500Inf_recogenmatch_muon");
+                  // if( Mass_tt>=1500){
+                  //     fill_histograms(event, "DY_1500Inf_recogenmatch_muon");
 
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1500Inf_muon"); 
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1500Inf_muon"); 
 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1500Inf_muon"); 
             
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1500Inf_muon");
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1500Inf_muon");
             
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1500Inf_muon"); 
             
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1500Inf_muon"); 
             
-                      }
-                  }
-                  } 
-                  else {
-                    if(Mass_tt<500 && Mass_tt>=0){
-                      // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
-                      fill_histograms(event, "DY_Mass_0_500_NOT_reco_muon");
-                    }
-                    if( Mass_tt>=500 && Mass_tt<750){
-                      fill_histograms(event, "DY_Mass_500_750_NOT_reco_muon");
-                    }
-                    if( Mass_tt>=750 && Mass_tt<1000){
-                      fill_histograms(event, "DY_Mass_750_1000_NOT_reco_muon");
-                    }
-                    if(  Mass_tt>=1000 && Mass_tt<1500){
-                      fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_muon");
-                    }
-                    if( Mass_tt>=1500){
-                      fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_muon");
-                    }
-                  }
-                  }
-            }
+                  //     }
+                  // }
+                  // } 
+                  // else {
+                  //   if(Mass_tt<500 && Mass_tt>=0){
+                  //     // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
+                  //     fill_histograms(event, "DY_Mass_0_500_NOT_reco_muon");
+                  //   }
+                  //   if( Mass_tt>=500 && Mass_tt<750){
+                  //     fill_histograms(event, "DY_Mass_500_750_NOT_reco_muon");
+                  //   }
+                  //   if( Mass_tt>=750 && Mass_tt<1000){
+                  //     fill_histograms(event, "DY_Mass_750_1000_NOT_reco_muon");
+                  //   }
+                  //   if(  Mass_tt>=1000 && Mass_tt<1500){
+                  //     fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_muon");
+                  //   }
+                  //   if( Mass_tt>=1500){
+                  //     fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_muon");
+                  //   }
+                  // }
+            //       }
+            // }
             // gen particle (index j) was not matched to a jet
             // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
             // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
@@ -2076,6 +2118,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
           // charge 1 bracket
           }
+          if(debug) cout << "muon charge 1: ok" << endl;
 
           if(event.muons->at(0).charge() == -1){
 
@@ -2258,30 +2301,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
             // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
           
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6) {
+            //     if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
                   
-                  fill_histograms(event, "Not_reco_gens_muon");
+            //       fill_histograms(event, "Not_reco_gens_muon");
 
-                  if (0 < m_ttbar && m_ttbar < 500) {
-                    fill_histograms(event, "Not_reco_gens_0_500_muon");
-                  } 
-                  else if (500 <= m_ttbar && m_ttbar < 750) {
-                    fill_histograms(event, "Not_reco_gens_500_750_muon");
-                  }
-                  else if (750 <= m_ttbar && m_ttbar < 1000) {
-                    fill_histograms(event, "Not_reco_gens_750_1000_muon");
-                  }
-                  else if (1000 <= m_ttbar && m_ttbar < 1500) {
-                    fill_histograms(event, "Not_reco_gens_1000_1500_muon");
-                  }
-                  else if (1500 <= m_ttbar ) {
-                    fill_histograms(event, "Not_reco_gens_1500Inf_muon");
-                  }
-                }
-              }
-            }
+            //       if (0 < m_ttbar && m_ttbar < 500) {
+            //         fill_histograms(event, "Not_reco_gens_0_500_muon");
+            //       } 
+            //       else if (500 <= m_ttbar && m_ttbar < 750) {
+            //         fill_histograms(event, "Not_reco_gens_500_750_muon");
+            //       }
+            //       else if (750 <= m_ttbar && m_ttbar < 1000) {
+            //         fill_histograms(event, "Not_reco_gens_750_1000_muon");
+            //       }
+            //       else if (1000 <= m_ttbar && m_ttbar < 1500) {
+            //         fill_histograms(event, "Not_reco_gens_1000_1500_muon");
+            //       }
+            //       else if (1500 <= m_ttbar ) {
+            //         fill_histograms(event, "Not_reco_gens_1500Inf_muon");
+            //       }
+            //     }
+            //   }
+            // }
 
             // Explanation:
             //A histogram of the ΔR distances between the jets and their matched genparticles. 
@@ -2328,18 +2371,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
 
             // in order to check how many 0 dY there are
-            if(DeltaY_gen_best>=0){
-                fill_histograms(event, "DY_P_equal_gen_muon");
-            }
-            if(DeltaY_gen_best<=0){
-                fill_histograms(event, "DY_N_equal_gen_muon");
-            }
-            if(DeltaY_reco_best>=0){
-                fill_histograms(event, "DY_P_equal_reco_muon");
-            }
-            if(DeltaY_reco_best<=0){
-                fill_histograms(event, "DY_N_equal_reco_muon");
-            }
+            // if(DeltaY_gen_best>=0){
+            //     fill_histograms(event, "DY_P_equal_gen_muon");
+            // }
+            // if(DeltaY_gen_best<=0){
+            //     fill_histograms(event, "DY_N_equal_gen_muon");
+            // }
+            // if(DeltaY_reco_best>=0){
+            //     fill_histograms(event, "DY_P_equal_reco_muon");
+            // }
+            // if(DeltaY_reco_best<=0){
+            //     fill_histograms(event, "DY_N_equal_reco_muon");
+            // }
           
 
             /// ------ RECO & GEN P_N -----
@@ -2462,152 +2505,153 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             // ----- IN DeltaY GEN BUT NOT IN RECO - Double check------
 
           
-            int topQuarkCount = 0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6){
-                topQuarkCount++;
+            // int topQuarkCount = 0;
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6){
+            //     topQuarkCount++;
 
-                int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
-                int recoBin;
+            //     int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
+            //     int recoBin;
 
-                // Checking if the gen particle is associated with a top (leptonic or hadronic)
-                if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
-                  recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
-                  int binNumber = 2 * genBin + recoBin;
+            //     // Checking if the gen particle is associated with a top (leptonic or hadronic)
+            //     if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
+            //       recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
+            //       int binNumber = 2 * genBin + recoBin;
 
-                  if(Mass_tt<500 && Mass_tt>=0 ){
-                    fill_histograms(event, "DY_0_500_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_0_500_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_0_500_muon"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_0_500_muon");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_0_500_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_0_500_muon"); 
-                      }
-                  }
+                  // if(Mass_tt<500 && Mass_tt>=0 ){
+                  //   fill_histograms(event, "DY_0_500_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_0_500_muon");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_0_500_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_0_500_muon"); 
+                  //     }
+                  // }
 
-                  if( Mass_tt>=500 && Mass_tt<750 ){
-                    fill_histograms(event, "DY_500_750_recogenmatch_muon");
+                  // if( Mass_tt>=500 && Mass_tt<750 ){
+                  //   fill_histograms(event, "DY_500_750_recogenmatch_muon");
 
-                    if(binNumber == 0) {
-                    fill_histograms(event, "DY_Match_N_N_500_750_muon"); 
+                  //   if(binNumber == 0) {
+                  //   fill_histograms(event, "DY_Match_N_N_500_750_muon"); 
 
-                    }
-                    else if(binNumber == 1) {
-                      fill_histograms(event, "DY_Match_N_P_500_750_muon"); 
-                    }
-                    else if(binNumber == 2) {
-                      fill_histograms(event, "DY_Match_P_N_500_750_muon");
-                    }
-                    else if(binNumber == 3) {
-                      fill_histograms(event, "DY_Match_P_P_500_750_muon"); 
-                    }
-                    else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                      fill_histograms(event, "UnMatched_500_750_muon"); 
-                    }
-                  }
+                  //   }
+                  //   else if(binNumber == 1) {
+                  //     fill_histograms(event, "DY_Match_N_P_500_750_muon"); 
+                  //   }
+                  //   else if(binNumber == 2) {
+                  //     fill_histograms(event, "DY_Match_P_N_500_750_muon");
+                  //   }
+                  //   else if(binNumber == 3) {
+                  //     fill_histograms(event, "DY_Match_P_P_500_750_muon"); 
+                  //   }
+                  //   else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //     fill_histograms(event, "UnMatched_500_750_muon"); 
+                  //   }
+                  // }
 
-                  if( Mass_tt>=750 && Mass_tt<1000 ){
-                      fill_histograms(event, "DY_750_1000_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_750_1000_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_750_1000_muon"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_750_1000_muon");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_750_1000_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_750_1000_muon"); 
-                      }
-                  }
+                  // if( Mass_tt>=750 && Mass_tt<1000 ){
+                  //     fill_histograms(event, "DY_750_1000_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_750_1000_muon");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_750_1000_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_750_1000_muon"); 
+                  //     }
+                  // }
                       
-                  if( Mass_tt>=1000 && Mass_tt<1500 ){
-                      fill_histograms(event, "DY_1000_1500_recogenmatch_muon");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1000_1500_muon"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1000_1500_muon");   
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1000_1500_muon"); 
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1000_1500_muon"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1000_1500_muon"); 
-                      }
-                  }
+                  // if( Mass_tt>=1000 && Mass_tt<1500 ){
+                  //     fill_histograms(event, "DY_1000_1500_recogenmatch_muon");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1000_1500_muon");   
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1000_1500_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1000_1500_muon"); 
+                  //     }
+                  // }
 
 
-                  if( Mass_tt>=1500){
-                      fill_histograms(event, "DY_1500Inf_recogenmatch_muon");
+                  // if( Mass_tt>=1500){
+                  //     fill_histograms(event, "DY_1500Inf_recogenmatch_muon");
 
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1500Inf_muon"); 
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1500Inf_muon"); 
 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1500Inf_muon"); 
             
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1500Inf_muon");
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1500Inf_muon");
             
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1500Inf_muon"); 
             
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1500Inf_muon"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1500Inf_muon"); 
             
-                      }
-                  }
-                } 
+                  //     }
+                  // }
+                // } 
                 
-                else {
-                  if(Mass_tt<500 && Mass_tt>=0){
-                    // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
-                    fill_histograms(event, "DY_Mass_0_500_NOT_reco_muon");
-                  }
-                  if( Mass_tt>=500 && Mass_tt<750){
-                    fill_histograms(event, "DY_Mass_500_750_NOT_reco_muon");
-                  }
-                  if( Mass_tt>=750 && Mass_tt<1000){
-                    fill_histograms(event, "DY_Mass_750_1000_NOT_reco_muon");
-                  }
-                  if(  Mass_tt>=1000 && Mass_tt<1500){
-                    fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_muon");
-                  }
-                  if( Mass_tt>=1500){
-                    fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_muon");
-                  }
-                }
-              }
-            }
+                // else {
+                //   if(Mass_tt<500 && Mass_tt>=0){
+                //     // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
+                //     fill_histograms(event, "DY_Mass_0_500_NOT_reco_muon");
+                //   }
+                //   if( Mass_tt>=500 && Mass_tt<750){
+                //     fill_histograms(event, "DY_Mass_500_750_NOT_reco_muon");
+                //   }
+                //   if( Mass_tt>=750 && Mass_tt<1000){
+                //     fill_histograms(event, "DY_Mass_750_1000_NOT_reco_muon");
+                //   }
+                //   if(  Mass_tt>=1000 && Mass_tt<1500){
+                //     fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_muon");
+                //   }
+                //   if( Mass_tt>=1500){
+                //     fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_muon");
+                //   }
+                // }
+            //   }
+            // }
             // gen particle (index j) was not matched to a jet
             // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
             // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
           
-            fill_histograms(event, "GenTop"); 
+            // fill_histograms(event, "GenTop"); 
             //charge -1 bracket
           }
 
+          if(debug) cout << "muon charge -1: ok" << endl;
 
           // double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
           // float DeltaY_reco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity());
@@ -2615,6 +2659,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         
         // muon bracket  ===== MUON END ==== 
         }
+        if(debug) cout << "muon: ok" << endl;
           
         if (isElectron){
 
@@ -2799,30 +2844,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
             // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
           
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6) {
+            //     if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
                   
-                  fill_histograms(event, "Not_reco_gens_ele");
+            //       fill_histograms(event, "Not_reco_gens_ele");
 
-                  if (0 < m_ttbar && m_ttbar < 500) {
-                    fill_histograms(event, "Not_reco_gens_0_500_ele");
-                  } 
-                  else if (500 <= m_ttbar && m_ttbar < 750) {
-                    fill_histograms(event, "Not_reco_gens_500_750_ele");
-                  }
-                  else if (750 <= m_ttbar && m_ttbar < 1000) {
-                    fill_histograms(event, "Not_reco_gens_750_1000_ele");
-                  }
-                  else if (1000 <= m_ttbar && m_ttbar < 1500) {
-                    fill_histograms(event, "Not_reco_gens_1000_1500_ele");
-                  }
-                  else if (1500 <= m_ttbar ) {
-                    fill_histograms(event, "Not_reco_gens_1500Inf_ele");
-                  }
-                }
-              }
-            }
+            //       if (0 < m_ttbar && m_ttbar < 500) {
+            //       //   fill_histograms(event, "Not_reco_gens_0_500_ele");
+            //       // } 
+            //       // else if (500 <= m_ttbar && m_ttbar < 750) {
+            //       //   fill_histograms(event, "Not_reco_gens_500_750_ele");
+            //       // }
+            //       // else if (750 <= m_ttbar && m_ttbar < 1000) {
+            //       //   fill_histograms(event, "Not_reco_gens_750_1000_ele");
+            //       // }
+            //       // else if (1000 <= m_ttbar && m_ttbar < 1500) {
+            //       //   fill_histograms(event, "Not_reco_gens_1000_1500_ele");
+            //       // }
+            //       // else if (1500 <= m_ttbar ) {
+            //       //   fill_histograms(event, "Not_reco_gens_1500Inf_ele");
+            //       // }
+            //     }
+            //   }
+            // }
 
             // Explanation:
             //A histogram of the ΔR distances between the jets and their matched genparticles. 
@@ -2870,18 +2915,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
 
             // in order to check how many 0 dY there are
-            if(DeltaY_gen_best>=0){
-                fill_histograms(event, "DY_P_equal_gen_ele");
-            }
-            if(DeltaY_gen_best<=0){
-                fill_histograms(event, "DY_N_equal_gen_ele");
-            }
-            if(DeltaY_reco_best>=0){
-                fill_histograms(event, "DY_P_equal_reco_ele");
-            }
-            if(DeltaY_reco_best<=0){
-                fill_histograms(event, "DY_N_equal_reco_ele");
-            }
+            // if(DeltaY_gen_best>=0){
+            //     fill_histograms(event, "DY_P_equal_gen_ele");
+            // }
+            // if(DeltaY_gen_best<=0){
+            //     fill_histograms(event, "DY_N_equal_gen_ele");
+            // }
+            // if(DeltaY_reco_best>=0){
+            //     fill_histograms(event, "DY_P_equal_reco_ele");
+            // }
+            // if(DeltaY_reco_best<=0){
+            //     fill_histograms(event, "DY_N_equal_reco_ele");
+            // }
           
 
             /// ------ RECO & GEN P_N -----
@@ -3005,145 +3050,146 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
           
 
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6){
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6){
 
 
-                int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
-                int recoBin;
+            //     int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
+            //     int recoBin;
 
-                // Checking if the gen particle is associated with a top (leptonic or hadronic)
-                if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
-                  recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
-                  int binNumber = 2 * genBin + recoBin;
+            //     // Checking if the gen particle is associated with a top (leptonic or hadronic)
+            //     if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
+            //       recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
+            //       int binNumber = 2 * genBin + recoBin;
 
-                  if(Mass_tt<500 && Mass_tt>=0 ){
-                    fill_histograms(event, "DY_0_500_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_0_500_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_0_500_ele"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_0_500_ele");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_0_500_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_0_500_ele"); 
-                      }
-                  }
+                  // if(Mass_tt<500 && Mass_tt>=0 ){
+                  //   fill_histograms(event, "DY_0_500_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_0_500_ele");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_0_500_ele"); 
+                  //     }
+                  // }
 
-                  if( Mass_tt>=500 && Mass_tt<750 ){
-                    fill_histograms(event, "DY_500_750_recogenmatch_ele");
+                  // if( Mass_tt>=500 && Mass_tt<750 ){
+                  //   fill_histograms(event, "DY_500_750_recogenmatch_ele");
 
-                    if(binNumber == 0) {
-                    fill_histograms(event, "DY_Match_N_N_500_750_ele"); 
+                  //   if(binNumber == 0) {
+                  //   fill_histograms(event, "DY_Match_N_N_500_750_ele"); 
 
-                    }
-                    else if(binNumber == 1) {
-                      fill_histograms(event, "DY_Match_N_P_500_750_ele"); 
-                    }
-                    else if(binNumber == 2) {
-                      fill_histograms(event, "DY_Match_P_N_500_750_ele");
-                    }
-                    else if(binNumber == 3) {
-                      fill_histograms(event, "DY_Match_P_P_500_750_ele"); 
-                    }
-                    else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                      fill_histograms(event, "UnMatched_500_750_ele"); 
-                    }
-                  }
+                  //   }
+                  //   else if(binNumber == 1) {
+                  //     fill_histograms(event, "DY_Match_N_P_500_750_ele"); 
+                  //   }
+                  //   else if(binNumber == 2) {
+                  //     fill_histograms(event, "DY_Match_P_N_500_750_ele");
+                  //   }
+                  //   else if(binNumber == 3) {
+                  //     fill_histograms(event, "DY_Match_P_P_500_750_ele"); 
+                  //   }
+                  //   else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //     fill_histograms(event, "UnMatched_500_750_ele"); 
+                  //   }
+                  // }
 
-                  if( Mass_tt>=750 && Mass_tt<1000 ){
-                      fill_histograms(event, "DY_750_1000_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_750_1000_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_750_1000_ele"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_750_1000_ele");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_750_1000_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_750_1000_ele"); 
-                      }
-                  }
+                  // if( Mass_tt>=750 && Mass_tt<1000 ){
+                  //     fill_histograms(event, "DY_750_1000_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_750_1000_ele");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_750_1000_ele"); 
+                  //     }
+                  // }
                         
-                  if( Mass_tt>=1000 && Mass_tt<1500 ){
-                      fill_histograms(event, "DY_1000_1500_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1000_1500_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1000_1500_ele");   
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1000_1500_ele"); 
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1000_1500_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1000_1500_ele"); 
-                      }
-                  }
+                  // if( Mass_tt>=1000 && Mass_tt<1500 ){
+                  //     fill_histograms(event, "DY_1000_1500_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1000_1500_ele");   
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1000_1500_ele"); 
+                  //     }
+                  // }
 
 
-                  if( Mass_tt>=1500){
-                      fill_histograms(event, "DY_1500Inf_recogenmatch_ele");
+                  // if( Mass_tt>=1500){
+                  //     fill_histograms(event, "DY_1500Inf_recogenmatch_ele");
 
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1500Inf_ele"); 
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1500Inf_ele"); 
 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1500Inf_ele"); 
             
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1500Inf_ele");
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1500Inf_ele");
             
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1500Inf_ele"); 
             
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1500Inf_ele"); 
             
-                      }
-                  }
-                } 
+                  //     }
+                  // }
+                // } 
                 
-                else {
-                  if(Mass_tt<500 && Mass_tt>=0){
-                    // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
-                    fill_histograms(event, "DY_Mass_0_500_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=500 && Mass_tt<750){
-                    fill_histograms(event, "DY_Mass_500_750_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=750 && Mass_tt<1000){
-                    fill_histograms(event, "DY_Mass_750_1000_NOT_reco_ele");
-                  }
-                  if(  Mass_tt>=1000 && Mass_tt<1500){
-                    fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=1500){
-                    fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_ele");
-                  }
-                }
-              }
-            }
+                // else {
+                //   if(Mass_tt<500 && Mass_tt>=0){
+                //     // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
+                //     fill_histograms(event, "DY_Mass_0_500_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=500 && Mass_tt<750){
+                //     fill_histograms(event, "DY_Mass_500_750_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=750 && Mass_tt<1000){
+                //     fill_histograms(event, "DY_Mass_750_1000_NOT_reco_ele");
+                //   }
+                //   if(  Mass_tt>=1000 && Mass_tt<1500){
+                //     fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=1500){
+                //     fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_ele");
+                //   }
+                // }
+            //   }
+            // }
           //charge 1
           }
+          if(debug) cout << "electron charge 1: ok" << endl;
 
           //electron charge negative
           if(event.electrons->at(0).charge() == -1){
@@ -3324,30 +3370,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
             // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
           
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6) {
+            //     if (!(valid_leptop && static_cast<int>(j) == best_gen_for_leptop) && !(valid_hadtop && static_cast<int>(j) == best_gen_for_hadtop)) {
                   
-                  fill_histograms(event, "Not_reco_gens_ele");
+            //       fill_histograms(event, "Not_reco_gens_ele");
 
-                  if (0 < m_ttbar && m_ttbar < 500) {
-                    fill_histograms(event, "Not_reco_gens_0_500_ele");
-                  } 
-                  else if (500 <= m_ttbar && m_ttbar < 750) {
-                    fill_histograms(event, "Not_reco_gens_500_750_ele");
-                  }
-                  else if (750 <= m_ttbar && m_ttbar < 1000) {
-                    fill_histograms(event, "Not_reco_gens_750_1000_ele");
-                  }
-                  else if (1000 <= m_ttbar && m_ttbar < 1500) {
-                    fill_histograms(event, "Not_reco_gens_1000_1500_ele");
-                  }
-                  else if (1500 <= m_ttbar ) {
-                    fill_histograms(event, "Not_reco_gens_1500Inf_ele");
-                  }
-                }
-              }
-            }
+            //       if (0 < m_ttbar && m_ttbar < 500) {
+            //         fill_histograms(event, "Not_reco_gens_0_500_ele");
+            //       } 
+            //       else if (500 <= m_ttbar && m_ttbar < 750) {
+            //         fill_histograms(event, "Not_reco_gens_500_750_ele");
+            //       }
+            //       else if (750 <= m_ttbar && m_ttbar < 1000) {
+            //         fill_histograms(event, "Not_reco_gens_750_1000_ele");
+            //       }
+            //       else if (1000 <= m_ttbar && m_ttbar < 1500) {
+            //         fill_histograms(event, "Not_reco_gens_1000_1500_ele");
+            //       }
+            //       else if (1500 <= m_ttbar ) {
+            //         fill_histograms(event, "Not_reco_gens_1500Inf_ele");
+            //       }
+            //     }
+            //   }
+            // }
 
             // Explanation:
             //A histogram of the ΔR distances between the jets and their matched genparticles. 
@@ -3395,18 +3441,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
 
             // in order to check how many 0 dY there are
-            if(DeltaY_gen_best>=0){
-                fill_histograms(event, "DY_P_equal_gen_ele");
-            }
-            if(DeltaY_gen_best<=0){
-                fill_histograms(event, "DY_N_equal_gen_ele");
-            }
-            if(DeltaY_reco_best>=0){
-                fill_histograms(event, "DY_P_equal_reco_ele");
-            }
-            if(DeltaY_reco_best<=0){
-                fill_histograms(event, "DY_N_equal_reco_ele");
-            }
+            // if(DeltaY_gen_best>=0){
+            //     fill_histograms(event, "DY_P_equal_gen_ele");
+            // }
+            // if(DeltaY_gen_best<=0){
+            //     fill_histograms(event, "DY_N_equal_gen_ele");
+            // }
+            // if(DeltaY_reco_best>=0){
+            //     fill_histograms(event, "DY_P_equal_reco_ele");
+            // }
+            // if(DeltaY_reco_best<=0){
+            //     fill_histograms(event, "DY_N_equal_reco_ele");
+            // }
           
 
             /// ------ RECO & GEN P_N -----
@@ -3531,148 +3577,150 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
           
 
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6){
+            // for(unsigned int j=0; j<genparticles->size(); ++j) {
+            //   if(abs(genparticles->at(j).pdgId()) == 6){
 
 
-                int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
-                int recoBin;
+            //     int genBin = (DeltaY_gen_best < 0) ? 0 : 1;
+            //     int recoBin;
 
-                // Checking if the gen particle is associated with a top (leptonic or hadronic)
-                if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
-                  recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
-                  int binNumber = 2 * genBin + recoBin;
+            //     // Checking if the gen particle is associated with a top (leptonic or hadronic)
+            //     if (best_leptop_for_gen[j] != -1 || best_hadtop_for_gen[j] != -1) {
+            //       recoBin = (DeltaY_reco_best < 0) ? 0 : 1;
+            //       int binNumber = 2 * genBin + recoBin;
 
-                  if(Mass_tt<500 && Mass_tt>=0 ){
-                    fill_histograms(event, "DY_0_500_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_0_500_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_0_500_ele"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_0_500_ele");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_0_500_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_0_500_ele"); 
-                      }
-                  }
+                  // if(Mass_tt<500 && Mass_tt>=0 ){
+                  //   fill_histograms(event, "DY_0_500_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_0_500_ele");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_0_500_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_0_500_ele"); 
+                  //     }
+                  // }
 
-                  if( Mass_tt>=500 && Mass_tt<750 ){
-                    fill_histograms(event, "DY_500_750_recogenmatch_ele");
+                  // if( Mass_tt>=500 && Mass_tt<750 ){
+                  //   fill_histograms(event, "DY_500_750_recogenmatch_ele");
 
-                    if(binNumber == 0) {
-                    fill_histograms(event, "DY_Match_N_N_500_750_ele"); 
+                  //   if(binNumber == 0) {
+                  //   fill_histograms(event, "DY_Match_N_N_500_750_ele"); 
 
-                    }
-                    else if(binNumber == 1) {
-                      fill_histograms(event, "DY_Match_N_P_500_750_ele"); 
-                    }
-                    else if(binNumber == 2) {
-                      fill_histograms(event, "DY_Match_P_N_500_750_ele");
-                    }
-                    else if(binNumber == 3) {
-                      fill_histograms(event, "DY_Match_P_P_500_750_ele"); 
-                    }
-                    else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                      fill_histograms(event, "UnMatched_500_750_ele"); 
-                    }
-                  }
+                  //   }
+                  //   else if(binNumber == 1) {
+                  //     fill_histograms(event, "DY_Match_N_P_500_750_ele"); 
+                  //   }
+                  //   else if(binNumber == 2) {
+                  //     fill_histograms(event, "DY_Match_P_N_500_750_ele");
+                  //   }
+                  //   else if(binNumber == 3) {
+                  //     fill_histograms(event, "DY_Match_P_P_500_750_ele"); 
+                  //   }
+                  //   else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //     fill_histograms(event, "UnMatched_500_750_ele"); 
+                  //   }
+                  // }
 
-                  if( Mass_tt>=750 && Mass_tt<1000 ){
-                      fill_histograms(event, "DY_750_1000_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_750_1000_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_750_1000_ele"); 
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_750_1000_ele");
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_750_1000_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_750_1000_ele"); 
-                      }
-                  }
+                  // if( Mass_tt>=750 && Mass_tt<1000 ){
+                  //     fill_histograms(event, "DY_750_1000_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_750_1000_ele");
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_750_1000_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_750_1000_ele"); 
+                  //     }
+                  // }
                         
-                  if( Mass_tt>=1000 && Mass_tt<1500 ){
-                      fill_histograms(event, "DY_1000_1500_recogenmatch_ele");
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1000_1500_ele"); 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1000_1500_ele");   
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1000_1500_ele"); 
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1000_1500_ele"); 
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1000_1500_ele"); 
-                      }
-                  }
+                  // if( Mass_tt>=1000 && Mass_tt<1500 ){
+                  //     fill_histograms(event, "DY_1000_1500_recogenmatch_ele");
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1000_1500_ele");   
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1000_1500_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1000_1500_ele"); 
+                  //     }
+                  // }
 
 
-                  if( Mass_tt>=1500){
-                      fill_histograms(event, "DY_1500Inf_recogenmatch_ele");
+                  // if( Mass_tt>=1500){
+                  //     fill_histograms(event, "DY_1500Inf_recogenmatch_ele");
 
-                      if(binNumber == 0) {
-                      fill_histograms(event, "DY_Match_N_N_1500Inf_ele"); 
+                  //     if(binNumber == 0) {
+                  //     fill_histograms(event, "DY_Match_N_N_1500Inf_ele"); 
 
-                      }
-                      else if(binNumber == 1) {
-                        fill_histograms(event, "DY_Match_N_P_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber == 1) {
+                  //       fill_histograms(event, "DY_Match_N_P_1500Inf_ele"); 
             
-                      }
-                      else if(binNumber == 2) {
-                        fill_histograms(event, "DY_Match_P_N_1500Inf_ele");
+                  //     }
+                  //     else if(binNumber == 2) {
+                  //       fill_histograms(event, "DY_Match_P_N_1500Inf_ele");
             
-                      }
-                      else if(binNumber == 3) {
-                        fill_histograms(event, "DY_Match_P_P_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber == 3) {
+                  //       fill_histograms(event, "DY_Match_P_P_1500Inf_ele"); 
             
-                      }
-                      else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
-                        fill_histograms(event, "UnMatched_1500Inf_ele"); 
+                  //     }
+                  //     else if(binNumber !=0 && binNumber !=1 && binNumber !=2 && binNumber !=3){
+                  //       fill_histograms(event, "UnMatched_1500Inf_ele"); 
             
-                      }
-                  }
-                } 
-                else {
-                  if(Mass_tt<500 && Mass_tt>=0){
-                    // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
-                    fill_histograms(event, "DY_Mass_0_500_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=500 && Mass_tt<750){
-                    fill_histograms(event, "DY_Mass_500_750_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=750 && Mass_tt<1000){
-                    fill_histograms(event, "DY_Mass_750_1000_NOT_reco_ele");
-                  }
-                  if(  Mass_tt>=1000 && Mass_tt<1500){
-                    fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_ele");
-                  }
-                  if( Mass_tt>=1500){
-                    fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_ele");
-                  }
-                }
-              }
-            }
+                  //     }
+                  // }
+                // } 
+                // else {
+                //   if(Mass_tt<500 && Mass_tt>=0){
+                //     // The top gen particle wasn't reconstructed. Please ignore P_P part, there is no meaning behind it.
+                //     fill_histograms(event, "DY_Mass_0_500_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=500 && Mass_tt<750){
+                //     fill_histograms(event, "DY_Mass_500_750_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=750 && Mass_tt<1000){
+                //     fill_histograms(event, "DY_Mass_750_1000_NOT_reco_ele");
+                //   }
+                //   if(  Mass_tt>=1000 && Mass_tt<1500){
+                //     fill_histograms(event, "DY_Mass_1000_1500_NOT_reco_ele");
+                //   }
+                //   if( Mass_tt>=1500){
+                //     fill_histograms(event, "DY_Mass_1500Inf_NOT_reco_ele");
+                //   }
+                //  }
+            //   }
+            // }
           //charge -1 bracket
           }
+          if(debug) cout << "electron charge -1: ok" << endl;
 
         // ===== ELECTRON END ==== 
         // electron bracket 
         }
+        if(debug) cout << "electron: ok" << endl;
         
       }
 
@@ -3707,7 +3755,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       if(debug) cout << "deltaY 4" << endl;
       // muon bracket  ===== MUON END ==== 
     }
-        
+    
     if (isElectron){
 
       ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);

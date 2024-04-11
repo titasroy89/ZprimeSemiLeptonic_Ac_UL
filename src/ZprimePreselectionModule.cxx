@@ -190,9 +190,9 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   jet2_sel.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
   met_sel.reset(new METCut(MET, uhh2::infinity));
 
-  ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
-  htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity ));
-  genjet_sel.reset(new GenJetPtCut(genjet_pt,uhh2::infinity));
+  // ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
+  // htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity));
+  // genjet_sel.reset(new GenJetPtCut(genjet_pt,uhh2::infinity));
 
 
   // additional branch with Ak4 CHS jets
@@ -211,19 +211,23 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
   if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
 
-  const vector<GenParticle> & genparticles = *(event.genparticles);
-  float genHT = 0;
-  for (unsigned int i = 0; i < genparticles.size(); ++i) {
-    
-    const GenParticle &genp = genparticles[i];
-    if (genp.status() == 1 && 
-      (std::abs(genp.pdgId()) < 6 || std::abs(genp.pdgId()) == 21) &&
-      genp.mother1() != 6 && genp.mother1() != 24 &&
-      genp.mother2() != 6 && genp.mother2() != 24) {
-        genHT += genp.pt();
-        cout << "found a jet:" << genp.pt() << genp.status() << genp.mother2() << genp.mother1() << genp.pdgId() << endl;
-    }
-  }
+
+    // for(const GenParticle & gp : *event.genparticles){
+
+    //   // if (std::abs(gp.pdgId()) < 6 || std::abs(gp.pdgId()) == 21){
+    //   if (std::abs(gp.pdgId()) == 21){
+    //     if(gp.mother1() != 6 && gp.mother1() != 24 && gp.mother2() != 6 && gp.mother2() != 24) {
+          
+    //       cout << "++++++++++++ NEW JET ++++++++++++++" << endl;
+    //       // cout << "found a jet: " <<endl;
+    //       cout << "pdgID:  " <<gp.pdgId() <<endl;
+    //       cout << "Status:  " <<gp.status() <<endl;
+    //       cout << "++++++++++++++++++++++++++" << endl;
+    //     }     
+    //   }
+    // }
+
+  
   
   if(!event.isRealData){
     if(debug) cout << "in split if" << event.event << endl;
@@ -235,6 +239,8 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   fill_histograms(event, "Input");
   if(debug) cout << "Passed 2" << event.event << endl;
 
+  // if(!htgen_sel->passes(event)) return false;
+  // if(debug) cout << "HT cut: ok" << endl;
 
   bool commonResult = common->process(event);
   if(debug) cout << "Passed 3" << event.event << endl;
@@ -324,7 +330,7 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   const bool pass_jet2 = jet2_sel->passes(event);
   if(!pass_jet2) return false;
   if(debug) cout << "NJetSelection2: ok" << endl;
-  // fill_histograms(event, "Jet2");
+  fill_histograms(event, "Jet2");
 
   // MET selection
   const bool pass_met = met_sel->passes(event);
@@ -332,18 +338,12 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(debug) cout << "METCut: ok" << endl;
   // fill_histograms(event, "MET");
 
-  //HT selection
+  // HT selection
   // const bool pass_ht = ht_sel->passes(event);
   // if(!pass_ht) return false;
-  // if(!htgen_sel->passes(event)) return false;
-
   
 
-
-  if(debug) cout << "HT cut: ok" << endl;
-  fill_histograms(event, "Jet2");
-
-  if(!genjet_sel->passes(event)) return false;
+  // if(!genjet_sel->passes(event)) return false;
   
   fill_histograms(event, "MET");
 

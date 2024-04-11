@@ -424,6 +424,69 @@ bool uhh2::HTlepCut::passes(const uhh2::Event& event){
 }
 ////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////
+
+uhh2::HTJetCut::HTJetCut(float min_ht, float max_ht):
+min_ht_(min_ht), max_ht_(max_ht) {}
+
+// for(const auto & jet : *event.jets)
+bool uhh2::HTJetCut::passes(const uhh2::Event& event){
+  float ht = 0;
+
+  // Sum over all jets' pt to calculate HT
+  if(event.jets) {
+    for(const auto & jet : *event.jets) {
+        ht += jet.pt();
+    }
+  }
+  return (ht > min_ht_) && (ht < max_ht_);
+}
+////////////////////////////////////////////////////////
+
+uhh2::HTGenJetCut::HTGenJetCut(float min_htgen, float max_htgen):
+min_htgen_(min_htgen), max_htgen_(max_htgen) {}
+
+bool uhh2::HTGenJetCut::passes(const uhh2::Event& event){
+
+  float genHT = 0;
+  for(const GenParticle & gp : *event.genparticles){
+    // the particle is a light quark or a gluon
+    if (std::abs(gp.pdgId()) < 6 || std::abs(gp.pdgId()) == 21){
+      // the particle is not a decay product of top quarks or W bosons
+      if(gp.mother1() != 6 && gp.mother1() != 24 && gp.mother2() != 6 && gp.mother2() != 24) {
+        // include particles with pt > 10 GeV and status 23 in the genHT calculation
+        if (gp.pt() > 10 && gp.status() == 23) {
+          genHT += gp.pt();
+        }
+      }
+    }
+  }
+
+  return (genHT > min_htgen_) && (genHT < max_htgen_);
+
+}
+
+
+
+////////////////////////////////////////////////////////
+
+
+uhh2::GenJetPtCut::GenJetPtCut(float min_genjetpt, float max_genjetpt) : 
+min_genjetpt_(min_genjetpt), max_genjetpt_(max_genjetpt) {}
+
+bool uhh2::GenJetPtCut::passes(const uhh2::Event& event){
+  if (!event.genjets) return false; // Return false if there are no genjets
+  
+  for (const auto& genjet : *event.genjets) {
+    if (genjet.pt() <= min_genjetpt_) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
+////////////////////////////////////////////////////////
 uhh2::METCut::METCut(float min_met, float max_met):
 min_met_(min_met), max_met_(max_met) {}
 
@@ -676,18 +739,4 @@ bool uhh2::SignSelection::passes(const uhh2::Event& event){
 
   return pass;
 
-}
-
-/////////////////////////////////////////////////////
-
-uhh2::DeltaEtaSelection::DeltaEtaSelection(){} // Context& ctx
-
-bool uhh2::DeltaEtaSelection::passes(const uhh2::Event& event){
-
-  assert(event.jets);
-
-  for(unsigned int k = 0; k < event.jets->size(); k++){
-    if( fabs(event.jets->at(0).eta() - event.jets->at(1).eta() ) > max_eta) return false;
-  }
-  return true;
 }

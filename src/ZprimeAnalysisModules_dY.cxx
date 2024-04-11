@@ -1473,11 +1473,17 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
 
 
 
-  ////DeltaY lines start here
+  // ----------- DeltaY lines start here --------------
 
+
+  // Check if the sample is MC simulation
   if(isMC){
+    // List of generated particles in the event
     vector<GenParticle>* genparticles = event.genparticles;
+
+    // Define variables to store the top quark and the antitop quark
     GenParticle top, antitop;
+    // Loop over all generated particles in the event
     for(const GenParticle & gp : *event.genparticles){
 
       if(gp.pdgId() == 6){
@@ -1487,16 +1493,19 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
       antitop = gp;
         }
     }
-    if(debug) cout << "1" << endl;
 
+    // Calculate the invariant mass of the top-antitop pair using their 4-momenta
     float m_ttbar = inv_mass(top.v4() + antitop.v4());
 
-    double_t DeltaY_gen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+    // Calculate the rapidity difference (DeltaY) between the top and antitop quarks
+    double_t DeltaY_gen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/
+      (top.energy() - top.pt()*TMath::SinH(top.eta())))) - 
+      TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/
+      (antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
    
     event.set(h_DeltaY_gen,DeltaY_gen);
 
-    if(debug) cout << "2" << endl;
-    //Number of deltaY gen events
+    // Classify the event based on the invariant mass of the top-antitop pair
     if(m_ttbar>=0 && m_ttbar < 500){
       fill_histograms(event, "DeltaY_gen_0_500");
     }
@@ -1513,7 +1522,6 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
       fill_histograms(event, "DeltaY_gen_1500Inf");
     }
     
-    if(debug) cout << "3" << endl;
     //Number of deltaY gen events with NEGATIVE DY
     if (DeltaY_gen<0){
       fill_histograms(event, "DeltaY_gen_N");
@@ -1558,18 +1566,27 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
 
     // ========= MUON ========
 
+    // Check if the event involves a muon
     if(isMuon){
 
+      // Retrieve the best Z' candidate based on chi-squared analysis from the event
       ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+
+      // Calculate the invariant mass of the top-antitop (ttbar) system from the Z' candidate
       float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
+      // Check if the leading muon in the event is positively charged
       if(event.muons->at(0).charge() == 1){
-
-        double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+        
+        // Calculate the rapidity difference (DeltaY) between the leptonic and hadronic tops
+        double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + 
+        BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/
+        (BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - 
+        TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
 
         event.set(h_DeltaY_reco,DeltaY_reco);
 
-        //Number of deltaY reco events
+        // Categorize and store the events based on the mass of the ttbar system
         if(Mass_tt>=0 && Mass_tt < 500){
           fill_histograms(event, "DeltaY_reco_0_500_muon");
         }
@@ -2073,6 +2090,7 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
       // charge 1 bracket
       }
 
+      // Proceed if the leading muon is positively charged
       if(event.muons->at(0).charge() == -1){
 
         double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
@@ -2139,7 +2157,7 @@ bool ZprimeAnalysisModule_dY::process(uhh2::Event& event){
         }
       
 
-        // ==== MATCHING with DELTA R === This section has explanation for each code snip
+        // ==== MATCHING with DELTA R === This section has explanation 
 
       
         // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.

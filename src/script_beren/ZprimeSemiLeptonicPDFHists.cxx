@@ -34,10 +34,10 @@ Hists(ctx, dirname){
 
   for(int i=0; i<100; i++){
     std::stringstream ss_name;
-    ss_name << "M_Zprime_PDF_" << i+1;
+    ss_name << "DeltaY_PDF_" << i+1;
 
     stringstream ss_title;
-    ss_title << "M_{t#bar{t}} [GeV] for PDF No. "  << i+1 << " out of 100" ;
+    ss_title << "#DeltaY_{t#bar{t}} [GeV] for PDF No. "  << i+1 << " out of 100" ;
 
     std::string s_name = ss_name.str();
     std::string s_title = ss_title.str();
@@ -46,7 +46,7 @@ Hists(ctx, dirname){
  
     hist_names[i] = s_name;
 
-    book<TH1F>(char_name, char_title,  400, 0, 10000);
+    book<TH1F>(char_name, char_title,  2, -2, 2);
 
   }
 }
@@ -59,7 +59,7 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
   if(is_zprime_reconstructed_chi2 && is_mc){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
-
+    float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
     int MY_FIRST_INDEX = 9;
     if ( is_dy || is_wjets || is_qcd_HTbinned || is_alps || is_azh || is_htott_scalar || is_htott_pseudo || is_zprimetott ) MY_FIRST_INDEX = 47;
     if(event.genInfo->systweights().size() > (unsigned int) 100 + MY_FIRST_INDEX){
@@ -67,11 +67,53 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
       for(int i=0; i<100; i++){
         double pdf_weight = event.genInfo->systweights().at(i+MY_FIRST_INDEX);
         const char* name = hist_names[i].c_str();
-        hist(name)->Fill(Mreco,weight * pdf_weight / orig_weight);
+        hist(name)->Fill(deltay,weight * pdf_weight / orig_weight);
       }
     }
   }
 
 }
+  // for(int i=0; i<100; i++){
+  //     std::stringstream ss_name;
+  //     ss_name << "M_Zprime_PDF_" << i+1;
+
+  //     stringstream ss_title;
+  //     ss_title << "M_{t#bar{t}} [GeV] for PDF No. "  << i+1 << " out of 100" ;
+
+  //     std::string s_name = ss_name.str();
+  //     std::string s_title = ss_title.str();
+  //     const char* char_name = s_name.c_str();
+  //     const char* char_title = s_title.c_str();
+  
+  //     hist_names[i] = s_name;
+
+  //     book<TH1F>(char_name, char_title,  400, 0, 10000);
+
+  //   }
+  // }
+
+  // void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
+
+  //   double weight = event.weight;
+
+  //   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
+  //   if(is_zprime_reconstructed_chi2 && is_mc){
+  //     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  //     float Mreco = BestZprimeCandidate->Zprime_v4().M();
+
+  //     int MY_FIRST_INDEX = 9;
+  //     if ( is_dy || is_wjets || is_qcd_HTbinned || is_alps || is_azh || is_htott_scalar || is_htott_pseudo || is_zprimetott ) MY_FIRST_INDEX = 47;
+  //     if(event.genInfo->systweights().size() > (unsigned int) 100 + MY_FIRST_INDEX){
+  //       float orig_weight = event.genInfo->originalXWGTUP();
+  //       for(int i=0; i<100; i++){
+  //         double pdf_weight = event.genInfo->systweights().at(i+MY_FIRST_INDEX);
+  //         const char* name = hist_names[i].c_str();
+  //         hist(name)->Fill(Mreco,weight * pdf_weight / orig_weight);
+  //       }
+  //     }
+  //   }
+
+  // }
+
 
 ZprimeSemiLeptonicPDFHists::~ZprimeSemiLeptonicPDFHists(){}
