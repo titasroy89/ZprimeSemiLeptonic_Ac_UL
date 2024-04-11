@@ -265,7 +265,7 @@ class NiceStackWithRatio():
         else:
             self.stack = root.THStack('stack', '')
             for i_process, process in enumerate(self.processes):
-                print(os.path.join(self.infile_directory, process.name))
+                # print(os.path.join(self.infile_directory, process.name))
                 hist = self.infile.Get(os.path.join(self.infile_directory, process.name))
                 self.preprocess_hist(hist)
                 hist.SetFillColorAlpha(process.tcolor, 1.)
@@ -316,6 +316,7 @@ class NiceStackWithRatio():
             err2 += (nominal * process.xsec_uncert)**2
             for syst in self.syst_names:
                 hist_syst_down = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Down'))
+                # print(os.path.join(self.infile_directory, process.name+'_'+syst+'Down'))
                 hist_syst_up = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Up'))
                 err_down = hist_syst_down.GetBinContent(i_bin) - nominal
                 err_up = hist_syst_up.GetBinContent(i_bin) - nominal
@@ -739,7 +740,7 @@ class NiceStackWithRatio():
         self.cosmetics_ratio()
         self.draw_texts()
 
-    def save_plot(self, filename, directory=None):
+    def save_plot(self, filename, directory= "./"):
         if not self.canvas:
             sys.exit('No canvas to save. Did you call "plot()"?')
         if directory:
