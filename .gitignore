@@ -16,6 +16,7 @@
 *.so
 *.pcm
 *.nfs*
+*.tgz
 obj/*
 config/workdir_*
 config/jobTempOutput_*

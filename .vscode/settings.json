@@ -85,6 +85,7 @@
         "tdrstyle_Titas.C": "cpp",
         "plotLikelihoodScan.C": "cpp",
         "envelope.C": "cpp",
-        "extractValues.C": "cpp"
+        "extractValues.C": "cpp",
+        "all_unfolding_data.C": "cpp"
     }
 }
