@@ -18,7 +18,7 @@ lepton_flavor = options.lepton_flavor if options.lepton_flavor else "muon"  # de
 # finalState = options.channel
 
 inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/".format(year)
-combine_file_name = 'Mtt_{}_{}.root'.format(year, lepton_flavor)
+combine_file_name = 'Mtt_{}_{}_CR1.root'.format(year, lepton_flavor)
 combine_file = TFile(combine_file_name, 'RECREATE')
 stackList = {"TTToSemiLeptonic", "TTToOthers", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
 
@@ -70,13 +70,15 @@ for sample in stackList:
     
     if sample == "DATA":
         print("Processing sample for other sys: ", sample)
-        data_obs = inFile.Get("DNN_output0_General/M_Zprime_all").Clone("M_Zprime_DATA")
+        data_obs = inFile.Get("DNN_output1_General/M_Zprime_all").Clone("M_Zprime_DATA")
+        data_obs.Rebin(2)
         data_obs.Write("M_Zprime_DATA")
     
     else:
         print("Processing sample for other sys: ", sample)
         
-        h_nominal = inFile.Get("DeltaY_SystVariations_DNN_output0/M_Zprime").Clone("M_Zprime_" + sample)
+        h_nominal = inFile.Get("DeltaY_SystVariations_DNN_output1/M_Zprime").Clone("M_Zprime_" + sample)
+        h_nominal.Rebin(2)
         h_nominal.Write("M_Zprime_" + sample)
         
         
@@ -85,8 +87,9 @@ for sample in stackList:
             
             for variation in ["up", "down"]:
                 sys_hist_name = "M_Zprime_{}_{}".format(sys, variation)
-                sys_hist = inFile.Get("DeltaY_SystVariations_DNN_output0/" + sys_hist_name)
+                sys_hist = inFile.Get("DeltaY_SystVariations_DNN_output1/" + sys_hist_name)
                 if sys_hist:
+                    sys_hist.Rebin(2)
                     output_hist_name = "M_Zprime_{}_{}{}".format(sample, sys, variation.capitalize())
                     sys_hist.Clone(output_hist_name).Write()
             
@@ -121,16 +124,18 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
 
         print("Processing sample for murmuf: ", sample)
     
-        h_nominal = inFile.Get("DeltaY_SystVariations_DNN_output0/M_Zprime")
+        h_nominal = inFile.Get("DeltaY_SystVariations_DNN_output1/M_Zprime")
+        h_nominal.Rebin(2)
         scales = {}
         if not h_nominal:
             print("Nominal histogram for {} not found.".format(sample))
             continue
 
         for variation in v_variations:
-            variation_hist = inFile.Get("DeltaY_SystVariations_DNN_output0/M_Zprime_murmuf_{}".format(variation))
+            variation_hist = inFile.Get("DeltaY_SystVariations_DNN_output1/M_Zprime_murmuf_{}".format(variation))
             
             if variation_hist: 
+                variation_hist.Rebin(2)
                 if h_nominal.GetBinContent(1) != 0:
                     scales[variation] = variation_hist.GetBinContent(1) / h_nominal.GetBinContent(1)
             else:
@@ -144,7 +149,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
             max_val = h_nominal.GetBinContent(bin_idx)
             min_val = h_nominal.GetBinContent(bin_idx)
             for var, scale in scales.items():
-                var_hist = inFile.Get("DeltaY_SystVariations_DNN_output0/M_Zprime_murmuf_{}".format(var))
+                var_hist = inFile.Get("DeltaY_SystVariations_DNN_output1M_Zprime_murmuf_{}".format(var))
                 if var_hist:
                     scaled_val = var_hist.GetBinContent(bin_idx) / scale
                     max_val = max(max_val, scaled_val)
@@ -177,54 +182,45 @@ def processPDF(inputDir, v_samples, combine_file):
             continue
         combine_file.cd()
 
+        print("Processing PDF: ", sample)
+        nominal_hist_name = "DeltaY_SystVariations_DNN_output1/M_Zprime" if sample == "Diboson" else "DeltaY_SystVariations_DNN_output1/M_Zprime"
+        nominal = inFile.Get(nominal_hist_name)
+        if not nominal:
+            print("Nominal histogram for {} not found.".format(sample))
+            continue
+
+        nominal.Rebin(2)
+        # nominal.GetXaxis().SetRangeUser(0, 5000)
+
         if sample == "Diboson":
-                nominal_hist_name = "DeltaY_SystVariations_DNN_output0/M_Zprime"
-                nominal = inFile.Get(nominal_hist_name) 
-                if not nominal:
-                    print("Nominal histogram for Diboson not found.")
-                    continue
-                
-                hist_pdfUp = nominal.Clone("M_Zprime_Diboson_pdfUp")
-                hist_pdfDown = nominal.Clone("M_Zprime_Diboson_pdfDown")
-                hist_pdfUp.Write()
-                hist_pdfDown.Write()
+            hist_pdfUp = nominal.Clone("M_Zprime_Diboson_pdfUp")
+            hist_pdfDown = nominal.Clone("M_Zprime_Diboson_pdfDown")
+            
+            hist_pdfUp.Write()
+            hist_pdfDown.Write()
 
 
         else:
             
-            print("Processing PDF: ", sample)
-            
-            # getting the nominal histogram
-            nominal = inFile.Get("DeltaY_SystVariations_DNN_output0/M_Zprime")
-            
-            if not nominal:
-                print("Nominal histogram for {} not found.".format(sample))
-                continue
-
-            # normalization scales for each PDF variation
-            v_pdf_norm = []
-            
-            # getting 100 PDFs histograms
-            for i in range(1, 101):
-                pdf_hist = inFile.Get("Zprime_PDFVariations_DNN_output0/M_Zprime_PDF_{}".format(i))
-                if pdf_hist:
-                    if nominal.GetBinContent(1) != 0:
-                        norm_scale_pdf = pdf_hist.GetBinContent(1) / nominal.GetBinContent(1)
-                        v_pdf_norm.append(norm_scale_pdf)
-                        pdf_hist.Scale(1. / norm_scale_pdf)
-
             hist_pdfUp = TH1F("M_Zprime_{}_pdfUp".format(sample), "{} pdf up variation".format(sample), nominal.GetNbinsX(), nominal.GetXaxis().GetXmin(), nominal.GetXaxis().GetXmax())
             hist_pdfDown = TH1F("M_Zprime_{}_pdfDown".format(sample), "{} pdf down variation".format(sample), nominal.GetNbinsX(), nominal.GetXaxis().GetXmin(), nominal.GetXaxis().GetXmax())
+            
+            sum_bins = [0.] * (nominal.GetNbinsX() + 1)  # Initialize sum of deviations squared for each bin
+            
+            for i in range(1, 101):
+                pdf_hist = inFile.Get("Zprime_PDFVariations_DNN_output1/M_Zprime_PDF_{}".format(i))
+                if pdf_hist:
+                    pdf_hist.Rebin(2)
+                    if nominal.GetBinContent(1) != 0:
+                        scale = pdf_hist.GetBinContent(1) / nominal.GetBinContent(1)
+                        pdf_hist.Scale(1. / scale)
 
-            # Calculate RMS for each bin and update up/down histograms
+                    for bin_idx in range(1, nominal.GetNbinsX() + 1):
+                        deviation = pdf_hist.GetBinContent(bin_idx) - nominal.GetBinContent(bin_idx)
+                        sum_bins[bin_idx] += deviation ** 2
+
             for bin_idx in range(1, nominal.GetNbinsX() + 1):
-                sum_bins = 0.
-                for j in range(1, 101):
-                    pdf_hist = inFile.Get("Zprime_PDFVariations_DNN_output0/M_Zprime_PDF_{}".format(j))
-                    bin_content = pdf_hist.GetBinContent(bin_idx)
-                    sum_bins += (bin_content - nominal.GetBinContent(bin_idx)) ** 2
-
-                rms = math.sqrt(sum_bins / 100)
+                rms = math.sqrt(sum_bins[bin_idx] / 100)
                 hist_pdfUp.SetBinContent(bin_idx, nominal.GetBinContent(bin_idx) + rms)
                 hist_pdfDown.SetBinContent(bin_idx, nominal.GetBinContent(bin_idx) - rms)
 
@@ -263,10 +259,15 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
             combine_file.cd()
 
             print("Processing {} for {} ".format(sample, sys_variation))
-            hist_name = "DNN_output0_General/M_Zprime"
+            hist_name = "DNN_output1_General/M_Zprime"
             jer_jec_hist = sys_file.Get(hist_name)
             if jer_jec_hist:
-                jer_jec_hist.Clone("M_Zprime_{}_{}".format(sample, sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())).Write()
+                
+                new_hist_name = "M_Zprime_{}_{}".format(sample, sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())
+                jer_jec_hist_cloned = jer_jec_hist.Clone(new_hist_name)
+                jer_jec_hist_cloned.Rebin(2)
+                # jer_jec_hist_cloned.GetXaxis().SetRangeUser(0, 5000)
+                jer_jec_hist_cloned.Write()
             
             else:
                 print("Missing histogram for {}: {}".format(sample, hist_name))

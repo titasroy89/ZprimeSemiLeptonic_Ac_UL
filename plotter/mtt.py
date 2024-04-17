@@ -42,6 +42,10 @@ systematics = [
     "btag_lf",
     "btag_lfstats1",
     "btag_lfstats2",
+    "ttag_corr",
+    "ttag_uncorr",
+    "tmistag",
+    "murmuf"
 ]
 
 print "year: " + year
@@ -85,7 +89,7 @@ for channel in channels:
 
 
         nice = NiceStackWithRatio(
-            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_muon.root",
+            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_muon_SR.root",
             # infile_directory = "", # the directory within the ROOT file
             x_axis_title = var.get("x_axis_title"),
             x_axis_unit = var.get("x_axis_unit"),
@@ -96,24 +100,29 @@ for channel in channels:
             lumi_unc = _YEARS.get(year).get("lumi_unc"),
             divide_by_bin_width = False,
             data_name = var.get("name") + "_DATA",
+            # show_cms_logo = True,
             text_prelim = "Private Work",
+            text_simulation = None, # or:  Simulation
             text_top_left = channel + " channel (" + year + ")",
             text_top_right = _YEARS.get(year).get("lumi_fb_display") + " fb^{#minus1} (13 TeV)",
+            y_axis_min = 0,
+            # y_axis_max = 5000,
+            x_axis_min = 0,
+            x_axis_max = 4000,
             nostack = False,
             logy = True,
             blind_data = False,
-            debug = False,
+            show_ratio = True,
         )
 
         nice.plot()
         nice.canvas.cd()
 
-        nice.ratio_null_hist.SetMinimum(0.0)
-        nice.ratio_null_hist.SetMaximum(2.0)
-        # nice.ratio_null_hist.GetYaxis().SetNdivisions(-402)
+        # nice.ratio_null_hist.SetMinimum(0.0)
+        # nice.ratio_null_hist.SetMaximum(2.0)
 
         # legend
-        leg_offset_x = 0.10
+        leg_offset_x = 0.05
         leg_offset_y = 0.23
         legend = root.TLegend(nice.coord.graph_to_pad_x(0.45+leg_offset_x), nice.coord.graph_to_pad_y(0.45+leg_offset_y), nice.coord.graph_to_pad_x(0.70+leg_offset_x), nice.coord.graph_to_pad_y(0.73+leg_offset_y))
         if not nice.blind_data: legend.AddEntry(nice.data_hist, "Data", "ep")
@@ -133,5 +142,5 @@ for channel in channels:
         legend.SetFillStyle(0)
         legend.Draw()
 
-        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "v2.pdf")
+        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "_SR_v2.pdf")
         nice.canvas.Close()

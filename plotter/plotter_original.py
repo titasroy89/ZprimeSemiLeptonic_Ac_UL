@@ -224,7 +224,7 @@ class NiceStackWithRatio():
 
     def preprocess_hist(self, hist, disable_bin_width_division=False, th1_for_bin_widths=None):
         if isinstance(hist, root.TH1):
-            # hist.Rebin(self.rebin_factor)
+            hist.Rebin(self.rebin_factor)
             n_bins = hist.GetNbinsX()
             if self.include_overflow:
                 hist.SetBinContent(n_bins, hist.GetBinContent(n_bins) + hist.GetBinContent(n_bins + 1))
