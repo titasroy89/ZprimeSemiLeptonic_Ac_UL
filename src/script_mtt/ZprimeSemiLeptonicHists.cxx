@@ -535,6 +535,7 @@ void ZprimeSemiLeptonicHists::init(){
   M_Zprime_dr_rebin        = book<TH1F>("M_Zprime_dr_rebin", "M_{t#bar{t}} (correctly matched) [GeV]", 140, 0, 7000);
   M_Zprime_dr_rebin2       = book<TH1F>("M_Zprime_dr_rebin2", "M_{t#bar{t}} (correctly matched) [GeV]", 70, 0, 7000);
   M_Zprime_dr_rebin3       = book<TH1F>("M_Zprime_dr_rebin3", "M_{t#bar{t}} (correctly matched) [GeV]", 35, 0, 7000);
+  M_Zprime_all             = book<TH1F>("M_Zprime_all", "M_{t#bar{t}} [GeV]", 280, 0, 7000);
 
   // 2D histogram of mttbar x cos(theta*) to optimize binning
   mttbar_vs_costhetastar = book<TH2F>("mttbar_vs_costhetastar", "m_{t#bar{t}} vs cos(#theta*)", 20, -1, 1, 1000, 0, 10000);
@@ -1365,6 +1366,14 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
 
   bool is_zprime_reconstructed_correctmatch = event.get(h_is_zprime_reconstructed_correctmatch);
+
+  if(is_zprime_reconstructed_chi2){
+    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+    float Mreco = BestZprimeCandidate->Zprime_v4().M();
+    M_Zprime_all->Fill(Mreco, weight);
+  }
+
+
   // added "is_mc" to blind data in mttbar hists
   if(is_zprime_reconstructed_chi2 && is_mc){
     if(debug) cout << "in general zprime chi" << endl;
@@ -1481,9 +1490,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     DeltaY_gen->Fill(dygen, weight);
     DeltaY_reco->Fill(dyreco, weight);
-    
-    
-  
 
     LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
     LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
