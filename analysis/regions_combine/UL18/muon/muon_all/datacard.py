@@ -1,6 +1,6 @@
 def create_datacard(year, mass_range, lepton_flavor):
     filename = 'datacard_{}_{}_{}.txt'.format(year, lepton_flavor, mass_range)
-    filepath = 'combine_input/dY_{}_{}_{}.root'.format(year, lepton_flavor, mass_range)
+    filepath = '/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/regions_combine/UL18/muon/{}/combine_input/dY_{}_{}_{}.root'.format(mass_range, year, lepton_flavor, mass_range)
     bins = ["SR", "CR1", "CR2"]
     processes = ["TTbar_1", "TTbar_2", "W_DYJets", "ST", "Others"]
     num_processes = len(processes) - 1  # jmax is number of processes minus 1
@@ -125,8 +125,8 @@ def create_datacard(year, mass_range, lepton_flavor):
 
 # years = ["UL18", "UL17", "preUL16", "postUL16"]
 years = ["UL18"]
-# mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
-mass_ranges = ["750_1000"]
+mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
+# mass_ranges = ["1500Inf"]
 lepton_flavors = ["muon"]
 
 for year in years:

@@ -125,8 +125,8 @@ def create_datacard(year, mass_range, lepton_flavor):
 
 # years = ["UL18", "UL17", "preUL16", "postUL16"]
 years = ["UL18"]
-# mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
-mass_ranges = ["750_1000"]
+mass_ranges = ["0_750", "750_1500", "1500Inf"]
+# mass_ranges = ["1500Inf"]
 lepton_flavors = ["muon"]
 
 for year in years:

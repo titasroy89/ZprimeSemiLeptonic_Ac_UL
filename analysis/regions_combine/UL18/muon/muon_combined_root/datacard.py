@@ -1,6 +1,6 @@
-def create_datacard(year, mass_range, lepton_flavor):
-    filename = 'datacard_{}_{}_{}.txt'.format(year, lepton_flavor, mass_range)
-    filepath = 'combine_input/dY_{}_{}_{}.root'.format(year, lepton_flavor, mass_range)
+def create_datacard(year, lepton_flavor):
+    filename = 'datacard_{}_{}.txt'.format(year, lepton_flavor)
+    filepath = 'combine_input/dY_{}_{}.root'.format(year, lepton_flavor)
     bins = ["SR", "CR1", "CR2"]
     processes = ["TTbar_1", "TTbar_2", "W_DYJets", "ST", "Others"]
     num_processes = len(processes) - 1  # jmax is number of processes minus 1
@@ -12,7 +12,7 @@ def create_datacard(year, mass_range, lepton_flavor):
         file.write("----------------------------------------------------------------------------------------------------------------------------------\n")
         
         for bin in bins:
-            file.write("shapes * muon_UL18_{2}_{1} {0} {1}/$PROCESS {1}/$PROCESS_$SYSTEMATIC\n".format(filepath, bin, mass_range))
+            file.write("shapes * muon_UL18_{1} {0} {1}/$PROCESS {1}/$PROCESS_$SYSTEMATIC\n".format(filepath, bin))
         file.write("shapes data_obs * {0} {1}/data_obs\n".format(filepath, bins[0])) 
         
         # file.write("shapes data_obs     *       {} $PROCESS\n".format(filepath))
@@ -20,14 +20,14 @@ def create_datacard(year, mass_range, lepton_flavor):
         file.write("----------------------------------------------------------------------------------------------------------------------------------\n")
         
         # Bin and observation section
-        file.write("bin                     {0}_{1}_{2}_SR          {0}_{1}_{2}_CR1           {0}_{1}_{2}_CR2\n".format(lepton_flavor, year, mass_range))
+        file.write("bin                     {0}_{1}_SR          {0}_{1}_CR1           {0}_{1}_CR2\n".format(lepton_flavor, year))
         file.write("observation             -1                            -1                              -1\n")
         
         # bin_names = ["{}_{}_{}_{}".format(lepton_flavor, year, mass_range, bin) for bin in bins]
         # file.write("observation  -1\n")
         
         file.write("----------------------------------------------------------------------------------------------------------------------------------\n")
-        file.write("bin                     {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}           {}_{}_{}_{}          {}_{}_{}_{}\n".format(lepton_flavor, year, mass_range, "SR", lepton_flavor, year, mass_range, "SR",lepton_flavor, year, mass_range, "SR",lepton_flavor, year, mass_range, "SR",lepton_flavor, year, mass_range, "SR",lepton_flavor, year, mass_range, "CR1", lepton_flavor, year, mass_range, "CR1",lepton_flavor, year, mass_range, "CR1",lepton_flavor, year, mass_range, "CR1",lepton_flavor, year, mass_range, "CR1", lepton_flavor, year, mass_range, "CR2",lepton_flavor, year, mass_range, "CR2",lepton_flavor, year, mass_range, "CR2",lepton_flavor, year, mass_range, "CR2",lepton_flavor, year, mass_range, "CR2"))
+        file.write("bin                     {}_{}_{}          {}_{}_{}           {}_{}_{}           {}_{}_{}          {}_{}_{}           {}_{}_{}          {}_{}_{}           {}_{}_{}          {}_{}_{}           {}_{}_{}          {}_{}_{}           {}_{}_{}          {}_{}_{}           {}_{}_{}          {}_{}_{}\n".format(lepton_flavor, year,  "SR", lepton_flavor, year,  "SR",lepton_flavor, year,  "SR",lepton_flavor, year,  "SR",lepton_flavor, year,  "SR",lepton_flavor, year,  "CR1", lepton_flavor, year,  "CR1",lepton_flavor, year,  "CR1",lepton_flavor, year,  "CR1",lepton_flavor, year,  "CR1", lepton_flavor, year,  "CR2",lepton_flavor, year,  "CR2",lepton_flavor, year,  "CR2",lepton_flavor, year,  "CR2",lepton_flavor, year, "CR2"))
         file.write("process                 TTbar_1                        TTbar_2                         W_DYJets                        ST                             Others                          TTbar_1                         TTbar_2                          W_DYJets                        ST                               Others                          TTbar_1                          TTbar_2                         W_DYJets                         ST                              Others\n")
         file.write("process                 -1                             0                               1                               2                              3                               -1                              0                                1                               2                                3                               -1                               0                               1                                2                               3\n")
         file.write("rate                    -1                             -1                              -1                              -1                             -1                              -1                              -1                               -1                              -1                               -1                              -1                               -1                              -1                               -1                              -1\n")
@@ -115,7 +115,7 @@ def create_datacard(year, mass_range, lepton_flavor):
         systematics = muon_systematics if lepton_flavor == "muon" else electron_systematics
         
         for bin in bins:
-            systematics.append("{}_{}_{}_{} autoMCStats 1e06 1 1".format(lepton_flavor, year, mass_range, bin))
+            systematics.append("{}_{}_{} autoMCStats 1e06 1 1".format(lepton_flavor, year, bin))
         
         for syst in systematics:
             file.write(syst + '\n')
@@ -125,11 +125,11 @@ def create_datacard(year, mass_range, lepton_flavor):
 
 # years = ["UL18", "UL17", "preUL16", "postUL16"]
 years = ["UL18"]
-# mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
-mass_ranges = ["750_1000"]
+mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
+# mass_ranges = ["1500Inf"]
 lepton_flavors = ["muon"]
 
 for year in years:
-    for mass_range in mass_ranges:
-        for lepton_flavor in lepton_flavors:
-            create_datacard(year, mass_range, lepton_flavor)
+    # for mass_range in mass_ranges:
+    for lepton_flavor in lepton_flavors:
+        create_datacard(year, lepton_flavor)

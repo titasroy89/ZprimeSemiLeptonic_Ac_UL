@@ -12,7 +12,7 @@ def create_datacard(year, mass_range, lepton_flavor):
         file.write("----------------------------------------------------------------------------------------------------------------------------------\n")
         
         for bin in bins:
-            file.write("shapes * muon_UL18_{2}_{1} {0} {1}/$PROCESS {1}/$PROCESS_$SYSTEMATIC\n".format(filepath, bin, mass_range))
+            file.write("shapes * muon_UL18_0_500_{1} {0} {1}/$PROCESS {1}/$PROCESS_$SYSTEMATIC\n".format(filepath, bin))
         file.write("shapes data_obs * {0} {1}/data_obs\n".format(filepath, bins[0])) 
         
         # file.write("shapes data_obs     *       {} $PROCESS\n".format(filepath))
@@ -126,7 +126,7 @@ def create_datacard(year, mass_range, lepton_flavor):
 # years = ["UL18", "UL17", "preUL16", "postUL16"]
 years = ["UL18"]
 # mass_ranges = ["0_500", "500_750", "750_1000", "1000_1500", "1500Inf"]
-mass_ranges = ["750_1000"]
+mass_ranges = ["0_500"]
 lepton_flavors = ["muon"]
 
 for year in years:

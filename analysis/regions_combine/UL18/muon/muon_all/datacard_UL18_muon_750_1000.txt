@@ -2,10 +2,10 @@ imax 3 number of bins
 jmax 4 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes * muon_UL18_750_1000_SR combine_input/dY_UL18_muon_750_1000.root SR/$PROCESS SR/$PROCESS_$SYSTEMATIC
-shapes * muon_UL18_750_1000_CR1 combine_input/dY_UL18_muon_750_1000.root CR1/$PROCESS CR1/$PROCESS_$SYSTEMATIC
-shapes * muon_UL18_750_1000_CR2 combine_input/dY_UL18_muon_750_1000.root CR2/$PROCESS CR2/$PROCESS_$SYSTEMATIC
-shapes data_obs * combine_input/dY_UL18_muon_750_1000.root SR/data_obs
+shapes * muon_UL18_750_1000_SR /nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/regions_combine/UL18/muon/750_1000/combine_input/dY_UL18_muon_750_1000.root SR/$PROCESS SR/$PROCESS_$SYSTEMATIC
+shapes * muon_UL18_750_1000_CR1 /nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/regions_combine/UL18/muon/750_1000/combine_input/dY_UL18_muon_750_1000.root CR1/$PROCESS CR1/$PROCESS_$SYSTEMATIC
+shapes * muon_UL18_750_1000_CR2 /nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/regions_combine/UL18/muon/750_1000/combine_input/dY_UL18_muon_750_1000.root CR2/$PROCESS CR2/$PROCESS_$SYSTEMATIC
+shapes data_obs * /nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/regions_combine/UL18/muon/750_1000/combine_input/dY_UL18_muon_750_1000.root SR/data_obs
 ----------------------------------------------------------------------------------------------------------------------------------
 bin                     muon_UL18_750_1000_SR          muon_UL18_750_1000_CR1           muon_UL18_750_1000_CR2
 observation             -1                            -1                              -1
