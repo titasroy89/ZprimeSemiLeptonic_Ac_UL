@@ -4,9 +4,9 @@ def copy_histograms(input_files, output_file_path):
     output_file = ROOT.TFile(output_file_path, 'RECREATE')
 
     directories = {
-        'dY_UL18_muon_750_1000_CR1.root' : 'CR1',
-        'dY_UL18_muon_750_1000_CR2.root': 'CR2',
-        'dY_UL18_muon_750_1000_SR.root' : 'SR'
+        'dY_UL18_muon_1500Inf_CR1.root' : 'CR1',
+        'dY_UL18_muon_1500Inf_CR2.root': 'CR2',
+        'dY_UL18_muon_1500Inf_SR.root' : 'SR'
     }
 
     for input_file_name, dir_name in directories.items():
@@ -31,10 +31,10 @@ def copy_histograms(input_files, output_file_path):
     output_file.Close()
 
 input_files = {
-    'dY_UL18_muon_750_1000_CR1.root' : 'CR1',
-    'dY_UL18_muon_750_1000_CR2.root': 'CR2',
-    'dY_UL18_muon_750_1000_SR.root' : 'SR'
+    'dY_UL18_muon_1500Inf_CR1.root' : 'CR1',
+    'dY_UL18_muon_1500Inf_CR2.root': 'CR2',
+    'dY_UL18_muon_1500Inf_SR.root' : 'SR'
 }
-output_file_path = 'dY_UL18_muon_750_1000.root'
+output_file_path = 'dY_UL18_muon_1500Inf.root'
 
 copy_histograms(input_files, output_file_path)

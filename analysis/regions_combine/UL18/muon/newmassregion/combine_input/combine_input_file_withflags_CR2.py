@@ -20,10 +20,9 @@ lepton_flavor = options.lepton_flavor if options.lepton_flavor else "muon"  # de
 # finalState = options.channel
 
 inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/".format(year)
-combine_file_name = 'dY_{}_{}_{}_CR1.root'.format(year, lepton_flavor, mass_range)
+combine_file_name = 'dY_{}_{}_{}_CR2.root'.format(year, lepton_flavor, mass_range)
 combine_file = TFile(combine_file_name, 'RECREATE')
 stackList = {"TTbar", "ST", "Others", "DATA"}
-
 
 
 ############ 
@@ -64,7 +63,7 @@ systematic_name_mapping = {
 print(" ----------------- all systematics except PDF, JER/JEC, murmuf ----------------")
 
 for sample in stackList:
-    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR1/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
     if not inFile:
         print("Input file for {} not found.".format(sample))
         continue
@@ -79,12 +78,12 @@ for sample in stackList:
         
     elif sample == "TTbar":
         print("Processing sample for other sys: ", sample)
-        h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY".format(mass_range, lepton_flavor)).Clone(sample)
+        h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/DeltaY".format(mass_range, lepton_flavor)).Clone(sample)
         
-        h_PP = inFile.Get("DY_P_P_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
-        h_PN = inFile.Get("DY_P_N_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
-        h_NP = inFile.Get("DY_N_P_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
-        h_NN = inFile.Get("DY_N_N_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
+        h_PP = inFile.Get("DY_P_P_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
+        h_PN = inFile.Get("DY_P_N_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
+        h_NP = inFile.Get("DY_N_P_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
+        h_NN = inFile.Get("DY_N_N_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor)).Clone()
 
         Matrix = TH2D("Matrix","", 2, -2.5, 2.5, 2, -2.5, 2.5)
 
@@ -109,10 +108,10 @@ for sample in stackList:
         for sys, new_sys_name in systematic_name_mapping.items():
             print sys
             for variation in ["up", "down"]:
-                h_PP = inFile.Get("DeltaY_reco_SystVariations_P_P_{}_{}_CR1/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
-                h_PN = inFile.Get("DeltaY_reco_SystVariations_P_N_{}_{}_CR1/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
-                h_NP = inFile.Get("DeltaY_reco_SystVariations_N_P_{}_{}_CR1/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
-                h_NN = inFile.Get("DeltaY_reco_SystVariations_N_N_{}_{}_CR1/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
+                h_PP = inFile.Get("DeltaY_reco_SystVariations_P_P_{}_{}_CR2/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
+                h_PN = inFile.Get("DeltaY_reco_SystVariations_P_N_{}_{}_CR2/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
+                h_NP = inFile.Get("DeltaY_reco_SystVariations_N_P_{}_{}_CR2/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
+                h_NN = inFile.Get("DeltaY_reco_SystVariations_N_N_{}_{}_CR2/DeltaY_{}_{}".format(mass_range, lepton_flavor, sys, variation))
 
                 # if not h_PP or not h_PN or not h_NP or not h_NN:
                 #     print("Could not find one or more histograms for systematic '{}' variation '{}'".format(sys, variation))
@@ -139,7 +138,7 @@ for sample in stackList:
     else:
         print("Processing sample for other sys: ", sample)
         
-        h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY".format(mass_range, lepton_flavor)).Clone(sample)
+        h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/DeltaY".format(mass_range, lepton_flavor)).Clone(sample)
         h_nominal.Write(sample)
         
         
@@ -148,7 +147,7 @@ for sample in stackList:
             
             for variation in ["up", "down"]:
                 sys_hist_name = "DeltaY_{}_{}".format(sys, variation)
-                sys_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/".format(mass_range, lepton_flavor) + sys_hist_name)
+                sys_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/".format(mass_range, lepton_flavor) + sys_hist_name)
                 if sys_hist:
                     output_hist_name = "{}_{}{}".format(sample, new_sys_name, variation.capitalize())
                     sys_hist.Clone(output_hist_name).Write()
@@ -176,7 +175,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
     print(" ----------------- murmuf processing ----------------")
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR1/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -190,7 +189,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
                 
                 Matrix = TH2D("Matrix_murmuf_{}".format(variation), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
                 for quadrant in ["P_P", "P_N", "N_P", "N_N"]:
-                    hist_name = "DeltaY_reco_SystVariations_{}_{}_{}_CR1/DeltaY_murmuf_{}".format(quadrant, mass_range, lepton_flavor, variation)
+                    hist_name = "DeltaY_reco_SystVariations_{}_{}_{}_CR2/DeltaY_murmuf_{}".format(quadrant, mass_range, lepton_flavor, variation)
                     h_var = inFile.Get(hist_name)
                     if not h_var:
                         print("Missing histogram for variation: {}".format(hist_name))
@@ -235,14 +234,14 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
         else:
             print("Processing sample for murmuf: ", sample)
         
-            h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY".format(mass_range, lepton_flavor))
+            h_nominal = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/DeltaY".format(mass_range, lepton_flavor))
             scales = {}
             if not h_nominal:
                 print("Nominal histogram for {} not found.".format(sample))
                 continue
 
             for variation in v_variations:
-                variation_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, variation))
+                variation_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, variation))
                 
                 if variation_hist:
                     scales[variation] = variation_hist.GetBinContent(1) / h_nominal.GetBinContent(1)
@@ -257,7 +256,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_project
                 max_val = h_nominal.GetBinContent(bin_idx)
                 min_val = h_nominal.GetBinContent(bin_idx)
                 for var, scale in scales.items():
-                    var_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, var))
+                    var_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR2/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, var))
                     if var_hist:
                         scaled_val = var_hist.GetBinContent(bin_idx) / scale
                         max_val = max(max_val, scaled_val)
@@ -284,7 +283,7 @@ def processPDF(inputDir, v_samples, combine_file):
     
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR1/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_CR2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -296,10 +295,10 @@ def processPDF(inputDir, v_samples, combine_file):
             
             # Step 1: make projection histograms for nominal and PDF variations
             
-            h_PP = inFile.Get("DY_P_P_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor))
-            h_PN = inFile.Get("DY_P_N_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor))
-            h_NP = inFile.Get("DY_N_P_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor))
-            h_NN = inFile.Get("DY_N_N_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            h_PP = inFile.Get("DY_P_P_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            h_PN = inFile.Get("DY_P_N_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            h_NP = inFile.Get("DY_N_P_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            h_NN = inFile.Get("DY_N_N_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor))
 
             Matrix_nominal = TH2D("Matrix_nominal", "", 2, -2.5, 2.5, 2, -2.5, 2.5)
 
@@ -319,10 +318,10 @@ def processPDF(inputDir, v_samples, combine_file):
             for i in range(1, 101):
                 Matrix_pdf = TH2D("Matrix_PDF_{}".format(i), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
             
-                h_PP_pdf = inFile.Get("DeltaY_reco_PDFVariations_P_P_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
-                h_PN_pdf = inFile.Get("DeltaY_reco_PDFVariations_P_N_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
-                h_NP_pdf = inFile.Get("DeltaY_reco_PDFVariations_N_P_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
-                h_NN_pdf = inFile.Get("DeltaY_reco_PDFVariations_N_N_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
+                h_PP_pdf = inFile.Get("DeltaY_reco_PDFVariations_P_P_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
+                h_PN_pdf = inFile.Get("DeltaY_reco_PDFVariations_P_N_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
+                h_NP_pdf = inFile.Get("DeltaY_reco_PDFVariations_N_P_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
+                h_NN_pdf = inFile.Get("DeltaY_reco_PDFVariations_N_N_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
                 
                 Matrix_pdf.SetBinContent(1, 1, h_NN_pdf.Integral())
                 Matrix_pdf.SetBinContent(1, 2, h_PN_pdf.Integral())
@@ -414,7 +413,7 @@ def processPDF(inputDir, v_samples, combine_file):
             print("Processing PDF: ", sample)
             
             # getting the nominal histogram
-            nominal = inFile.Get("DeltaY_reco_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor))
+            nominal = inFile.Get("DeltaY_reco_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor))
             
             if not nominal:
                 print("Nominal histogram for {} not found.".format(sample))
@@ -425,7 +424,7 @@ def processPDF(inputDir, v_samples, combine_file):
             
             # getting 100 PDFs histograms
             for i in range(1, 101):
-                pdf_hist = inFile.Get("DeltaY_reco_PDFVariations_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
+                pdf_hist = inFile.Get("DeltaY_reco_PDFVariations_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, i))
                 if pdf_hist:
                     norm_scale_pdf = pdf_hist.GetBinContent(1) / nominal.GetBinContent(1)
                     v_pdf_norm.append(norm_scale_pdf)
@@ -438,7 +437,7 @@ def processPDF(inputDir, v_samples, combine_file):
             for bin_idx in range(1, nominal.GetNbinsX() + 1):
                 sum_bins = 0.
                 for j in range(1, 101):
-                    pdf_hist = inFile.Get("DeltaY_reco_PDFVariations_{}_{}_CR1/DeltaY_PDF_{}".format(mass_range, lepton_flavor, j))
+                    pdf_hist = inFile.Get("DeltaY_reco_PDFVariations_{}_{}_CR2/DeltaY_PDF_{}".format(mass_range, lepton_flavor, j))
                     bin_content = pdf_hist.GetBinContent(bin_idx)
                     sum_bins += (bin_content - nominal.GetBinContent(bin_idx)) ** 2
 
@@ -486,7 +485,7 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
                 Matrix = TH2D("Matrix_{}".format(sys_variation), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
                 
                 for quadrant in ["P_P", "P_N", "N_P", "N_N"]:
-                    hist_name = "DY_{}_{}_{}_General/DeltaY_reco".format(quadrant, mass_range, lepton_flavor)
+                    hist_name = "DY_{}_{}_{}_CR2_General/DeltaY_reco".format(quadrant, mass_range, lepton_flavor)
                     h_var = sys_file.Get(hist_name)
                     if h_var:
                         Matrix.SetBinContent(1 if "N" in quadrant else 2, 1 if quadrant.endswith("N") else 2, h_var.Integral())
@@ -498,16 +497,17 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
 
                 output_name_1 = "TTbar_1_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())
                 output_name_2 = "TTbar_2_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())
-                
+
                 ProjX_1 = Matrix.ProjectionX(output_name_1, 1, 1)
                 ProjX_2 = Matrix.ProjectionX(output_name_2, 2, 2)
-
+                
                 ProjX_1.Write(output_name_1)
                 ProjX_2.Write(output_name_2)
                 
+                
             else:
                 print("Processing {} for {} ".format(sample, sys_variation))
-                hist_name = "DeltaY_reco_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor)
+                hist_name = "DeltaY_reco_{}_{}_CR2_General/DeltaY_reco".format(mass_range, lepton_flavor)
                 jer_jec_hist = sys_file.Get(hist_name)
                 if jer_jec_hist:
                     jer_jec_hist.Clone("{}_{}".format(sample, sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())).Write()

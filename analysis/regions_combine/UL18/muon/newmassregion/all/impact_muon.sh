@@ -12,7 +12,7 @@ declare -a POIS=(
   "Ac"
 )
 
-export WORKSPACE=Ac_UL18_ele_0_750.root
+export WORKSPACE=Ac_UL18_muon.root
 export VERBOSITY=0
 
 export SetParameters="rgx{r.+}=1,Ac=0.7"
@@ -78,4 +78,4 @@ echo
 echo
 
 mkdir output_combine
-mv higgs* impacts.json Ac_UL18_ele_0_750.root combine_logger.out output_combine
+mv higgs* impacts.json Ac_UL18_muon.root combine_logger.out output_combine

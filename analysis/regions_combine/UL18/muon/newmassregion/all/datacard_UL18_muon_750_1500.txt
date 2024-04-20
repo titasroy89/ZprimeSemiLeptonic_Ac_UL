@@ -49,6 +49,6 @@ jec                 shape   1       1       -       -       1       1       -   
 TTbar_norm          lnN     1.05    1.05    -       -       1.05    1.05    -       -       1.05    1.05    -       -
 ST_norm             lnN     -       -       1.3     -       -       -       1.3     -       -       -       1.3     -
 Others_norm         lnN     -       -       -       1.3     -       -       -       1.3     -       -       -       1.3
-muon_UL18_750_1500_SR autoMCStats 1 1 1
-muon_UL18_750_1500_CR1 autoMCStats 1 1 1
-muon_UL18_750_1500_CR2 autoMCStats 1 1 1
+muon_UL18_750_1500_SR autoMCStats 0 1 1
+muon_UL18_750_1500_CR1 autoMCStats 0 1 1
+muon_UL18_750_1500_CR2 autoMCStats 0 1 1

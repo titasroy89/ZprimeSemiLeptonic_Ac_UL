@@ -355,9 +355,15 @@ def processPDF(inputDir, v_samples, combine_file):
             norm_scales_2 = []
             
             for i in range(100):
-                norm_scale_1 = pdf_projections_1[i].GetBinContent(1) / projection_1_nominal.GetBinContent(1)
-                norm_scales_1.append(norm_scale_1)
-                pdf_projections_1[i].Scale(1. / norm_scale_1)
+                if projection_1_nominal.GetBinContent(1) != 0:
+                    norm_scale_1 = pdf_projections_1[i].GetBinContent(1) / projection_1_nominal.GetBinContent(1)
+                    norm_scales_1.append(norm_scale_1)
+                    if norm_scale_1 != 0:
+                        pdf_projections_1[i].Scale(1. / norm_scale_1)
+                    else:
+                        pdf_projections_1[i].Scale(1.0)
+                else:
+                    pdf_projections_1[i].Scale(1.0)
                 
                 # norm_scale_2 = pdf_projections_2[i].GetBinContent(1) / projection_2_nominal.GetBinContent(1)
                 # norm_scales_2.append(norm_scale_2)
@@ -521,7 +527,7 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
                 Matrix = TH2D("Matrix_{}".format(sys_variation), "", 2, -2.5, 2.5, 2, -2.5, 2.5)
                 
                 for quadrant in ["P_P", "P_N", "N_P", "N_N"]:
-                    hist_name = "DY_{}_{}_{}_General/DeltaY_reco".format(quadrant, mass_range, lepton_flavor)
+                    hist_name = "DY_{}_{}_{}_CR1_General/DeltaY_reco".format(quadrant, mass_range, lepton_flavor)
                     h_var = sys_file.Get(hist_name)
                     if h_var:
                         Matrix.SetBinContent(1 if "N" in quadrant else 2, 1 if quadrant.endswith("N") else 2, h_var.Integral())
@@ -542,7 +548,7 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
                 
             else:
                 print("Processing {} for {} ".format(sample, sys_variation))
-                hist_name = "DeltaY_reco_{}_{}_General/DeltaY_reco".format(mass_range, lepton_flavor)
+                hist_name = "DeltaY_reco_{}_{}_CR1_General/DeltaY_reco".format(mass_range, lepton_flavor)
                 jer_jec_hist = sys_file.Get(hist_name)
                 if jer_jec_hist:
                     jer_jec_hist.Clone("{}_{}".format(sample, sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())).Write()
