@@ -60,7 +60,7 @@ systematic_name_mapping = {
 
 print(" ----------------- all systematics except PDF, JER/JEC, murmuf ----------------")
 for sample in stackList:
-    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst_rebin_v2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
     if not inFile:
         print("Input file for {} not found.".format(sample))
         continue
@@ -116,7 +116,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
     print(" ----------------- murmuf processing ----------------")
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst_rebin_v2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -149,7 +149,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
             max_val = h_nominal.GetBinContent(bin_idx)
             min_val = h_nominal.GetBinContent(bin_idx)
             for var, scale in scales.items():
-                var_hist = inFile.Get("DeltaY_SystVariations_DNN_output1M_Zprime_murmuf_{}".format(var))
+                var_hist = inFile.Get("DeltaY_SystVariations_DNN_output1/M_Zprime_murmuf_{}".format(var))
                 if var_hist:
                     scaled_val = var_hist.GetBinContent(bin_idx) / scale
                     max_val = max(max_val, scaled_val)
@@ -176,7 +176,7 @@ def processPDF(inputDir, v_samples, combine_file):
     
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst_rebin_v2/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -285,6 +285,6 @@ getEnvelope(inputDir, v_samples, v_variations, combine_file)
 
 processPDF(inputDir, v_samples, combine_file)
 
-processJERJEC(inputDir, v_samples, combine_file, sys_variations)
+# processJERJEC(inputDir, v_samples, combine_file, sys_variations)
 
 combine_file.Close()

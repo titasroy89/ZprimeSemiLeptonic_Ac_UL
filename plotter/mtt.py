@@ -12,8 +12,8 @@ from constants_mtt import _VARIABLES
 
 year = "UL18"
 channels = [
-    # "electron",
-    "muon"
+    "ele",
+    # "muon"
 ]
 
 
@@ -89,7 +89,7 @@ for channel in channels:
 
 
         nice = NiceStackWithRatio(
-            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_muon_SR.root",
+            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_ele_CR1.root",
             # infile_directory = "", # the directory within the ROOT file
             x_axis_title = var.get("x_axis_title"),
             x_axis_unit = var.get("x_axis_unit"),
@@ -142,5 +142,5 @@ for channel in channels:
         legend.SetFillStyle(0)
         legend.Draw()
 
-        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "_SR_v2.pdf")
+        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "_CR1.pdf")
         nice.canvas.Close()

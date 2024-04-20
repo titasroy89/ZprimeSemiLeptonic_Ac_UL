@@ -18,7 +18,7 @@ lepton_flavor = options.lepton_flavor if options.lepton_flavor else "muon"  # de
 # finalState = options.channel
 
 inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/".format(year)
-combine_file_name = 'Mtt_{}_{}_SR.root'.format(year, lepton_flavor)
+combine_file_name = 'Mtt_{}_{}_SR_v2.root'.format(year, lepton_flavor)
 combine_file = TFile(combine_file_name, 'RECREATE')
 stackList = {"TTToSemiLeptonic", "TTToOthers", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
 
@@ -60,7 +60,7 @@ systematic_name_mapping = {
 
 print(" ----------------- all systematics except PDF, JER/JEC, murmuf ----------------")
 for sample in stackList:
-    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+    inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
     if not inFile:
         print("Input file for {} not found.".format(sample))
         continue
@@ -116,7 +116,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
     print(" ----------------- murmuf processing ----------------")
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")       
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
@@ -176,7 +176,7 @@ def processPDF(inputDir, v_samples, combine_file):
     
     
     for sample in v_samples:
-        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_Syst/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
+        inFile = TFile.Open(inputDir + "{}/workdir_AnalysisDNN_{}_{}_dY_Mtt/nominal/{}.root".format(lepton_flavor, year, lepton_flavor, sample), "READ")
         if not inFile:
             print("Input file for {} not found.".format(sample))
             continue
