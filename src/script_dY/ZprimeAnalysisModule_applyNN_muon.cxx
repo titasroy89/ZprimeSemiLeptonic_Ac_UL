@@ -2121,6 +2121,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
             double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
 
+
             //Number of deltaY reco events
             if(Mass_tt>=0 && Mass_tt < 500){
               fill_histograms(event, "DeltaY_reco_0_500_muon_SR");
@@ -2148,7 +2149,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
               h_DeltaY_reco_PDFVariations_1500Inf_muon_SR->fill(event);
             }
           
-            //Number of deltaY reco events with NEGATIVE DY
+            // //Number of deltaY reco events with NEGATIVE DY
             // if (DeltaY_reco<0){
             //   fill_histograms(event, "DeltaY_reco_N_muon_SR");
 
@@ -2169,27 +2170,26 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             //   }
             // }
 
-            //Number of deltaY reco events with POSITIVE DY
-            if (DeltaY_reco>0){
-              fill_histograms(event, "DeltaY_reco_P_muon_SR");
+            // //Number of deltaY reco events with POSITIVE DY
+            // if (DeltaY_reco>0){
+            //   fill_histograms(event, "DeltaY_reco_P_muon_SR");
 
-              // if(Mass_tt>=0 && Mass_tt < 500){
-              //   fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
-              // }
-              if(Mass_tt>=500 && Mass_tt < 750){
-                // fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
-                cout << "DeltaY_P_reco_500_750_muon_SR: "<< DeltaY_reco << endl;
-              }
-              // if(Mass_tt>=750 && Mass_tt < 1000){
-              //   fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
-              // }
-              // if(Mass_tt>=1000 && Mass_tt < 1500){
-              //   fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
-              // }
-              // if(Mass_tt>=1500){
-              //   fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
-              // }
-            }
+            //   if(Mass_tt>=0 && Mass_tt < 500){
+            //     fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
+            //   }
+            //   if(Mass_tt>=500 && Mass_tt < 750){
+            //     fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
+            //   }
+            //   if(Mass_tt>=750 && Mass_tt < 1000){
+            //     fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
+            //   }
+            //   if(Mass_tt>=1000 && Mass_tt < 1500){
+            //     fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
+            //   }
+            //   if(Mass_tt>=1500){
+            //     fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
+            //   }
+            // }
             
 
             // ==== MATCHING with DELTA R === This section has explanation for each code snip
