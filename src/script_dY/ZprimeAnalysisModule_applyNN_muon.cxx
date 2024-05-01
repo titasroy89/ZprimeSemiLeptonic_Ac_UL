@@ -2099,7 +2099,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         vector<GenParticle>* genparticles = event.genparticles;
         GenParticle top, antitop;
         for(const GenParticle & gp : *event.genparticles){
-
           if(gp.pdgId() == 6){
             top = gp;
           }

@@ -370,7 +370,7 @@ protected:
   std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2_NoTopTag;
 
 
-// ================ SR ==================================================================================================================================================================================================================
+  // ================ SR ==================================================================================================================================================================================================================
   //muon
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_muon_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_muon_SR;
@@ -384,137 +384,54 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_muon_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_muon_SR;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_SR;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_SR;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_SR;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_SR;
 
   //muon//
 
   //electron//
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_SR;
 
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_SR;
 
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_SR;
 
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_SR;
 
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_SR;
-
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_SR;
-
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_SR;
-
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_SR;
-
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_SR;
-
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_SR;
-  // std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_SR;
-// ================ SR ends ==================================================================================================================================================================================================================
+  // ================ SR ends ==================================================================================================================================================================================================================
 
 
-// // ================ CR1 ==================================================================================================================================================================================================================
-//   //muon
+  // ================ CR1 ==================================================================================================================================================================================================================
+  //muon
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_muon_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_muon_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_muon_CR1;
@@ -527,137 +444,54 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR1;
+  //muon//
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR1;
+  //electron//
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR1;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR1;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR1;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR1;
-
-//   //muon//
-
-//   //electron//
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR1;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR1;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR1;
-// // ================ CR1 ends ==================================================================================================================================================================================================================
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR1;
+  
+  // ================ CR1 ends ==================================================================================================================================================================================================================
 
 
-// // ================ CR2 ==================================================================================================================================================================================================================
-//   //muon
+  // ================ CR2 ==================================================================================================================================================================================================================
+  //muon
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_muon_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_muon_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_muon_CR2;
@@ -670,133 +504,48 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR2;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR2;
+  //muon//
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR2;
+  //electron//
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_CR2;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR2;
 
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR2;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR2;
-
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR2;
-  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR2;
-
-//   //muon//
-
-//   //electron//
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR2;
-
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR2;
-//   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR2;
-// // ================ CR2 ends ==================================================================================================================================================================================================================
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR2;
+  // ================ CR2 ends ==================================================================================================================================================================================================================
 
 
   // Configuration
@@ -1131,140 +880,54 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_DeltaY_reco_PDFVariations_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_muon_SR"));
   h_DeltaY_reco_PDFVariations_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_muon_SR"));
 
-  h_DeltaY_reco_SystVariations_P_P_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_P_0_500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_P_500_750_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_muon_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_muon_SR"));
 
-  h_DeltaY_reco_PDFVariations_P_P_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_P_0_500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_SystVariations_P_N_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_N_0_500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_N_500_750_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_muon_SR"));
-  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_PDFVariations_P_N_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_N_0_500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_SystVariations_N_P_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_P_0_500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_P_500_750_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_PDFVariations_N_P_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_SystVariations_N_N_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_N_0_500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_N_500_750_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_muon_SR"));
-  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_muon_SR"));
-
-  h_DeltaY_reco_PDFVariations_N_N_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_N_0_500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_muon_SR"));
-  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_muon_SR"));
-
+  h_DeltaY_reco_PDFVariations_ttbar_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_muon_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_muon_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_muon_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_muon_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_SR"));
   //muon//
 
   //electron
-  // h_DeltaY_reco_SystVariations_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_SR"));
-  // h_DeltaY_reco_SystVariations_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_SR"));
-  // h_DeltaY_reco_SystVariations_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_SR"));
+  h_DeltaY_reco_SystVariations_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_SR"));
+  h_DeltaY_reco_SystVariations_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_SR"));
+  h_DeltaY_reco_SystVariations_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_SR"));
+  h_DeltaY_reco_SystVariations_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_SR"));
+  h_DeltaY_reco_SystVariations_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_SR"));
 
-  // h_DeltaY_reco_PDFVariations_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_SR"));
+  h_DeltaY_reco_PDFVariations_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_SR"));
+  h_DeltaY_reco_PDFVariations_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_SR"));
+  h_DeltaY_reco_PDFVariations_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_SR"));
+  h_DeltaY_reco_PDFVariations_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_SR"));
+  h_DeltaY_reco_PDFVariations_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_SR"));
 
-  // h_DeltaY_reco_SystVariations_P_P_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_P_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_P_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_P_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_ele_SR"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_ele_SR"));
 
-  // h_DeltaY_reco_PDFVariations_P_P_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_P_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_P_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_SystVariations_P_N_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_N_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_N_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_N_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_PDFVariations_P_N_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_N_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_N_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_SystVariations_N_P_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_P_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_P_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_P_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_PDFVariations_N_P_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_P_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_P_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_SystVariations_N_N_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_N_0_500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_N_500_750_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_N_750_1000_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_ele_SR"));
-  // h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_ele_SR"));
-
-  // h_DeltaY_reco_PDFVariations_N_N_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_N_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_N_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_ele_SR"));
-  // h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_ele_SR"));
-
-  //electron//
+  h_DeltaY_reco_PDFVariations_ttbar_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_ele_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_ele_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_ele_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_ele_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_SR"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_SR"));
+  // electron/
 
   // ================ SR ends ==================================================================================================================================================================================================================
   
 
-  // // ================ CR1 ==================================================================================================================================================================================================================
-  //  //muon
+  // ================ CR1 ==================================================================================================================================================================================================================
+  //muon
   h_DeltaY_reco_SystVariations_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_muon_CR1"));
   h_DeltaY_reco_SystVariations_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_muon_CR1"));
   h_DeltaY_reco_SystVariations_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_muon_CR1"));
@@ -1277,140 +940,55 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_muon_CR1"));
   h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_muon_CR1"));
 
-  h_DeltaY_reco_SystVariations_P_P_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR1"));
 
-  h_DeltaY_reco_PDFVariations_P_P_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR1"));
+  // muon
 
-  h_DeltaY_reco_SystVariations_P_N_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR1"));
+  //electron
+  h_DeltaY_reco_SystVariations_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_CR1"));
+  h_DeltaY_reco_SystVariations_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_CR1"));
+  h_DeltaY_reco_SystVariations_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_CR1"));
+  h_DeltaY_reco_SystVariations_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_CR1"));
+  h_DeltaY_reco_SystVariations_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_CR1"));
 
-  h_DeltaY_reco_PDFVariations_P_N_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_CR1"));
 
-  h_DeltaY_reco_SystVariations_N_P_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_ele_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_ele_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_ele_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR1"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR1"));
 
-  h_DeltaY_reco_PDFVariations_N_P_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR1"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR1"));
 
-  h_DeltaY_reco_SystVariations_N_N_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR1"));
-  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR1"));
-
-  h_DeltaY_reco_PDFVariations_N_N_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR1"));
-  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR1"));
-
-  // //muon//
-
-  // //electron
-  // h_DeltaY_reco_SystVariations_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_PDFVariations_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_SystVariations_P_P_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_PDFVariations_P_P_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_SystVariations_P_N_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_PDFVariations_P_N_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_SystVariations_N_P_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_PDFVariations_N_P_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_SystVariations_N_N_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR1"));
-
-  // h_DeltaY_reco_PDFVariations_N_N_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR1"));
-  // h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR1"));
-
-  // //electron//
-  // // ================ CR1 ends ==================================================================================================================================================================================================================
+  // electron
+  // ================ CR1 ends ==================================================================================================================================================================================================================
 
 
-  // // ================ CR2 ==================================================================================================================================================================================================================
+  // ================ CR2 ==================================================================================================================================================================================================================
 
-  //  //muon
+  //muon
   h_DeltaY_reco_SystVariations_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_muon_CR2"));
   h_DeltaY_reco_SystVariations_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_muon_CR2"));
   h_DeltaY_reco_SystVariations_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_muon_CR2"));
@@ -1423,134 +1001,49 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_muon_CR2"));
   h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_muon_CR2"));
 
-  h_DeltaY_reco_SystVariations_P_P_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR2"));
 
-  h_DeltaY_reco_PDFVariations_P_P_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR2"));
 
-  h_DeltaY_reco_SystVariations_P_N_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR2"));
+  //muon//
 
-  h_DeltaY_reco_PDFVariations_P_N_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR2"));
+  //electron
+  h_DeltaY_reco_SystVariations_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_CR2"));
+  h_DeltaY_reco_SystVariations_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_CR2"));
+  h_DeltaY_reco_SystVariations_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_CR2"));
+  h_DeltaY_reco_SystVariations_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_CR2"));
+  h_DeltaY_reco_SystVariations_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_CR2"));
 
-  h_DeltaY_reco_SystVariations_N_P_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR2"));
+  h_DeltaY_reco_PDFVariations_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_CR2"));
 
-  h_DeltaY_reco_PDFVariations_N_P_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_ele_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_0_500_ele_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_500_750_ele_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR2"));
+  h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR2"));
 
-  h_DeltaY_reco_SystVariations_N_N_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR2"));
-  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR2"));
-
-  h_DeltaY_reco_PDFVariations_N_N_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR2"));
-  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR2"));
-
-  // //muon//
-
-  // //electron
-  // h_DeltaY_reco_SystVariations_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_PDFVariations_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_SystVariations_P_P_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_0_500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_500_750_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_750_1000_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_PDFVariations_P_P_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_0_500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_500_750_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_SystVariations_P_N_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_0_500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_500_750_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_750_1000_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_PDFVariations_P_N_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_0_500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_500_750_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_SystVariations_N_P_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_0_500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_500_750_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_750_1000_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_PDFVariations_N_P_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_0_500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_500_750_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_SystVariations_N_N_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_0_500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_500_750_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_750_1000_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR2"));
-
-  // h_DeltaY_reco_PDFVariations_N_N_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_0_500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_500_750_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR2"));
-  // h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR2"));
-
-  //electron//
+  h_DeltaY_reco_PDFVariations_ttbar_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR2"));
+  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR2"));
+  // electron
   // ================ CR2 ends ==================================================================================================================================================================================================================
 
   
@@ -1576,52 +1069,34 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   "Initial", "Middle", "Last",
   
   "DeltaY_reco_1500Inf_muon_SR" ,"DeltaY_reco_1000_1500_muon_SR" ,"DeltaY_reco_750_1000_muon_SR" ,"DeltaY_reco_500_750_muon_SR", "DeltaY_reco_0_500_muon_SR",
-  // "DeltaY_reco_N_muon_SR", "DeltaY_N_reco_1500Inf_muon_SR" ,"DeltaY_N_reco_1000_1500_muon_SR" ,"DeltaY_N_reco_750_1000_muon_SR" ,"DeltaY_N_reco_500_750_muon_SR", "DeltaY_N_reco_0_500_muon_SR", 
-  // "DeltaY_reco_P_muon_SR", "DeltaY_P_reco_1500Inf_muon_SR" ,"DeltaY_P_reco_1000_1500_muon_SR" ,"DeltaY_P_reco_750_1000_muon_SR" ,"DeltaY_P_reco_500_750_muon_SR", "DeltaY_P_reco_0_500_muon_SR",
-  "DY_P_P_muon_SR", "DY_P_P_0_500_muon_SR", "DY_P_P_500_750_muon_SR", "DY_P_P_750_1000_muon_SR", "DY_P_P_1000_1500_muon_SR", "DY_P_P_1500Inf_muon_SR", "DY_P_P_750Inf_muon_SR", 
-  "DY_P_N_muon_SR", "DY_P_N_0_500_muon_SR", "DY_P_N_500_750_muon_SR", "DY_P_N_750_1000_muon_SR", "DY_P_N_1000_1500_muon_SR", "DY_P_N_1500Inf_muon_SR", "DY_P_N_750Inf_muon_SR", 
-  "DY_N_P_muon_SR", "DY_N_P_0_500_muon_SR", "DY_N_P_500_750_muon_SR", "DY_N_P_750_1000_muon_SR", "DY_N_P_1000_1500_muon_SR", "DY_N_P_1500Inf_muon_SR", "DY_N_P_750Inf_muon_SR", 
-  "DY_N_N_muon_SR", "DY_N_N_0_500_muon_SR", "DY_N_N_500_750_muon_SR", "DY_N_N_750_1000_muon_SR", "DY_N_N_1000_1500_muon_SR", "DY_N_N_1500Inf_muon_SR", "DY_N_N_750Inf_muon_SR", 
-  // "DeltaY_reco_1500Inf_ele_SR" ,"DeltaY_reco_1000_1500_ele_SR" ,"DeltaY_reco_750_1000_ele_SR" ,"DeltaY_reco_500_750_ele_SR", "DeltaY_reco_0_500_ele_SR",
-  // "DeltaY_reco_N_ele_SR", "DeltaY_N_reco_1500Inf_ele_SR" ,"DeltaY_N_reco_1000_1500_ele_SR" ,"DeltaY_N_reco_750_1000_ele_SR" ,"DeltaY_N_reco_500_750_ele_SR", "DeltaY_N_reco_0_500_ele_SR", 
-  // "DeltaY_reco_P_ele_SR", "DeltaY_P_reco_1500Inf_ele_SR" ,"DeltaY_P_reco_1000_1500_ele_SR" ,"DeltaY_P_reco_750_1000_ele_SR" ,"DeltaY_P_reco_500_750_ele_SR", "DeltaY_P_reco_0_500_ele_SR",
-  // "DY_P_P_ele_SR", "DY_P_P_0_500_ele_SR", "DY_P_P_500_750_ele_SR", "DY_P_P_750_1000_ele_SR", "DY_P_P_1000_1500_ele_SR", "DY_P_P_1500Inf_ele_SR", "DY_P_P_750Inf_ele_SR", 
-  // "DY_P_N_ele_SR", "DY_P_N_0_500_ele_SR", "DY_P_N_500_750_ele_SR", "DY_P_N_750_1000_ele_SR", "DY_P_N_1000_1500_ele_SR", "DY_P_N_1500Inf_ele_SR", "DY_P_N_750Inf_ele_SR", 
-  // "DY_N_P_ele_SR", "DY_N_P_0_500_ele_SR", "DY_N_P_500_750_ele_SR", "DY_N_P_750_1000_ele_SR", "DY_N_P_1000_1500_ele_SR", "DY_N_P_1500Inf_ele_SR", "DY_N_P_750Inf_ele_SR", 
-  // "DY_N_N_ele_SR", "DY_N_N_0_500_ele_SR", "DY_N_N_500_750_ele_SR", "DY_N_N_750_1000_ele_SR", "DY_N_N_1000_1500_ele_SR", "DY_N_N_1500Inf_ele_SR", "DY_N_N_750Inf_ele_SR", 
+  "DeltaY_reco_N_muon_SR", "DeltaY_N_reco_1500Inf_muon_SR" ,"DeltaY_N_reco_1000_1500_muon_SR" ,"DeltaY_N_reco_750_1000_muon_SR" ,"DeltaY_N_reco_500_750_muon_SR", "DeltaY_N_reco_0_500_muon_SR", 
+  "DeltaY_reco_P_muon_SR", "DeltaY_P_reco_1500Inf_muon_SR" ,"DeltaY_P_reco_1000_1500_muon_SR" ,"DeltaY_P_reco_750_1000_muon_SR" ,"DeltaY_P_reco_500_750_muon_SR", "DeltaY_P_reco_0_500_muon_SR",
+  "DY_ttbar_muon_SR", "DY_ttbar_0_500_muon_SR", "DY_ttbar_500_750_muon_SR", "DY_ttbar_750_1000_muon_SR", "DY_ttbar_1000_1500_muon_SR", "DY_ttbar_1500Inf_muon_SR", "DY_ttbar_750Inf_muon_SR", 
+  "DeltaY_reco_1500Inf_ele_SR" ,"DeltaY_reco_1000_1500_ele_SR" ,"DeltaY_reco_750_1000_ele_SR" ,"DeltaY_reco_500_750_ele_SR", "DeltaY_reco_0_500_ele_SR",
+  "DeltaY_reco_N_ele_SR", "DeltaY_N_reco_1500Inf_ele_SR" ,"DeltaY_N_reco_1000_1500_ele_SR" ,"DeltaY_N_reco_750_1000_ele_SR" ,"DeltaY_N_reco_500_750_ele_SR", "DeltaY_N_reco_0_500_ele_SR", 
+  "DeltaY_reco_P_ele_SR", "DeltaY_P_reco_1500Inf_ele_SR" ,"DeltaY_P_reco_1000_1500_ele_SR" ,"DeltaY_P_reco_750_1000_ele_SR" ,"DeltaY_P_reco_500_750_ele_SR", "DeltaY_P_reco_0_500_ele_SR",
+  "DY_ttbar_ele_SR", "DY_ttbar_0_500_ele_SR", "DY_ttbar_500_750_ele_SR", "DY_ttbar_750_1000_ele_SR", "DY_ttbar_1000_1500_ele_SR", "DY_ttbar_1500Inf_ele_SR", "DY_ttbar_750Inf_ele_SR", 
   
   "DeltaY_reco_1500Inf_muon_CR1" ,"DeltaY_reco_1000_1500_muon_CR1" ,"DeltaY_reco_750_1000_muon_CR1" ,"DeltaY_reco_500_750_muon_CR1", "DeltaY_reco_0_500_muon_CR1",
-  // "DeltaY_reco_N_muon_CR1", "DeltaY_N_reco_1500Inf_muon_CR1" ,"DeltaY_N_reco_1000_1500_muon_CR1" ,"DeltaY_N_reco_750_1000_muon_CR1" ,"DeltaY_N_reco_500_750_muon_CR1", "DeltaY_N_reco_0_500_muon_CR1", 
-  // "DeltaY_reco_P_muon_CR1", "DeltaY_P_reco_1500Inf_muon_CR1" ,"DeltaY_P_reco_1000_1500_muon_CR1" ,"DeltaY_P_reco_750_1000_muon_CR1" ,"DeltaY_P_reco_500_750_muon_CR1", "DeltaY_P_reco_0_500_muon_CR1",
-  "DY_P_P_muon_CR1", "DY_P_P_0_500_muon_CR1", "DY_P_P_500_750_muon_CR1", "DY_P_P_750_1000_muon_CR1", "DY_P_P_1000_1500_muon_CR1", "DY_P_P_1500Inf_muon_CR1", "DY_P_P_750Inf_muon_CR1", 
-  "DY_P_N_muon_CR1", "DY_P_N_0_500_muon_CR1", "DY_P_N_500_750_muon_CR1", "DY_P_N_750_1000_muon_CR1", "DY_P_N_1000_1500_muon_CR1", "DY_P_N_1500Inf_muon_CR1", "DY_P_N_750Inf_muon_CR1", 
-  "DY_N_P_muon_CR1", "DY_N_P_0_500_muon_CR1", "DY_N_P_500_750_muon_CR1", "DY_N_P_750_1000_muon_CR1", "DY_N_P_1000_1500_muon_CR1", "DY_N_P_1500Inf_muon_CR1", "DY_N_P_750Inf_muon_CR1", 
-  "DY_N_N_muon_CR1", "DY_N_N_0_500_muon_CR1", "DY_N_N_500_750_muon_CR1", "DY_N_N_750_1000_muon_CR1", "DY_N_N_1000_1500_muon_CR1", "DY_N_N_1500Inf_muon_CR1", "DY_N_N_750Inf_muon_CR1", 
-  // "DeltaY_reco_1500Inf_ele_CR1" ,"DeltaY_reco_1000_1500_ele_CR1" ,"DeltaY_reco_750_1000_ele_CR1" ,"DeltaY_reco_500_750_ele_CR1", "DeltaY_reco_0_500_ele_CR1",
-  // "DeltaY_reco_N_ele_CR1", "DeltaY_N_reco_1500Inf_ele_CR1" ,"DeltaY_N_reco_1000_1500_ele_CR1" ,"DeltaY_N_reco_750_1000_ele_CR1" ,"DeltaY_N_reco_500_750_ele_CR1", "DeltaY_N_reco_0_500_ele_CR1", 
-  // "DeltaY_reco_P_ele_CR1", "DeltaY_P_reco_1500Inf_ele_CR1" ,"DeltaY_P_reco_1000_1500_ele_CR1" ,"DeltaY_P_reco_750_1000_ele_CR1" ,"DeltaY_P_reco_500_750_ele_CR1", "DeltaY_P_reco_0_500_ele_CR1",
-  // "DY_P_P_ele_CR1", "DY_P_P_0_500_ele_CR1", "DY_P_P_500_750_ele_CR1", "DY_P_P_750_1000_ele_CR1", "DY_P_P_1000_1500_ele_CR1", "DY_P_P_1500Inf_ele_CR1", "DY_P_P_750Inf_ele_CR1", 
-  // "DY_P_N_ele_CR1", "DY_P_N_0_500_ele_CR1", "DY_P_N_500_750_ele_CR1", "DY_P_N_750_1000_ele_CR1", "DY_P_N_1000_1500_ele_CR1", "DY_P_N_1500Inf_ele_CR1", "DY_P_N_750Inf_ele_CR1", 
-  // "DY_N_P_ele_CR1", "DY_N_P_0_500_ele_CR1", "DY_N_P_500_750_ele_CR1", "DY_N_P_750_1000_ele_CR1", "DY_N_P_1000_1500_ele_CR1", "DY_N_P_1500Inf_ele_CR1", "DY_N_P_750Inf_ele_CR1", 
-  // "DY_N_N_ele_CR1", "DY_N_N_0_500_ele_CR1", "DY_N_N_500_750_ele_CR1", "DY_N_N_750_1000_ele_CR1", "DY_N_N_1000_1500_ele_CR1", "DY_N_N_1500Inf_ele_CR1", "DY_N_N_750Inf_ele_CR1", 
+  "DeltaY_reco_N_muon_CR1", "DeltaY_N_reco_1500Inf_muon_CR1" ,"DeltaY_N_reco_1000_1500_muon_CR1" ,"DeltaY_N_reco_750_1000_muon_CR1" ,"DeltaY_N_reco_500_750_muon_CR1", "DeltaY_N_reco_0_500_muon_CR1", 
+  "DeltaY_reco_P_muon_CR1", "DeltaY_P_reco_1500Inf_muon_CR1" ,"DeltaY_P_reco_1000_1500_muon_CR1" ,"DeltaY_P_reco_750_1000_muon_CR1" ,"DeltaY_P_reco_500_750_muon_CR1", "DeltaY_P_reco_0_500_muon_CR1",
+  "DY_ttbar_muon_CR1", "DY_ttbar_0_500_muon_CR1", "DY_ttbar_500_750_muon_CR1", "DY_ttbar_750_1000_muon_CR1", "DY_ttbar_1000_1500_muon_CR1", "DY_ttbar_1500Inf_muon_CR1", "DY_ttbar_750Inf_muon_CR1", 
+  "DeltaY_reco_1500Inf_ele_CR1" ,"DeltaY_reco_1000_1500_ele_CR1" ,"DeltaY_reco_750_1000_ele_CR1" ,"DeltaY_reco_500_750_ele_CR1", "DeltaY_reco_0_500_ele_CR1",
+  "DeltaY_reco_N_ele_CR1", "DeltaY_N_reco_1500Inf_ele_CR1" ,"DeltaY_N_reco_1000_1500_ele_CR1" ,"DeltaY_N_reco_750_1000_ele_CR1" ,"DeltaY_N_reco_500_750_ele_CR1", "DeltaY_N_reco_0_500_ele_CR1", 
+  "DeltaY_reco_P_ele_CR1", "DeltaY_P_reco_1500Inf_ele_CR1" ,"DeltaY_P_reco_1000_1500_ele_CR1" ,"DeltaY_P_reco_750_1000_ele_CR1" ,"DeltaY_P_reco_500_750_ele_CR1", "DeltaY_P_reco_0_500_ele_CR1",
+  "DY_ttbar_ele_CR1", "DY_ttbar_0_500_ele_CR1", "DY_ttbar_500_750_ele_CR1", "DY_ttbar_750_1000_ele_CR1", "DY_ttbar_1000_1500_ele_CR1", "DY_ttbar_1500Inf_ele_CR1", "DY_ttbar_750Inf_ele_CR1", 
   
   "DeltaY_reco_1500Inf_muon_CR2" ,"DeltaY_reco_1000_1500_muon_CR2" ,"DeltaY_reco_750_1000_muon_CR2" ,"DeltaY_reco_500_750_muon_CR2", "DeltaY_reco_0_500_muon_CR2",
-  // "DeltaY_reco_N_muon_CR2", "DeltaY_N_reco_1500Inf_muon_CR2" ,"DeltaY_N_reco_1000_1500_muon_CR2" ,"DeltaY_N_reco_750_1000_muon_CR2" ,"DeltaY_N_reco_500_750_muon_CR2", "DeltaY_N_reco_0_500_muon_CR2", 
-  // "DeltaY_reco_P_muon_CR2", "DeltaY_P_reco_1500Inf_muon_CR2" ,"DeltaY_P_reco_1000_1500_muon_CR2" ,"DeltaY_P_reco_750_1000_muon_CR2" ,"DeltaY_P_reco_500_750_muon_CR2", "DeltaY_P_reco_0_500_muon_CR2",
-  "DY_P_P_muon_CR2", "DY_P_P_0_500_muon_CR2", "DY_P_P_500_750_muon_CR2", "DY_P_P_750_1000_muon_CR2", "DY_P_P_1000_1500_muon_CR2", "DY_P_P_1500Inf_muon_CR2", "DY_P_P_750Inf_muon_CR2", 
-  "DY_P_N_muon_CR2", "DY_P_N_0_500_muon_CR2", "DY_P_N_500_750_muon_CR2", "DY_P_N_750_1000_muon_CR2", "DY_P_N_1000_1500_muon_CR2", "DY_P_N_1500Inf_muon_CR2", "DY_P_N_750Inf_muon_CR2", 
-  "DY_N_P_muon_CR2", "DY_N_P_0_500_muon_CR2", "DY_N_P_500_750_muon_CR2", "DY_N_P_750_1000_muon_CR2", "DY_N_P_1000_1500_muon_CR2", "DY_N_P_1500Inf_muon_CR2", "DY_N_P_750Inf_muon_CR2", 
-  "DY_N_N_muon_CR2", "DY_N_N_0_500_muon_CR2", "DY_N_N_500_750_muon_CR2", "DY_N_N_750_1000_muon_CR2", "DY_N_N_1000_1500_muon_CR2", "DY_N_N_1500Inf_muon_CR2", "DY_N_N_750Inf_muon_CR2", 
-  // "DeltaY_reco_1500Inf_ele_CR2" ,"DeltaY_reco_1000_1500_ele_CR2" ,"DeltaY_reco_750_1000_ele_CR2" ,"DeltaY_reco_500_750_ele_CR2", "DeltaY_reco_0_500_ele_CR2",
-  // "DeltaY_reco_N_ele_CR2", "DeltaY_N_reco_1500Inf_ele_CR2" ,"DeltaY_N_reco_1000_1500_ele_CR2" ,"DeltaY_N_reco_750_1000_ele_CR2" ,"DeltaY_N_reco_500_750_ele_CR2", "DeltaY_N_reco_0_500_ele_CR2", 
-  // "DeltaY_reco_P_ele_CR2", "DeltaY_P_reco_1500Inf_ele_CR2" ,"DeltaY_P_reco_1000_1500_ele_CR2" ,"DeltaY_P_reco_750_1000_ele_CR2" ,"DeltaY_P_reco_500_750_ele_CR2", "DeltaY_P_reco_0_500_ele_CR2",
-  // "DY_P_P_ele_CR2", "DY_P_P_0_500_ele_CR2", "DY_P_P_500_750_ele_CR2", "DY_P_P_750_1000_ele_CR2", "DY_P_P_1000_1500_ele_CR2", "DY_P_P_1500Inf_ele_CR2", "DY_P_P_750Inf_ele_CR2", 
-  // "DY_P_N_ele_CR2", "DY_P_N_0_500_ele_CR2", "DY_P_N_500_750_ele_CR2", "DY_P_N_750_1000_ele_CR2", "DY_P_N_1000_1500_ele_CR2", "DY_P_N_1500Inf_ele_CR2", "DY_P_N_750Inf_ele_CR2", 
-  // "DY_N_P_ele_CR2", "DY_N_P_0_500_ele_CR2", "DY_N_P_500_750_ele_CR2", "DY_N_P_750_1000_ele_CR2", "DY_N_P_1000_1500_ele_CR2", "DY_N_P_1500Inf_ele_CR2", "DY_N_P_750Inf_ele_CR2", 
-  // "DY_N_N_ele_CR2", "DY_N_N_0_500_ele_CR2", "DY_N_N_500_750_ele_CR2", "DY_N_N_750_1000_ele_CR2", "DY_N_N_1000_1500_ele_CR2", "DY_N_N_1500Inf_ele_CR2", "DY_N_N_750Inf_ele_CR2", 
-  
-  // "DeltaY_reco_0_500_muon_data", "DeltaY_reco_500_750_muon_data", "DeltaY_reco_750_1000_muon_data", "DeltaY_reco_1000_1500_muon_data", "DeltaY_reco_1500Inf_muon_data",
-  // "DeltaY_reco_0_500_ele_data", "DeltaY_reco_500_750_ele_data", "DeltaY_reco_750_1000_ele_data", "DeltaY_reco_1000_1500_ele_data", "DeltaY_reco_1500Inf_ele_data"
+  "DeltaY_reco_N_muon_CR2", "DeltaY_N_reco_1500Inf_muon_CR2" ,"DeltaY_N_reco_1000_1500_muon_CR2" ,"DeltaY_N_reco_750_1000_muon_CR2" ,"DeltaY_N_reco_500_750_muon_CR2", "DeltaY_N_reco_0_500_muon_CR2", 
+  "DeltaY_reco_P_muon_CR2", "DeltaY_P_reco_1500Inf_muon_CR2" ,"DeltaY_P_reco_1000_1500_muon_CR2" ,"DeltaY_P_reco_750_1000_muon_CR2" ,"DeltaY_P_reco_500_750_muon_CR2", "DeltaY_P_reco_0_500_muon_CR2",
+  "DY_ttbar_muon_CR2", "DY_ttbar_0_500_muon_CR2", "DY_ttbar_500_750_muon_CR2", "DY_ttbar_750_1000_muon_CR2", "DY_ttbar_1000_1500_muon_CR2", "DY_ttbar_1500Inf_muon_CR2", "DY_ttbar_750Inf_muon_CR2", 
+  "DeltaY_reco_1500Inf_ele_CR2" ,"DeltaY_reco_1000_1500_ele_CR2" ,"DeltaY_reco_750_1000_ele_CR2" ,"DeltaY_reco_500_750_ele_CR2", "DeltaY_reco_0_500_ele_CR2",
+  "DeltaY_reco_N_ele_CR2", "DeltaY_N_reco_1500Inf_ele_CR2" ,"DeltaY_N_reco_1000_1500_ele_CR2" ,"DeltaY_N_reco_750_1000_ele_CR2" ,"DeltaY_N_reco_500_750_ele_CR2", "DeltaY_N_reco_0_500_ele_CR2", 
+  "DeltaY_reco_P_ele_CR2", "DeltaY_P_reco_1500Inf_ele_CR2" ,"DeltaY_P_reco_1000_1500_ele_CR2" ,"DeltaY_P_reco_750_1000_ele_CR2" ,"DeltaY_P_reco_500_750_ele_CR2", "DeltaY_P_reco_0_500_ele_CR2",
+  "DY_ttbar_ele_CR2", "DY_ttbar_0_500_ele_CR2", "DY_ttbar_500_750_ele_CR2", "DY_ttbar_750_1000_ele_CR2", "DY_ttbar_1000_1500_ele_CR2", "DY_ttbar_1500Inf_ele_CR2", "DY_ttbar_750Inf_ele_CR2", 
+
+  "DeltaY_reco_0_500_muon_data", "DeltaY_reco_500_750_muon_data", "DeltaY_reco_750_1000_muon_data", "DeltaY_reco_1000_1500_muon_data", "DeltaY_reco_1500Inf_muon_data",
+  "DeltaY_reco_0_500_ele_data", "DeltaY_reco_500_750_ele_data", "DeltaY_reco_750_1000_ele_data", "DeltaY_reco_1000_1500_ele_data", "DeltaY_reco_1500Inf_ele_data"
 
   };
 
@@ -2084,22 +1559,20 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   fill_histograms(event, "AfterChi2");
 
-/*
-█  
-█ OUTPUT SCORE 0
-█ 
-█  
-*/
+  /*
+  █  
+  █ OUTPUT SCORE 0
+  █ 
+  █  
+  */
 
   if(out0 == max_score){
     if(Chi2_selection->passes(event)){
-          // DeltaY lines start here
 
       if(isMC){
         vector<GenParticle>* genparticles = event.genparticles;
         GenParticle top, antitop;
         for(const GenParticle & gp : *event.genparticles){
-
           if(gp.pdgId() == 6){
             top = gp;
           }
@@ -2110,16 +1583,129 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
         // =============== MUON ===================================================================================================================================================================================
 
-        // ========= MUON ========
-
         if(isMuon){
 
           ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
           float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
+          // =============== MUON charge 1 ===================================================================================================================================================================================
           if(event.muons->at(0).charge() == 1){
 
             double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+
+
+            //Number of deltaY reco events
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_reco_0_500_muon_SR");
+              h_DeltaY_reco_SystVariations_0_500_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_0_500_muon_SR->fill(event);
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_reco_500_750_muon_SR");
+              h_DeltaY_reco_SystVariations_500_750_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_500_750_muon_SR->fill(event);
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_reco_750_1000_muon_SR");
+              h_DeltaY_reco_SystVariations_750_1000_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_750_1000_muon_SR->fill(event);
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_reco_1000_1500_muon_SR");
+              h_DeltaY_reco_SystVariations_1000_1500_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_1000_1500_muon_SR->fill(event);
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_reco_1500Inf_muon_SR");
+              h_DeltaY_reco_SystVariations_1500Inf_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_1500Inf_muon_SR->fill(event);
+            }
+          
+            // //Number of deltaY reco events with NEGATIVE DY
+            if (DeltaY_reco<0){
+              fill_histograms(event, "DeltaY_reco_N_muon_SR");
+
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_N_reco_0_500_muon_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_N_reco_500_750_muon_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_N_reco_750_1000_muon_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_SR");
+              }
+            }
+
+            // //Number of deltaY reco events with POSITIVE DY
+            if (DeltaY_reco>0){
+              fill_histograms(event, "DeltaY_reco_P_muon_SR");
+
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
+              }
+            }
+            
+            /// ------ RECO & GEN for ttbar samples -----
+
+            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
+              if(debug) cout << "ttbar begins...... CHARGE POSITIVE: " << endl;
+                fill_histograms(event, "DY_ttbar_muon_SR");
+                h_DeltaY_reco_SystVariations_ttbar_muon_SR->fill(event);
+                h_DeltaY_reco_PDFVariations_ttbar_muon_SR->fill(event);
+              if(debug) cout << "ttbar ends....... CHARGE 1: " << endl;
+            
+              if(Mass_tt>=0 && Mass_tt<500){
+                fill_histograms(event, "DY_ttbar_0_500_muon_SR");
+                h_DeltaY_reco_SystVariations_ttbar_0_500_muon_SR->fill(event);
+                h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_SR->fill(event);
+              }
+              if(Mass_tt>=500 && Mass_tt<750){
+                  fill_histograms(event, "DY_ttbar_500_750_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_500_750_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_SR->fill(event);
+              } 
+              if(Mass_tt>=750 && Mass_tt<1000){
+                  fill_histograms(event, "DY_ttbar_750_1000_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_SR->fill(event);
+              }
+              if(Mass_tt>=1000 && Mass_tt<1500){
+                  fill_histograms(event, "DY_ttbar_1000_1500_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_SR->fill(event);
+              }
+              if(Mass_tt>=1500){
+                  fill_histograms(event, "DY_ttbar_1500Inf_muon_SR");
+                h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_SR->fill(event);
+                h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_SR->fill(event);
+              }
+
+          // charge 1 bracket
+          }
+
+          // =============== MUON charge -1 ===================================================================================================================================================================================
+          if(event.muons->at(0).charge() == -1){
+
+            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+
 
             //Number of deltaY reco events
             if(Mass_tt>=0 && Mass_tt < 500){
@@ -2149,4384 +1735,1402 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
           
             //Number of deltaY reco events with NEGATIVE DY
-            // if (DeltaY_reco<0){
-            //   fill_histograms(event, "DeltaY_reco_N_muon_SR");
+            if (DeltaY_reco<0){
+              fill_histograms(event, "DeltaY_reco_N_muon_SR");
 
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_N_reco_0_500_muon_SR");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_N_reco_500_750_muon_SR");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_N_reco_750_1000_muon_SR");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_SR");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_SR");
-            //   }
-            // }
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_N_reco_0_500_muon_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_N_reco_500_750_muon_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_N_reco_750_1000_muon_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_SR");
+              }
+            }
 
             //Number of deltaY reco events with POSITIVE DY
             if (DeltaY_reco>0){
               fill_histograms(event, "DeltaY_reco_P_muon_SR");
 
-              // if(Mass_tt>=0 && Mass_tt < 500){
-              //   fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
-              // }
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
+              }
               if(Mass_tt>=500 && Mass_tt < 750){
-                // fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
-                cout << "DeltaY_P_reco_500_750_muon_SR: "<< DeltaY_reco << endl;
+                fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
               }
-              // if(Mass_tt>=750 && Mass_tt < 1000){
-              //   fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
-              // }
-              // if(Mass_tt>=1000 && Mass_tt < 1500){
-              //   fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
-              // }
-              // if(Mass_tt>=1500){
-              //   fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
-              // }
-            }
-            
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-            
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
               }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
-            }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-            }
-            }
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
-            }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
-            }
-          
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
-
-          
-            // deltaY values calculation
-
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-            } 
-
-            // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_SR");
-                h_DeltaY_reco_SystVariations_P_P_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_SR->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_SR->fill(event);
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
               }
               if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_SR");
-                h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_SR->fill(event);
-
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_SR");
+                fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
               }
             }
-
           
-
-            /// ------ RECO & GEN P_N -----
+            /// ------ RECO & GEN for ttbar samples -----
 
             //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_SR");
-                h_DeltaY_reco_SystVariations_P_N_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_SR->fill(event);
+              fill_histograms(event, "DY_ttbar_muon_SR");
+              h_DeltaY_reco_SystVariations_ttbar_muon_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_muon_SR->fill(event);
             
               if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_SR->fill(event);
+                fill_histograms(event, "DY_ttbar_0_500_muon_SR");
+                h_DeltaY_reco_SystVariations_ttbar_0_500_muon_SR->fill(event);
+                h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_SR->fill(event);
               }
               if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_500_750_muon_SR->fill(event);
+                  fill_histograms(event, "DY_ttbar_500_750_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_500_750_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_SR->fill(event);
               } 
               if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_SR->fill(event);
+                  fill_histograms(event, "DY_ttbar_750_1000_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_SR->fill(event);
               }
               if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_SR->fill(event);
+                  fill_histograms(event, "DY_ttbar_1000_1500_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_SR->fill(event);
               }
               if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_SR->fill(event);
+                  fill_histograms(event, "DY_ttbar_1500Inf_muon_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_SR->fill(event);
               }
               if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_SR");
+                  fill_histograms(event, "DY_ttbar_750Inf_muon_SR");
               }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_SR");
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_N_P_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_0_500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_SR");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_SR");
-                h_DeltaY_reco_SystVariations_N_N_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_SR->fill(event);
-          
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_SR");
-              }
-            }
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-            
-
-          // charge 1 bracket
-          }
-
-            // =============== MUON charge -1 ===================================================================================================================================================================================
-
-
-          if(event.muons->at(0).charge() == -1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-
-            //Number of deltaY reco events
-            if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_muon_SR");
-              h_DeltaY_reco_SystVariations_0_500_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_muon_SR->fill(event);
-            }
-            if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_muon_SR");
-              h_DeltaY_reco_SystVariations_500_750_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_muon_SR->fill(event);
-            }
-            if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_muon_SR");
-              h_DeltaY_reco_SystVariations_750_1000_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_muon_SR->fill(event);
-            }
-            if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_muon_SR");
-              h_DeltaY_reco_SystVariations_1000_1500_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_muon_SR->fill(event);
-            }
-            if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_muon_SR");
-              h_DeltaY_reco_SystVariations_1500Inf_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_muon_SR->fill(event);
-            }
-          
-            //Number of deltaY reco events with NEGATIVE DY
-            // if (DeltaY_reco<0){
-            //   fill_histograms(event, "DeltaY_reco_N_muon_SR");
-
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_N_reco_0_500_muon_SR");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_N_reco_500_750_muon_SR");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_N_reco_750_1000_muon_SR");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_SR");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_SR");
-            //   }
-            // }
-
-            //Number of deltaY reco events with POSITIVE DY
-            // if (DeltaY_reco>0){
-            //   fill_histograms(event, "DeltaY_reco_P_muon_SR");
-
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_P_reco_0_500_muon_SR");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_P_reco_500_750_muon_SR");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_P_reco_750_1000_muon_SR");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_SR");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_SR");
-            //   }
-            // }
-          
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-          
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
-              }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
-            }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-              }
-            }
-            
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
-            }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
-            }
-
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
-
-          
-            // deltaY values calculation
-
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
-        
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                // DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-
-            } 
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_SR");
-                h_DeltaY_reco_SystVariations_P_P_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_SR->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_SR");
-              }
-            }
-          
-
-            /// ------ RECO & GEN P_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_SR");
-                h_DeltaY_reco_SystVariations_P_N_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_SR->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_SR");
-              }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_SR");
-                h_DeltaY_reco_SystVariations_N_P_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_SR->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_N_P_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_SR->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_SR");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_SR");
-                h_DeltaY_reco_SystVariations_N_N_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_SR->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_SR");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_SR->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_500_750_muon_SR->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_SR->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_SR");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_SR->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_SR");
-              }
-            }
-
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-          
+                      
             //charge -1 bracket
           }
 
 
-          // double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-          // float DeltaY_reco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity());
-
-        
-        // muon bracket  ===== MUON END ==== 
+          //===== MUON END ==== 
+          // muon bracket  
         }
         
         
         // =============== ELECTRON ===================================================================================================================================================================================
 
           
-      // if (isElectron){
+        if (isElectron){
 
-        //   ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-        //   float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-
-        //   if(event.electrons->at(0).charge() == 1){
-        //     double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-
-
-        //     //Number of deltaY reco events
-        //     if(Mass_tt>=0 && Mass_tt < 500){
-        //       fill_histograms(event, "DeltaY_reco_0_500_ele_SR");
-        //       h_DeltaY_reco_SystVariations_0_500_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_0_500_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=500 && Mass_tt < 750){
-        //       fill_histograms(event, "DeltaY_reco_500_750_ele_SR");
-        //       h_DeltaY_reco_SystVariations_500_750_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_500_750_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=750 && Mass_tt < 1000){
-        //       fill_histograms(event, "DeltaY_reco_750_1000_ele_SR");
-        //       h_DeltaY_reco_SystVariations_750_1000_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_750_1000_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=1000 && Mass_tt < 1500){
-        //       fill_histograms(event, "DeltaY_reco_1000_1500_ele_SR");
-        //       h_DeltaY_reco_SystVariations_1000_1500_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_1000_1500_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=1500){
-        //       fill_histograms(event, "DeltaY_reco_1500Inf_ele_SR");
-        //       h_DeltaY_reco_SystVariations_1500Inf_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_1500Inf_ele_SR->fill(event);
-        //     }
+          ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+          float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
           
-        //     //Number of deltaY reco events with NEGATIVE DY
-        //     // if (DeltaY_reco<0){
-        //     //   fill_histograms(event, "DeltaY_reco_N_ele_SR");
+          // =============== ELECTRON charge 1 ===================================================================================================================================================================================
+          if(event.electrons->at(0).charge() == 1){
+            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
 
-        //     //   if(Mass_tt>=0 && Mass_tt < 500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_0_500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=500 && Mass_tt < 750){
-        //     //     fill_histograms(event, "DeltaY_N_reco_500_750_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=750 && Mass_tt < 1000){
-        //     //     fill_histograms(event, "DeltaY_N_reco_750_1000_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1000 && Mass_tt < 1500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_SR");
-        //     //   }
-        //     // }
-
-        //     //Number of deltaY reco events with POSITIVE DY
-        //     // if (DeltaY_reco>0){
-        //     //   fill_histograms(event, "DeltaY_reco_P_ele_SR");
-
-        //     //   if(Mass_tt>=0 && Mass_tt < 500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_0_500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=500 && Mass_tt < 750){
-        //     //     fill_histograms(event, "DeltaY_P_reco_500_750_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=750 && Mass_tt < 1000){
-        //     //     fill_histograms(event, "DeltaY_P_reco_750_1000_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1000 && Mass_tt < 1500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_SR");
-        //     //   }
-        //     // }
+            //Number of deltaY reco events
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_reco_0_500_ele_SR");
+              h_DeltaY_reco_SystVariations_0_500_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_ele_SR->fill(event);
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_reco_500_750_ele_SR");
+              h_DeltaY_reco_SystVariations_500_750_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_ele_SR->fill(event);
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_reco_750_1000_ele_SR");
+              h_DeltaY_reco_SystVariations_750_1000_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_ele_SR->fill(event);
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_reco_1000_1500_ele_SR");
+              h_DeltaY_reco_SystVariations_1000_1500_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_ele_SR->fill(event);
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_reco_1500Inf_ele_SR");
+              h_DeltaY_reco_SystVariations_1500Inf_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_ele_SR->fill(event);
+            }
           
+            //Number of deltaY reco events with NEGATIVE DY
+            if (DeltaY_reco<0){
+              fill_histograms(event, "DeltaY_reco_N_ele_SR");
 
-        //     // ==== MATCHING with DELTA R === This section has explanation for each part
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_N_reco_0_500_ele_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_N_reco_500_750_ele_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_N_reco_750_1000_ele_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_SR");
+              }
+            }
 
-          
-        //     // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-        //     GenParticle top, antitop;
-        //     for(const GenParticle & gp : *event.genparticles){
-        //       if(gp.pdgId() == 6){
-        //         top = gp;
-        //       }
-        //       else if(gp.pdgId() == -6){
-        //         antitop = gp;
-        //       }
-        //     }
-        //     std::vector<GenParticle> tops = {top, antitop};
+            //Number of deltaY reco events with POSITIVE DY
+            if (DeltaY_reco>0){
+              fill_histograms(event, "DeltaY_reco_P_ele_SR");
 
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_P_reco_0_500_ele_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_P_reco_500_750_ele_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_P_reco_750_1000_ele_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_SR");
+              }
+            }
 
-        //     // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-        //     LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-        //     LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
+            /// ------ RECO & GEN for ttbar samples -----
 
-        //     //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-        //     std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-        //     std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-        //     // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-        //     // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-        //         deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-        //         deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-        //       }
-        //     }
-        //     // vectors to store the best gen particle for each top
-        //     // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-        //     int best_gen_for_leptop = -1;
-        //     int best_gen_for_hadtop = -1;
-        //     std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-        //     std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-        //     // Find closest gen particle for each top
-        //     // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-        //     double deltaR_min_leptonic = 99.0;
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-        //             deltaR_min_leptonic = deltaR_leptonic_values[j];
-        //             best_gen_for_leptop = j;
-        //         }
-        //       }   
-        //     }
-        //     double deltaR_min_hadronic = 99.0;
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-        //             deltaR_min_hadronic = deltaR_hadronic_values[j];
-        //             best_gen_for_hadtop = j;
-        //         }
-        //       }
-        //     }
-        
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-        //             best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-        //         } else {
-        //             best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-        //         }
-        //       }
-        //     }
-          
-        //     // deltaY values calculation
-
-        //     // matched gen particles
-        //     GenParticle best_matched_gen_leptop;
-        //     GenParticle best_matched_gen_hadtop;
-
-        //     bool valid_leptop = true, valid_hadtop = true;
-
-        //     if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-        //         best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-        //     } else {
-        //         // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-        //         valid_leptop = false;
-        //     }
-
-        //     if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-        //         best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-        //     } else {
-        //         // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-        //         valid_hadtop = false; 
-        //     }
+              fill_histograms(event, "DY_ttbar_ele_SR");
+              h_DeltaY_reco_SystVariations_ttbar_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_ele_SR->fill(event);
             
-        //     double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-            
-        //     double_t DeltaY_gen_best = 0.0;
-          
-        //     if(valid_leptop && valid_hadtop) {
-        //       DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-        //     } 
-          
+              if(Mass_tt>=0 && Mass_tt<500){
+                fill_histograms(event, "DY_ttbar_0_500_ele_SR");
+                h_DeltaY_reco_SystVariations_ttbar_0_500_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_SR->fill(event);
+              }
+              if(Mass_tt>=500 && Mass_tt<750){
+                  fill_histograms(event, "DY_ttbar_500_750_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_500_750_ele_SR->fill(event);
+                  h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_SR->fill(event);
+              } 
+              if(Mass_tt>=750 && Mass_tt<1000){
+                  fill_histograms(event, "DY_ttbar_750_1000_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_SR->fill(event);
+              }
+              if(Mass_tt>=1000 && Mass_tt<1500){
+                  fill_histograms(event, "DY_ttbar_1000_1500_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_SR->fill(event);
+              }
+              if(Mass_tt>=1500){
+                  fill_histograms(event, "DY_ttbar_1500Inf_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_SR->fill(event);
+              }
+              if(Mass_tt>=750){
+                  fill_histograms(event, "DY_ttbar_750Inf_ele_SR");
+              }
 
-        //     // Explanation:
-        //     //A histogram of the ΔR distances between the jets and their matched genparticles. 
-        //     //This gives an overall sense of the matching quality. 
-        //     //If the matching is good, one should expect to see most of the entries at small ΔR values.
+          //charge 1
+          }
+          // =============== ELECTRON charge -1 ===================================================================================================================================================================================
 
-
-
-        //     /// ------ RECO & GEN P_P -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-        //         fill_histograms(event, "DY_P_P_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_P_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_P_P_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_P_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_P_P_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_500_750_ele_SR->fill(event);
-        //           h_DeltaY_reco_PDFVariations_P_P_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_P_P_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_P_P_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_P_P_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_P_P_750Inf_ele_SR");
-        //       }
-        //     }
-
-          
-
-        //     /// ------ RECO & GEN P_N -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-        //         fill_histograms(event, "DY_P_N_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_N_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_P_N_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_N_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_P_N_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_P_N_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_P_N_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_P_N_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_P_N_750Inf_ele_SR");
-        //       }
-        //     }
-
-
-        //     /// ------ RECO & GEN N_P -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-        //         fill_histograms(event, "DY_N_P_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_P_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_N_P_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_P_0_500_ele_SR->fill(event);
-        //         h_DeltaY_reco_PDFVariations_N_P_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_N_P_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_N_P_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_N_P_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_N_P_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_N_P_750Inf_ele_SR");
-        //       }
-        //     }
-
-        //     /// ------ RECO & GEN N_N -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-        //         fill_histograms(event, "DY_N_N_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_N_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_N_N_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_N_N_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_N_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_N_N_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_N_N_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_N_N_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_N_N_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_N_N_750Inf_ele_SR");
-        //       }
-        //     }
-
-        //   //charge 1
-        //   }
-        //   // =============== ELECTRON charge -1 ===================================================================================================================================================================================
-
-        //   //electron charge negative
-        //   if(event.electrons->at(0).charge() == -1){
-        //     double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+          if(event.electrons->at(0).charge() == -1){
+            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
             
 
-        //     //Number of deltaY reco events
-        //     if(Mass_tt>=0 && Mass_tt < 500){
-        //       fill_histograms(event, "DeltaY_reco_0_500_ele_SR");
-        //       h_DeltaY_reco_SystVariations_0_500_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_0_500_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=500 && Mass_tt < 750){
-        //       fill_histograms(event, "DeltaY_reco_500_750_ele_SR");
-        //       h_DeltaY_reco_SystVariations_500_750_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_500_750_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=750 && Mass_tt < 1000){
-        //       fill_histograms(event, "DeltaY_reco_750_1000_ele_SR");
-        //       h_DeltaY_reco_SystVariations_750_1000_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_750_1000_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=1000 && Mass_tt < 1500){
-        //       fill_histograms(event, "DeltaY_reco_1000_1500_ele_SR");
-        //       h_DeltaY_reco_SystVariations_1000_1500_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_1000_1500_ele_SR->fill(event);
-        //     }
-        //     if(Mass_tt>=1500){
-        //       fill_histograms(event, "DeltaY_reco_1500Inf_ele_SR");
-        //       h_DeltaY_reco_SystVariations_1500Inf_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_1500Inf_ele_SR->fill(event);
-        //     }
+            //Number of deltaY reco events
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_reco_0_500_ele_SR");
+              h_DeltaY_reco_SystVariations_0_500_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_ele_SR->fill(event);
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_reco_500_750_ele_SR");
+              h_DeltaY_reco_SystVariations_500_750_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_ele_SR->fill(event);
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_reco_750_1000_ele_SR");
+              h_DeltaY_reco_SystVariations_750_1000_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_ele_SR->fill(event);
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_reco_1000_1500_ele_SR");
+              h_DeltaY_reco_SystVariations_1000_1500_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_ele_SR->fill(event);
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_reco_1500Inf_ele_SR");
+              h_DeltaY_reco_SystVariations_1500Inf_ele_SR->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_ele_SR->fill(event);
+            }
           
-        //     //Number of deltaY reco events with NEGATIVE DY
-        //     // if (DeltaY_reco<0){
-        //     //   fill_histograms(event, "DeltaY_reco_N_ele_SR");
+            //Number of deltaY reco events with NEGATIVE DY
+            if (DeltaY_reco<0){
+              fill_histograms(event, "DeltaY_reco_N_ele_SR");
 
-        //     //   if(Mass_tt>=0 && Mass_tt < 500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_0_500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=500 && Mass_tt < 750){
-        //     //     fill_histograms(event, "DeltaY_N_reco_500_750_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=750 && Mass_tt < 1000){
-        //     //     fill_histograms(event, "DeltaY_N_reco_750_1000_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1000 && Mass_tt < 1500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1500){
-        //     //     fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_SR");
-        //     //   }
-        //     // }
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_N_reco_0_500_ele_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_N_reco_500_750_ele_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_N_reco_750_1000_ele_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_SR");
+              }
+            }
 
-        //     //Number of deltaY reco events with POSITIVE DY
-        //     // if (DeltaY_reco>0){
-        //     //   fill_histograms(event, "DeltaY_reco_P_ele_SR");
+            //Number of deltaY reco events with POSITIVE DY
+            if (DeltaY_reco>0){
+              fill_histograms(event, "DeltaY_reco_P_ele_SR");
 
-        //     //   if(Mass_tt>=0 && Mass_tt < 500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_0_500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=500 && Mass_tt < 750){
-        //     //     fill_histograms(event, "DeltaY_P_reco_500_750_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=750 && Mass_tt < 1000){
-        //     //     fill_histograms(event, "DeltaY_P_reco_750_1000_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1000 && Mass_tt < 1500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_SR");
-        //     //   }
-        //     //   if(Mass_tt>=1500){
-        //     //     fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_SR");
-        //     //   }
-        //     // }
-          
+              if(Mass_tt>=0 && Mass_tt < 500){
+                fill_histograms(event, "DeltaY_P_reco_0_500_ele_SR");
+              }
+              if(Mass_tt>=500 && Mass_tt < 750){
+                fill_histograms(event, "DeltaY_P_reco_500_750_ele_SR");
+              }
+              if(Mass_tt>=750 && Mass_tt < 1000){
+                fill_histograms(event, "DeltaY_P_reco_750_1000_ele_SR");
+              }
+              if(Mass_tt>=1000 && Mass_tt < 1500){
+                fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_SR");
+              }
+              if(Mass_tt>=1500){
+                fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_SR");
+              }
+            }
 
-        //     // ==== MATCHING with DELTA R === This section has explanation for each part
+            /// ------ RECO & GEN for ttbar samples -----
 
-          
-        //     // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-        //     GenParticle top, antitop;
-        //     for(const GenParticle & gp : *event.genparticles){
-        //       if(gp.pdgId() == 6){
-        //         top = gp;
-        //       }
-        //       else if(gp.pdgId() == -6){
-        //         antitop = gp;
-        //       }
-        //     }
-        //     std::vector<GenParticle> tops = {top, antitop};
-
-
-        //     // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-        //     LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-        //     LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-        //     //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-        //     std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-        //     std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-        //     // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-        //     // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-        //         deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-        //         deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-        //       } 
-        //     }
-        //     // vectors to store the best gen particle for each top
-        //     // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-        //     int best_gen_for_leptop = -1;
-        //     int best_gen_for_hadtop = -1;
-        //     std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-        //     std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-        //     // Find closest gen particle for each top
-        //     // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-        //     double deltaR_min_leptonic = 99.0;
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-        //             deltaR_min_leptonic = deltaR_leptonic_values[j];
-        //             best_gen_for_leptop = j;
-        //         }
-        //       }   
-        //     }
-        //     double deltaR_min_hadronic = 99.0;
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-        //             deltaR_min_hadronic = deltaR_hadronic_values[j];
-        //             best_gen_for_hadtop = j;
-        //         }
-        //       }
-        //     }
-        
-        //     for(unsigned int j=0; j<genparticles->size(); ++j) {
-        //       if(abs(genparticles->at(j).pdgId()) == 6) {
-        //         if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-        //             best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-        //         } else {
-        //             best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-        //         }
-        //       }
-        //     }
-          
-          
-        //     // deltaY values calculation
-
-        //     // matched gen particles
-        //     GenParticle best_matched_gen_leptop;
-        //     GenParticle best_matched_gen_hadtop;
-
-        //     bool valid_leptop = true, valid_hadtop = true;
-
-        //     if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-        //         best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-        //     } else {
-        //         // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-        //         valid_leptop = false;
-        //     }
-
-        //     if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-        //         best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-        //     } else {
-        //         // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-        //         valid_hadtop = false; 
-        //     }
-
-        //     double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
+              fill_histograms(event, "DY_ttbar_ele_SR");
+              h_DeltaY_reco_SystVariations_ttbar_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_ele_SR->fill(event);
             
-        //     double_t DeltaY_gen_best = 0.0;
-        //     if(valid_leptop && valid_hadtop) {
-        //       //  DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-        //       DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-        //     } 
-
-        //     // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
-      
-
-        //     // Explanation:
-        //     //A histogram of the ΔR distances between the jets and their matched genparticles. 
-        //     //This gives an overall sense of the matching quality. 
-        //     //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-
-        //     /// ------ RECO & GEN P_P -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-        //         fill_histograms(event, "DY_P_P_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_P_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_P_P_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_P_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_P_P_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_P_P_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_P_P_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_P_P_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_P_P_750Inf_ele_SR");
-        //       }
-        //     }
-
+              if(Mass_tt>=0 && Mass_tt<500){
+                fill_histograms(event, "DY_ttbar_0_500_ele_SR");
+                h_DeltaY_reco_SystVariations_ttbar_0_500_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_SR->fill(event);
+              }
+              if(Mass_tt>=500 && Mass_tt<750){
+                  fill_histograms(event, "DY_ttbar_500_750_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_500_750_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_SR->fill(event);
+              } 
+              if(Mass_tt>=750 && Mass_tt<1000){
+                  fill_histograms(event, "DY_ttbar_750_1000_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_SR->fill(event);
+              }
+              if(Mass_tt>=1000 && Mass_tt<1500){
+                  fill_histograms(event, "DY_ttbar_1000_1500_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_SR->fill(event);
+              }
+              if(Mass_tt>=1500){
+                  fill_histograms(event, "DY_ttbar_1500Inf_ele_SR");
+                  h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_SR->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_SR->fill(event);
+              }
+              if(Mass_tt>=750){
+                  fill_histograms(event, "DY_ttbar_750Inf_ele_SR");
+              }
           
-
-        //     /// ------ RECO & GEN P_N -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-        //         fill_histograms(event, "DY_P_N_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_N_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_P_N_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_P_N_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_P_N_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_P_N_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_P_N_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_P_N_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_P_N_750Inf_ele_SR");
-        //       }
-        //     }
-
-
-        //     /// ------ RECO & GEN N_P -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-        //         fill_histograms(event, "DY_N_P_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_P_ele_SR->fill(event);
-        //     h_DeltaY_reco_PDFVariations_N_P_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_N_P_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_P_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_N_P_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_N_P_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_N_P_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //           fill_histograms(event, "DY_N_P_1500Inf_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_SR->fill(event);
-        //     }
-             
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_N_P_750Inf_ele_SR");
-        //       }
-        //      }
-
-        //     /// ------ RECO & GEN N_N -----
-
-        //     //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-        //     if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-        //       fill_histograms(event, "DY_N_N_ele_SR");
-        //       h_DeltaY_reco_SystVariations_N_N_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_ele_SR->fill(event);
-            
-        //       if(Mass_tt>=0 && Mass_tt<500){
-        //         fill_histograms(event, "DY_N_N_0_500_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_N_0_500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_0_500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=500 && Mass_tt<750){
-        //           fill_histograms(event, "DY_N_N_500_750_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_500_750_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_500_750_ele_SR->fill(event);
-        //       } 
-        //       if(Mass_tt>=750 && Mass_tt<1000){
-        //           fill_histograms(event, "DY_N_N_750_1000_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_750_1000_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1000 && Mass_tt<1500){
-        //           fill_histograms(event, "DY_N_N_1000_1500_ele_SR");
-        //           h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_SR->fill(event);
-        //       h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=1500){
-        //         fill_histograms(event, "DY_N_N_1500Inf_ele_SR");
-        //         h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_SR->fill(event);
-        //         h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_SR->fill(event);
-        //       }
-        //       if(Mass_tt>=750){
-        //           fill_histograms(event, "DY_N_N_750Inf_ele_SR");
-        //       }
-        //     }
-
-
-
-        //   //charge -1 bracket
-        //   }
-
-        // // ===== ELECTRON END ==== 
-        // // electron bracket 
-        // }
-        
+          //charge -1 bracket
+          }
+        // ===== ELECTRON END ==== 
+        // electron bracket 
+       }
+       // isMC bracket
       }
-
+      // chi2 bracket
     } 
+    // out0 bracket
   }
 
-  /*
-█  
-█ OUTPUT SCORE 0 ENDS
-█ 
-█  
-*/
+    /*
+  █  
+  █ OUTPUT SCORE 0 ENDS
+  █ 
+  █  
+  */
 
-/*
-█  
-█ OUTPUT SCORE 1
-█ 
-█  
-*/
+  /*
+  █  
+  █ OUTPUT SCORE 1
+  █ 
+  █  
+  */
 
   if(out1 == max_score){
+    if(isMC){
+      vector<GenParticle>* genparticles = event.genparticles;
+      GenParticle top, antitop;
+      for(const GenParticle & gp : *event.genparticles){
 
-      ////DeltaY lines start here
-
-      if(isMC){
-        vector<GenParticle>* genparticles = event.genparticles;
-        GenParticle top, antitop;
-        for(const GenParticle & gp : *event.genparticles){
-
-          if(gp.pdgId() == 6){
-            top = gp;
-          }
-          else if(gp.pdgId() == -6){
-          antitop = gp;
-            }
+        if(gp.pdgId() == 6){
+          top = gp;
         }
+        else if(gp.pdgId() == -6){
+        antitop = gp;
+          }
+      }
 
-        // =============== MUON ===================================================================================================================================================================================
+      // =============== MUON ===================================================================================================================================================================================
 
-        // ========= MUON ========
+      // ========= MUON ========
 
-        if(isMuon){
+      if(isMuon){
 
-          ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-          float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+        
+        // =============== MUON charge 1 ===================================================================================================================================================================================
+        if(event.muons->at(0).charge() == 1){
 
-          if(event.muons->at(0).charge() == 1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
 
 
-            //Number of deltaY reco events
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_muon_CR1");
+            h_DeltaY_reco_SystVariations_0_500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_muon_CR1");
+            h_DeltaY_reco_SystVariations_500_750_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_muon_CR1");
+            h_DeltaY_reco_SystVariations_750_1000_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR1");
+            h_DeltaY_reco_SystVariations_1000_1500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR1");
+            h_DeltaY_reco_SystVariations_1500Inf_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1->fill(event);
+          }
+            
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_muon_CR1");
+
             if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_muon_CR1");
-              h_DeltaY_reco_SystVariations_0_500_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR1");
             }
             if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_muon_CR1");
-              h_DeltaY_reco_SystVariations_500_750_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR1");
             }
             if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_muon_CR1");
-              h_DeltaY_reco_SystVariations_750_1000_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR1");
             }
             if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR1");
-              h_DeltaY_reco_SystVariations_1000_1500_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR1");
             }
             if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR1");
-              h_DeltaY_reco_SystVariations_1500Inf_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR1");
             }
-          
-            // //Number of deltaY reco events with NEGATIVE DY
-            // if (DeltaY_reco<0){
-            //   fill_histograms(event, "DeltaY_reco_N_muon_CR1");
+          }
 
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR1");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR1");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR1");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR1");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR1");
-            //   }
-            // }
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_muon_CR1");
 
-            // //Number of deltaY reco events with POSITIVE DY
-            // if (DeltaY_reco>0){
-            //   fill_histograms(event, "DeltaY_reco_P_muon_CR1");
-
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR1");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR1");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR1");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR1");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR1");
-            //   }
-            // }
-            
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-            
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
-              }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR1");
             }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR1");
             }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR1");
             }
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR1");
             }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR1");
             }
-          
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
+          }
+              
+          /// ------ RECO & GEN for ttbar sample -----
 
-          
-            // deltaY values calculation
+          fill_histograms(event, "DY_ttbar_muon_CR1");
+          h_DeltaY_reco_SystVariations_ttbar_muon_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_muon_CR1->fill(event);
+      
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_muon_CR1");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR1->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_muon_CR1");
+            h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR1->fill(event);
 
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-            } 
-
-            // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_P_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR1->fill(event);
-
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_CR1");
-              }
-            }
-
-          
-
-            /// ------ RECO & GEN P_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_N_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_CR1");
-              }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_CR1");
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_P_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_CR1");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_N_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_CR1->fill(event);
-          
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_CR1");
-              }
-            }
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-            
+          }
 
           // charge 1 bracket
+        }
+
+        // =============== MUON charge -1 ===================================================================================================================================================================================
+        
+        if(event.muons->at(0).charge() == -1){
+
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+
+          // Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_muon_CR1");
+            h_DeltaY_reco_SystVariations_0_500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_muon_CR1->fill(event);
           }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_muon_CR1");
+            h_DeltaY_reco_SystVariations_500_750_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_muon_CR1");
+            h_DeltaY_reco_SystVariations_750_1000_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR1");
+            h_DeltaY_reco_SystVariations_1000_1500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR1");
+            h_DeltaY_reco_SystVariations_1500Inf_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1->fill(event);
+          }
+        
+          // Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_muon_CR1");
 
-            // =============== MUON charge -1 ===================================================================================================================================================================================
-
-
-          if(event.muons->at(0).charge() == -1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-
-            //Number of deltaY reco events
             if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_muon_CR1");
-              h_DeltaY_reco_SystVariations_0_500_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR1");
             }
             if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_muon_CR1");
-              h_DeltaY_reco_SystVariations_500_750_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR1");
             }
             if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_muon_CR1");
-              h_DeltaY_reco_SystVariations_750_1000_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR1");
             }
             if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR1");
-              h_DeltaY_reco_SystVariations_1000_1500_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR1");
             }
             if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR1");
-              h_DeltaY_reco_SystVariations_1500Inf_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_muon_CR1->fill(event);
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR1");
             }
-          
-            //Number of deltaY reco events with NEGATIVE DY
-            if (DeltaY_reco<0){
-              fill_histograms(event, "DeltaY_reco_N_muon_CR1");
-
-              if(Mass_tt>=0 && Mass_tt < 500){
-                fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR1");
-              }
-              if(Mass_tt>=500 && Mass_tt < 750){
-                fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR1");
-              }
-              if(Mass_tt>=750 && Mass_tt < 1000){
-                fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR1");
-              }
-              if(Mass_tt>=1000 && Mass_tt < 1500){
-                fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR1");
-              }
-              if(Mass_tt>=1500){
-                fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR1");
-              }
-            }
-
-            //Number of deltaY reco events with POSITIVE DY
-            if (DeltaY_reco>0){
-              fill_histograms(event, "DeltaY_reco_P_muon_CR1");
-
-              if(Mass_tt>=0 && Mass_tt < 500){
-                fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR1");
-              }
-              if(Mass_tt>=500 && Mass_tt < 750){
-                fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR1");
-              }
-              if(Mass_tt>=750 && Mass_tt < 1000){
-                fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR1");
-              }
-              if(Mass_tt>=1000 && Mass_tt < 1500){
-                fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR1");
-              }
-              if(Mass_tt>=1500){
-                fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR1");
-              }
-            }
-          
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-          
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
-              }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
-            }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-              }
-            }
-            
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
-            }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
-            }
-
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
-
-          
-            // deltaY values calculation
-
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
-        
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                // DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-
-            } 
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_P_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_CR1");
-              }
-            }
-          
-
-            /// ------ RECO & GEN P_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_N_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_CR1");
-              }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_P_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR1->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_CR1");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_N_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_CR1->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_CR1");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR1->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR1->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_CR1");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR1->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_CR1");
-              }
-            }
-
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-          
-            //charge -1 bracket
           }
 
+          // Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_muon_CR1");
 
-          // double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-          // float DeltaY_reco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity());
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR1");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR1");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR1");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR1");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR1");
+            }
+          }
 
+          /// ------ RECO & GEN for ttbar samples -----
+
+          fill_histograms(event, "DY_ttbar_muon_CR1");
+          h_DeltaY_reco_SystVariations_ttbar_muon_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_muon_CR1->fill(event);
         
-        // muon bracket  ===== MUON END ==== 
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_muon_CR1");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR1->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR1->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_muon_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR1->fill(event);
+          }
+          if(Mass_tt>=750){
+              fill_histograms(event, "DY_ttbar_750Inf_muon_CR1");
+          }
+            
+          //charge -1 bracket
         }
+
+        //===== MUON END ==== 
+        // muon bracket
+      }
         
         
-  //       // =============== ELECTRON ===================================================================================================================================================================================
+      // =============== ELECTRON ===================================================================================================================================================================================
+ 
+      if (isElectron){
 
-          
-  //       if (isElectron){
+        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
-  //         ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-  //         float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+        // =============== ELECTRON charge 1 ===================================================================================================================================================================================
 
-
-  //         if(event.electrons->at(0).charge() == 1){
-  //           double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-
-
-  //           //Number of deltaY reco events
-  //           if(Mass_tt>=0 && Mass_tt < 500){
-  //             fill_histograms(event, "DeltaY_reco_0_500_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_0_500_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_0_500_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=500 && Mass_tt < 750){
-  //             fill_histograms(event, "DeltaY_reco_500_750_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_500_750_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_500_750_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=750 && Mass_tt < 1000){
-  //             fill_histograms(event, "DeltaY_reco_750_1000_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_750_1000_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_750_1000_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=1000 && Mass_tt < 1500){
-  //             fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_1000_1500_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=1500){
-  //             fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_1500Inf_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1->fill(event);
-  //           }
-          
-  //           //Number of deltaY reco events with NEGATIVE DY
-  //           if (DeltaY_reco<0){
-  //             fill_histograms(event, "DeltaY_reco_N_ele_CR1");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR1");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR1");
-  //             }
-  //           }
-
-  //           //Number of deltaY reco events with POSITIVE DY
-  //           if (DeltaY_reco>0){
-  //             fill_histograms(event, "DeltaY_reco_P_ele_CR1");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR1");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR1");
-  //             }
-  //           }
-          
-
-  //           // ==== MATCHING with DELTA R === This section has explanation for each part
-
-          
-  //           // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-  //           GenParticle top, antitop;
-  //           for(const GenParticle & gp : *event.genparticles){
-  //             if(gp.pdgId() == 6){
-  //               top = gp;
-  //             }
-  //             else if(gp.pdgId() == -6){
-  //               antitop = gp;
-  //             }
-  //           }
-  //           std::vector<GenParticle> tops = {top, antitop};
+        if(event.electrons->at(0).charge() == 1){
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
 
 
-  //           // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-  //           LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-  //           LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-  //           //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-  //           std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-  //           std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-  //           // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-  //           // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-  //               deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-  //               deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-  //             }
-  //           }
-  //           // vectors to store the best gen particle for each top
-  //           // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-  //           int best_gen_for_leptop = -1;
-  //           int best_gen_for_hadtop = -1;
-  //           std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-  //           std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-  //           // Find closest gen particle for each top
-  //           // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-  //           double deltaR_min_leptonic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-  //                   deltaR_min_leptonic = deltaR_leptonic_values[j];
-  //                   best_gen_for_leptop = j;
-  //               }
-  //             }   
-  //           }
-  //           double deltaR_min_hadronic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-  //                   deltaR_min_hadronic = deltaR_hadronic_values[j];
-  //                   best_gen_for_hadtop = j;
-  //               }
-  //             }
-  //           }
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_ele_CR1");
+            h_DeltaY_reco_SystVariations_0_500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_0_500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_ele_CR1");
+            h_DeltaY_reco_SystVariations_500_750_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_500_750_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_ele_CR1");
+            h_DeltaY_reco_SystVariations_750_1000_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_750_1000_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR1");
+            h_DeltaY_reco_SystVariations_1000_1500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR1");
+            h_DeltaY_reco_SystVariations_1500Inf_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1->fill(event);
+          }
         
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-  //                   best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-  //               } else {
-  //                   best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-  //               }
-  //             }
-  //           }
-          
-  //           // deltaY values calculation
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_ele_CR1");
 
-  //           // matched gen particles
-  //           GenParticle best_matched_gen_leptop;
-  //           GenParticle best_matched_gen_hadtop;
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR1");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR1");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR1");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR1");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR1");
+            }
+          }
 
-  //           bool valid_leptop = true, valid_hadtop = true;
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_ele_CR1");
 
-  //           if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-  //               best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-  //               valid_leptop = false;
-  //           }
-
-  //           if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-  //               best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-  //               valid_hadtop = false; 
-  //           }
-            
-  //           double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-            
-  //           double_t DeltaY_gen_best = 0.0;
-          
-  //           if(valid_leptop && valid_hadtop) {
-  //             DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-  //           } 
-          
-
-  //           // Explanation:
-  //           //A histogram of the ΔR distances between the jets and their matched genparticles. 
-  //           //This gives an overall sense of the matching quality. 
-  //           //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-
-  //           /// ------ RECO & GEN P_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_P_P_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_P_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_P_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_P_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR1->fill(event);
-  //                 h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_P_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_P_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_P_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_P_750Inf_ele_CR1");
-  //             }
-  //           }
-
-          
-
-  //           /// ------ RECO & GEN P_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_P_N_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_N_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_N_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_N_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_N_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_N_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_N_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_N_750Inf_ele_CR1");
-  //             }
-  //           }
-
-
-  //           /// ------ RECO & GEN N_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_N_P_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_P_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_P_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_P_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_P_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_P_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_P_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_P_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_P_750Inf_ele_CR1");
-  //             }
-  //           }
-
-  //           /// ------ RECO & GEN N_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_N_N_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_N_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_N_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_N_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_N_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_N_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_N_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_N_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_N_750Inf_ele_CR1");
-  //             }
-  //           }
-
-  //         //charge 1
-  //         }
-  //       // =============== ELECTRON charge -1 ===================================================================================================================================================================================
-
-  //         //electron charge negative
-  //         if(event.electrons->at(0).charge() == -1){
-  //           double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-            
-
-  //           //Number of deltaY reco events
-  //           if(Mass_tt>=0 && Mass_tt < 500){
-  //             fill_histograms(event, "DeltaY_reco_0_500_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_0_500_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_0_500_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=500 && Mass_tt < 750){
-  //             fill_histograms(event, "DeltaY_reco_500_750_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_500_750_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_500_750_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=750 && Mass_tt < 1000){
-  //             fill_histograms(event, "DeltaY_reco_750_1000_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_750_1000_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_750_1000_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=1000 && Mass_tt < 1500){
-  //             fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_1000_1500_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1->fill(event);
-  //           }
-  //           if(Mass_tt>=1500){
-  //             fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_1500Inf_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1->fill(event);
-  //           }
-          
-  //           //Number of deltaY reco events with NEGATIVE DY
-  //           if (DeltaY_reco<0){
-  //             fill_histograms(event, "DeltaY_reco_N_ele_CR1");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR1");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR1");
-  //             }
-  //           }
-
-  //           //Number of deltaY reco events with POSITIVE DY
-  //           if (DeltaY_reco>0){
-  //             fill_histograms(event, "DeltaY_reco_P_ele_CR1");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR1");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR1");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR1");
-  //             }
-  //           }
-          
-
-  //           // ==== MATCHING with DELTA R === This section has explanation for each part
-
-          
-  //           // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-  //           GenParticle top, antitop;
-  //           for(const GenParticle & gp : *event.genparticles){
-  //             if(gp.pdgId() == 6){
-  //               top = gp;
-  //             }
-  //             else if(gp.pdgId() == -6){
-  //               antitop = gp;
-  //             }
-  //           }
-  //           std::vector<GenParticle> tops = {top, antitop};
-
-
-  //           // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-  //           LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-  //           LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-  //           //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-  //           std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-  //           std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-  //           // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-  //           // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-  //               deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-  //               deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-  //             } 
-  //           }
-  //           // vectors to store the best gen particle for each top
-  //           // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-  //           int best_gen_for_leptop = -1;
-  //           int best_gen_for_hadtop = -1;
-  //           std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-  //           std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-  //           // Find closest gen particle for each top
-  //           // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-  //           double deltaR_min_leptonic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-  //                   deltaR_min_leptonic = deltaR_leptonic_values[j];
-  //                   best_gen_for_leptop = j;
-  //               }
-  //             }   
-  //           }
-  //           double deltaR_min_hadronic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-  //                   deltaR_min_hadronic = deltaR_hadronic_values[j];
-  //                   best_gen_for_hadtop = j;
-  //               }
-  //             }
-  //           }
-        
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-  //                   best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-  //               } else {
-  //                   best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-  //               }
-  //             }
-  //           }
-          
-          
-  //           // deltaY values calculation
-
-  //           // matched gen particles
-  //           GenParticle best_matched_gen_leptop;
-  //           GenParticle best_matched_gen_hadtop;
-
-  //           bool valid_leptop = true, valid_hadtop = true;
-
-  //           if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-  //               best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-  //               valid_leptop = false;
-  //           }
-
-  //           if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-  //               best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-  //               valid_hadtop = false; 
-  //           }
-
-  //           double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
-            
-  //           double_t DeltaY_gen_best = 0.0;
-  //           if(valid_leptop && valid_hadtop) {
-  //             //  DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-  //             DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-  //           } 
-
-  //           // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR1");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR1");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR1");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR1");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR1");
+            }
+          }
       
 
-  //           // Explanation:
-  //           //A histogram of the ΔR distances between the jets and their matched genparticles. 
-  //           //This gives an overall sense of the matching quality. 
-  //           //If the matching is good, one should expect to see most of the entries at small ΔR values.
+          /// ------ RECO & GEN for ttbar samples -----
 
-
-
-  //           /// ------ RECO & GEN P_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_P_P_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_P_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_P_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_P_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_P_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_P_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_P_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_P_750Inf_ele_CR1");
-  //             }
-  //           }
-
-          
-
-  //           /// ------ RECO & GEN P_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_P_N_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_N_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_N_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_N_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_N_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_N_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_N_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_N_750Inf_ele_CR1");
-  //             }
-  //           }
-
-
-  //           /// ------ RECO & GEN N_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_N_P_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_P_ele_CR1->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_P_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_P_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_P_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_P_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_P_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_P_1500Inf_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR1->fill(event);
-  //           }
-             
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_P_750Inf_ele_CR1");
-  //             }
-  //            }
-
-  //           /// ------ RECO & GEN N_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-  //             fill_histograms(event, "DY_N_N_ele_CR1");
-  //             h_DeltaY_reco_SystVariations_N_N_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_ele_CR1->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_N_0_500_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_N_500_750_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR1->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_N_750_1000_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_N_1000_1500_ele_CR1");
-  //                 h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR1->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DY_N_N_1500Inf_ele_CR1");
-  //               h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR1->fill(event);
-  //               h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR1->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_N_750Inf_ele_CR1");
-  //             }
-  //           }
-
-
-
-  //         //charge -1 bracket
-  //         }
-
-  //       // ===== ELECTRON END ==== 
-  //       // electron bracket 
-  //       }
+          fill_histograms(event, "DY_ttbar_ele_CR1");
+          h_DeltaY_reco_SystVariations_ttbar_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_ele_CR1->fill(event);
         
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_ele_CR1");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR1->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=750){
+              fill_histograms(event, "DY_ttbar_750Inf_ele_CR1");
+          }
+
+          //charge 1
+        }
+        
+        // =============== ELECTRON charge -1 ===================================================================================================================================================================================
+        
+        if(event.electrons->at(0).charge() == -1){
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+          
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_ele_CR1");
+            h_DeltaY_reco_SystVariations_0_500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_0_500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_ele_CR1");
+            h_DeltaY_reco_SystVariations_500_750_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_500_750_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_ele_CR1");
+            h_DeltaY_reco_SystVariations_750_1000_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_750_1000_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR1");
+            h_DeltaY_reco_SystVariations_1000_1500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_1000_1500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR1");
+            h_DeltaY_reco_SystVariations_1500Inf_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_1500Inf_ele_CR1->fill(event);
+          }
+        
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_ele_CR1");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR1");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR1");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR1");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR1");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR1");
+            }
+          }
+
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_ele_CR1");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR1");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR1");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR1");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR1");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR1");
+            }
+          }
+
+          /// ------ RECO & GEN for ttbar samples -----
+
+          fill_histograms(event, "DY_ttbar_ele_CR1");
+          h_DeltaY_reco_SystVariations_ttbar_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_ele_CR1->fill(event);
+        
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_ele_CR1");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR1->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_ele_CR1");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR1->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR1->fill(event);
+          }
+          if(Mass_tt>=750){
+              fill_histograms(event, "DY_ttbar_750Inf_ele_CR1");
+          }
+          //charge -1 bracket
+        }
+
+        // ===== ELECTRON END ==== 
+        // electron bracket 
       }
+      // isMC bracket  
+    }
+    // out1 bracket
   }
 
-  /*
-█  
-█ OUTPUT SCORE 1 ENDS
-█ 
-█  
-*/
+    /*
+  █  
+  █ OUTPUT SCORE 1 ENDS
+  █ 
+  █  
+  */
 
-/*
-█  
-█ OUTPUT SCORE 2
-█ 
-█  
-*/
+  /*
+  █  
+  █ OUTPUT SCORE 2
+  █ 
+  █  
+  */
 
   if(out2 == max_score){
+    if(isMC){
+      vector<GenParticle>* genparticles = event.genparticles;
+      GenParticle top, antitop;
+      for(const GenParticle & gp : *event.genparticles){
 
-      ////DeltaY lines start here
-
-      if(isMC){
-        vector<GenParticle>* genparticles = event.genparticles;
-        GenParticle top, antitop;
-        for(const GenParticle & gp : *event.genparticles){
-
-          if(gp.pdgId() == 6){
-            top = gp;
-          }
-          else if(gp.pdgId() == -6){
-          antitop = gp;
-            }
+        if(gp.pdgId() == 6){
+          top = gp;
         }
-
-        // =============== MUON ===================================================================================================================================================================================
-
-        // ========= MUON ========
-
-        if(isMuon){
-
-          ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-          float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-          if(event.muons->at(0).charge() == 1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-
-
-            //Number of deltaY reco events
-            if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_muon_CR2");
-              h_DeltaY_reco_SystVariations_0_500_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_muon_CR2");
-              h_DeltaY_reco_SystVariations_500_750_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_muon_CR2");
-              h_DeltaY_reco_SystVariations_750_1000_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR2");
-              h_DeltaY_reco_SystVariations_1000_1500_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR2");
-              h_DeltaY_reco_SystVariations_1500Inf_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2->fill(event);
-            }
-          
-            //Number of deltaY reco events with NEGATIVE DY
-            // if (DeltaY_reco<0){
-            //   fill_histograms(event, "DeltaY_reco_N_muon_CR2");
-
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR2");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR2");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR2");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR2");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR2");
-            //   }
-            // }
-
-            //Number of deltaY reco events with POSITIVE DY
-            // if (DeltaY_reco>0){
-            //   fill_histograms(event, "DeltaY_reco_P_muon_CR2");
-
-            //   if(Mass_tt>=0 && Mass_tt < 500){
-            //     fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR2");
-            //   }
-            //   if(Mass_tt>=500 && Mass_tt < 750){
-            //     fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR2");
-            //   }
-            //   if(Mass_tt>=750 && Mass_tt < 1000){
-            //     fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR2");
-            //   }
-            //   if(Mass_tt>=1000 && Mass_tt < 1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR2");
-            //   }
-            //   if(Mass_tt>=1500){
-            //     fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR2");
-            //   }
-            // }
-            
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-            
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
-              }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
-            }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-            }
-            }
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
-            }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
-            }
-          
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
-
-          
-            // deltaY values calculation
-
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-            } 
-
-            // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_P_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR2->fill(event);
-
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_CR2");
-              }
-            }
-
-          
-
-            /// ------ RECO & GEN P_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_N_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_750_1000_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_CR2");
-              }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_CR2");
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_P_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_CR2");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_N_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_CR2->fill(event);
-          
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_CR2");
-              }
-            }
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-            
-
-          // charge 1 bracket
+        else if(gp.pdgId() == -6){
+        antitop = gp;
           }
-
-            // =============== MUON charge -1 ===================================================================================================================================================================================
-
-
-          if(event.muons->at(0).charge() == -1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-
-            //Number of deltaY reco events
-            if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_muon_CR2");
-              h_DeltaY_reco_SystVariations_0_500_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_muon_CR2");
-              h_DeltaY_reco_SystVariations_500_750_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_muon_CR2");
-              h_DeltaY_reco_SystVariations_750_1000_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR2");
-              h_DeltaY_reco_SystVariations_1000_1500_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2->fill(event);
-            }
-            if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR2");
-              h_DeltaY_reco_SystVariations_1500Inf_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2->fill(event);
-            }
-          
-            //Number of deltaY reco events with NEGATIVE DY
-            if (DeltaY_reco<0){
-              fill_histograms(event, "DeltaY_reco_N_muon_CR2");
-
-              if(Mass_tt>=0 && Mass_tt < 500){
-                fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR2");
-              }
-              if(Mass_tt>=500 && Mass_tt < 750){
-                fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR2");
-              }
-              if(Mass_tt>=750 && Mass_tt < 1000){
-                fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR2");
-              }
-              if(Mass_tt>=1000 && Mass_tt < 1500){
-                fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR2");
-              }
-              if(Mass_tt>=1500){
-                fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR2");
-              }
-            }
-
-            //Number of deltaY reco events with POSITIVE DY
-            if (DeltaY_reco>0){
-              fill_histograms(event, "DeltaY_reco_P_muon_CR2");
-
-              if(Mass_tt>=0 && Mass_tt < 500){
-                fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR2");
-              }
-              if(Mass_tt>=500 && Mass_tt < 750){
-                fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR2");
-              }
-              if(Mass_tt>=750 && Mass_tt < 1000){
-                fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR2");
-              }
-              if(Mass_tt>=1000 && Mass_tt < 1500){
-                fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR2");
-              }
-              if(Mass_tt>=1500){
-                fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR2");
-              }
-            }
-          
-
-            // ==== MATCHING with DELTA R === This section has explanation for each code snip
-
-          
-            // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-            GenParticle top, antitop;
-            for(const GenParticle & gp : *event.genparticles){
-              if(gp.pdgId() == 6){
-                top = gp;
-              }
-              else if(gp.pdgId() == -6){
-                antitop = gp;
-              }
-            }
-            std::vector<GenParticle> tops = {top, antitop};
-
-            // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-            LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-            LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-            //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-            std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-            std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-            // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-            // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-              LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-              deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-              deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-              }
-            }
-            
-            // vectors to store the best gen particle for each top
-            // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-            int best_gen_for_leptop = -1;
-            int best_gen_for_hadtop = -1;
-            std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-            std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-            // Find closest gen particle for each top
-            // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-            double deltaR_min_leptonic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-                    deltaR_min_leptonic = deltaR_leptonic_values[j];
-                    best_gen_for_leptop = j;
-                }
-              }   
-            }
-            double deltaR_min_hadronic = 99.0;
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-                    deltaR_min_hadronic = deltaR_hadronic_values[j];
-                    best_gen_for_hadtop = j;
-                }
-              }
-            }
-
-            for(unsigned int j=0; j<genparticles->size(); ++j) {
-              if(abs(genparticles->at(j).pdgId()) == 6) {
-                if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-                    best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-                } else {
-                    best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-                }
-              }
-            }
-
-          
-            // deltaY values calculation
-
-            // matched gen particles
-            GenParticle best_matched_gen_leptop;
-            GenParticle best_matched_gen_hadtop;
-
-            bool valid_leptop = true, valid_hadtop = true;
-
-            if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-                best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-            } else {
-                // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-                valid_leptop = false;
-            }
-
-            if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-                best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            } else {
-                // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-                valid_hadtop = false; 
-            }
-          
-            double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
-        
-            double_t DeltaY_gen_best = 0.0;
-
-            if(valid_leptop && valid_hadtop) {
-                // DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-                DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-
-            } 
-
-
-            // Explanation:
-            //A histogram of the ΔR distances between the jets and their matched genparticles. 
-            //This gives an overall sense of the matching quality. 
-            //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-            /// ------ RECO & GEN P_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_P_P_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_P_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_P_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_P_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_P_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_P_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_P_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_750_1000_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_P_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_P_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_P_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_P_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_P_750Inf_muon_CR2");
-              }
-            }
-          
-
-            /// ------ RECO & GEN P_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_P_N_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_N_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_P_N_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_P_N_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_P_N_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_P_N_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_P_N_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_500_750_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_P_N_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_P_N_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_P_N_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_P_N_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_P_N_750Inf_muon_CR2");
-              }
-            }
-
-
-            /// ------ RECO & GEN N_P -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-                fill_histograms(event, "DY_N_P_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_P_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_P_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_P_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_P_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_P_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_500_750_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_P_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_750_1000_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_P_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_1000_1500_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_P_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_P_1500Inf_muon_CR2->fill(event);
-                  h_DeltaY_reco_PDFVariations_N_P_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_P_750Inf_muon_CR2");
-              }
-            }
-
-            /// ------ RECO & GEN N_N -----
-
-            //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-            if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-                fill_histograms(event, "DY_N_N_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_N_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_muon_CR2->fill(event);
-            
-              if(Mass_tt>=0 && Mass_tt<500){
-                fill_histograms(event, "DY_N_N_0_500_muon_CR2");
-                h_DeltaY_reco_SystVariations_N_N_0_500_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_0_500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=500 && Mass_tt<750){
-                  fill_histograms(event, "DY_N_N_500_750_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_500_750_muon_CR2->fill(event);
-                h_DeltaY_reco_PDFVariations_N_N_500_750_muon_CR2->fill(event);
-              } 
-              if(Mass_tt>=750 && Mass_tt<1000){
-                  fill_histograms(event, "DY_N_N_750_1000_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_750_1000_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_750_1000_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1000 && Mass_tt<1500){
-                  fill_histograms(event, "DY_N_N_1000_1500_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_1000_1500_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1000_1500_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=1500){
-                  fill_histograms(event, "DY_N_N_1500Inf_muon_CR2");
-                  h_DeltaY_reco_SystVariations_N_N_1500Inf_muon_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_N_N_1500Inf_muon_CR2->fill(event);
-              }
-              if(Mass_tt>=750){
-                  fill_histograms(event, "DY_N_N_750Inf_muon_CR2");
-              }
-            }
-
-
-
-
-            // gen particle (index j) was not matched to a jet
-            // cout << "Gen particle at index " << j << " was not reconstructed." << endl;
-            // std::cout << "Number of top quarks: " << topQuarkCount << std::endl;
-          
-            //charge -1 bracket
-          }
-
-
-          // double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-          // float DeltaY_reco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity());
-
-        
-        // muon bracket  ===== MUON END ==== 
-        }
-        
-        
-        // =============== ELECTRON ===================================================================================================================================================================================
-
-          
-  //       if (isElectron){
-
-  //         ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-  //         float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-
-  //         if(event.electrons->at(0).charge() == 1){
-  //           double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-
-
-  //           //Number of deltaY reco events
-  //           if(Mass_tt>=0 && Mass_tt < 500){
-  //             fill_histograms(event, "DeltaY_reco_0_500_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_0_500_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_0_500_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=500 && Mass_tt < 750){
-  //             fill_histograms(event, "DeltaY_reco_500_750_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_500_750_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_500_750_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=750 && Mass_tt < 1000){
-  //             fill_histograms(event, "DeltaY_reco_750_1000_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_750_1000_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_750_1000_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=1000 && Mass_tt < 1500){
-  //             fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_1000_1500_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=1500){
-  //             fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_1500Inf_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2->fill(event);
-  //           }
-          
-  //           //Number of deltaY reco events with NEGATIVE DY
-  //           if (DeltaY_reco<0){
-  //             fill_histograms(event, "DeltaY_reco_N_ele_CR2");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR2");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR2");
-  //             }
-  //           }
-
-  //           //Number of deltaY reco events with POSITIVE DY
-  //           if (DeltaY_reco>0){
-  //             fill_histograms(event, "DeltaY_reco_P_ele_CR2");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR2");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR2");
-  //             }
-  //           }
-          
-
-  //           // ==== MATCHING with DELTA R === This section has explanation for each part
-
-          
-  //           // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-  //           GenParticle top, antitop;
-  //           for(const GenParticle & gp : *event.genparticles){
-  //             if(gp.pdgId() == 6){
-  //               top = gp;
-  //             }
-  //             else if(gp.pdgId() == -6){
-  //               antitop = gp;
-  //             }
-  //           }
-  //           std::vector<GenParticle> tops = {top, antitop};
-
-
-  //           // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-  //           LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-  //           LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-  //           //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-  //           std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-  //           std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-  //           // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-  //           // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-  //               deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-  //               deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-  //             }
-  //           }
-  //           // vectors to store the best gen particle for each top
-  //           // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-  //           int best_gen_for_leptop = -1;
-  //           int best_gen_for_hadtop = -1;
-  //           std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-  //           std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-  //           // Find closest gen particle for each top
-  //           // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-  //           double deltaR_min_leptonic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-  //                   deltaR_min_leptonic = deltaR_leptonic_values[j];
-  //                   best_gen_for_leptop = j;
-  //               }
-  //             }   
-  //           }
-  //           double deltaR_min_hadronic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-  //                   deltaR_min_hadronic = deltaR_hadronic_values[j];
-  //                   best_gen_for_hadtop = j;
-  //               }
-  //             }
-  //           }
-        
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-  //                   best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-  //               } else {
-  //                   best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-  //               }
-  //             }
-  //           }
-          
-  //           // deltaY values calculation
-
-  //           // matched gen particles
-  //           GenParticle best_matched_gen_leptop;
-  //           GenParticle best_matched_gen_hadtop;
-
-  //           bool valid_leptop = true, valid_hadtop = true;
-
-  //           if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-  //               best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-  //               valid_leptop = false;
-  //           }
-
-  //           if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-  //               best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-  //               valid_hadtop = false; 
-  //           }
-            
-  //           double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-            
-  //           double_t DeltaY_gen_best = 0.0;
-          
-  //           if(valid_leptop && valid_hadtop) {
-  //             DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-  //           } 
-          
-
-  //           // Explanation:
-  //           //A histogram of the ΔR distances between the jets and their matched genparticles. 
-  //           //This gives an overall sense of the matching quality. 
-  //           //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-
-  //           /// ------ RECO & GEN P_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_P_P_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_P_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_P_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_P_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR2->fill(event);
-  //                 h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_P_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_P_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_P_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_P_750Inf_ele_CR2");
-  //             }
-  //           }
-
-          
-
-  //           /// ------ RECO & GEN P_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_P_N_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_N_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_N_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_N_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_N_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_N_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_N_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_N_750Inf_ele_CR2");
-  //             }
-  //           }
-
-
-  //           /// ------ RECO & GEN N_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_N_P_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_P_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_P_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_P_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_P_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_P_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_P_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_P_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_P_750Inf_ele_CR2");
-  //             }
-  //           }
-
-  //           /// ------ RECO & GEN N_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_N_N_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_N_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_N_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_N_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_N_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_N_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_N_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_N_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_N_750Inf_ele_CR2");
-  //             }
-  //           }
-
-  //         //charge 1
-  //         }
-  // // =============== ELECTRON charge -1 ===================================================================================================================================================================================
-
-  //         //electron charge negative
-  //         if(event.electrons->at(0).charge() == -1){
-  //           double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-            
-
-  //           //Number of deltaY reco events
-  //           if(Mass_tt>=0 && Mass_tt < 500){
-  //             fill_histograms(event, "DeltaY_reco_0_500_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_0_500_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_0_500_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=500 && Mass_tt < 750){
-  //             fill_histograms(event, "DeltaY_reco_500_750_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_500_750_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_500_750_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=750 && Mass_tt < 1000){
-  //             fill_histograms(event, "DeltaY_reco_750_1000_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_750_1000_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_750_1000_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=1000 && Mass_tt < 1500){
-  //             fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_1000_1500_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2->fill(event);
-  //           }
-  //           if(Mass_tt>=1500){
-  //             fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_1500Inf_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2->fill(event);
-  //           }
-          
-  //           //Number of deltaY reco events with NEGATIVE DY
-  //           if (DeltaY_reco<0){
-  //             fill_histograms(event, "DeltaY_reco_N_ele_CR2");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR2");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR2");
-  //             }
-  //           }
-
-  //           //Number of deltaY reco events with POSITIVE DY
-  //           if (DeltaY_reco>0){
-  //             fill_histograms(event, "DeltaY_reco_P_ele_CR2");
-
-  //             if(Mass_tt>=0 && Mass_tt < 500){
-  //               fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt < 750){
-  //               fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR2");
-  //             }
-  //             if(Mass_tt>=750 && Mass_tt < 1000){
-  //               fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt < 1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR2");
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR2");
-  //             }
-  //           }
-          
-
-  //           // ==== MATCHING with DELTA R === This section has explanation for each part
-
-          
-  //           // This section loops over the generator particles in the event,for pdgId of 6 (top quark) and -6 (anti-top quark). The found particles are then stored in the tops vector.
-  //           GenParticle top, antitop;
-  //           for(const GenParticle & gp : *event.genparticles){
-  //             if(gp.pdgId() == 6){
-  //               top = gp;
-  //             }
-  //             else if(gp.pdgId() == -6){
-  //               antitop = gp;
-  //             }
-  //           }
-  //           std::vector<GenParticle> tops = {top, antitop};
-
-
-  //           // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
-  //           LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
-  //           LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
-
-  //           //// vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
-  //           std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-  //           std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
-
-  //           // deltaR is a measure of separation in the eta-phi space. The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-  //           // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-  //               deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-  //               deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-  //             } 
-  //           }
-  //           // vectors to store the best gen particle for each top
-  //           // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-  //           int best_gen_for_leptop = -1;
-  //           int best_gen_for_hadtop = -1;
-  //           std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-  //           std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-  //           // Find closest gen particle for each top
-  //           // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
-  //           double deltaR_min_leptonic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-  //                   deltaR_min_leptonic = deltaR_leptonic_values[j];
-  //                   best_gen_for_leptop = j;
-  //               }
-  //             }   
-  //           }
-  //           double deltaR_min_hadronic = 99.0;
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-  //                   deltaR_min_hadronic = deltaR_hadronic_values[j];
-  //                   best_gen_for_hadtop = j;
-  //               }
-  //             }
-  //           }
-        
-  //           for(unsigned int j=0; j<genparticles->size(); ++j) {
-  //             if(abs(genparticles->at(j).pdgId()) == 6) {
-  //               if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-  //                   best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-  //               } else {
-  //                   best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-  //               }
-  //             }
-  //           }
-          
-          
-  //           // deltaY values calculation
-
-  //           // matched gen particles
-  //           GenParticle best_matched_gen_leptop;
-  //           GenParticle best_matched_gen_hadtop;
-
-  //           bool valid_leptop = true, valid_hadtop = true;
-
-  //           if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-  //               best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-  //               valid_leptop = false;
-  //           }
-
-  //           if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-  //               best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-  //           } else {
-  //               // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-  //               valid_hadtop = false; 
-  //           }
-
-  //           double_t DeltaY_reco_best= TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
-            
-  //           double_t DeltaY_gen_best = 0.0;
-  //           if(valid_leptop && valid_hadtop) {
-  //             //  DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-  //             DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
-  //           } 
-
-  //           // This loop checks each gen particle and if it's not one of the "best matched" gen particles for the tops, the particle's pt is set to a histogram based on the invariant mass m_ttbar of the top-antitop system.
-      
-
-  //           // Explanation:
-  //           //A histogram of the ΔR distances between the jets and their matched genparticles. 
-  //           //This gives an overall sense of the matching quality. 
-  //           //If the matching is good, one should expect to see most of the entries at small ΔR values.
-
-
-
-  //           /// ------ RECO & GEN P_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_P_P_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_P_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_P_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_P_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_P_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_P_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_P_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_P_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_P_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_P_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_P_750Inf_ele_CR2");
-  //             }
-  //           }
-
-          
-
-  //           /// ------ RECO & GEN P_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best>0 && DeltaY_reco_best<0){
-  //               fill_histograms(event, "DY_P_N_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_N_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_P_N_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_P_N_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_P_N_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_P_N_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_P_N_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_P_N_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_P_N_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_P_N_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_P_N_750Inf_ele_CR2");
-  //             }
-  //           }
-
-
-  //           /// ------ RECO & GEN N_P -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best>0){
-  //               fill_histograms(event, "DY_N_P_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_P_ele_CR2->fill(event);
-  //           h_DeltaY_reco_PDFVariations_N_P_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_P_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_P_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_P_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_P_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_P_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //                 fill_histograms(event, "DY_N_P_1500Inf_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_P_1500Inf_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_P_1500Inf_ele_CR2->fill(event);
-  //           }
-             
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_P_750Inf_ele_CR2");
-  //             }
-  //            }
-
-  //           /// ------ RECO & GEN N_N -----
-
-  //           //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-  //           if(DeltaY_gen_best<0 && DeltaY_reco_best<0){
-  //             fill_histograms(event, "DY_N_N_ele_CR2");
-  //             h_DeltaY_reco_SystVariations_N_N_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_ele_CR2->fill(event);
-            
-  //             if(Mass_tt>=0 && Mass_tt<500){
-  //               fill_histograms(event, "DY_N_N_0_500_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_N_0_500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_0_500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=500 && Mass_tt<750){
-  //                 fill_histograms(event, "DY_N_N_500_750_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_500_750_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_500_750_ele_CR2->fill(event);
-  //             } 
-  //             if(Mass_tt>=750 && Mass_tt<1000){
-  //                 fill_histograms(event, "DY_N_N_750_1000_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_750_1000_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_750_1000_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1000 && Mass_tt<1500){
-  //                 fill_histograms(event, "DY_N_N_1000_1500_ele_CR2");
-  //                 h_DeltaY_reco_SystVariations_N_N_1000_1500_ele_CR2->fill(event);
-  //             h_DeltaY_reco_PDFVariations_N_N_1000_1500_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=1500){
-  //               fill_histograms(event, "DY_N_N_1500Inf_ele_CR2");
-  //               h_DeltaY_reco_SystVariations_N_N_1500Inf_ele_CR2->fill(event);
-  //               h_DeltaY_reco_PDFVariations_N_N_1500Inf_ele_CR2->fill(event);
-  //             }
-  //             if(Mass_tt>=750){
-  //                 fill_histograms(event, "DY_N_N_750Inf_ele_CR2");
-  //             }
-  //           }
-
-
-
-  //         //charge -1 bracket
-  //         }
-
-  //       // ===== ELECTRON END ==== 
-  //       // electron bracket 
-  //       }
-        
       }
+
+      // =============== MUON ===================================================================================================================================================================================
+
+      if(isMuon){
+
+        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+          
+        // =============== MUON charge 1 ===================================================================================================================================================================================
+        if(event.muons->at(0).charge() == 1){
+
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+
+
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_muon_CR2");
+            h_DeltaY_reco_SystVariations_0_500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_muon_CR2");
+            h_DeltaY_reco_SystVariations_500_750_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_muon_CR2");
+            h_DeltaY_reco_SystVariations_750_1000_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR2");
+            h_DeltaY_reco_SystVariations_1000_1500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR2");
+            h_DeltaY_reco_SystVariations_1500Inf_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2->fill(event);
+          }
+        
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_muon_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR2");
+            }
+          }
+
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_muon_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR2");
+            }
+          }
+          /// ------ RECO & GEN for ttbar samples -----
+
+          fill_histograms(event, "DY_ttbar_muon_CR2");
+          h_DeltaY_reco_SystVariations_ttbar_muon_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_muon_CR2->fill(event);
+        
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+            fill_histograms(event, "DY_ttbar_500_750_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR2->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+            fill_histograms(event, "DY_ttbar_750_1000_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+            fill_histograms(event, "DY_ttbar_1000_1500_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DY_ttbar_1500Inf_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR2->fill(event);
+          }
+          // charge 1 bracket
+        }
+
+        // =============== MUON charge -1 ===================================================================================================================================================================================
+        if(event.muons->at(0).charge() == -1){
+
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_muon_CR2");
+            h_DeltaY_reco_SystVariations_0_500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_0_500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_muon_CR2");
+            h_DeltaY_reco_SystVariations_500_750_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_500_750_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_muon_CR2");
+            h_DeltaY_reco_SystVariations_750_1000_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_750_1000_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_muon_CR2");
+            h_DeltaY_reco_SystVariations_1000_1500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_1000_1500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_muon_CR2");
+            h_DeltaY_reco_SystVariations_1500Inf_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_1500Inf_muon_CR2->fill(event);
+          }
+        
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_muon_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_muon_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_muon_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_muon_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_muon_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_muon_CR2");
+            }
+          }
+
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_muon_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_muon_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_muon_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_muon_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_muon_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_muon_CR2");
+            }
+          }
+
+          /// ------ RECO & GEN for ttbar samples -----
+
+          fill_histograms(event, "DY_ttbar_muon_CR2");
+          h_DeltaY_reco_SystVariations_ttbar_muon_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_muon_CR2->fill(event);
+          
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_muon_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_muon_CR2->fill(event);
+            h_DeltaY_reco_PDFVariations_ttbar_0_500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_muon_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_muon_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_muon_CR2->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_muon_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_muon_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_750_1000_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_muon_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_muon_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1000_1500_muon_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_muon_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_muon_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_1500Inf_muon_CR2->fill(event);
+          }
+          //charge -1 bracket
+        }
+
+      
+        //===== MUON END ==== 
+        //muon bracket  
+      }
+      
+      
+      // =============== ELECTRON ===================================================================================================================================================================================
+
+          
+      if (isElectron){
+
+        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+
+        // =============== ELECTRON charge 1 ===================================================================================================================================================================================
+
+        if(event.electrons->at(0).charge() == 1){
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+
+
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_ele_CR2");
+            h_DeltaY_reco_SystVariations_0_500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_0_500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_ele_CR2");
+            h_DeltaY_reco_SystVariations_500_750_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_500_750_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_ele_CR2");
+            h_DeltaY_reco_SystVariations_750_1000_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_750_1000_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR2");
+            h_DeltaY_reco_SystVariations_1000_1500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR2");
+            h_DeltaY_reco_SystVariations_1500Inf_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2->fill(event);
+          }
+        
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_ele_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR2");
+            }
+          }
+
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_ele_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR2");
+            }
+          }
+        
+          /// ------ RECO & GEN for ttbar samples -----
+
+          fill_histograms(event, "DY_ttbar_ele_CR2");
+          h_DeltaY_reco_SystVariations_ttbar_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_ele_CR2->fill(event);
+        
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_ele_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR2->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR2->fill(event);
+          }
+        //charge 1
+        }
+      
+        // =============== ELECTRON charge -1 ===================================================================================================================================================================================
+
+        if(event.electrons->at(0).charge() == -1){
+          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+          
+          //Number of deltaY reco events
+          if(Mass_tt>=0 && Mass_tt < 500){
+            fill_histograms(event, "DeltaY_reco_0_500_ele_CR2");
+            h_DeltaY_reco_SystVariations_0_500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_0_500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt < 750){
+            fill_histograms(event, "DeltaY_reco_500_750_ele_CR2");
+            h_DeltaY_reco_SystVariations_500_750_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_500_750_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=750 && Mass_tt < 1000){
+            fill_histograms(event, "DeltaY_reco_750_1000_ele_CR2");
+            h_DeltaY_reco_SystVariations_750_1000_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_750_1000_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt < 1500){
+            fill_histograms(event, "DeltaY_reco_1000_1500_ele_CR2");
+            h_DeltaY_reco_SystVariations_1000_1500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_1000_1500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+            fill_histograms(event, "DeltaY_reco_1500Inf_ele_CR2");
+            h_DeltaY_reco_SystVariations_1500Inf_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_1500Inf_ele_CR2->fill(event);
+          }
+        
+          //Number of deltaY reco events with NEGATIVE DY
+          if (DeltaY_reco<0){
+            fill_histograms(event, "DeltaY_reco_N_ele_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_N_reco_0_500_ele_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_N_reco_500_750_ele_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_N_reco_750_1000_ele_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_N_reco_1000_1500_ele_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_N_reco_1500Inf_ele_CR2");
+            }
+          }
+
+          //Number of deltaY reco events with POSITIVE DY
+          if (DeltaY_reco>0){
+            fill_histograms(event, "DeltaY_reco_P_ele_CR2");
+
+            if(Mass_tt>=0 && Mass_tt < 500){
+              fill_histograms(event, "DeltaY_P_reco_0_500_ele_CR2");
+            }
+            if(Mass_tt>=500 && Mass_tt < 750){
+              fill_histograms(event, "DeltaY_P_reco_500_750_ele_CR2");
+            }
+            if(Mass_tt>=750 && Mass_tt < 1000){
+              fill_histograms(event, "DeltaY_P_reco_750_1000_ele_CR2");
+            }
+            if(Mass_tt>=1000 && Mass_tt < 1500){
+              fill_histograms(event, "DeltaY_P_reco_1000_1500_ele_CR2");
+            }
+            if(Mass_tt>=1500){
+              fill_histograms(event, "DeltaY_P_reco_1500Inf_ele_CR2");
+            }
+          }
+
+          /// ------ RECO & GEN for ttbar samples -----
+
+          
+          fill_histograms(event, "DY_ttbar_ele_CR2");
+          h_DeltaY_reco_SystVariations_ttbar_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_ele_CR2->fill(event);
+        
+          if(Mass_tt>=0 && Mass_tt<500){
+            fill_histograms(event, "DY_ttbar_0_500_ele_CR2");
+            h_DeltaY_reco_SystVariations_ttbar_0_500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_0_500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=500 && Mass_tt<750){
+              fill_histograms(event, "DY_ttbar_500_750_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_500_750_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_500_750_ele_CR2->fill(event);
+          } 
+          if(Mass_tt>=750 && Mass_tt<1000){
+              fill_histograms(event, "DY_ttbar_750_1000_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_750_1000_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_750_1000_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1000 && Mass_tt<1500){
+              fill_histograms(event, "DY_ttbar_1000_1500_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1000_1500_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1000_1500_ele_CR2->fill(event);
+          }
+          if(Mass_tt>=1500){
+              fill_histograms(event, "DY_ttbar_1500Inf_ele_CR2");
+              h_DeltaY_reco_SystVariations_ttbar_1500Inf_ele_CR2->fill(event);
+          h_DeltaY_reco_PDFVariations_ttbar_1500Inf_ele_CR2->fill(event);
+          }
+
+          //charge -1 bracket
+        }
+
+        // ===== ELECTRON END ==== 
+        // electron bracket 
+      }
+      //isMC
+    }
+    //out2 == max_score
   }
 
-  /*
-█  
-█ OUTPUT SCORE 2 ENDS
-█ 
-█  
-*/
-
-
+  
+  
+    /*
+  █  
+  █ OUTPUT SCORE 2 ENDS
+  █ 
+  █  
+  */
 
   // =============== MC dY lines END ===================================================================================================================================================================================
 
+    /*
+  █  
+  █ DATA dY lines
+  █ 
+  █  
+  */
 
-  // if (!isMC){
-  //   if(isMuon){
-    
-
-  //     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-  //     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+  if (!isMC){
+    if(isMuon){
+  
+      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
                 
-  //     //Number of deltaY reco events
-  //     if(Mass_tt>=0 && Mass_tt < 500){
-  //       fill_histograms(event, "DeltaY_reco_0_500_muon_data");
-  //     }
-  //     if(Mass_tt>=500 && Mass_tt < 750){
-  //       fill_histograms(event, "DeltaY_reco_500_750_muon_data");
-  //     }
-  //     if(Mass_tt>=750 && Mass_tt < 1000){
-  //       fill_histograms(event, "DeltaY_reco_750_1000_muon_data");
-  //     }
-  //     if(Mass_tt>=1000 && Mass_tt < 1500){
-  //       fill_histograms(event, "DeltaY_reco_1000_1500_muon_data");
-  //     }
-  //     if(Mass_tt>=1500){
-  //       fill_histograms(event, "DeltaY_reco_1500Inf_muon_data");
-  //     }
+      //Number of deltaY reco events
+      if(Mass_tt>=0 && Mass_tt < 500){
+        fill_histograms(event, "DeltaY_reco_0_500_muon_data");
+      }
+      if(Mass_tt>=500 && Mass_tt < 750){
+        fill_histograms(event, "DeltaY_reco_500_750_muon_data");
+      }
+      if(Mass_tt>=750 && Mass_tt < 1000){
+        fill_histograms(event, "DeltaY_reco_750_1000_muon_data");
+      }
+      if(Mass_tt>=1000 && Mass_tt < 1500){
+        fill_histograms(event, "DeltaY_reco_1000_1500_muon_data");
+      }
+      if(Mass_tt>=1500){
+        fill_histograms(event, "DeltaY_reco_1500Inf_muon_data");
+      }
       
-  //     if(debug) cout << "deltaY 4" << endl;
-  //     // muon bracket  ===== MUON END ==== 
-  //   }
+      // muon bracket  ===== MUON END ==== 
+    }
         
-  //   if (isElectron){
+    if (isElectron){
 
-  //     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-  //     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-        
-  //     // double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+              
+      //Number of deltaY reco events
+      if(Mass_tt>=0 && Mass_tt < 500){
+        fill_histograms(event, "DeltaY_reco_0_500_ele_data");
+      }
+      if(Mass_tt>=500 && Mass_tt < 750){
+        fill_histograms(event, "DeltaY_reco_500_750_ele_data");
+      }
+      if(Mass_tt>=750 && Mass_tt < 1000){
+        fill_histograms(event, "DeltaY_reco_750_1000_ele_data");
+      }
+      if(Mass_tt>=1000 && Mass_tt < 1500){
+        fill_histograms(event, "DeltaY_reco_1000_1500_ele_data");
+      }
+      if(Mass_tt>=1500){
+        fill_histograms(event, "DeltaY_reco_1500Inf_ele_data");
+      }
       
-  //     //Number of deltaY reco events
-  //     if(Mass_tt>=0 && Mass_tt < 500){
-  //       fill_histograms(event, "DeltaY_reco_0_500_ele_data");
-  //     }
-  //     if(Mass_tt>=500 && Mass_tt < 750){
-  //       fill_histograms(event, "DeltaY_reco_500_750_ele_data");
-  //     }
-  //     if(Mass_tt>=750 && Mass_tt < 1000){
-  //       fill_histograms(event, "DeltaY_reco_750_1000_ele_data");
-  //     }
-  //     if(Mass_tt>=1000 && Mass_tt < 1500){
-  //       fill_histograms(event, "DeltaY_reco_1000_1500_ele_data");
-  //     }
-  //     if(Mass_tt>=1500){
-  //       fill_histograms(event, "DeltaY_reco_1500Inf_ele_data");
-  //     }
-      
-  //     // ===== ELECTRON END ==== 
-  //     // electron bracket 
-  //   }
-  // }  
+      // electron bracket 
+    }
+  }  
    
 
-// if(!isEleTriggerMeasurement) SystematicsModule->process(event);
+  // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
 
 
   return true;

@@ -17,18 +17,19 @@
 #include <iostream>
 
 
+
 using namespace std;
 using namespace uhh2;
 
-
-
 ZprimeSemiLeptonicHists::ZprimeSemiLeptonicHists(uhh2::Context& ctx, const std::string& dirname):
-  
-
 Hists(ctx, dirname) {
   is_mc = ctx.get("dataset_type") == "MC";
   ishotvr = (ctx.get("is_hotvr") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
+  debug = false;
+  isMuon = false; isElectron = false;
+  if(ctx.get("channel") == "muon") isMuon = true;
+  if(ctx.get("channel") == "electron") isElectron = true;
   if(isdeepAK8){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("DeepAK8TopTags");
   }else if(ishotvr){
@@ -461,23 +462,13 @@ void ZprimeSemiLeptonicHists::init(){
   ditop_deltaR      = book<TH1F>("ditop_deltaR", "#DeltaR(t,#bar{t})", 100, 0, 10.0);
   
   // DeltaY
-  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
-  DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
-
-  //Gen plots
-  // topgen_pt       = book<TH1F>("topgen_pt", "p_{T}^{top} [GeV] in gen",70, 0, 7000);
-  // topgen_eta      = book<TH1F>("antitopgen_eta", "#eta^{top} in gen",60, -3.0, 3.0);
-  // antitopgen_pt   = book<TH1F>("antitopgen_pt", "p_{antiT}^{top} [GeV] in gen",70, 0, 7000);
-  // antitopgen_eta  = book<TH1F>("antitopgen_eta", "#eta^{antiT}",60, -3.0, 3.0);
-  // leptongen_pt    = book<TH1F>("leptongen_pt", "p_{T}^{lepton} [GeV] in gen",70, 0, 7000);
-  // leptongen_eta   = book<TH1F>("leptongen_eta", "#eta^{lepton} in gen",60, -3.0, 3.0);
-  // muongen_pt      = book<TH1F>("muongen_pt", "p_{T}^{muon} [GeV] in gen",70, 0, 7000);
-  // muongen_eta     = book<TH1F>("muongen_eta", "#eta^{muon} in gen"      ,60, -3.0, 3.0);
-  // electrongen_pt  = book<TH1F>("electrongen_pt", "p_{T}^{electron} [GeV] in gen",70, 0, 7000);
-  // electrongen_eta = book<TH1F>("electrongen_eta", "#eta^{electron} in gen",60, -3.0, 3.0);
-  // bquarkgen_pt    = book<TH1F>("bquarkgen_pt", "p_{bquark} [GeV] in gen",70, 0, 7000);
-  // bquarkgen_eta   = book<TH1F>("bquarkgen_eta", "#eta^{bquark} in gen",60, -3.0, 3.0);
-
+  DeltaY_reco         = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_gen          = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
+  DeltaY_reco_0_500   = book<TH1F>("DeltaY_reco_0_500", "#Delta Y_{(t,#bar{t})} 0<Mtt<500",2,-2,2);
+  DeltaY_reco_500_750 = book<TH1F>("DeltaY_reco_500_750", "#Delta Y_{(t,#bar{t})} 500<Mtt<750",2,-2,2);
+  DeltaY_reco_750_1000  = book<TH1F>("DeltaY_reco_750_1000", "#Delta Y_{(t,#bar{t})} 750<Mtt<1000",2,-2,2);
+  DeltaY_reco_1000_1500 = book<TH1F>("DeltaY_reco_1000_1500", "#Delta Y_{(t,#bar{t})} 1000<Mtt<1500",2,-2,2);
+  DeltaY_reco_1500Inf   = book<TH1F>("DeltaY_reco_1500Inf", "#Delta Y_{(t,#bar{t})} Mtt>1500",2,-2,2);
 
 
   vector<float> bins_Zprime4 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200,3400,3600,3800,4000,4400,4800,5200,5600,6000,6100};
@@ -535,11 +526,16 @@ void ZprimeSemiLeptonicHists::init(){
   M_Zprime_dr_rebin        = book<TH1F>("M_Zprime_dr_rebin", "M_{t#bar{t}} (correctly matched) [GeV]", 140, 0, 7000);
   M_Zprime_dr_rebin2       = book<TH1F>("M_Zprime_dr_rebin2", "M_{t#bar{t}} (correctly matched) [GeV]", 70, 0, 7000);
   M_Zprime_dr_rebin3       = book<TH1F>("M_Zprime_dr_rebin3", "M_{t#bar{t}} (correctly matched) [GeV]", 35, 0, 7000);
-  M_Zprime_all             = book<TH1F>("M_Zprime_all", "M_{t#bar{t}} [GeV]", 280, 0, 7000);
 
   // 2D histogram of mttbar x cos(theta*) to optimize binning
   mttbar_vs_costhetastar = book<TH2F>("mttbar_vs_costhetastar", "m_{t#bar{t}} vs cos(#theta*)", 20, -1, 1, 1000, 0, 10000);
   costhetastar_vs_mttbar = book<TH2F>("costhetastar_vs_mttbar", "cos(#theta*) vs m_{t#bar{t}}", 1000, 0, 10000, 20, -1, 1);
+
+  response_matrix = book<TH2F>("ResponseMatrix", "Response Matrix; #Delta Y_{(t,#bar{t})}_reco ;#Delta Y_{(t,#bar{t})}_gen",  2, -2.5, 2.5, 2, -2.5, 2.5);
+  response_matrix->GetXaxis()->SetBinLabel(1, "Negative");
+  response_matrix->GetXaxis()->SetBinLabel(2, "Positive");
+  response_matrix->GetYaxis()->SetBinLabel(1, "Negative");
+  response_matrix->GetYaxis()->SetBinLabel(2, "Positive");
 
   // Sphericity tensor
   S11 = book<TH1F>("S11", "S_{11}", 50, 0, 1);
@@ -670,8 +666,6 @@ void ZprimeSemiLeptonicHists::init(){
 
 void ZprimeSemiLeptonicHists::fill(const Event & event){
 
-  bool debug = false;
-
   double weight = event.weight;
 
 
@@ -688,14 +682,13 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
-  if(debug) cout << "filling jets section" << endl;
 
   // for(unsigned int i=0; i<jets->size(); i++){
-  //   if(debug) cout << "Jet pt: " << jets->at(i).pt() << endl
+  //   cout << "Jet pt: " << jets->at(i).pt() << endl
   // }
-  // if(debug) cout << "Jet1 pt: " << jets->at(0).pt() << endl;
-  // if(debug) cout << "Jet2 pt: " << jets->at(0).pt() << endl;
-  // if(debug) cout << "Jet3 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet1 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet2 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet3 pt: " << jets->at(0).pt() << endl;
 
   for(unsigned int i=0; i<jets->size(); i++){
     pt_jet->Fill(jets->at(i).pt(),weight);
@@ -703,8 +696,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     phi_jet->Fill(jets->at(i).phi(),weight);
     m_jet->Fill(jets->at(i).v4().M(),weight);
     deepjetbscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
-    if(debug) cout << "jet pt" << endl;
-    
 
     if(i==0){
       pt_jet1->Fill(jets->at(i).pt(),weight);
@@ -728,7 +719,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       deepjetbscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
     }
   }
-  if(debug) cout << "passed 1" << endl;
 
 
   int NbjetsDeepJet_loose = 0, NbjetsDeepJet_medium = 0, NbjetsDeepJet_tight = 0;
@@ -741,12 +731,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     if(BtagDeepJet_medium(jets->at(i),event)) NbjetsDeepJet_medium++;
     if(BtagDeepJet_tight(jets->at(i),event))  NbjetsDeepJet_tight++;
   }
-  if(debug) cout << "passed 2" << endl;
 
   N_bJetsDeepJet_loose->Fill(NbjetsDeepJet_loose,weight);
   N_bJetsDeepJet_med->Fill(NbjetsDeepJet_medium,weight);
   N_bJetsDeepJet_tight->Fill(NbjetsDeepJet_tight,weight);
-  if(debug) cout << "passed 3" << endl;
 
   /*
   █ ██   ██    █████  ██████ ██    ██   █████
@@ -760,7 +748,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     vector<TopJet>* HOTVRjets = event.topjets;
     unsigned int NHOTVRjets = HOTVRjets->size();
     N_HOTVRjets->Fill(NHOTVRjets, weight);
-    if(debug) cout << "passed 4" << endl;
 
     for(unsigned int i=0; i<NHOTVRjets; i++){
       double tau21 = HOTVRjets->at(i).tau2_groomed() / HOTVRjets->at(i).tau1_groomed();
@@ -928,7 +915,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     N_HOTVRjets->Fill(NHOTVRjets, weight);
     N_HOTVRTaggedjets->Fill(NHOTVRTaggedjets, weight);
-    if(debug) cout << "passed 5" << endl;
 
   }//end hotvr mode
 
@@ -941,11 +927,9 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   */
 
   if(isdeepAK8){
-    if(debug) cout << "passed 6" << endl;
     vector<TopJet>* AK8Puppijets = event.toppuppijets;
     unsigned int NAK8Puppijets = 0;
     for(unsigned int i=0; i<AK8Puppijets->size(); i++){
-      if(debug) cout << "passed in AK8" << endl;
       if(AK8Puppijets->at(i).numberOfDaughters()<2) continue;
       NAK8Puppijets++;
 
@@ -992,7 +976,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       tau3_AK8Puppijet->Fill(AK8Puppijets->at(i).tau3(), weight);
       tau21_AK8Puppijet->Fill(tau21, weight);
       tau32_AK8Puppijet->Fill(tau32, weight);
-      if(debug) cout << "AK8fills" << endl;
 
       if(i==0){
         pt_AK8Puppijet1->Fill(AK8Puppijets->at(i).pt(), weight);
@@ -1074,7 +1057,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     int NAK8PuppiTaggedjets = 0;
     for(unsigned int i=0; i<AK8PuppiTopTags.size(); i++){
       NAK8PuppiTaggedjets++;
-      if(debug) cout << "in AK8top tag" << endl;
 
       double tau21 = AK8PuppiTopTags.at(i).tau2() / AK8PuppiTopTags.at(i).tau1();
       double tau32 = AK8PuppiTopTags.at(i).tau3() / AK8PuppiTopTags.at(i).tau2();
@@ -1173,7 +1155,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     N_AK8Puppijets->Fill(NAK8Puppijets, weight);
     N_AK8PuppiTaggedjets->Fill(NAK8PuppiTaggedjets, weight);
-    if(debug) cout << "passed 7" << endl;
 
   }//end deepak8 mode
 
@@ -1191,17 +1172,14 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Muon>* muons = event.muons;
   int Nmuons = muons->size();
   N_mu->Fill(Nmuons, weight);
-  if(debug) cout << "passed 8" << endl;
   for(int i=0; i<Nmuons; i++){
 
     pt_mu->Fill(muons->at(i).pt(),weight);
-    if(debug) cout << "passed mu pt" << endl;
     eta_mu->Fill(muons->at(i).eta(),weight);
     phi_mu->Fill(muons->at(i).phi(),weight);
     reliso_mu->Fill(muons->at(i).relIso(),weight);
     reliso_mu_rebin->Fill(muons->at(i).relIso(),weight);
     dRmin_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
-    if(debug) cout << "in for 4" << endl;
     dRmin_mu_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
     ptrel_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
     dRmin_ptrel_mu->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
@@ -1216,7 +1194,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       ptrel_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
       dRmin_ptrel_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
     }
-    
     else if(i==1){
       pt_mu2->Fill(muons->at(i).pt(),weight);
       eta_mu2->Fill(muons->at(i).eta(),weight);
@@ -1242,7 +1219,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_mumu->Fill((muons->at(i).v4() + muons->at(j).v4()).M() ,weight);
     }
   }
-  if(debug) cout << "passed 9" << endl;
 
   /*
   ███████ ██      ███████  ██████ ████████ ██████   ██████  ███    ██ ███████
@@ -1332,7 +1308,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
   int Npvs = event.pvs->size();
   NPV->Fill(Npvs, weight);
-  if(debug) cout << "passed 10" << endl;
 
   double met = event.met->pt();
   double st = 0., st_jets = 0., st_lep = 0.;
@@ -1359,155 +1334,266 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   STlep_rebin->Fill(ht_lep, weight);
   STlep_rebin2->Fill(ht_lep, weight);
   STlep_rebin3->Fill(ht_lep, weight);
-  if(debug) cout << "passed 11" << endl;
-
 
   // Zprime reco
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
-
   bool is_zprime_reconstructed_correctmatch = event.get(h_is_zprime_reconstructed_correctmatch);
+  // added "is_mc" to blind data in mttbar hists
+  
+  if(debug) cout << "Before dY lines:" << endl;
 
-  if(is_zprime_reconstructed_chi2){
+
+  // ================== DY new =========================================================
+  
+  if(is_zprime_reconstructed_chi2 && is_mc){
+    const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-    float Mreco = BestZprimeCandidate->Zprime_v4().M();
-    float dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
-  
-    if(event.muons->at(0).charge() == 1){
-      float dyreco = TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+
+    GenParticle top, antitop;
+      for(const GenParticle & gp : *genparticles){
+          if(gp.pdgId() == 6){
+              top = gp;
+          }
+          else if(gp.pdgId() == -6){
+              antitop = gp;
+          }
+      }
+    if(debug) cout << "after gen 1:" << endl;
+    // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
+    LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
+    LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
+
+    // vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
+    // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
+    std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
+    std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
+
+    // deltaR is a measure of separation in the eta-phi space. 
+    // The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6) {
+      LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
+      deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
+      deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
+      }
     }
-    if(event.muons->at(0).charge() == -1){
-      float dyreco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
+    if(debug) cout << "after gen 2:" << endl;
+    // vectors to store the best gen particle for each top
+    // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
+    int best_gen_for_leptop = -1;
+    int best_gen_for_hadtop = -1;
+    std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
+    std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
+
+    // Find closest gen particle for each top
+    // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
+    double deltaR_min_leptonic = 99.0;
+    bool is_leptop_matched = false;
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6) {
+        if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
+            deltaR_min_leptonic = deltaR_leptonic_values[j];
+            best_gen_for_leptop = j;
+            is_leptop_matched = true;
+        }
+      }   
+    }
+    if(debug) cout << "after gen 3:" << endl;
+    double deltaR_min_hadronic = 99.0;
+    bool is_hadtop_matched = false;
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6) {
+        if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
+            deltaR_min_hadronic = deltaR_hadronic_values[j];
+            best_gen_for_hadtop = j;
+            is_hadtop_matched = true;
+        }
+      }
+    }
+    if(debug) cout << "after gen 4:" << endl;
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6) {
+        if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
+            best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
+        } else {
+            best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
+        }
+      }
+    }
+    if(debug) cout << "after gen 5:" << endl;
+
+    // deltaY values calculation starts:
+
+    // matched gen particles
+    GenParticle best_matched_gen_leptop;
+    GenParticle best_matched_gen_hadtop;
+
+    bool valid_leptop = true, valid_hadtop = true;
+
+    if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
+        best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
+    } else {
+        // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
+        valid_leptop = false;
     }
 
-    if(event.electrons->at(0).charge() == 1){
-      float dyreco = TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
+    if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
+        best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
+    } else {
+        // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
+        valid_hadtop = false; 
     }
-    if(event.electrons->at(0).charge() == -1){
-      float dyreco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
 
+    if(debug) cout << "after matching boolean definition" << endl;
+    
+    float_t DeltaY_gen_best = 0.0;
+    float_t DeltaY_reco_best = 0.0;
+    bool isLeptonPositive = false;
+    
+    // The following if-else block determines whether the lepton is positive or negative
+    if(debug) cout << "before isLeptonPositive" << endl;
+
+    if(debug) cout<< "isMuon: " << isMuon << endl;
+    if(isMuon){
+      if(debug) cout << event.muons->at(0).charge() << endl;
+      if (event.muons->at(0).charge() == 1){
+      if(debug) cout << "lepton is positive" << endl;
+        isLeptonPositive = true;
+      } else {
+        if(debug) cout << "lepton is negative" << endl;
+          isLeptonPositive = false;
+      }
     }
-  
 
-    M_Zprime_all->Fill(Mreco, weight);
+    if(debug) cout << "isElectron: " << isElectron << endl;
+    if(isElectron){
+      if (event.electrons->at(0).charge() == 1){
+      if(debug) cout << "lepton is positive" << endl;
+        isLeptonPositive = true;
+      } else {
+        if(debug) cout << "lepton is negative" << endl;
+        isLeptonPositive = false;
+      }
+    }
+    // if (event.muons->at(0).charge() == 1 || event.electrons->at(0).charge() == 1){
+    //   if(debug) cout << "lepton is positive" << endl;
+    //     isLeptonPositive = true;
+    // } else {
+    //   if(debug) cout << "lepton is negative" << endl;
+    //     isLeptonPositive = false;
+    // }
+    
+    if(debug) cout << "lepton charge check" << endl;
+    // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
+    if (isLeptonPositive) {
+      DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
+    } else {
+      DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
+    }
+
+    // Calculates the delta y with matched gen particles
+    if(valid_leptop && valid_hadtop) {
+      DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
+    }
+
+    response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
+
+    // -------------------------------------------------- COUTs --------------------------------------------------
+    // Printing out the initial conditions, deltaR values, best matched gen particles, and delta y values
+    if(debug) cout << "Initial conditions:" << endl;
+    if(debug) cout << "Number of muons: " << event.muons->size() << endl;
+    if(debug) cout << "Number of electrons: " << event.electrons->size() << endl;
+    if(debug) cout << "Number of genparticles: " << genparticles->size() << endl;
+    if (!event.muons->empty() && !event.electrons->empty()) {
+      if(debug) cout << "Muon charge: " << event.muons->at(0).charge() << ", Electron charge: " << event.electrons->at(0).charge() << endl;
+    }
+
+    // Find the best matches, print the values and the indices of the best matches.
+    if(debug) cout << "Calculating deltaR for genparticles..." << endl;
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6) {
+        if(debug) cout << "Genparticle index " << j << " pdgId: " << genparticles->at(j).pdgId() << ", deltaR with leptonic top: " << deltaR_leptonic_values[j] << ", deltaR with hadronic top: " << deltaR_hadronic_values[j] << endl;
+      }
+    }
+
+
+    if(debug) cout << "Best match index for leptonic top: " << best_gen_for_leptop << ", deltaR: " << deltaR_min_leptonic << endl;
+    if(debug) cout << "Best match index for hadronic top: " << best_gen_for_hadtop << ", deltaR: " << deltaR_min_hadronic << endl;
+
+    // After determining the best matched gen particles, print out whether they are valid
+    if (valid_leptop) {
+        if(debug) cout << "Best matched gen particle for leptonic top is valid." << endl;
+        if(debug) cout << "Properties: Energy: " << best_matched_gen_leptop.energy() << ", Pt: " << best_matched_gen_leptop.pt() << ", Eta: " << best_matched_gen_leptop.eta() << endl;
+    } else {
+        if(debug) cout << "No valid leptonic top match found." << endl;
+    }
+
+    if (valid_hadtop) {
+        if(debug) cout << "Best matched gen particle for hadronic top is valid." << endl;
+        if(debug) cout << "Properties: Energy: " << best_matched_gen_hadtop.energy() << ", Pt: " << best_matched_gen_hadtop.pt() << ", Eta: " << best_matched_gen_hadtop.eta() << endl;
+    } else {
+        if(debug) cout << "No valid hadronic top match found." << endl;
+    }
+
+    if(debug) cout << "Unmatched Reco Particles:" << endl;
+    if(!is_leptop_matched) {
+        if(debug) cout << "Leptonic top is unmatched." << endl;
+    }
+    if(!is_hadtop_matched) {
+        if(debug) cout << "Hadronic top is unmatched." << endl;
+    }
+
+    // DeltaY values are printed out
+    if(debug) cout << "DeltaY Reco Best: " << DeltaY_reco_best << endl;
+    if (valid_leptop && valid_hadtop) {
+        if(debug) cout << "DeltaY Gen Best: " << DeltaY_gen_best << endl;
+    } else {
+        if(debug) cout << "Invalid inputs for DeltaY Gen calculation." << endl;
+    }
+
+    // -------------------------------------------------- COUTs --------------------------------------------------
+  //is_zprime_reconstructed_chi2 is a boolean that is true if the Zprime candidate is reconstructed using the chi2 method
+  }
+
+  // for backgrounds and DATA
+  if(is_zprime_reconstructed_chi2){
+    const auto& genparticles = event.genparticles;
+    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+
+    bool isLeptonPositive = false;
+    
+    if(isMuon){
+      if(debug) cout << event.muons->at(0).charge() << endl;
+      if (event.muons->at(0).charge() == 1){
+        isLeptonPositive = true;
+      } else {
+        isLeptonPositive = false;
+      }
+    }
+
+    if(isElectron){
+      if (event.electrons->at(0).charge() == 1){
+        isLeptonPositive = true;
+      } else {
+        isLeptonPositive = false;
+      }
+    }
+
+    float_t dyreco = 0.0;
+    if (isLeptonPositive) {
+      dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+    } else {
+      dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+    }
+
     DeltaY_reco->Fill(dyreco, weight);
   }
 
-
-  // added "is_mc" to blind data in mttbar hists
+  
   if(is_zprime_reconstructed_chi2 && is_mc){
-    if(debug) cout << "in general zprime chi" << endl;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
-
-    
-    // vector<GenParticle>* genparticles = event.genparticles;
-   
-
-  
-    // leptonic leg of ttbar definition
-    // const vector<GenParticle> & genparticles = *(event.genparticles);
-    // for (unsigned int i = 0; i < genparticles.size(); ++i) {
-    //   const GenParticle &genp = genparticles[i];
-    //   if (abs(genp.pdgId()) == 6) {
-    //     // cout<< "abstop pt:" << genp.pt() << endl;
-    //     float toppt = genp.pt();
-    //     float topeta = genp.eta();
-    //     if (genp.pdgId() == 6) {
-    //       // cout<< "top is found" << endl;
-    //       // cout<< "top pt:" << genp.pt() << endl;
-    //       topgen_pt->Fill(toppt, weight);
-    //       topgen_eta->Fill(topeta, weight);
-    //     } else if (genp.pdgId() == -6) {
-    //       // cout<< "antitop is found" << endl;
-    //       antitopgen_pt->Fill(toppt, weight);
-    //       antitopgen_eta->Fill(toppt );
-    //     }
-
-    //     const GenParticle* w = nullptr;
-    //     const GenParticle* b = nullptr;
-
-    //     for (unsigned int j = 0; j < genparticles.size(); ++j) {
-    //         const GenParticle &gp = genparticles[j];
-    //         auto m1 = gp.mother(&genparticles, 1);
-    //         auto m2 = gp.mother(&genparticles, 2);
-    //         bool has_top_mother = (m1 && m1->index() == genp.index()) || (m2 && m2->index() == genp.index());
-
-    //         if (has_top_mother) {
-    //             if (abs(gp.pdgId()) == 24) { // W boson
-    //                 w = &gp;
-    //                 // cout<< "w is found" << endl;
-    //             } 
-    //             else if (abs(gp.pdgId()) == 5) { // b quark
-    //                 b = &gp;
-    //                 // cout<< "b is found" << endl;
-    //             }
-    //         }
-    //     }
-
-    //     // Check W boson decays leptonically
-    //     if (w) {
-    //       // bool isLeptonic = false;
-    //       // const GenParticle* lepton = nullptr;
-    //       // const GenParticle* neutrino = nullptr;
-    //       for (unsigned int k = 0; k < genparticles.size(); ++k) {
-    //         const GenParticle &daught = genparticles[k];
-    //         auto m1 = daught.mother(&genparticles, 1);
-    //         auto m2 = daught.mother(&genparticles, 2);
-    //         bool has_w_mother = (m1 && m1->index() == w->index()) || (m2 && m2->index() == w->index());
-
-    //         if (has_w_mother) {
-    //             int pdgId = abs(daught.pdgId());
-
-    //             if (pdgId == 11 || pdgId == 13) {
-    //                 // isLeptonic = true;
-    //                 // lepton = &daught;
-    //                 leptongen_pt->Fill(daught.pt());
-    //                 leptongen_eta->Fill(daught.eta());
-    //                 // cout<< "lepton pt:" << daught.pt() << endl;
-    //                 // cout<< "lepton is found" << endl;
-
-    //                 if (pdgId == 11) { // Electron
-    //                     electrongen_pt->Fill(daught.pt());
-    //                     electrongen_eta->Fill(daught.eta());
-    //                     // cout<< "electron is found" << endl;
-    //                 } else if (pdgId == 13) { // Muon
-    //                     muongen_pt->Fill(daught.pt());
-    //                     muongen_eta->Fill(daught.eta());
-    //                     // cout<< "muon is found" << endl;
-    //                 }
-    //             } 
-    //             // else if (pdgId == 12 || pdgId == 14) { // Neutrino
-    //             //     // isLeptonic = true;
-    //             //     neutrino = &daught;
-    //             // }
-    //         }
-    //       }
-    //     }
-
-    //     if (b) {
-    //       bquarkgen_pt->Fill(b->pt());
-    //       bquarkgen_eta->Fill(b->eta());
-    //     }
-    //   }
-    // }
-    // gen histograms filling end
-
-    GenParticle topgen, antitopgen;
-    for(const GenParticle & gp : *event.genparticles){
-
-      if(gp.pdgId() == 6){
-        topgen = gp;
-      }
-      else if(gp.pdgId() == -6){
-        antitopgen = gp;
-      }
-    }
-
-    float dygen= TMath::Abs(0.5*TMath::Log((topgen.energy() + topgen.pt()*TMath::SinH(topgen.eta()))/(topgen.energy() - topgen.pt()*TMath::SinH(topgen.eta())))) - TMath::Abs(0.5*TMath::Log((antitopgen.energy() + antitopgen.pt()*TMath::SinH(antitopgen.eta()))/(antitopgen.energy() - antitopgen.pt()*TMath::SinH(antitopgen.eta()))));
-
-    DeltaY_gen->Fill(dygen, weight);
-  
 
     LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
     LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
@@ -1522,11 +1608,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     tophad_phi->Fill(tophad.Phi(), weight);
     tophad_m->Fill(tophad.M(), weight);
 
-    if(debug) cout << "passed general 0" << endl;
     ditop_mass->Fill(Mreco, weight);
-    if(debug) cout << "passed general 1" << endl;
     ditop_absDeltaPhi->Fill(deltaPhi(toplep, tophad), weight);
-    if(debug) cout << "passed general 2" << endl;
     ditop_deltaEta->Fill(toplep.Eta()-tophad.Eta(), weight);
     ditop_absDeltaEta->Fill(abs(toplep.Eta()-tophad.Eta()), weight);
     ditop_deltaR->Fill(deltaR(toplep,tophad), weight);
@@ -1621,14 +1704,13 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_toplep_ak4->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
     }
   }
-  if(debug) cout << "passed 12" << endl;
   if(is_zprime_reconstructed_correctmatch){
-    // if(debug) cout << "Correct match is filled" << endl;
+    // cout << "Correct match is filled" << endl;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateCorrectMatch);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float dr = BestZprimeCandidate->discriminator("correct_match");
     if(dr < 10.){
-      // if(debug) cout << "dr < 10" << endl;
+      // cout << "dr < 10" << endl;
       if(BestZprimeCandidate->is_toptag_reconstruction()){
         M_tophad_dr_ttag->Fill(BestZprimeCandidate->tophad_topjet_ptr()->softdropmass(), weight);
         M_toplep_dr_ttag->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
@@ -1644,7 +1726,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_Zprime_dr_rebin3->Fill(Mreco, weight);
     }
   }
-  if(debug) cout << "passed 13" << endl;
 
   // Sphericity tensor
   double s11 = -1., s12 = -1., s13 = -1., s22 = -1., s23 = -1., s33 = -1., mag = -1.;
@@ -1671,7 +1752,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   S22->Fill(s22, weight);
   S23->Fill(s23, weight);
   S33->Fill(s33, weight);
-  if(debug) cout << "passed general 1" << endl;
 
   sum_event_weights->Fill(1., weight);
 
@@ -1692,7 +1772,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     NN_Mu_phi->Fill(muons->at(i).phi(),weight);
     NN_Mu_E->Fill(muons->at(i).energy(),weight);
   }
-  if(debug) cout << "passed 14" << endl;
 
 
 
@@ -1702,7 +1781,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
     NN_Ele_E->Fill(electrons->at(i).energy(),weight);
   }
-  if(debug) cout << "passed 15" << endl;
 
   NN_MET_pt->Fill(event.met->pt(),weight);
   NN_MET_phi->Fill(event.met->phi(),weight);
@@ -1710,10 +1788,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Jet>* Ak4jets = event.jets;
   int NAk4jets = Ak4jets->size();
   NN_N_Ak4->Fill(NAk4jets,weight);
-  if(debug) cout << "passed NN 10" << endl;
 
   for(int i=0; i<NAk4jets; i++){
-    if(debug) cout << "passed NN 1" << endl;
     if(i==0){
       NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
       NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
@@ -1762,11 +1838,9 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
       NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
     }
-    if(debug) cout << "passed NN 2" << endl;
   }
 
   if(ishotvr){
-    if(debug) cout << "passed 16" << endl;
     vector<TopJet>* HOTVRjets = event.topjets;
     int N_HOTVRjets = HOTVRjets->size();
     NN_N_HOTVR->Fill(N_HOTVRjets,weight);
@@ -1800,17 +1874,14 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
       }
     }
-    if(debug) cout << "passed 17" << endl;
   } // end hotvr mode
 
   if(isdeepAK8){
     vector<TopJet>* Ak8jets = event.toppuppijets;
     int NAk8jets = Ak8jets->size();
     NN_N_Ak8->Fill(NAk8jets,weight);
-    if(debug) cout << "passed 18" << endl;
 
     for(int i=0; i<NAk8jets; i++){
-      if(debug) cout << "passed deepAk8 1" << endl;
       if(i==0){
         NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
         NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
@@ -1830,7 +1901,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
         NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
         NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
-        if(debug) cout << "passed deepAk8 2" << endl;
       }
       if(i==2){
         NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
@@ -1841,26 +1911,20 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
         NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
         NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
-        if(debug) cout << "passed deepAk8 3" << endl;
       }
-      if(debug) cout << "passed deepAk8 final" << endl;
     }
-    if(debug) cout << "passed 19" << endl;
   } // end deepAK8 mode
-  if(debug) cout << "passed 20" << endl;
-  if(is_zprime_reconstructed_chi2){
-    if(debug) cout << "passed 21" << endl;
 
+  if(is_zprime_reconstructed_chi2){
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
     if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
     NN_chi2->Fill(chi2,weight);
-    if(debug) cout << "passed 22" << endl;
   }
 
-if(debug) cout << "passed 23" << endl;
+
 } //Method
 
 

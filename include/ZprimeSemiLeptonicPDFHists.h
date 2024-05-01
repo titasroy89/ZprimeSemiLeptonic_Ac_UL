@@ -22,10 +22,12 @@ namespace uhh2 {
     explicit ZprimeSemiLeptonicPDFHists(uhh2::Context&, const std::string&);
     virtual void fill(const uhh2::Event&) override;
     std::string hist_names[100];
+    std::string hist_names_tt[100];
 
   protected:
     bool is_mc;
     bool is_dy;
+    bool is_tt;
     bool is_wjets;
     bool is_qcd_HTbinned;
     bool is_alps;
@@ -33,6 +35,9 @@ namespace uhh2 {
     bool is_htott_scalar;
     bool is_htott_pseudo;
     bool is_zprimetott;
+    bool isMuon;
+    bool isElectron;
+    bool debug;
     uhh2::Event::Handle<bool> h_is_zprime_reconstructed_chi2;
     uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
     uhh2::Event::Handle<std::vector<ReconstructionHypothesis>> h_ttbar_hyps;
