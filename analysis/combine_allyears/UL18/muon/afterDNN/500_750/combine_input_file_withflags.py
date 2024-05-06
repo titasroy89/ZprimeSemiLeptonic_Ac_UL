@@ -13,7 +13,7 @@ parser.add_option("-l", "--lepton_flavor", dest="lepton_flavor", help="Specify t
 (options, args) = parser.parse_args()
 
 year = options.year if options.year else "UL18"  # default value if not specified
-mass_range = options.mass_range if options.mass_range else "750_1000"  # default value if not specified
+mass_range = options.mass_range if options.mass_range else "500_750"  # default value if not specified
 lepton_flavor = options.lepton_flavor if options.lepton_flavor else "muon"  # default value if not specified
 
 
@@ -87,10 +87,10 @@ for sample in stackList:
 
         Matrix = TH2D("Matrix","", 2, -2.5, 2.5, 2, -2.5, 2.5)
 
-        Matrix.SetBinContent(1, 1, h_NN.Integral())
-        Matrix.SetBinContent(1, 2, h_PN.Integral())
-        Matrix.SetBinContent(2, 1, h_NP.Integral())
-        Matrix.SetBinContent(2, 2, h_PP.Integral())
+        Matrix.SetBinContent(1, 1, h_NN.GetBinContent(1))
+        Matrix.SetBinContent(1, 2, h_PN.GetBinContent(1))
+        Matrix.SetBinContent(2, 1, h_NP.GetBinContent(2))
+        Matrix.SetBinContent(2, 2, h_PP.GetBinContent(2))
 
         ProjX_1 = Matrix.ProjectionX("px1", 1, 1)
         ProjX_2 = Matrix.ProjectionX("px2", 2, 2)
@@ -532,11 +532,11 @@ sys_variations = ["JEC_up", "JEC_down", "JER_up", "JER_down"]
 v_samples = ["TTbar", "WJets", "ST", "QCD", "DY", "Diboson"]
 v_variations = ["upup", "upnone", "noneup", "nonedown", "downnone", "downdown"]
 
-getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_projections)
+# getEnvelope(inputDir, v_samples, v_variations, combine_file, nominal_projections)
 
-processPDF(inputDir, v_samples, combine_file)
+# processPDF(inputDir, v_samples, combine_file)
 
-processJERJEC(inputDir, v_samples, combine_file, sys_variations)
+# processJERJEC(inputDir, v_samples, combine_file, sys_variations)
 
 combine_file.Close()
 

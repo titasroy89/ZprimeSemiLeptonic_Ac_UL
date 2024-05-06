@@ -1464,7 +1464,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   // Variables for NN
   Variables_module->process(event);
-  fill_histograms(event, "NNInputsBeforeReweight");
+  // fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "Variables_module: ok" << endl;
 
   // NN module
@@ -1621,7 +1621,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
               h_DeltaY_reco_PDFVariations_1500Inf_muon_SR->fill(event);
             }
           
-            // //Number of deltaY reco events with NEGATIVE DY
+            //Number of deltaY reco events with NEGATIVE DY
             if (DeltaY_reco<0){
               fill_histograms(event, "DeltaY_reco_N_muon_SR");
 
@@ -1642,7 +1642,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
               }
             }
 
-            // //Number of deltaY reco events with POSITIVE DY
+            //Number of deltaY reco events with POSITIVE DY
             if (DeltaY_reco>0){
               fill_histograms(event, "DeltaY_reco_P_muon_SR");
 
@@ -1666,11 +1666,11 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             /// ------ RECO & GEN for ttbar samples -----
 
             //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-              if(debug) cout << "ttbar begins...... CHARGE POSITIVE: " << endl;
+              // if(debug) cout << "ttbar begins...... CHARGE POSITIVE: " << endl;
                 fill_histograms(event, "DY_ttbar_muon_SR");
                 h_DeltaY_reco_SystVariations_ttbar_muon_SR->fill(event);
                 h_DeltaY_reco_PDFVariations_ttbar_muon_SR->fill(event);
-              if(debug) cout << "ttbar ends....... CHARGE 1: " << endl;
+              // if(debug) cout << "ttbar ends....... CHARGE 1: " << endl;
             
               if(Mass_tt>=0 && Mass_tt<500){
                 fill_histograms(event, "DY_ttbar_0_500_muon_SR");
@@ -2054,7 +2054,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         // ===== ELECTRON END ==== 
         // electron bracket 
        }
-       // isMC bracket
+      //  // isMC bracket
       }
       // chi2 bracket
     } 
