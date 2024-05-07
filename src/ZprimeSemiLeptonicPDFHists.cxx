@@ -74,105 +74,101 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
   if(is_zprime_reconstructed_chi2 && is_mc){
     if(is_tt){
-      const auto& genparticles = event.genparticles;
-      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
 
+      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      // float Mreco = BestZprimeCandidate->Zprime_v4().M();
+      const auto& genparticles = event.genparticles;
+      
       GenParticle top, antitop;
-        for(const GenParticle & gp : *genparticles){
-            if(gp.pdgId() == 6){
-                top = gp;
-            }
-            else if(gp.pdgId() == -6){
-                antitop = gp;
-            }
-        }
+      for(const GenParticle & gp : *genparticles){
+          if(gp.pdgId() == 6){
+              top = gp;
+          }
+          else if(gp.pdgId() == -6){
+              antitop = gp;
+          }
+      }
       // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
       LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
       LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
 
       // vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
       // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
-      std::vector<double> deltaR_leptonic_values(genparticles->size(), 99.0);
-      std::vector<double> deltaR_hadronic_values(genparticles->size(), 99.0);
+      std::vector<std::pair<double, int>> deltaR_leptonic_values; // ((dR, index), (dR, index), ...)
+      std::vector<std::pair<double, int>> deltaR_hadronic_values;
 
-      // deltaR is a measure of separation in the eta-phi space. 
-      // The next few sections calculate the deltaR values between the leptonic and hadronic tops and each generator particle
-      for(unsigned int j=0; j<genparticles->size(); ++j) {
-        if(abs(genparticles->at(j).pdgId()) == 6) {
-        LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-        deltaR_leptonic_values[j] = deltaR(lep_top, genparticle_p4);
-        deltaR_hadronic_values[j] = deltaR(had_top, genparticle_p4);
-        }
-      }
-      // vectors to store the best gen particle for each top
-      // it determines which gen particle is closest in the eta-phi space to the leptonic and hadronic tops
-      int best_gen_for_leptop = -1;
-      int best_gen_for_hadtop = -1;
-      std::vector<int> best_leptop_for_gen(genparticles->size(), -1);
-      std::vector<int> best_hadtop_for_gen(genparticles->size(), -1);
-
-      // Find closest gen particle for each top
-      // These loops determine whether each gen particle is closer to the leptonic or hadronic top and assigns an index accordingly
       double deltaR_min_leptonic = 99.0;
+      double deltaR_sec_min_leptonic = 99.0;
+      int best_gen_for_leptop = -1;
+      int sec_best_gen_for_leptop = -1;
       bool is_leptop_matched = false;
-      for(unsigned int j=0; j<genparticles->size(); ++j) {
-        if(abs(genparticles->at(j).pdgId()) == 6) {
-          if (deltaR_leptonic_values[j] < deltaR_min_leptonic && deltaR_leptonic_values[j]<0.4) {
-              deltaR_min_leptonic = deltaR_leptonic_values[j];
-              best_gen_for_leptop = j;
-              is_leptop_matched = true;
-          }
-        }   
-      }
+
       double deltaR_min_hadronic = 99.0;
+      double deltaR_sec_min_hadronic = 99.0;
+      int best_gen_for_hadtop = -1;
+      int sec_best_gen_for_hadtop = -1;
       bool is_hadtop_matched = false;
+
       for(unsigned int j=0; j<genparticles->size(); ++j) {
-        if(abs(genparticles->at(j).pdgId()) == 6) {
-          if (deltaR_hadronic_values[j] < deltaR_min_hadronic && deltaR_hadronic_values[j]<0.4) {
-              deltaR_min_hadronic = deltaR_hadronic_values[j];
-              best_gen_for_hadtop = j;
-              is_hadtop_matched = true;
+        if(abs(genparticles->at(j).pdgId()) == 6 ){
+          if (genparticles->at(j).index() == 2 || genparticles->at(j).index() == 3){
+            LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
+            deltaR_leptonic_values.push_back(std::make_pair(deltaR(lep_top, genparticle_p4),genparticles->at(j).index() ));
+            deltaR_hadronic_values.push_back(std::make_pair(deltaR(had_top, genparticle_p4), genparticles->at(j).index()));
+            // cout << "deltaR: " << deltaR(lep_top, genparticle_p4) << j << endl;
           }
         }
-      }
-      for(unsigned int j=0; j<genparticles->size(); ++j) {
-        if(abs(genparticles->at(j).pdgId()) == 6) {
-          if(deltaR_leptonic_values[j] < deltaR_hadronic_values[j]) {
-              best_leptop_for_gen[j] = 0;  // 0 is the index for the single leptonic top
-          } else {
-              best_hadtop_for_gen[j] = 0;  // 0 is the index for the single hadronic top
-          }
+      }  
+      
+      for (const auto& pair_lep : deltaR_leptonic_values) {
+        if (pair_lep.first > 0 && pair_lep.first < deltaR_min_leptonic) {
+          // deltaR_min_leptonic = pair_lep.first;
+          deltaR_sec_min_leptonic = deltaR_min_leptonic;
+          deltaR_min_leptonic = pair_lep.first;
+          sec_best_gen_for_leptop = best_gen_for_leptop;
+          best_gen_for_leptop = pair_lep.second;
+          is_leptop_matched = true;
+        }
+        else if (pair_lep.first > 0 && pair_lep.first < deltaR_sec_min_leptonic && pair_lep.first != deltaR_min_leptonic && pair_lep.second != best_gen_for_leptop) {
+          deltaR_sec_min_leptonic = pair_lep.first;
+          sec_best_gen_for_leptop = pair_lep.second;
         }
       }
 
       // deltaY values calculation starts:
 
       // matched gen particles
+      for (const auto& pair_had : deltaR_hadronic_values) {
+        if (pair_had.first > 0 && pair_had.first < deltaR_min_hadronic) {
+          // deltaR_min_hadronic = pair_had.first;
+          deltaR_sec_min_hadronic = deltaR_min_hadronic;
+          deltaR_min_hadronic = pair_had.first;
+          sec_best_gen_for_hadtop = best_gen_for_hadtop;
+          best_gen_for_hadtop = pair_had.second;
+          is_hadtop_matched = true;
+        }
+        else if (pair_had.first > 0 && pair_had.first < deltaR_sec_min_hadronic && pair_had.first != deltaR_min_hadronic && pair_had.second != best_gen_for_hadtop) {
+          deltaR_sec_min_hadronic = pair_had.first;
+          sec_best_gen_for_hadtop = pair_had.second;
+        }
+      }
+
+      if (best_gen_for_hadtop == best_gen_for_leptop){
+        if (deltaR_min_leptonic <= deltaR_min_hadronic){
+          best_gen_for_hadtop = sec_best_gen_for_hadtop;
+          deltaR_min_hadronic = deltaR_sec_min_hadronic;
+        } else {
+          best_gen_for_leptop = sec_best_gen_for_leptop;
+          deltaR_min_leptonic = deltaR_sec_min_leptonic;
+        }
+      }
+
       GenParticle best_matched_gen_leptop;
       GenParticle best_matched_gen_hadtop;
 
-      bool valid_leptop = true, valid_hadtop = true;
-
-      if (best_gen_for_leptop >= 0 && static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
-          best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
-      } else {
-          // std::cerr << "Error: Invalid index for leptonic top gen particle: " << best_gen_for_leptop << std::endl;
-          valid_leptop = false;
-      }
-
-      if (best_gen_for_hadtop >= 0 && static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
-          best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-      } else {
-          // std::cerr << "Error: Invalid index for hadronic top gen particle: " << best_gen_for_hadtop << std::endl;
-          valid_hadtop = false; 
-      }
-
-      
-      float_t DeltaY_gen_best = 0.0;
-      float_t DeltaY_reco_best = 0.0;
+      float_t DeltaY_gen_best = 99.0;
+      float_t DeltaY_reco_best = 99.0;
       bool isLeptonPositive = false;
-      
-      // The following if-else block determines whether the lepton is positive or negative
 
       if(isMuon){
         if (event.muons->at(0).charge() == 1){
@@ -190,17 +186,28 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
         }
       }
 
-      // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
-      if (isLeptonPositive) {
+      if (deltaR_min_leptonic < 0.4 && deltaR_min_hadronic < 0.4 && best_gen_for_leptop >= 0 && best_gen_for_hadtop >= 0) {
+     
+        if(static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
+          best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
+        }
+        
+        if(static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
+            best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
+        }
+
+        if (isLeptonPositive) {
         DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
-      } else {
-        DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
+        DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
+
+        } else {
+          DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
+          DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
+
+        }
       }
 
-      // Calculates the delta y with matched gen particles
-      if(valid_leptop && valid_hadtop) {
-        DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
-      }
+      
       
 
       // Fill the histogram

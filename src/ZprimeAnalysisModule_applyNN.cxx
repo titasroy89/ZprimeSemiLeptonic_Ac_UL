@@ -1063,10 +1063,10 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   // Book histograms
   vector<string> histogram_tags = {
-  "AfterChi2",
-  "NNInputsBeforeReweight", 
+  // "AfterChi2",
+  // "NNInputsBeforeReweight", 
   "DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag",
-  "Initial", "Middle", "Last",
+  // "Initial", "Middle", "Last",
   
   "DeltaY_reco_1500Inf_muon_SR" ,"DeltaY_reco_1000_1500_muon_SR" ,"DeltaY_reco_750_1000_muon_SR" ,"DeltaY_reco_500_750_muon_SR", "DeltaY_reco_0_500_muon_SR",
   "DeltaY_reco_N_muon_SR", "DeltaY_N_reco_1500Inf_muon_SR" ,"DeltaY_N_reco_1000_1500_muon_SR" ,"DeltaY_N_reco_750_1000_muon_SR" ,"DeltaY_N_reco_500_750_muon_SR", "DeltaY_N_reco_0_500_muon_SR", 
@@ -1257,7 +1257,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if(debug)  cout<<"BeforeCuts"<<endl;
   // fill_histograms(event, "Weights_Init");
   if(debug)  cout<<"Weights_Init"<<endl;
-  lumihists_Weights_Init->fill(event);
+  // lumihists_Weights_Init->fill(event);
   if(debug)  cout<<"lumi_Weights_Init"<<endl;
 
   
@@ -1272,13 +1272,13 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   PUWeight_module->process(event);
   if(debug)  cout<<"PUWeight ok"<<endl;
   // fill_histograms(event, "Weights_PU");
-  lumihists_Weights_PU->fill(event);
+  // lumihists_Weights_PU->fill(event);
 
   // lumi weight
   LumiWeight_module->process(event);
   if(debug)  cout<<"LumiWeight ok"<<endl;
   // fill_histograms(event, "Weights_Lumi");
-  lumihists_Weights_Lumi->fill(event);
+  // lumihists_Weights_Lumi->fill(event);
 
   // top pt reweighting
   // TopPtReweight_module->process(event);
@@ -1289,7 +1289,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // MC scale
   MCScale_module->process(event);
   // fill_histograms(event, "Weights_MCScale");
-  lumihists_Weights_MCScale->fill(event);
+  // lumihists_Weights_MCScale->fill(event);
 
   // Prefiring weights
   if (isMC) {
@@ -1302,7 +1302,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // Write PSWeights from genInfo to own branch in output tree
   ps_weights->process(event);
   // fill_histograms(event, "Weights_PS");
-  lumihists_Weights_PS->fill(event);
+  // lumihists_Weights_PS->fill(event);
 
   // DeepAK8 TopTag SFs
   if(isdeepAK8) sf_toptag->process(event);
@@ -1483,7 +1483,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   double out2 = (double)(NNoutputs[0].tensor<float, 2>()(0,2));
   vector<double> out_event = {out0, out1, out2};
 
-  h_MulticlassNN_output->fill(event);
+  // h_MulticlassNN_output->fill(event);
 
   double max_score = 0.0;
   for ( int i = 0; i < 3; i++ ) {
@@ -1557,7 +1557,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     }
   }
 
-  fill_histograms(event, "AfterChi2");
+  // fill_histograms(event, "AfterChi2");
 
   /*
   █  
@@ -1568,6 +1568,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   if(out0 == max_score){
     if(Chi2_selection->passes(event)){
+      if(debug) cout << "out0, chi2 in dY: ok" << endl;
 
       if(isMC){
         vector<GenParticle>* genparticles = event.genparticles;
@@ -1584,6 +1585,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         // =============== MUON ===================================================================================================================================================================================
 
         if(isMuon){
+          if(debug) cout << "muon in dY: ok" << endl;
 
           ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
           float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
@@ -1666,11 +1668,11 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             /// ------ RECO & GEN for ttbar samples -----
 
             //Number of events with DeltaY_gen_best POSITIVE and DeltaY_reco_best POSITIVE
-              // if(debug) cout << "ttbar begins...... CHARGE POSITIVE: " << endl;
+              if(debug) cout << "ttbar begins...... CHARGE POSITIVE: " << endl;
                 fill_histograms(event, "DY_ttbar_muon_SR");
                 h_DeltaY_reco_SystVariations_ttbar_muon_SR->fill(event);
                 h_DeltaY_reco_PDFVariations_ttbar_muon_SR->fill(event);
-              // if(debug) cout << "ttbar ends....... CHARGE 1: " << endl;
+              if(debug) cout << "ttbar ends....... CHARGE 1: " << endl;
             
               if(Mass_tt>=0 && Mass_tt<500){
                 fill_histograms(event, "DY_ttbar_0_500_muon_SR");
@@ -1819,6 +1821,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
           //===== MUON END ==== 
           // muon bracket  
         }
+
+        if(debug) cout << "electron in dY: ok" << endl;
         
         
         // =============== ELECTRON ===================================================================================================================================================================================
@@ -3077,30 +3081,38 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   █  
   */
 
+  if(debug) cout << "MC dY: ok" << endl;
   if (!isMC){
     if(isMuon){
+      if(debug) cout << "in muon data" << endl;
   
       ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
       float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
                 
       //Number of deltaY reco events
       if(Mass_tt>=0 && Mass_tt < 500){
+        if(debug) cout << "in muon 0-500 data" << endl;
         fill_histograms(event, "DeltaY_reco_0_500_muon_data");
       }
       if(Mass_tt>=500 && Mass_tt < 750){
+        if(debug) cout << "in muon 500-750 data" << endl;
         fill_histograms(event, "DeltaY_reco_500_750_muon_data");
       }
       if(Mass_tt>=750 && Mass_tt < 1000){
+        if(debug) cout << "in muon 750-1000 data" << endl;
         fill_histograms(event, "DeltaY_reco_750_1000_muon_data");
       }
       if(Mass_tt>=1000 && Mass_tt < 1500){
+        if(debug) cout << "in muon 1000-1500 data" << endl;
         fill_histograms(event, "DeltaY_reco_1000_1500_muon_data");
       }
       if(Mass_tt>=1500){
+        if(debug) cout << "in muon 1500Inf  data" << endl;
         fill_histograms(event, "DeltaY_reco_1500Inf_muon_data");
       }
       
       // muon bracket  ===== MUON END ==== 
+      if(debug) cout << "end of muon data" << endl;
     }
         
     if (isElectron){
@@ -3128,6 +3140,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       // electron bracket 
     }
   }  
+  if(debug) cout << "DATA dY: ok" << endl;
    
 
   // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
