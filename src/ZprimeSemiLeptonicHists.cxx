@@ -1581,6 +1581,9 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       DeltaY_notMatched->Fill(1);
     }
 
+    // cout << "DeltaY_reco_best: " << DeltaY_reco_best << endl;
+    // cout << "DeltaY_gen_best: " << DeltaY_gen_best << endl;
+
 
     response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
     DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);

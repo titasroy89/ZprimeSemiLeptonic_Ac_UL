@@ -457,7 +457,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         
         if(static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
             best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
-            if(debug) cout << "hadtop match done" << endl;
+            // if( ) cout << "hadtop match done" << endl;
         }
 
 
@@ -474,15 +474,26 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       
       }
 
-      cout << "DeltaY_reco_best: " << DeltaY_reco_best << endl;
-      cout << "DeltaY_gen_best: " << DeltaY_gen_best << endl;
+      // cout << "DeltaY_reco_best: " << DeltaY_reco_best << endl;
+      // cout << "DeltaY_gen_best: " << DeltaY_gen_best << endl;
 
-
+      DeltaY_tt->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
       // up/down variations
       for(unsigned int i=0; i<names.size(); i++){
         hists_up_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_up.at(i)/syst_nominal.at(i));
         hists_down_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_down.at(i)/syst_nominal.at(i));
+        // cout << "filling up/down" << endl;
+        // cout << "DeltaY_reco_best: " << DeltaY_reco_best << endl;
+        // cout << "DeltaY_gen_best: " << DeltaY_gen_best << endl;
+        // cout << "weigh down: " <<  weight * syst_down.at(i)/syst_nominal.at(i) << endl;
+        // cout << "weigh up: " <<  weight * syst_up.at(i)/syst_nominal.at(i) << endl;
+        // cout << "hists_up_tt.at(i): " << hists_up_tt.at(i) << endl;
+        // cout << "hists_up_tt :" << hists_up_tt << endl;
+        // cout << "hists_up_tt.isA(): " << hists_up_tt.at(i)->ClassName() << endl;
+        // cout << "hists_up 1D .isA(): " << hists_up.at(i)->ClassName()  << endl;
+        // cout << "entries: " << hists_up_tt.at(i)->GetEntries() << endl;
       }
+
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
         hists_scale_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_scale.at(i));
@@ -516,6 +527,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       for(unsigned int i=0; i<names.size(); i++){
         hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
         hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
+        
       }
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
