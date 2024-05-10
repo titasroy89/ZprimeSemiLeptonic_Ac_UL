@@ -7,13 +7,13 @@ import ROOT as root
 from collections import OrderedDict
 from plotter import NiceStackWithRatio, Process
 from constants import _YEARS
-from constants_mtt import _VARIABLES
+from constants_dY import _VARIABLES
 
 
 year = "UL18"
 channels = [
     # "ele",
-    "electron"
+    "muon"
 ]
 
 
@@ -86,7 +86,7 @@ for channel in channels:
 
 
         nice = NiceStackWithRatio(
-            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_electron_SR_new.root",
+            infile_path = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/plotter/Mtt_UL18_muon_SR_dY.root",
             # infile_directory = "", # the directory within the ROOT file
             x_axis_title = var.get("x_axis_title"),
             x_axis_unit = var.get("x_axis_unit"),
@@ -104,8 +104,8 @@ for channel in channels:
             text_top_right = _YEARS.get(year).get("lumi_fb_display") + " fb^{#minus1} (13 TeV)",
             y_axis_min = 0,
             # y_axis_max = 5000,
-            x_axis_min = 0,
-            x_axis_max = 4000,
+            # x_axis_min = 0,
+            # x_axis_max = 2.5,
             nostack = False,
             logy = True,
             blind_data = False,
@@ -139,5 +139,5 @@ for channel in channels:
         legend.SetFillStyle(0)
         legend.Draw()
 
-        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "_SR_logy.pdf")
+        nice.save_plot(year + "/" + channel + "/" + var.get("name") + "_SR_dY_logy.pdf")
         nice.canvas.Close()

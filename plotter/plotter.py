@@ -327,6 +327,8 @@ class NiceStackWithRatio():
 
     def create_data(self):
         self.data_hist = self.infile.Get(os.path.join(self.infile_directory, self.data_name))
+        print(self.infile_directory)
+        print(self.data_name)
         self.data_hist.SetLineWidth(1)
         self.data_hist.SetLineColor(root.kBlack)
         self.data_hist.SetMarkerStyle(8)
@@ -349,6 +351,7 @@ class NiceStackWithRatio():
             for syst in self.syst_names:
                 # print(syst)
                 hist_syst_down = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Down'))
+                # print(hist_syst_down)
                 hist_syst_up = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Up'))
                 err_down = hist_syst_down.GetBinContent(i_bin) - nominal
                 err_up = hist_syst_up.GetBinContent(i_bin) - nominal
