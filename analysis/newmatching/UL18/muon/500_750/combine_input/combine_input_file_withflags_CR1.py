@@ -24,7 +24,8 @@ lepton_flavor = options.lepton_flavor if options.lepton_flavor else "muon"  # de
 inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/".format(year)
 combine_file_name = 'dY_{}_{}_{}_CR1.root'.format(year, lepton_flavor, mass_range)
 combine_file = TFile(combine_file_name, 'RECREATE')
-stackList = {"TTbar", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
+# stackList = {"TTbar", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
+stackList = ["TTbar", "ST", "Others", "DATA"]
 
 
 ############ 
@@ -114,14 +115,14 @@ for sample in stackList:
                     continue
                 
 
-                ProjX_1 = Matrix.ProjectionX("TTbar_1_{}_{}".format(new_sys_name, variation), 1, 1)
-                ProjX_2 = Matrix.ProjectionX("TTbar_2_{}_{}".format(new_sys_name, variation), 2, 2)
+                output_hist_1 = "TTbar_1_{}{}".format(new_sys_name, variation.capitalize())
+                output_hist_2 = "TTbar_2_{}{}".format(new_sys_name, variation.capitalize())
+                
+                ProjX_1 = Matrix.ProjectionX(output_hist_1, 1, 1)
+                ProjX_2 = Matrix.ProjectionX(output_hist_2, 2, 2)
 
                 ProjX_1.GetXaxis().SetTitle("#Delta_Y_{reco}")
                 ProjX_2.GetXaxis().SetTitle("#Delta_Y_{reco}")
-
-                output_hist_1 = "TTbar_1_{}{}".format(new_sys_name, variation.capitalize())
-                output_hist_2 = "TTbar_2_{}{}".format(new_sys_name, variation.capitalize())
 
                 ProjX_1.Write(output_hist_1)
                 ProjX_2.Write(output_hist_2)
@@ -188,58 +189,57 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
         
         
         if sample == "TTbar":
-        
+            
             print("Processing sample for murmuf: ", sample)
             
-            # path = "DeltaY_reco_SystVariations_ttbar_{}_{}_CR1/DeltaY_tt".format(mass_range, lepton_flavor)
-            # nominal_matrix = inFile.Get(path)
+            scaled_histograms_up = {}
+            scaled_histograms_down = {}
             
-            # # nominal_matrix = inFile.Get("DeltaY_reco_SystVariations_ttbar_{}_{}_CR1/DeltaY_tt").format(mass_range, lepton_flavor)
-            # if not nominal_matrix:
-            #     print("Nominal matrix not found for TTbar.")
-            #     continue
-            # proj1_nominal = nominal_matrix.ProjectionX("TTbar_1", 1, 1)
-            # proj2_nominal = nominal_matrix.ProjectionX("TTbar_2", 2, 2)
-
+            hist_scaleUp_1 = ProjX_1.Clone("TTbar_1_murmufUp")
+            hist_scaleDown_1 = ProjX_1.Clone("TTbar_1_murmufDown")
+            hist_scaleUp_2 = ProjX_2.Clone("TTbar_2_murmufUp")
+            hist_scaleDown_2 = ProjX_2.Clone("TTbar_2_murmufDown")
         
             for variation in v_variations:
                 path_var = "DeltaY_reco_SystVariations_ttbar_{}_{}_CR1/DeltaY_murmuf_{}_tt".format(mass_range, lepton_flavor, variation)
                 matrix_var = inFile.Get(path_var)
-                # matrix_var = inFile.Get("DeltaY_reco_SystVariations_ttbar_{}_{}_CR1/DeltaY_murmuf_{}_tt").format(mass_range, lepton_flavor, variation)
                
                 if not matrix_var:
-                    print("Missing matrix for variation: {}").format(variation)
-                    continue
+                    print("Missing matrix for variation: {}".format(variation))
                 
-                proj1_var = matrix_var.ProjectionX("TTbar_1_murmuf_{}".format(variation), 1, 1)
-                proj2_var = matrix_var.ProjectionX("TTbar_2_murmuf_{}".format(variation), 2, 2)
+                projection_1 = matrix_var.ProjectionX("TTbar_1_murmuf_{}".format(variation), 1, 1)
+                projection_2 = matrix_var.ProjectionX("TTbar_2_murmuf_{}".format(variation), 2, 2)
                 
-                # Create up and down histograms by applying symmetric manipulation
-                proj1_up_name = "TTbar_1_{}Up".format(variation)
-                proj1_down_name = "TTbar_1_{}Down".format(variation)
-                proj2_up_name = "TTbar_2_{}Up".format(variation)
-                proj2_down_name = "TTbar_2_{}Down".format(variation)
+                norm_1 = projection_1.GetBinContent(1) / ProjX_1.GetBinContent(1)
+                norm_2 = projection_2.GetBinContent(1) / ProjX_2.GetBinContent(1)
                 
-                pdf_proj1_up = ProjX_1.Clone(proj1_up_name)
-                pdf_proj2_up = ProjX_2.Clone(proj1_down_name)
-                pdf_proj1_down = ProjX_1.Clone(proj2_up_name)
-                pdf_proj2_down = ProjX_2.Clone(proj2_down_name)
+                scaled_histograms_up[variation + "_1"] = projection_1.Clone(variation + "_proj1_scaled")
+                scaled_histograms_down[variation + "_2"] = projection_2.Clone(variation + "_proj2_scaled")
+                scaled_histograms_up[variation + "_1"].Scale(1 / norm_1)
+                scaled_histograms_down[variation + "_2"].Scale(1 / norm_2)
 
 
-                for bin_idx in range(1, ProjX_1.GetNbinsX() + 1):
-                    
-                    scaling_factor_1 = proj1_var.GetBinContent(bin_idx) / ProjX_1.GetBinContent(bin_idx) if ProjX_1.GetBinContent(bin_idx) != 0 else 1
-                    scaling_factor_2 = proj2_var.GetBinContent(bin_idx) / ProjX_2.GetBinContent(bin_idx) if ProjX_2.GetBinContent(bin_idx) != 0 else 1
-                
-                    pdf_proj1_up.SetBinContent(bin_idx, ProjX_1.GetBinContent(bin_idx) * (1 + abs(1 - scaling_factor_1)))
-                    pdf_proj1_down.SetBinContent(bin_idx, ProjX_1.GetBinContent(bin_idx) * (1 - abs(1 - scaling_factor_1)))
-                    pdf_proj2_up.SetBinContent(bin_idx, ProjX_2.GetBinContent(bin_idx) * (1 + abs(1 - scaling_factor_2)))
-                    pdf_proj2_down.SetBinContent(bin_idx, ProjX_2.GetBinContent(bin_idx) * (1 - abs(1 - scaling_factor_2)))
+            for bin_idx in range(1, ProjX_1.GetNbinsX() + 1):
+                max_val_1 = min_val_1 = hist_scaleUp_1.GetBinContent(bin_idx)
+                max_val_2 = min_val_2 = hist_scaleUp_2.GetBinContent(bin_idx)
 
-                pdf_proj1_up.Write()
-                pdf_proj2_up.Write()
-                pdf_proj1_down.Write()
-                pdf_proj2_down.Write()
+                for key in scaled_histograms_up.keys():
+                    max_val_1 = max(max_val_1, scaled_histograms_up[key].GetBinContent(bin_idx))
+                    min_val_1 = min(min_val_1, scaled_histograms_up[key].GetBinContent(bin_idx))
+
+                for key in scaled_histograms_down.keys():
+                    max_val_2 = max(max_val_2, scaled_histograms_down[key].GetBinContent(bin_idx))
+                    min_val_2 = min(min_val_2, scaled_histograms_down[key].GetBinContent(bin_idx))
+
+                hist_scaleUp_1.SetBinContent(bin_idx, max_val_1)
+                hist_scaleDown_1.SetBinContent(bin_idx, min_val_1)
+                hist_scaleUp_2.SetBinContent(bin_idx, max_val_2)
+                hist_scaleDown_2.SetBinContent(bin_idx, min_val_2)
+
+            hist_scaleUp_1.Write()
+            hist_scaleDown_1.Write()
+            hist_scaleUp_2.Write()
+            hist_scaleDown_2.Write()
             
         else:
             print("Processing sample for murmuf: ", sample)
@@ -250,7 +250,7 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
             # if not h_nominal:
             #     print("Nominal histogram for {} not found.".format(sample))
             #     continue
-
+            scales = {}
             for variation in v_variations:
                 variation_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, variation))
                 
@@ -258,18 +258,31 @@ def getEnvelope(inputDir, v_samples, v_variations, combine_file):
                     print("Histogram for variation '{}' not found in {}").format(variation, sample)
                     continue
                 
-                variation_hist_up_name = "{}_{}Up".format(sample, variation)
-                variation_hist_down_name = "{}_{}Down".format(sample, variation)
-                variation_hist_up = h_nominal.Clone(variation_hist_up_name)
-                variation_hist_down = h_nominal.Clone(variation_hist_down_name)
+                scales[variation] = variation_hist.GetBinContent(1) / h_nominal.GetBinContent(1)
+                
+                hist_scaleUp = h_nominal.Clone(sample + "_murmufUp")
+                hist_scaleDown = h_nominal.Clone(sample + "_murmufDown")
+            
+                # variation_hist_up_name = "{}_{}Up".format(sample, variation)
+                # variation_hist_down_name = "{}_{}Down".format(sample, variation)
+                # variation_hist_up = h_nominal.Clone(variation_hist_up_name)
+                # variation_hist_down = h_nominal.Clone(variation_hist_down_name)
 
                 for bin_idx in range(1, h_nominal.GetNbinsX() + 1):
-                    scaling_factor = variation_hist.GetBinContent(bin_idx) / h_nominal.GetBinContent(bin_idx) if h_nominal.GetBinContent(bin_idx) != 0 else 1
-                    variation_hist_up.SetBinContent(bin_idx, h_nominal.GetBinContent(bin_idx) * (1 + abs(1 - scaling_factor)))
-                    variation_hist_down.SetBinContent(bin_idx, h_nominal.GetBinContent(bin_idx) * (1 - abs(1 - scaling_factor)))
+                    max_val = h_nominal.GetBinContent(bin_idx)
+                    min_val = h_nominal.GetBinContent(bin_idx)
+                    for var, scale in scales.items():
+                        var_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}_CR1/DeltaY_murmuf_{}".format(mass_range, lepton_flavor, var))
+                        if var_hist:
+                            scaled_val = var_hist.GetBinContent(bin_idx) / scale
+                            max_val = max(max_val, scaled_val)
+                            min_val = min(min_val, scaled_val)
 
-                variation_hist_up.Write()
-                variation_hist_down.Write()
+                hist_scaleUp.SetBinContent(bin_idx, max_val)
+                hist_scaleDown.SetBinContent(bin_idx, min_val)
+            
+            hist_scaleUp.Write()
+            hist_scaleDown.Write()
 
 
         inFile.Close()
@@ -565,13 +578,12 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
                 if not Matrix:
                     print("Nominal matrix not found for TTbar.")
                 else:
-                    ProjX_1_jerjec = Matrix.ProjectionX("TTbar_1_{}".format(sys_variation), 1, 1)
-                    ProjX_2_jerjec = Matrix.ProjectionX("TTbar_2_{}".format(sys_variation), 2, 2)
-                
-            
                     output_name_1 = "TTbar_1_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())
                     output_name_2 = "TTbar_2_{}".format(sys_variation.split('_')[0].lower() + sys_variation.split('_')[1].capitalize())
 
+                    ProjX_1_jerjec = Matrix.ProjectionX(output_name_1, 1, 1)
+                    ProjX_2_jerjec = Matrix.ProjectionX(output_name_2, 2, 2)
+                    
                     ProjX_1_jerjec.Write(output_name_1)
                     ProjX_2_jerjec.Write(output_name_2)
                 
@@ -590,7 +602,8 @@ def processJERJEC(inputDir, v_samples, combine_file, sys_variations):
 
 sys_variations = ["JEC_up", "JEC_down", "JER_up", "JER_down"]
 
-v_samples = ["TTbar", "WJets", "ST", "QCD", "DY", "Diboson"]
+# v_samples = ["TTbar", "WJets", "ST", "QCD", "DY", "Diboson"]
+v_samples = ["TTbar", "ST", "Others"]
 v_variations = ["upup", "upnone", "noneup", "nonedown", "downnone", "downdown"]
 
 getEnvelope(inputDir, v_samples, v_variations, combine_file)

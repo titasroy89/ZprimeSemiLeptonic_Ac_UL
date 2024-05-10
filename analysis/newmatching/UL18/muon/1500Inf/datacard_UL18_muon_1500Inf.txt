@@ -2,12 +2,12 @@ imax 3 number of bins
 jmax 3 number of processes minus 1
 kmax * number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes data_obs     muon_UL18_1500Inf_SR      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_SR.root SR/data_obs
-shapes *            muon_UL18_1500Inf_SR      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_SR.root SR/$PROCESS SR/$PROCESS_$SYSTEMATIC
-shapes data_obs     muon_UL18_1500Inf_CR1      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_CR1.root CR1/data_obs
-shapes *            muon_UL18_1500Inf_CR1      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_CR1.root CR1/$PROCESS CR1/$PROCESS_$SYSTEMATIC
-shapes data_obs     muon_UL18_1500Inf_CR2      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_CR2.root CR2/data_obs
-shapes *            muon_UL18_1500Inf_CR2      combine_input/dY_UL18_muon_1500Inf.root/muon_UL18_1500Inf_CR2.root CR2/$PROCESS CR2/$PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_1500Inf_SR      combine_input/dY_UL18_muon_1500Inf.root SR/data_obs
+shapes *            muon_UL18_1500Inf_SR      combine_input/dY_UL18_muon_1500Inf.root SR/$PROCESS SR/$PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_1500Inf_CR1      combine_input/dY_UL18_muon_1500Inf.root CR1/data_obs
+shapes *            muon_UL18_1500Inf_CR1      combine_input/dY_UL18_muon_1500Inf.root CR1/$PROCESS CR1/$PROCESS_$SYSTEMATIC
+shapes data_obs     muon_UL18_1500Inf_CR2      combine_input/dY_UL18_muon_1500Inf.root CR2/data_obs
+shapes *            muon_UL18_1500Inf_CR2      combine_input/dY_UL18_muon_1500Inf.root CR2/$PROCESS CR2/$PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
 bin                     muon_UL18_1500Inf_SR          muon_UL18_1500Inf_CR1           muon_UL18_1500Inf_CR2
 observation             -1                            -1                              -1

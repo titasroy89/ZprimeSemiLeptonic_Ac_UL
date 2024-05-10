@@ -44,12 +44,7 @@ btagLfstats2        shape   1          1          1          1          1       
 ttagCorr            shape   1          1          1          1          1          1          1          1          1          1          1          1          
 ttagUncorr          shape   1          1          1          1          1          1          1          1          1          1          1          1          
 tmistag             shape   1          1          1          1          1          1          1          1          1          1          1          1          
-upup                shape   1          1          -          -          1          1          -          -          1          1          -          -          
-upnone              shape   1          1          -          -          1          1          -          -          1          1          -          -          
-noneup              shape   1          1          -          -          1          1          -          -          1          1          -          -          
-downdown            shape   1          1          -          -          1          1          -          -          1          1          -          -          
-downnone            shape   1          1          -          -          1          1          -          -          1          1          -          -          
-nonedown            shape   1          1          -          -          1          1          -          -          1          1          -          -          
+murmuf              shape   1          1          -          -          1          1          -          -          1          1          -          -          
 pdf                 shape   1          1          -          -          1          1          -          -          1          1          -          -          
 jer                 shape   1          1          -          -          1          1          -          -          1          1          -          -          
 jec                 shape   1          1          -          -          1          1          -          -          1          1          -          -          
