@@ -101,13 +101,13 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
       double deltaR_sec_min_leptonic = 99.0;
       int best_gen_for_leptop = -1;
       int sec_best_gen_for_leptop = -1;
-      bool is_leptop_matched = false;
+      // bool is_leptop_matched = false;
 
       double deltaR_min_hadronic = 99.0;
       double deltaR_sec_min_hadronic = 99.0;
       int best_gen_for_hadtop = -1;
       int sec_best_gen_for_hadtop = -1;
-      bool is_hadtop_matched = false;
+      // bool is_hadtop_matched = false;
 
       for(unsigned int j=0; j<genparticles->size(); ++j) {
         if(abs(genparticles->at(j).pdgId()) == 6 ){
@@ -127,7 +127,7 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
           deltaR_min_leptonic = pair_lep.first;
           sec_best_gen_for_leptop = best_gen_for_leptop;
           best_gen_for_leptop = pair_lep.second;
-          is_leptop_matched = true;
+          // is_leptop_matched = true;
         }
         else if (pair_lep.first > 0 && pair_lep.first < deltaR_sec_min_leptonic && pair_lep.first != deltaR_min_leptonic && pair_lep.second != best_gen_for_leptop) {
           deltaR_sec_min_leptonic = pair_lep.first;
@@ -145,7 +145,7 @@ void ZprimeSemiLeptonicPDFHists::fill(const Event & event){
           deltaR_min_hadronic = pair_had.first;
           sec_best_gen_for_hadtop = best_gen_for_hadtop;
           best_gen_for_hadtop = pair_had.second;
-          is_hadtop_matched = true;
+          // is_hadtop_matched = true;
         }
         else if (pair_had.first > 0 && pair_had.first < deltaR_sec_min_hadronic && pair_had.first != deltaR_min_hadronic && pair_had.second != best_gen_for_hadtop) {
           deltaR_sec_min_hadronic = pair_had.first;

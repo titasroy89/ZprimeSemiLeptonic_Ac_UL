@@ -127,10 +127,10 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   double jet2_pt(30.);
   double MET(20.);
   double HT_cut(800);
-  double HTGen_cut;
-  double genjet_pt;
-  HTGen_cut = 800;
-  genjet_pt = 10;
+  // double HTGen_cut;
+  // double genjet_pt;
+  // HTGen_cut = 800;
+  // genjet_pt = 10;
 
 
   // GEN Flavor selection [W+jets flavor-splitting]
