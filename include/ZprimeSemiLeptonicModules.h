@@ -195,11 +195,10 @@ private:
   uhh2::Event::Handle<float> h_HOTVR_j1_pt, h_HOTVR_j1_eta, h_HOTVR_j1_phi, h_HOTVR_j1_E, h_HOTVR_j1_mSD, h_HOTVR_j1_tau21, h_HOTVR_j1_tau32;
   uhh2::Event::Handle<float> h_HOTVR_j2_pt, h_HOTVR_j2_eta, h_HOTVR_j2_phi, h_HOTVR_j2_E, h_HOTVR_j2_mSD, h_HOTVR_j2_tau21, h_HOTVR_j2_tau32;
   uhh2::Event::Handle<float> h_HOTVR_j3_pt, h_HOTVR_j3_eta, h_HOTVR_j3_phi, h_HOTVR_j3_E, h_HOTVR_j3_mSD, h_HOTVR_j3_tau21, h_HOTVR_j3_tau32;
-  uhh2::Event::Handle<float> h_N_Ak8;
+  uhh2::Event::Handle<float> h_N_Ak8, h_N_Ak4;
   uhh2::Event::Handle<float> h_Ak8_j1_pt, h_Ak8_j1_eta, h_Ak8_j1_phi, h_Ak8_j1_E, h_Ak8_j1_mSD, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j1_deepak8tscore;
   uhh2::Event::Handle<float> h_Ak8_j2_pt, h_Ak8_j2_eta, h_Ak8_j2_phi, h_Ak8_j2_E, h_Ak8_j2_mSD, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j2_deepak8tscore;
   uhh2::Event::Handle<float> h_Ak8_j3_pt, h_Ak8_j3_eta, h_Ak8_j3_phi, h_Ak8_j3_E, h_Ak8_j3_mSD, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ak8_j3_deepak8tscore;
-  uhh2::Event::Handle<float> h_N_Ak4;
   uhh2::Event::Handle<float> h_Ak4_j1_pt, h_Ak4_j1_eta, h_Ak4_j1_phi, h_Ak4_j1_E, h_Ak4_j1_m, h_Ak4_j1_deepjetbscore;
   uhh2::Event::Handle<float> h_Ak4_j2_pt, h_Ak4_j2_eta, h_Ak4_j2_phi, h_Ak4_j2_E, h_Ak4_j2_m, h_Ak4_j2_deepjetbscore;
   uhh2::Event::Handle<float> h_Ak4_j3_pt, h_Ak4_j3_eta, h_Ak4_j3_phi, h_Ak4_j3_E, h_Ak4_j3_m, h_Ak4_j3_deepjetbscore;

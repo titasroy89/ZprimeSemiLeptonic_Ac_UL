@@ -464,10 +464,12 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
         // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
         if (isLeptonPositive) {
+          //cout<<"lepton is positive"<<endl;
           DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
           DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
 
         } else {
+          //cout<<"lepton is negative"<<endl;
           DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
           DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
         }
@@ -476,10 +478,13 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
       // cout << "DeltaY_reco_best: " << DeltaY_reco_best << endl;
       // cout << "DeltaY_gen_best: " << DeltaY_gen_best << endl;
+      //DeltaY_reco->Fill(DeltaY_reco_best, weight);
+      //DeltaY_gen->Fill(DeltaY_gen_best, weight);
 
       DeltaY_tt->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
       // up/down variations
       for(unsigned int i=0; i<names.size(); i++){
+       
         hists_up_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_up.at(i)/syst_nominal.at(i));
         hists_down_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_down.at(i)/syst_nominal.at(i));
         // cout << "filling up/down" << endl;
@@ -512,6 +517,8 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
       // ps variations
       for(unsigned int i=0; i<hists_ps.size(); i++){
+      //cout << "weight:" << weight <<endl;
+     // cout << i<<": "<< syst_ps.at(i) <<endl;   
       hists_ps_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_ps.at(i));
       }
     }
