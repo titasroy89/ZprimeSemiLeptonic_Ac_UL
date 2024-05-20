@@ -250,9 +250,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
  // cout<<"in neural network module"<<endl;
   //Only Ele or Mu variables!!
   //muon
-  ifstream normfile ("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //electron
-  //ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+ // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
 
  // cout<<"read txt"<<endl;
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
@@ -352,7 +352,7 @@ protected:
   Event::Handle<float> h_chi2_SR;
   Event::Handle<float> h_dRmin_mu_jet_SR; 
   Event::Handle<float> h_dRmin_jet_SR;
-  Event::Handle<float> h_Mttbar_SR;
+  Event::Handle<float> h_M_tt_SR;
   Event::Handle<float> h_weight_SR;
   Event::Handle<float> h_pTlep_SR;
   Event::Handle<float> h_pThad_SR;
@@ -364,12 +364,12 @@ protected:
   Event::Handle<float> h_ak8jet1_eta_SR;
   Event::Handle<float> h_ptrel_mu_jet_SR;
   Event::Handle<float> h_ptrel_jet_SR;
-  Event::Handle<float> h_N_jets_SR;
+  Event::Handle<float> h_N_Ak4_SR;
 
   Event::Handle<float> h_chi2_CR1;
   Event::Handle<float> h_dRmin_mu_jet_CR1; 
   Event::Handle<float> h_dRmin_jet_CR1;
-  Event::Handle<float> h_Mttbar_CR1;
+  Event::Handle<float> h_M_tt_CR1;
   Event::Handle<float> h_weight_CR1;
   Event::Handle<float> h_pTlep_CR1;
   Event::Handle<float> h_pThad_CR1;
@@ -381,12 +381,12 @@ protected:
   Event::Handle<float> h_ak8jet1_eta_CR1;
   Event::Handle<float> h_ptrel_mu_jet_CR1;
   Event::Handle<float> h_ptrel_jet_CR1;
-  Event::Handle<float> h_N_jets_CR1;
+  Event::Handle<float> h_N_Ak4_CR1;
 
   Event::Handle<float> h_chi2_CR2;
   Event::Handle<float> h_dRmin_mu_jet_CR2; 
   Event::Handle<float> h_dRmin_jet_CR2;
-  Event::Handle<float> h_Mttbar_CR2;
+  Event::Handle<float> h_M_tt_CR2;
   Event::Handle<float> h_weight_CR2;
   Event::Handle<float> h_pTlep_CR2;
   Event::Handle<float> h_pThad_CR2;
@@ -398,7 +398,7 @@ protected:
   Event::Handle<float> h_ak8jet1_eta_CR2;
   Event::Handle<float> h_ptrel_mu_jet_CR2;
   Event::Handle<float> h_ptrel_jet_CR2;
-  Event::Handle<float> h_N_jets_CR2;
+  Event::Handle<float> h_N_Ak4_CR2;
 
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
 
@@ -789,7 +789,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_chi2_SR = ctx.declare_event_output<float> ("rec_chi2");
   h_dRmin_mu_jet_SR = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
   h_dRmin_jet_SR = ctx.declare_event_output<float> ("dRmin_jet");
-  h_Mttbar_SR = ctx.declare_event_output<float> ("Mttbar");
+ // h_M_tt_SR = ctx.declare_event_output<float> ("Mttbar");
   h_weight_SR = ctx.declare_event_output<float> ("weight");
   h_pTlep_SR = ctx.declare_event_output<float> ("pT_lep");
   h_pThad_SR = ctx.declare_event_output<float> ("pT_had");
@@ -801,12 +801,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_ak8jet1_eta_SR = ctx.declare_event_output<float> ("ak8jet1_eta");
   h_ptrel_mu_jet_SR = ctx.declare_event_output<float> ("ptrel_mu_jet");
   h_ptrel_jet_SR = ctx.declare_event_output<float> ("ptrel_jet");
-  h_N_jets_SR = ctx.declare_event_output<float> ("N_jets");
+  //h_N_jets_SR = ctx.declare_event_output<float> ("N_jets");
 
   h_chi2_CR1 = ctx.declare_event_output<float> ("rec_chi2");
   h_dRmin_mu_jet_CR1 = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
   h_dRmin_jet_CR1 = ctx.declare_event_output<float> ("dRmin_jet");
-  h_Mttbar_CR1 = ctx.declare_event_output<float> ("Mttbar");
+ // h_M_tt_CR1 = ctx.declare_event_output<float> ("Mttbar");
   h_weight_CR1 = ctx.declare_event_output<float> ("weight");
   h_pTlep_CR1 = ctx.declare_event_output<float> ("pT_lep");
   h_pThad_CR1 = ctx.declare_event_output<float> ("pT_had");
@@ -818,12 +818,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_ak8jet1_eta_CR1 = ctx.declare_event_output<float> ("ak8jet1_eta");
   h_ptrel_mu_jet_CR1 = ctx.declare_event_output<float> ("ptrel_mu_jet");
   h_ptrel_jet_CR1 = ctx.declare_event_output<float> ("ptrel_jet");
-  h_N_jets_CR1 = ctx.declare_event_output<float> ("N_jets");
+ // h_N_jets_CR1 = ctx.declare_event_output<float> ("N_jets");
 
   h_chi2_CR2 = ctx.declare_event_output<float> ("rec_chi2");
   h_dRmin_mu_jet_CR2 = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
   h_dRmin_jet_CR2 = ctx.declare_event_output<float> ("dRmin_jet");
-  h_Mttbar_CR2 = ctx.declare_event_output<float> ("Mttbar");
+ // h_M_tt_CR2 = ctx.declare_event_output<float> ("Mttbar");
   h_weight_CR2 = ctx.declare_event_output<float> ("weight");
   h_pTlep_CR2 = ctx.declare_event_output<float> ("pT_lep");
   h_pThad_CR2 = ctx.declare_event_output<float> ("pT_had");
@@ -835,7 +835,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_ak8jet1_eta_CR2 = ctx.declare_event_output<float> ("ak8jet1_eta");
   h_ptrel_mu_jet_CR2 = ctx.declare_event_output<float> ("ptrel_mu_jet");
   h_ptrel_jet_CR2 = ctx.declare_event_output<float> ("ptrel_jet");
-  h_N_jets_CR2 = ctx.declare_event_output<float> ("N_jets");
+  //h_N_jets_CR2 = ctx.declare_event_output<float> ("N_jets");
 
 
   sel_1btag.reset(new NJetSelection(1, -1, id_btag));
@@ -1085,7 +1085,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_chi2_SR,-100);
   event.set(h_dRmin_mu_jet_SR,-100);  
   event.set(h_dRmin_jet_SR,-100);
-  event.set(h_Mttbar_SR,-100);
+ // event.set(h_M_tt_SR,-100);
   event.set(h_weight_SR,-100);
   event.set(h_pTlep_SR,-100);
   event.set(h_pThad_SR,-100);
@@ -1097,12 +1097,12 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_ak8jet1_eta_SR,-100);
   event.set(h_ptrel_mu_jet_SR,-100);
   event.set(h_ptrel_jet_SR,-100);
-  event.set(h_N_jets_SR, -100);
+  //event.set(h_N_jets_SR, -100);
 
   event.set(h_chi2_CR1,-100);
   event.set(h_dRmin_mu_jet_CR1,-100);  
   event.set(h_dRmin_jet_CR1,-100);
-  event.set(h_Mttbar_CR1,-100);
+ // event.set(h_M_tt_CR1,-100);
   event.set(h_weight_CR1,-100);
   event.set(h_pTlep_CR1,-100);
   event.set(h_pThad_CR1,-100);
@@ -1114,12 +1114,12 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_ak8jet1_eta_CR1,-100);
   event.set(h_ptrel_mu_jet_CR1,-100);
   event.set(h_ptrel_jet_CR1,-100);
-  event.set(h_N_jets_CR1, -100);
+ // event.set(h_N_jets_CR1, -100);
 
   event.set(h_chi2_CR2,-100);
   event.set(h_dRmin_mu_jet_CR2,-100);  
   event.set(h_dRmin_jet_CR2,-100);
-  event.set(h_Mttbar_CR2,-100);
+ // event.set(h_M_tt_CR2,-100);
   event.set(h_weight_CR2,-100);
   event.set(h_pTlep_CR2,-100);
   event.set(h_pThad_CR2,-100);
@@ -1131,7 +1131,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_ak8jet1_eta_CR2,-100);
   event.set(h_ptrel_mu_jet_CR2,-100);
   event.set(h_ptrel_jet_CR2,-100);
-  event.set(h_N_jets_CR2, -100);
+ // event.set(h_N_jets_CR2, -100);
 
   event.set(h_NNoutput0, 0);
   event.set(h_NNoutput1, 0);
@@ -1446,9 +1446,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       
       }
    // }
-  
+   // cout << "chi2 is: ,"<<  BestZprimeCandidate->discriminator("chi2_total")
     event.set(h_chi2_SR,BestZprimeCandidate->discriminator("chi2_total"));
-    event.set(h_Mttbar_SR,BestZprimeCandidate->Zprime_v4().M());
+   // event.set(h_M_tt_SR,BestZprimeCandidate->Zprime_v4().M());
     event.set(h_weight_SR,event.weight);
     event.set(h_pTlep_SR,BestZprimeCandidate->top_leptonic_v4().Pt());
     event.set(h_pThad_SR,BestZprimeCandidate->top_hadronic_v4().Pt());
@@ -1463,7 +1463,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(event.jets->size()>0){
       event.set(h_ak4jet1_pt_SR,event.jets->at(0).pt());
       event.set(h_ak4jet1_eta_SR,event.jets->at(0).eta());
-      event.set(h_N_jets_SR,event.jets->size());
+     // event.set(h_N_jets_SR,event.jets->size());
     }
     if(event.topjets->size()>0){
       event.set(h_ak8jet1_pt_SR,event.topjets->at(0).pt());
@@ -1525,7 +1525,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       // h_Zprime_PDFVariations_DNN_output1_NoTopTag->fill(event);
     // }
     event.set(h_chi2_CR1,BestZprimeCandidate->discriminator("chi2_total"));
-    event.set(h_Mttbar_CR1,BestZprimeCandidate->Zprime_v4().M());
+    //event.set(h_M_tt_CR1,BestZprimeCandidate->Zprime_v4().M());
     event.set(h_weight_CR1,event.weight);
     event.set(h_pTlep_CR1,BestZprimeCandidate->top_leptonic_v4().Pt());
     event.set(h_pThad_CR1,BestZprimeCandidate->top_hadronic_v4().Pt());
@@ -1540,7 +1540,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(event.jets->size()>0){
       event.set(h_ak4jet1_pt_CR1,event.jets->at(0).pt());
       event.set(h_ak4jet1_eta_CR1,event.jets->at(0).eta());
-      event.set(h_N_jets_CR1,event.jets->size());
+    //  event.set(h_N_jets_CR1,event.jets->size());
     }
     if(event.topjets->size()>0){
       event.set(h_ak8jet1_pt_CR1,event.topjets->at(0).pt());
@@ -1591,21 +1591,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
               h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
             }
     
-    // DeltaY_SystVariations_DNN_output2->fill(event);
-    // h_Zprime_PDFVariations_DNN_output2->fill(event);
-    // h_MistagHists->fill(event);
-    //if( ZprimeTopTag_selection->passes(event) ){
-    //  fill_histograms(event, "DNN_output2_TopTag");
-      // DeltaY_SystVariations_DNN_output2_TopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output2_TopTag->fill(event);
-  //  }else{
-     // fill_histograms(event, "DNN_output2_NoTopTag");
-      // DeltaY_SystVariations_DNN_output2_NoTopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output2_NoTopTag->fill(event);
-  //  }
 
     event.set(h_chi2_CR2,BestZprimeCandidate->discriminator("chi2_total"));
-    event.set(h_Mttbar_CR2,BestZprimeCandidate->Zprime_v4().M());
+   // event.set(h_M_tt_CR2,BestZprimeCandidate->Zprime_v4().M());
     event.set(h_weight_CR2,event.weight);
     event.set(h_pTlep_CR2,BestZprimeCandidate->top_leptonic_v4().Pt());
     event.set(h_pThad_CR2,BestZprimeCandidate->top_hadronic_v4().Pt());
@@ -1620,7 +1608,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(event.jets->size()>0){
       event.set(h_ak4jet1_pt_CR2,event.jets->at(0).pt());
       event.set(h_ak4jet1_eta_CR2,event.jets->at(0).eta());
-      event.set(h_N_jets_CR2,event.jets->size());
+   //   event.set(h_N_jets_CR2,event.jets->size());
     }
     if(event.topjets->size()>0){
       event.set(h_ak8jet1_pt_CR2,event.topjets->at(0).pt());

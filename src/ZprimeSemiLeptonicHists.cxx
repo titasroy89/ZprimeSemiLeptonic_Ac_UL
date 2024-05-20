@@ -1597,9 +1597,25 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
   // for backgrounds and DATA
   if(is_zprime_reconstructed_chi2){
-    const auto& genparticles = event.genparticles;
+   // const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-
+    float Mreco = BestZprimeCandidate->Zprime_v4().M();
+    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+    ditop_mass->Fill(Mreco, weight);
+    M_Zprime->Fill(Mreco, weight);
+    M_Zprime_rebin->Fill(Mreco, weight);
+    M_Zprime_rebin2->Fill(Mreco, weight);
+    M_Zprime_rebin3->Fill(Mreco, weight);
+    if(Mreco < 6000.) M_Zprime_rebin4->Fill(Mreco, weight);
+    else M_Zprime_rebin4->Fill(6050., weight);
+    if(Mreco < 5000.) M_Zprime_rebin5->Fill(Mreco, weight);
+    else M_Zprime_rebin5->Fill(5050., weight);
+    M_Zprime_rebin6->Fill(Mreco, weight);
+    M_Zprime_rebin7->Fill(Mreco, weight);
+    M_Zprime_rebin8->Fill(Mreco, weight);
+    chi2_Zprime->Fill(chi2, weight);
+    chi2_Zprime_rebin->Fill(chi2, weight);
+    chi2_Zprime_rebin2->Fill(chi2, weight);
     bool isLeptonPositive = false;
     
     if(isMuon){
@@ -1648,26 +1664,26 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     tophad_phi->Fill(tophad.Phi(), weight);
     tophad_m->Fill(tophad.M(), weight);
 
-    ditop_mass->Fill(Mreco, weight);
+    //ditop_mass->Fill(Mreco, weight);
     ditop_absDeltaPhi->Fill(deltaPhi(toplep, tophad), weight);
     ditop_deltaEta->Fill(toplep.Eta()-tophad.Eta(), weight);
     ditop_absDeltaEta->Fill(abs(toplep.Eta()-tophad.Eta()), weight);
     ditop_deltaR->Fill(deltaR(toplep,tophad), weight);
 
-    M_Zprime->Fill(Mreco, weight);
-    M_Zprime_rebin->Fill(Mreco, weight);
-    M_Zprime_rebin2->Fill(Mreco, weight);
-    M_Zprime_rebin3->Fill(Mreco, weight);
-    if(Mreco < 6000.) M_Zprime_rebin4->Fill(Mreco, weight);
-    else M_Zprime_rebin4->Fill(6050., weight);
-    if(Mreco < 5000.) M_Zprime_rebin5->Fill(Mreco, weight);
-    else M_Zprime_rebin5->Fill(5050., weight);
-    M_Zprime_rebin6->Fill(Mreco, weight);
-    M_Zprime_rebin7->Fill(Mreco, weight);
-    M_Zprime_rebin8->Fill(Mreco, weight);
-    chi2_Zprime->Fill(chi2, weight);
-    chi2_Zprime_rebin->Fill(chi2, weight);
-    chi2_Zprime_rebin2->Fill(chi2, weight);
+    //M_Zprime->Fill(Mreco, weight);
+    //M_Zprime_rebin->Fill(Mreco, weight);
+    // M_Zprime_rebin2->Fill(Mreco, weight);
+    // M_Zprime_rebin3->Fill(Mreco, weight);
+    // if(Mreco < 6000.) M_Zprime_rebin4->Fill(Mreco, weight);
+    // else M_Zprime_rebin4->Fill(6050., weight);
+    // if(Mreco < 5000.) M_Zprime_rebin5->Fill(Mreco, weight);
+    // else M_Zprime_rebin5->Fill(5050., weight);
+    // M_Zprime_rebin6->Fill(Mreco, weight);
+    // M_Zprime_rebin7->Fill(Mreco, weight);
+    // M_Zprime_rebin8->Fill(Mreco, weight);
+    // chi2_Zprime->Fill(chi2, weight);
+    // chi2_Zprime_rebin->Fill(chi2, weight);
+    // chi2_Zprime_rebin2->Fill(chi2, weight);
 
     TOP_20_001_ditopmass_Fig19->Fill(Mreco, weight);
     TOP_20_001_ditopmass_Fig25->Fill(Mreco, weight);
