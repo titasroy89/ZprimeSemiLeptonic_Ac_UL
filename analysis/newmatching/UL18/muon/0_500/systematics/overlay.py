@@ -5,31 +5,50 @@ from numpy import log10
 ROOT.gROOT.SetBatch(True)
 
 systematic_name_mapping = {
-    # "muonReco",
-    # "pu",
-    # "prefiringWeight",
-    # "muonID", 
-    # "muonTrigger",
-    # "muonReco",
-    # "muonIso",
-    # "isr", 
-    # "fsr", 
-    # "btagCferr1", 
-    # "btagCferr2", 
-    # "btagHf",  
-    # "btagHfstats1",
-    # "btagHfstats2", 
-    # "btagLf", 
-    # "btagLfstats1",
-    # "btagLfstats2", 
-    # "ttagCorr", 
-    # "ttagUncorr", 
-    # "tmistag",
+    "pu",
+    "prefiringWeight",
+    "muonID", 
+    "muonTrigger",
+    "muonReco",
+    "muonIso", 
+    "btagCferr1", 
+    "btagCferr2", 
+    "btagHf",  
+    "btagHfstats1",
+    "btagHfstats2", 
+    "btagLf", 
+    "btagLfstats1",
+    "btagLfstats2", 
+    "ttagCorr", 
+    "ttagUncorr", 
+    "tmistag"
+}
+
+systematic_name_mapping_tt = {
+    "muonReco",
+    "pu",
+    "prefiringWeight",
+    "muonID", 
+    "muonTrigger",
+    "muonReco",
+    "muonIso",
+    "isr", 
+    "fsr", 
+    "btagCferr1", 
+    "btagCferr2", 
+    "btagHf",  
+    "btagHfstats1",
+    "btagHfstats2", 
+    "btagLf", 
+    "btagLfstats1",
+    "btagLfstats2", 
+    "ttagCorr", 
+    "ttagUncorr", 
+    "tmistag",
     "jec",
     "jer",
     "murmuf",
     "pdf"
-    
 }
 
 file = ROOT.TFile("../combine_input/dY_UL18_muon_0_500.root", "READ")
@@ -41,8 +60,11 @@ def systematics_plot(region, sample, systematics):
     hist1 = file.Get(hist1_name)
     hist2 = file.Get(hist2_name)
     hist3 = file.Get(hist3_name)
-    print("Working on: ", sample, region, systematics)
-
+    # print("Working on: ", sample, region, systematics)
+    
+    if not hist1 or not hist2 or not hist3:
+        print("Error: Could not find one or more histograms for {}, {}, {}".format(sample, region, systematics))
+        return
 
     hist1.SetLineColor(ROOT.kBlue)
     hist1.SetLineWidth(2)
@@ -55,7 +77,7 @@ def systematics_plot(region, sample, systematics):
     min_value = min(hist1.GetMaximum(), hist2.GetMaximum(), hist3.GetMaximum())
     # print(max_value)
     
-    # hist1.GetYaxis().SetRangeUser(min_value*0.7, max_value*1.1)
+    hist1.GetYaxis().SetRangeUser(min_value*0.7, max_value*1.1)
     # hist1.GetYaxis().SetRangeUser(0,10**(1.5*log10(max_value) - 0.5*log10(min_value)))
 
     canvas = ROOT.TCanvas("canvas", "Overlayed Histograms", 800, 600)
@@ -76,12 +98,18 @@ def systematics_plot(region, sample, systematics):
     canvas.SaveAs("{}_{}_{}.png".format(region, sample, systematics))
 
 regions = {"SR", "CR1", "CR2"}
-samples = {"TTbar_1", "TTbar_2", "ST", "Others"}
+samples_tt = {"TTbar_1", "TTbar_2"}
+samples = {"ST", "Others"}
 
 for sample in samples:
     for region in regions:
         for systematics in systematic_name_mapping:
             systematics_plot(region, sample, systematics)
 
+for sample in samples_tt:
+    for region in regions:
+        for systematics in systematic_name_mapping_tt:
+            systematics_plot(region, sample, systematics)
+            
 
 file.Close()
