@@ -250,9 +250,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
  // cout<<"in neural network module"<<endl;
   //Only Ele or Mu variables!!
   //muon
-  ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //electron
- // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+ ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
 
  // cout<<"read txt"<<endl;
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
@@ -937,8 +937,6 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_500_CR2", 
 
-  //"DeltaY_reco_0_500_data", "DeltaY_reco_500_750_data", "DeltaY_reco_750_1000_data", "DeltaY_reco_1000_1500_data", "DeltaY_reco_1500Inf_data",
-
   };
 
 
@@ -1059,9 +1057,9 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_NNoutput2 = ctx.declare_event_output<double>("NNoutput2");
   //Only Ele or Mu variables!!
   //muon
-  NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
   //electron
-  //NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
 
 
 }
@@ -1400,130 +1398,109 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   vector<Muon>* muons = event.muons;
 
   // out0=TTbar, out1=ST, out2=WJets
-  if( out0 == max_score ){
-    //fill_histograms(event, "DNN_output0_beforeChi2Cut");
-    //if( ZprimeTopTag_selection->passes(event) ){
-    //  fill_histograms(event, "DNN_output0_TopTag_beforeChi2Cut");
-   // }
-    //else{
-    //  fill_histograms(event, "DNN_output0_NoTopTag_beforeChi2Cut");
-   // }
+  if( out0 == max_score ){  
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       fill_histograms(event, "DNN_output0");
       if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_SR");
-              h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
-            }
+        fill_histograms(event, "DeltaY_reco_0_500_SR");
+        h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
+      }
       if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_SR");
-              h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
-            }
+        fill_histograms(event, "DeltaY_reco_500_750_SR");
+        h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
+      }
       if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_SR");
-              h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
-            }
+        fill_histograms(event, "DeltaY_reco_750_1000_SR");
+        h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
+      }
       if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_SR");
-              h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
-            }
+        fill_histograms(event, "DeltaY_reco_1000_1500_SR");
+        h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
+      }
       if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_SR");
-              h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
-            }
+        fill_histograms(event, "DeltaY_reco_1500Inf_SR");
+        h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
+      }
      
-      
       if( ZprimeTopTag_selection->passes(event) ){
         fill_histograms(event, "DNN_output0_TopTag");
-       
       }
       else{
         fill_histograms(event, "DNN_output0_NoTopTag");
-      
       }
-   // }
-   // cout << "chi2 is: ,"<<  BestZprimeCandidate->discriminator("chi2_total")
-    event.set(h_chi2_SR,BestZprimeCandidate->discriminator("chi2_total"));
-   // event.set(h_M_tt_SR,BestZprimeCandidate->Zprime_v4().M());
-    event.set(h_weight_SR,event.weight);
-    event.set(h_pTlep_SR,BestZprimeCandidate->top_leptonic_v4().Pt());
-    event.set(h_pThad_SR,BestZprimeCandidate->top_hadronic_v4().Pt());
-    if(isMuon){
-      event.set(h_lep1_pt_SR,event.muons->at(0).pt());
-      event.set(h_lep1_eta_SR,event.muons->at(0).eta());
-    }
-    if(isElectron){
-      event.set(h_lep1_pt_SR,event.electrons->at(0).pt());
-      event.set(h_lep1_eta_SR,event.electrons->at(0).eta());
-    }
-    if(event.jets->size()>0){
-      event.set(h_ak4jet1_pt_SR,event.jets->at(0).pt());
-      event.set(h_ak4jet1_eta_SR,event.jets->at(0).eta());
-     // event.set(h_N_jets_SR,event.jets->size());
-    }
-    if(event.topjets->size()>0){
-      event.set(h_ak8jet1_pt_SR,event.topjets->at(0).pt());
-      event.set(h_ak8jet1_eta_SR,event.topjets->at(0).eta());
-    }
-    int Nmuons = muons->size();
-    for(int i=0; i<Nmuons; i++){
-      if(muons->at(i).has_tag(Muon::twodcut_dRmin) && muons->at(i).has_tag(Muon::twodcut_pTrel)){
-        event.set(h_ptrel_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_pTrel));
-        event.set(h_dRmin_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_dRmin));
+   
+      event.set(h_chi2_SR,BestZprimeCandidate->discriminator("chi2_total"));
+      // event.set(h_M_tt_SR,BestZprimeCandidate->Zprime_v4().M());
+      event.set(h_weight_SR,event.weight);
+      event.set(h_pTlep_SR,BestZprimeCandidate->top_leptonic_v4().Pt());
+      event.set(h_pThad_SR,BestZprimeCandidate->top_hadronic_v4().Pt());
+      if(isMuon){
+        event.set(h_lep1_pt_SR,event.muons->at(0).pt());
+        event.set(h_lep1_eta_SR,event.muons->at(0).eta());
       }
-    }
-    int Nelectrons = electrons->size();
-    for(int i=0; i<Nelectrons; i++){
-      if(electrons->at(i).has_tag(Electron::twodcut_dRmin) && electrons->at(i).has_tag(Electron::twodcut_pTrel)){
-        event.set(h_ptrel_jet_SR,electrons->at(i).get_tag(Electron::twodcut_pTrel));
-        event.set(h_dRmin_jet_SR,electrons->at(i).get_tag(Electron::twodcut_dRmin));
+      if(isElectron){
+        event.set(h_lep1_pt_SR,event.electrons->at(0).pt());
+        event.set(h_lep1_eta_SR,event.electrons->at(0).eta());
       }
-    }
-  }//chi2 
-}//out0
+      if(event.jets->size()>0){
+        event.set(h_ak4jet1_pt_SR,event.jets->at(0).pt());
+        event.set(h_ak4jet1_eta_SR,event.jets->at(0).eta());
+      // event.set(h_N_jets_SR,event.jets->size());
+      }
+      if(event.topjets->size()>0){
+        event.set(h_ak8jet1_pt_SR,event.topjets->at(0).pt());
+        event.set(h_ak8jet1_eta_SR,event.topjets->at(0).eta());
+      }
+      int Nmuons = muons->size();
+      for(int i=0; i<Nmuons; i++){
+        if(muons->at(i).has_tag(Muon::twodcut_dRmin) && muons->at(i).has_tag(Muon::twodcut_pTrel)){
+          event.set(h_ptrel_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_pTrel));
+          event.set(h_dRmin_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_dRmin));
+        }
+      }
+      int Nelectrons = electrons->size();
+      for(int i=0; i<Nelectrons; i++){
+        if(electrons->at(i).has_tag(Electron::twodcut_dRmin) && electrons->at(i).has_tag(Electron::twodcut_pTrel)){
+          event.set(h_ptrel_jet_SR,electrons->at(i).get_tag(Electron::twodcut_pTrel));
+          event.set(h_dRmin_jet_SR,electrons->at(i).get_tag(Electron::twodcut_dRmin));
+        }
+      }
+    }//chi2 
+  }//out0
 
   if( out1 == max_score ){
     fill_histograms(event, "DNN_output1");
     if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_CR1");
-              h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_CR1->fill(event);  
-            }
+      fill_histograms(event, "DeltaY_reco_0_500_CR1");
+      h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_0_500_CR1->fill(event);  
+    }
     if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_CR1");
-              h_DeltaY_reco_SystVariations_500_750_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_CR1->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_500_750_CR1");
+      h_DeltaY_reco_SystVariations_500_750_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_500_750_CR1->fill(event);
+    }
     if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_CR1");
-              h_DeltaY_reco_SystVariations_750_1000_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_CR1->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_750_1000_CR1");
+      h_DeltaY_reco_SystVariations_750_1000_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_750_1000_CR1->fill(event);
+    }
     if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_CR1");
-              h_DeltaY_reco_SystVariations_1000_1500_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_1000_1500_CR1");
+      h_DeltaY_reco_SystVariations_1000_1500_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
+    }
     if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
-              h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
-            }
-   // DeltaY_SystVariations_DNN_output1->fill(event);
-   // h_Zprime_PDFVariations_DNN_output1->fill(event);
-    // if( ZprimeTopTag_selection->passes(event) ){
-      // fill_histograms(event, "DNN_output1_TopTag");
-    //  DeltaY_SystVariations_DNN_output1_TopTag->fill(event);
-    //  h_Zprime_PDFVariations_DNN_output1_TopTag->fill(event);
-    // }else{
-      // fill_histograms(event, "DNN_output1_NoTopTag");
-      // DeltaY_SystVariations_DNN_output1_NoTopTag->fill(event);
-      // h_Zprime_PDFVariations_DNN_output1_NoTopTag->fill(event);
-    // }
+      fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
+      h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
+    }
+
     event.set(h_chi2_CR1,BestZprimeCandidate->discriminator("chi2_total"));
     //event.set(h_M_tt_CR1,BestZprimeCandidate->Zprime_v4().M());
     event.set(h_weight_CR1,event.weight);
@@ -1561,481 +1538,38 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       }
     }
   }
+  
   if(debug) cout << "out1 == max_score: ok" << endl;
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
     if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_CR2");
-              h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_0_500_CR2");
+      h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
+    }
     if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_CR2");
-              h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_500_750_CR2");
+      h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
+    }
     if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_CR2");
-              h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_750_1000_CR2");
+      h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
+    }
     if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
-              h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
+      h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
+    }
     if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
-              h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
-            }
-    
-
-    event.set(h_chi2_CR2,BestZprimeCandidate->discriminator("chi2_total"));
-   // event.set(h_M_tt_CR2,BestZprimeCandidate->Zprime_v4().M());
-    event.set(h_weight_CR2,event.weight);
-    event.set(h_pTlep_CR2,BestZprimeCandidate->top_leptonic_v4().Pt());
-    event.set(h_pThad_CR2,BestZprimeCandidate->top_hadronic_v4().Pt());
-    if(isMuon){
-      event.set(h_lep1_pt_CR2,event.muons->at(0).pt());
-      event.set(h_lep1_eta_CR2,event.muons->at(0).eta());
-    }
-    if(isElectron){
-      event.set(h_lep1_pt_CR2,event.electrons->at(0).pt());
-      event.set(h_lep1_eta_CR2,event.electrons->at(0).eta());
-    }
-    if(event.jets->size()>0){
-      event.set(h_ak4jet1_pt_CR2,event.jets->at(0).pt());
-      event.set(h_ak4jet1_eta_CR2,event.jets->at(0).eta());
-   //   event.set(h_N_jets_CR2,event.jets->size());
-    }
-    if(event.topjets->size()>0){
-      event.set(h_ak8jet1_pt_CR2,event.topjets->at(0).pt());
-      event.set(h_ak8jet1_eta_CR2,event.topjets->at(0).eta());
-    }
-    int Nmuons = muons->size();
-    for(int i=0; i<Nmuons; i++){
-      if(muons->at(i).has_tag(Muon::twodcut_dRmin) && muons->at(i).has_tag(Muon::twodcut_pTrel)){
-        event.set(h_ptrel_mu_jet_CR2,muons->at(i).get_tag(Muon::twodcut_pTrel));
-        event.set(h_dRmin_mu_jet_CR2,muons->at(i).get_tag(Muon::twodcut_dRmin));
-      }
-    }
-    int Nelectrons = electrons->size();
-    for(int i=0; i<Nelectrons; i++){
-      if(electrons->at(i).has_tag(Electron::twodcut_dRmin) && electrons->at(i).has_tag(Electron::twodcut_pTrel)){
-        event.set(h_ptrel_jet_CR2,electrons->at(i).get_tag(Electron::twodcut_pTrel));
-        event.set(h_dRmin_jet_CR2,electrons->at(i).get_tag(Electron::twodcut_dRmin));
-      }
+      fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
+      h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
     }
   }
 
-
-
-  // fill_histograms(event, "AfterChi2");
-
-  /*
-  █  
-  █ OUTPUT SCORE 0
-  █ 
-  █  
-  */
-  /*
-  if(out0 == max_score){
-    if(Chi2_selection->passes(event)){
-      if(debug) cout << "out0, chi2 in dY: ok" << endl;
-
-      if(isMC){
-        vector<GenParticle>* genparticles = event.genparticles;
-        GenParticle top, antitop;
-        for(const GenParticle & gp : *event.genparticles){
-          if(gp.pdgId() == 6){
-            top = gp;
-          }
-          else if(gp.pdgId() == -6){
-          antitop = gp;
-            }
-        }
-        if(isMuon){
-          if(debug) cout << "muon in dY: ok" << endl;
-
-          ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-          float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-          // =============== MUON charge 1 ===================================================================================================================================================================================
-          if(event.muons->at(0).charge() == 1){
-
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-          
-          }else if (event.muons->at(0).charge() == -1){
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-          }
-          
-          
-            //Number of deltaY reco events
-            if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_SR");
-              h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
-            }
-            if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_SR");
-              h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
-            }
-            if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_SR");
-              h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
-            }
-            if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_SR");
-              h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
-            }
-            if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_SR");
-              h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
-            }
-          }
-          
-        if (isElectron){
-
-          ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-          float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-          
-          // =============== ELECTRON charge 1 ===================================================================================================================================================================================
-          if(event.electrons->at(0).charge() == 1){
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-          }
-          else if (event.electrons->at(0).charge() == -1)
-          {
-            double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-          }
-          
-            //Number of deltaY reco events
-            if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_SR");
-              h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
-            }
-            if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_SR");
-              h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
-            }
-            if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_SR");
-              h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
-            }
-            if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_SR");
-              h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
-            }
-            if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_SR");
-              h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
-            }
-          }//is electron
-       }//is MC
-    
-    }//chi2
-}//out0
-
-
-  if(out1 == max_score){
-    if(isMC){
-      vector<GenParticle>* genparticles = event.genparticles;
-      GenParticle top, antitop;
-      for(const GenParticle & gp : *event.genparticles){
-
-        if(gp.pdgId() == 6){
-          top = gp;
-        }
-        else if(gp.pdgId() == -6){
-        antitop = gp;
-          }
-      }
-
-
-      if(isMuon){
-
-        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-        
-        // =============== MUON charge 1 ===================================================================================================================================================================================
-        if(event.muons->at(0).charge() == 1){
-
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-        }
-        else if(event.muons->at(0).charge() == -1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-        }
-
-          //Number of deltaY reco events
-          if(Mass_tt>=0 && Mass_tt < 500){
-            fill_histograms(event, "DeltaY_reco_0_500_CR1");
-            h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_0_500_CR1->fill(event);
-          }
-          if(Mass_tt>=500 && Mass_tt < 750){
-            fill_histograms(event, "DeltaY_reco_500_750_CR1");
-            h_DeltaY_reco_SystVariations_500_750_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_500_750_CR1->fill(event);
-          }
-          if(Mass_tt>=750 && Mass_tt < 1000){
-            fill_histograms(event, "DeltaY_reco_750_1000_CR1");
-            h_DeltaY_reco_SystVariations_750_1000_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_750_1000_CR1->fill(event);
-          }
-          if(Mass_tt>=1000 && Mass_tt < 1500){
-            fill_histograms(event, "DeltaY_reco_1000_1500_CR1");
-            h_DeltaY_reco_SystVariations_1000_1500_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
-          }
-          if(Mass_tt>=1500){
-            fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
-            h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
-          }
-            
-         }//isMuon
-
-      
-        
-      if (isElectron){
-
-        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-        // =============== ELECTRON charge 1 ===================================================================================================================================================================================
-
-        if(event.electrons->at(0).charge() == 1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-        }
-        else if(event.electrons->at(0).charge() == -1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-        }
-
-          //Number of deltaY reco events
-          if(Mass_tt>=0 && Mass_tt < 500){
-            fill_histograms(event, "DeltaY_reco_0_500_CR1");
-            h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
-            h_DeltaY_reco_PDFVariations_0_500_CR1->fill(event);
-          }
-          if(Mass_tt>=500 && Mass_tt < 750){
-            fill_histograms(event, "DeltaY_reco_500_750_CR1");
-            h_DeltaY_reco_SystVariations_500_750_CR1->fill(event);
-          h_DeltaY_reco_PDFVariations_500_750_CR1->fill(event);
-          }
-          if(Mass_tt>=750 && Mass_tt < 1000){
-            fill_histograms(event, "DeltaY_reco_750_1000_CR1");
-            h_DeltaY_reco_SystVariations_750_1000_CR1->fill(event);
-          h_DeltaY_reco_PDFVariations_750_1000_CR1->fill(event);
-          }
-          if(Mass_tt>=1000 && Mass_tt < 1500){
-            fill_histograms(event, "DeltaY_reco_1000_1500_CR1");
-            h_DeltaY_reco_SystVariations_1000_1500_CR1->fill(event);
-          h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
-          }
-          if(Mass_tt>=1500){
-            fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
-            h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
-          h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
-          }
-        
-        
-      }//isElectron
-     
-    }//isMC
-    
-  }//isoutpit1
-
-  
-
- 
-
-  if(out2 == max_score){
-    if(isMC){
-      vector<GenParticle>* genparticles = event.genparticles;
-      GenParticle top, antitop;
-      for(const GenParticle & gp : *event.genparticles){
-
-        if(gp.pdgId() == 6){
-          top = gp;
-        }
-        else if(gp.pdgId() == -6){
-        antitop = gp;
-          }
-      }
-
-      // =============== MUON ===================================================================================================================================================================================
-
-      if(isMuon){
-
-        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-          
-        // =============== MUON charge 1 ===================================================================================================================================================================================
-        if(event.muons->at(0).charge() == 1){
-
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-        }
-        else if(event.muons->at(0).charge() == -1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-        }
-
-          //Number of deltaY reco events
-          if(Mass_tt>=0 && Mass_tt < 500){
-            fill_histograms(event, "DeltaY_reco_0_500_CR2");
-            h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
-          }
-          if(Mass_tt>=500 && Mass_tt < 750){
-            fill_histograms(event, "DeltaY_reco_500_750_CR2");
-            h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
-          }
-          if(Mass_tt>=750 && Mass_tt < 1000){
-            fill_histograms(event, "DeltaY_reco_750_1000_CR2");
-            h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
-          }
-          if(Mass_tt>=1000 && Mass_tt < 1500){
-            fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
-            h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
-          }
-          if(Mass_tt>=1500){
-            fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
-            h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
-          }
-      }
-        //   }
-        
-      if (isElectron){
-
-        ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-        float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
-        // =============== ELECTRON charge 1 ===================================================================================================================================================================================
-
-        if(event.electrons->at(0).charge() == 1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))));
-         }
-        else if(event.electrons->at(0).charge() == -1){
-          double_t DeltaY_reco= TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_hadronic_v4().energy() + BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta()))/(BestZprimeCandidate->top_hadronic_v4().energy() - BestZprimeCandidate->top_hadronic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_hadronic_v4().eta())))) - TMath::Abs(0.5*TMath::Log((BestZprimeCandidate->top_leptonic_v4().energy() + BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))/(BestZprimeCandidate->top_leptonic_v4().energy() - BestZprimeCandidate->top_leptonic_v4().pt()*TMath::SinH(BestZprimeCandidate->top_leptonic_v4().eta()))));
-
-        }
-
-          //Number of deltaY reco events
-          if(Mass_tt>=0 && Mass_tt < 500){
-            fill_histograms(event, "DeltaY_reco_0_500_CR2");
-            h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
-          }
-          if(Mass_tt>=500 && Mass_tt < 750){
-            fill_histograms(event, "DeltaY_reco_500_750_CR2");
-            h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
-          }
-          if(Mass_tt>=750 && Mass_tt < 1000){
-            fill_histograms(event, "DeltaY_reco_750_1000_CR2");
-            h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
-          }
-          if(Mass_tt>=1000 && Mass_tt < 1500){
-            fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
-            h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
-          }
-          if(Mass_tt>=1500){
-            fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
-            h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
-            h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
-          }
-        
-
-      }//isElectron
-          
-
-    }//isMC
-    
-  }//isout2
-
-  
-  
- 
-
- // if(debug) cout << "MC dY: ok" << endl;
-  if (!isMC){
-    if(isMuon){
-      if(debug) cout << "in muon data" << endl;
-  
-      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-      float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-                
-      //Number of deltaY reco events
-      if(Mass_tt>=0 && Mass_tt < 500){
-        if(debug) cout << "in muon 0-500 data" << endl;
-        fill_histograms(event, "DeltaY_reco_0_500_data");
-      }
-      if(Mass_tt>=500 && Mass_tt < 750){
-        if(debug) cout << "in muon 500-750 data" << endl;
-        fill_histograms(event, "DeltaY_reco_500_750_data");
-      }
-      if(Mass_tt>=750 && Mass_tt < 1000){
-        if(debug) cout << "in muon 750-1000 data" << endl;
-        fill_histograms(event, "DeltaY_reco_750_1000_data");
-      }
-      if(Mass_tt>=1000 && Mass_tt < 1500){
-        if(debug) cout << "in muon 1000-1500 data" << endl;
-        fill_histograms(event, "DeltaY_reco_1000_1500_data");
-      }
-      if(Mass_tt>=1500){
-        if(debug) cout << "in muon 1500Inf  data" << endl;
-        fill_histograms(event, "DeltaY_reco_1500Inf_data");
-      }
-      
-      // muon bracket  ===== MUON END ==== 
-      if(debug) cout << "end of muon data" << endl;
-    }
-        
-    if (isElectron){
-
-      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-      float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-              
-      //Number of deltaY reco events
-      if(Mass_tt>=0 && Mass_tt < 500){
-        fill_histograms(event, "DeltaY_reco_0_500_data");
-      }
-      if(Mass_tt>=500 && Mass_tt < 750){
-        fill_histograms(event, "DeltaY_reco_500_750_data");
-      }
-      if(Mass_tt>=750 && Mass_tt < 1000){
-        fill_histograms(event, "DeltaY_reco_750_1000_data");
-      }
-      if(Mass_tt>=1000 && Mass_tt < 1500){
-        fill_histograms(event, "DeltaY_reco_1000_1500_data");
-      }
-      if(Mass_tt>=1500){
-        fill_histograms(event, "DeltaY_reco_1500Inf_data");
-      }
-      
-      // electron bracket 
-    }
-  }  
-  if(debug) cout << "DATA dY: ok" << endl;
- */  
 
   // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
 
