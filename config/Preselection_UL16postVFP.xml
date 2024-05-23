@@ -2,7 +2,7 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi  "16810"> <!-- from https://twiki.cern.ch/twiki/bin/view/CMS/TWikiLUM#SummaryTable, https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopSystematics#Luminosity -->
-<!ENTITY PRESELdir   "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL16_postVFP/Preselection">
+<!ENTITY PRESELdir   "/nfs/dust/cms/group/zprime-uhh/Preselection_dY/UL16postVFP">
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT        "-1">
 <!ENTITY IS_HOTVR    "false">
@@ -126,7 +126,6 @@
 		<InputData Lumi="117575358.677" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16postVFP" Cacheable="&b_Cacheable;">
 			&TTToSemiLeptonic_UL16postVFP;
 			<InputTree Name="AnalysisTree" />
-			<OutputTree Name="AnalysisTree" />
 		</InputData>
 		<!-- <InputData Lumi="88489755.8674" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16postVFP" Cacheable="&b_Cacheable;">
 			&TTToHadronic_UL16postVFP;

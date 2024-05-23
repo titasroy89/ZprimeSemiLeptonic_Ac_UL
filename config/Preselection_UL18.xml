@@ -2,7 +2,7 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi "59830.0">
-<!ENTITY PRESELdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/Preselection">
+<!ENTITY PRESELdir   "/nfs/dust/cms/group/zprime-uhh/Preselection_dY/UL18">
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT "-1">
 <!ENTITY YEARsuffix "_UL18">
@@ -76,7 +76,7 @@
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunC&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunC; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunD; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> -->
 
-		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
 		<!-- <InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="277261144.22366405" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> -->
 		<!-- <InputData Lumi="18184625.971525513" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_top_5f_NoFullyHadronicDecays&YEARsuffix;" Cacheable="&b_Cacheable;"> &ST_tW_top_5f_NoFullyHadronicDecays; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
