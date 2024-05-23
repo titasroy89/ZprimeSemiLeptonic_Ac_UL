@@ -84,7 +84,7 @@
     <InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SinglePhoton_RunE&YEARsuffix;" Cacheable="&b_Cacheable;"> &SinglePhoton_RunE; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SinglePhoton_RunF&YEARsuffix;" Cacheable="&b_Cacheable;"> &SinglePhoton_RunF; <InputTree Name="AnalysisTree"/> </InputData>
 
-    <!-- <InputData Lumi="287297864.34871227" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
+    <InputData Lumi="287297864.34871227" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="86394848.08209327" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="190947232.88378084" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> </InputData>
 
@@ -93,7 +93,7 @@
     <InputData Lumi="100258060.25952065" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_top_4f_InclusiveDecays&YEARsuffix;" Cacheable="&b_Cacheable;"> &ST_t-channel_top_4f_InclusiveDecays; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="54133245.962322414" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_antitop_4f_InclusiveDecays&YEARsuffix;" Cacheable="&b_Cacheable;"> &ST_t-channel_antitop_4f_InclusiveDecays; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="14468534.84924145" NEventsMax="&NEVT;" Type="MC" Version="ST_s-channel_4f_leptonDecays&YEARsuffix;" Cacheable="&b_Cacheable;"> &ST_s-channel_4f_leptonDecays; <InputTree Name="AnalysisTree"/> </InputData>
-   <InputData Lumi="34594.90243902439" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-70To100&YEARsuffix;" Cacheable="&b_Cacheable;"> &WJetsToLNu_HT-70To100; <InputTree Name="AnalysisTree"/> </InputData>
+    <InputData Lumi="34594.90243902439" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-70To100&YEARsuffix;" Cacheable="&b_Cacheable;"> &WJetsToLNu_HT-70To100; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="37290.94094173983" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-100To200&YEARsuffix;" Cacheable="&b_Cacheable;"> &WJetsToLNu_HT-100To200; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="124068.57695742781" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-200To400&YEARsuffix;" Cacheable="&b_Cacheable;"> &WJetsToLNu_HT-200To400; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="119828.13536828135" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-400To600&YEARsuffix;" Cacheable="&b_Cacheable;"> &WJetsToLNu_HT-400To600; <InputTree Name="AnalysisTree"/> </InputData>
@@ -120,7 +120,7 @@
     <InputData Lumi="5224.666925465838" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT700to1000&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT700to1000; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="9066.735241502683" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1000to1500&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT1000to1500; <InputTree Name="AnalysisTree"/> </InputData>
     <InputData Lumi="69712.27777777778" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1500to2000&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT1500to2000; <InputTree Name="AnalysisTree"/> </InputData>
-    <InputData Lumi="185881.22727272726" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT2000toInf&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT2000toInf; <InputTree Name="AnalysisTree"/> </InputData> -->
+    <InputData Lumi="185881.22727272726" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT2000toInf&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT2000toInf; <InputTree Name="AnalysisTree"/> </InputData>
 
     <UserConfig>
       <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>

@@ -1107,7 +1107,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if(isElectron){
     sf_muon_trigger_dummy->process(event);
   }
-
+  if(debug) cout << "leptons: ok" << endl;
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
   // fill_histograms(event, "BeforeBtagSF");
 
@@ -1166,9 +1166,10 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   NNModule->process(event);
   std::vector<tensorflow::Tensor> NNoutputs = NNModule->GetOutputs();
   ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2); 
   float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
-  
+  if(debug) cout << "starting DNN" << endl;
   //float Mttbar_reco =inv_mass(BestZprimeCandidate->BestZprimeCandidate->top_leptonic_v4()+BestZprimeCandidate->BestZprimeCandidate->top_hadronic_v4());
   //cout << "what is Mttbar:" << Mttbar_reco<<endl;
   event.set(h_NNoutput0, (double)(NNoutputs[0].tensor<float, 2>()(0,0)));
@@ -1183,6 +1184,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   // h_MulticlassNN_output->fill(event);
 
+  //
+
   double max_score = 0.0;
   for ( int i = 0; i < 3; i++ ) {
     if ( out_event[i] > max_score) {
@@ -1195,7 +1198,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   if(!DeltaEta_selection->passes(event)) return false;
   // fill_histograms(event, "DeltaEtaCut");
-
+  if(debug) cout << "check for signal node" << endl;
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
@@ -1236,7 +1239,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       }
     }//Chi2
   }//out0
-
+  if(debug) cout << "check for ST node" << endl;
   if( out1 == max_score ){
     fill_histograms(event, "DNN_output1");
     if(Mass_tt>=0 && Mass_tt < 500){
@@ -1266,7 +1269,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
             }
    }//out1
  
-  if(debug) cout << "out1 == max_score: ok" << endl;
+  if(debug) cout << "check for WJets node" << endl;
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
@@ -1296,7 +1299,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
               h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
             }
     }//out2
-
+  if(debug) cout << "done" << endl;
   return true;
 }
 
