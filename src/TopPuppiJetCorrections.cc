@@ -74,7 +74,7 @@ void TopPuppiJetCorrections::init(Context & ctx){
     } else if (year == Year::isUL16postVFP) {
       jer_tag = "Summer20UL16_JRV3";
     } else if (year == Year::isUL17) {
-      jer_tag = "Summer19UL17_JRV2";
+      jer_tag = "Summer19UL17_JRV3";
     } else if (year == Year::isUL18) {
       jer_tag = "Summer19UL18_JRV2";
     } else {

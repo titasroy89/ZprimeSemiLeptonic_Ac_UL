@@ -250,9 +250,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
  // cout<<"in neural network module"<<endl;
   //Only Ele or Mu variables!!
   //muon
-  // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+ // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //electron
- ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+  ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
 
  // cout<<"read txt"<<endl;
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
@@ -270,9 +270,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //Only Ele or Mu variables!!
   //Muon
-  vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_MET_phi, h_MET_pt, h_Mu_E, h_Mu_eta, h_Mu_phi, h_Mu_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
+  //vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_MET_phi, h_MET_pt, h_Mu_E, h_Mu_eta, h_Mu_phi, h_Mu_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
   //Electron
-  //vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ele_E, h_Ele_eta, h_Ele_phi, h_Ele_pt, h_MET_phi, h_MET_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
+  vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ele_E, h_Ele_eta, h_Ele_phi, h_Ele_pt, h_MET_phi, h_MET_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
 
   for(int i = 0; i < 59; ++i){
    // cout<<"looping over NN inputs "<< i <<endl;
@@ -349,57 +349,7 @@ protected:
   Event::Handle<float> h_chi2;
   Event::Handle<float> h_weight;
 
-  Event::Handle<float> h_chi2_SR;
-  Event::Handle<float> h_dRmin_mu_jet_SR; 
-  Event::Handle<float> h_dRmin_jet_SR;
-  Event::Handle<float> h_M_tt_SR;
-  Event::Handle<float> h_weight_SR;
-  Event::Handle<float> h_pTlep_SR;
-  Event::Handle<float> h_pThad_SR;
-  Event::Handle<float> h_lep1_pt_SR;
-  Event::Handle<float> h_lep1_eta_SR;
-  Event::Handle<float> h_ak4jet1_pt_SR;
-  Event::Handle<float> h_ak4jet1_eta_SR;
-  Event::Handle<float> h_ak8jet1_pt_SR;
-  Event::Handle<float> h_ak8jet1_eta_SR;
-  Event::Handle<float> h_ptrel_mu_jet_SR;
-  Event::Handle<float> h_ptrel_jet_SR;
-  Event::Handle<float> h_N_Ak4_SR;
-
-  Event::Handle<float> h_chi2_CR1;
-  Event::Handle<float> h_dRmin_mu_jet_CR1; 
-  Event::Handle<float> h_dRmin_jet_CR1;
-  Event::Handle<float> h_M_tt_CR1;
-  Event::Handle<float> h_weight_CR1;
-  Event::Handle<float> h_pTlep_CR1;
-  Event::Handle<float> h_pThad_CR1;
-  Event::Handle<float> h_lep1_pt_CR1;
-  Event::Handle<float> h_lep1_eta_CR1;
-  Event::Handle<float> h_ak4jet1_pt_CR1;
-  Event::Handle<float> h_ak4jet1_eta_CR1;
-  Event::Handle<float> h_ak8jet1_pt_CR1;
-  Event::Handle<float> h_ak8jet1_eta_CR1;
-  Event::Handle<float> h_ptrel_mu_jet_CR1;
-  Event::Handle<float> h_ptrel_jet_CR1;
-  Event::Handle<float> h_N_Ak4_CR1;
-
-  Event::Handle<float> h_chi2_CR2;
-  Event::Handle<float> h_dRmin_mu_jet_CR2; 
-  Event::Handle<float> h_dRmin_jet_CR2;
-  Event::Handle<float> h_M_tt_CR2;
-  Event::Handle<float> h_weight_CR2;
-  Event::Handle<float> h_pTlep_CR2;
-  Event::Handle<float> h_pThad_CR2;
-  Event::Handle<float> h_lep1_pt_CR2;
-  Event::Handle<float> h_lep1_eta_CR2;
-  Event::Handle<float> h_ak4jet1_pt_CR2;
-  Event::Handle<float> h_ak4jet1_eta_CR2;
-  Event::Handle<float> h_ak8jet1_pt_CR2;
-  Event::Handle<float> h_ak8jet1_eta_CR2;
-  Event::Handle<float> h_ptrel_mu_jet_CR2;
-  Event::Handle<float> h_ptrel_jet_CR2;
-  Event::Handle<float> h_N_Ak4_CR2;
-
+  
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
 
   // Lumi hists
@@ -410,28 +360,7 @@ protected:
   // DNN multiclass output hist
   std::unique_ptr<Hists> h_MulticlassNN_output;
 
-  // Hists with systematics variations
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0_TopTag;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1_TopTag;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2_TopTag;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output0_NoTopTag;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output1_NoTopTag;
-  // std::unique_ptr<Hists> DeltaY_SystVariations_DNN_output2_NoTopTag;
-
-  // // Hists with PDF variations
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0_TopTag;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1_TopTag;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2_TopTag;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output0_NoTopTag;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output1_NoTopTag;
-  // std::unique_ptr<Hists> h_Zprime_PDFVariations_DNN_output2_NoTopTag;
-
+ 
 
   // ================ SR ==================================================================================================================================================================================================================
   //muon and ele systematics
@@ -493,7 +422,8 @@ protected:
   bool isPhoton;
   TString year;
 
-  TH2F *ratio_hist;
+  TH2F *ratio_hist_muon;
+  TH2F *ratio_hist_ele;
 
 
   Event::Handle<float> h_Ak4_j1_E;
@@ -786,72 +716,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_chi2 = ctx.declare_event_output<float> ("rec_chi2");
   h_weight = ctx.declare_event_output<float> ("weight");
 
-  h_chi2_SR = ctx.declare_event_output<float> ("rec_chi2");
-  h_dRmin_mu_jet_SR = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
-  h_dRmin_jet_SR = ctx.declare_event_output<float> ("dRmin_jet");
- // h_M_tt_SR = ctx.declare_event_output<float> ("Mttbar");
-  h_weight_SR = ctx.declare_event_output<float> ("weight");
-  h_pTlep_SR = ctx.declare_event_output<float> ("pT_lep");
-  h_pThad_SR = ctx.declare_event_output<float> ("pT_had");
-  h_lep1_pt_SR = ctx.declare_event_output<float> ("lep1_pt");
-  h_lep1_eta_SR = ctx.declare_event_output<float> ("lep1_eta");
-  h_ak4jet1_pt_SR = ctx.declare_event_output<float> ("ak4jet1_pt");
-  h_ak4jet1_eta_SR = ctx.declare_event_output<float> ("ak4jet1_eta");
-  h_ak8jet1_pt_SR = ctx.declare_event_output<float> ("ak8jet1_pt");
-  h_ak8jet1_eta_SR = ctx.declare_event_output<float> ("ak8jet1_eta");
-  h_ptrel_mu_jet_SR = ctx.declare_event_output<float> ("ptrel_mu_jet");
-  h_ptrel_jet_SR = ctx.declare_event_output<float> ("ptrel_jet");
-  //h_N_jets_SR = ctx.declare_event_output<float> ("N_jets");
-
-  h_chi2_CR1 = ctx.declare_event_output<float> ("rec_chi2");
-  h_dRmin_mu_jet_CR1 = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
-  h_dRmin_jet_CR1 = ctx.declare_event_output<float> ("dRmin_jet");
- // h_M_tt_CR1 = ctx.declare_event_output<float> ("Mttbar");
-  h_weight_CR1 = ctx.declare_event_output<float> ("weight");
-  h_pTlep_CR1 = ctx.declare_event_output<float> ("pT_lep");
-  h_pThad_CR1 = ctx.declare_event_output<float> ("pT_had");
-  h_lep1_pt_CR1 = ctx.declare_event_output<float> ("lep1_pt");
-  h_lep1_eta_CR1 = ctx.declare_event_output<float> ("lep1_eta");
-  h_ak4jet1_pt_CR1 = ctx.declare_event_output<float> ("ak4jet1_pt");
-  h_ak4jet1_eta_CR1 = ctx.declare_event_output<float> ("ak4jet1_eta");
-  h_ak8jet1_pt_CR1 = ctx.declare_event_output<float> ("ak8jet1_pt");
-  h_ak8jet1_eta_CR1 = ctx.declare_event_output<float> ("ak8jet1_eta");
-  h_ptrel_mu_jet_CR1 = ctx.declare_event_output<float> ("ptrel_mu_jet");
-  h_ptrel_jet_CR1 = ctx.declare_event_output<float> ("ptrel_jet");
- // h_N_jets_CR1 = ctx.declare_event_output<float> ("N_jets");
-
-  h_chi2_CR2 = ctx.declare_event_output<float> ("rec_chi2");
-  h_dRmin_mu_jet_CR2 = ctx.declare_event_output<float> ("dRmin_mu_jet"); 
-  h_dRmin_jet_CR2 = ctx.declare_event_output<float> ("dRmin_jet");
- // h_M_tt_CR2 = ctx.declare_event_output<float> ("Mttbar");
-  h_weight_CR2 = ctx.declare_event_output<float> ("weight");
-  h_pTlep_CR2 = ctx.declare_event_output<float> ("pT_lep");
-  h_pThad_CR2 = ctx.declare_event_output<float> ("pT_had");
-  h_lep1_pt_CR2 = ctx.declare_event_output<float> ("lep1_pt");
-  h_lep1_eta_CR2 = ctx.declare_event_output<float> ("lep1_eta");
-  h_ak4jet1_pt_CR2 = ctx.declare_event_output<float> ("ak4jet1_pt");
-  h_ak4jet1_eta_CR2 = ctx.declare_event_output<float> ("ak4jet1_eta");
-  h_ak8jet1_pt_CR2 = ctx.declare_event_output<float> ("ak8jet1_pt");
-  h_ak8jet1_eta_CR2 = ctx.declare_event_output<float> ("ak8jet1_eta");
-  h_ptrel_mu_jet_CR2 = ctx.declare_event_output<float> ("ptrel_mu_jet");
-  h_ptrel_jet_CR2 = ctx.declare_event_output<float> ("ptrel_jet");
-  //h_N_jets_CR2 = ctx.declare_event_output<float> ("N_jets");
-
+  
+  
 
   sel_1btag.reset(new NJetSelection(1, -1, id_btag));
   sel_2btag.reset(new NJetSelection(2,-1, id_btag));
 
-  // Hist with Syst Variations
-  //DeltaY_SystVariations_DNN_output0.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0"));
-  //DeltaY_SystVariations_DNN_output1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1"));
-  //DeltaY_SystVariations_DNN_output2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2"));
-  // DeltaY_SystVariations_DNN_output0_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0_TopTag"));
-  // DeltaY_SystVariations_DNN_output1_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1_TopTag"));
-  // DeltaY_SystVariations_DNN_output2_TopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2_TopTag"));
-  // DeltaY_SystVariations_DNN_output0_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output0_NoTopTag"));
-  // DeltaY_SystVariations_DNN_output1_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output1_NoTopTag"));
-  // DeltaY_SystVariations_DNN_output2_NoTopTag.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_SystVariations_DNN_output2_NoTopTag"));
-
+  
   // ================ SR ==================================================================================================================================================================================================================
   
   h_DeltaY_reco_SystVariations_0_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_SR"));
@@ -908,39 +779,19 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // ================ CR2 ends ==================================================================================================================================================================================================================
 
   
-  // Hist with PDF variations
-  // // h_Zprime_PDFVariations_DNN_output0.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0"));
-  // h_Zprime_PDFVariations_DNN_output1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1"));
-  // h_Zprime_PDFVariations_DNN_output2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2"));
-  // h_Zprime_PDFVariations_DNN_output0_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0_TopTag"));
-  // h_Zprime_PDFVariations_DNN_output1_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1_TopTag"));
-  // h_Zprime_PDFVariations_DNN_output2_TopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2_TopTag"));
-  // h_Zprime_PDFVariations_DNN_output0_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output0_NoTopTag"));
-  // h_Zprime_PDFVariations_DNN_output1_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output1_NoTopTag"));
-  // h_Zprime_PDFVariations_DNN_output2_NoTopTag.reset(new ZprimeSemiLeptonicPDFHists(ctx, "Zprime_PDFVariations_DNN_output2_NoTopTag"));
-
   
-  // h_MistagHists.reset(new ZprimeSemiLeptonicMistagHists(ctx, "Mistag"));
   
-  // Book histograms
   vector<string> histogram_tags = {
-  // "AfterChi2",
-  // "NNInputsBeforeReweight", 
-  //"DNN_output0_beforeChi2Cut", "DNN_output0_TopTag_beforeChi2Cut", "DNN_output0_NoTopTag_beforeChi2Cut", 
-  "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag", "DNN_output0_NoTopTag",//
-  //"DNN_output1_TopTag","DNN_output2_TopTag","DNN_output0_NoTopTag","DNN_output1_NoTopTag","DNN_output2_NoTopTag",
-  // "Initial", "Middle", "Last",
+  "DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag", "DNN_output0_NoTopTag",
   
   "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_500_SR", 
   
   "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1", "DeltaY_reco_0_500_CR1",   
   
   "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_500_CR2", 
+};
 
-  };
 
-
-  // vector<string> histogram_tags = {"BeforeCuts", "AfterBaseline", "AfterDNN", "AfterChi2" };
   book_histograms(ctx, histogram_tags);
 
   h_MulticlassNN_output.reset(new ZprimeSemiLeptonicMulticlassNNHists(ctx, "MulticlassNN"));
@@ -965,13 +816,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
     if(isMuon){
       TFile* f_btag2Dsf = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
-      ratio_hist = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
-      ratio_hist->SetDirectory(0);
+      ratio_hist_muon = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
+      ratio_hist_muon->SetDirectory(0);
     }
     else if(!isMuon){
       TFile* f_btag2Dsf = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
-      ratio_hist = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
-      ratio_hist->SetDirectory(0);
+      ratio_hist_ele = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
+      ratio_hist_ele->SetDirectory(0);
     }
   }
 
@@ -1057,7 +908,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_NNoutput2 = ctx.declare_event_output<double>("NNoutput2");
   //Only Ele or Mu variables!!
   //muon
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  //NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
   //electron
   NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
 
@@ -1079,57 +930,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // Initialize reco flags with false
   event.set(h_is_zprime_reconstructed_chi2, false);
   event.set(h_is_zprime_reconstructed_correctmatch, false);
+  event.set(h_chi2,-100);
+  event.set(h_weight,-100);
   
-  event.set(h_chi2_SR,-100);
-  event.set(h_dRmin_mu_jet_SR,-100);  
-  event.set(h_dRmin_jet_SR,-100);
- // event.set(h_M_tt_SR,-100);
-  event.set(h_weight_SR,-100);
-  event.set(h_pTlep_SR,-100);
-  event.set(h_pThad_SR,-100);
-  event.set(h_lep1_pt_SR,-100);
-  event.set(h_lep1_eta_SR,-100);
-  event.set(h_ak4jet1_pt_SR,-100);
-  event.set(h_ak4jet1_eta_SR,-100);
-  event.set(h_ak8jet1_pt_SR,-100);
-  event.set(h_ak8jet1_eta_SR,-100);
-  event.set(h_ptrel_mu_jet_SR,-100);
-  event.set(h_ptrel_jet_SR,-100);
-  //event.set(h_N_jets_SR, -100);
-
-  event.set(h_chi2_CR1,-100);
-  event.set(h_dRmin_mu_jet_CR1,-100);  
-  event.set(h_dRmin_jet_CR1,-100);
- // event.set(h_M_tt_CR1,-100);
-  event.set(h_weight_CR1,-100);
-  event.set(h_pTlep_CR1,-100);
-  event.set(h_pThad_CR1,-100);
-  event.set(h_lep1_pt_CR1,-100);
-  event.set(h_lep1_eta_CR1,-100);
-  event.set(h_ak4jet1_pt_CR1,-100);
-  event.set(h_ak4jet1_eta_CR1,-100);
-  event.set(h_ak8jet1_pt_CR1,-100);
-  event.set(h_ak8jet1_eta_CR1,-100);
-  event.set(h_ptrel_mu_jet_CR1,-100);
-  event.set(h_ptrel_jet_CR1,-100);
- // event.set(h_N_jets_CR1, -100);
-
-  event.set(h_chi2_CR2,-100);
-  event.set(h_dRmin_mu_jet_CR2,-100);  
-  event.set(h_dRmin_jet_CR2,-100);
- // event.set(h_M_tt_CR2,-100);
-  event.set(h_weight_CR2,-100);
-  event.set(h_pTlep_CR2,-100);
-  event.set(h_pThad_CR2,-100);
-  event.set(h_lep1_pt_CR2,-100);
-  event.set(h_lep1_eta_CR2,-100);
-  event.set(h_ak4jet1_pt_CR2,-100);
-  event.set(h_ak4jet1_eta_CR2,-100);
-  event.set(h_ak8jet1_pt_CR2,-100);
-  event.set(h_ak8jet1_eta_CR2,-100);
-  event.set(h_ptrel_mu_jet_CR2,-100);
-  event.set(h_ptrel_jet_CR2,-100);
- // event.set(h_N_jets_CR2, -100);
 
   event.set(h_NNoutput0, 0);
   event.set(h_NNoutput1, 0);
@@ -1151,8 +954,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // fill_histograms(event, "Weights_Init");
   if(debug)  cout<<"Weights_Init"<<endl;
   // lumihists_Weights_Init->fill(event);
-  // if(debug)  cout<<"lumi_Weights_Init"<<endl;
-
+  
   
 
   if(!HEM_selection->passes(event)){
@@ -1305,7 +1107,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if(isElectron){
     sf_muon_trigger_dummy->process(event);
   }
-
+  if(debug) cout << "leptons: ok" << endl;
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
   // fill_histograms(event, "BeforeBtagSF");
 
@@ -1322,7 +1124,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     int Njets = jets->size();
     double st_jets = 0.;
     for(const auto & jet : *jets) st_jets += jet.pt();
-    custom_sf = ratio_hist->GetBinContent( ratio_hist->GetXaxis()->FindBin(Njets), ratio_hist->GetYaxis()->FindBin(st_jets) );
+    custom_sf = ratio_hist_muon->GetBinContent( ratio_hist_muon->GetXaxis()->FindBin(Njets), ratio_hist_muon->GetYaxis()->FindBin(st_jets) );
 
     event.weight *= custom_sf;
   }
@@ -1333,7 +1135,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     int Njets = jets->size();
     double st_jets = 0.;
     for(const auto & jet : *jets) st_jets += jet.pt();
-    custom_sf = ratio_hist->GetBinContent( ratio_hist->GetXaxis()->FindBin(Njets), ratio_hist->GetYaxis()->FindBin(st_jets) );
+    custom_sf = ratio_hist_ele->GetBinContent( ratio_hist_ele->GetXaxis()->FindBin(Njets), ratio_hist_ele->GetYaxis()->FindBin(st_jets) );
 
     event.weight *= custom_sf;
   }
@@ -1364,9 +1166,10 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   NNModule->process(event);
   std::vector<tensorflow::Tensor> NNoutputs = NNModule->GetOutputs();
   ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2); 
   float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
-  
+  if(debug) cout << "starting DNN" << endl;
   //float Mttbar_reco =inv_mass(BestZprimeCandidate->BestZprimeCandidate->top_leptonic_v4()+BestZprimeCandidate->BestZprimeCandidate->top_hadronic_v4());
   //cout << "what is Mttbar:" << Mttbar_reco<<endl;
   event.set(h_NNoutput0, (double)(NNoutputs[0].tensor<float, 2>()(0,0)));
@@ -1381,6 +1184,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   // h_MulticlassNN_output->fill(event);
 
+  //
+
   double max_score = 0.0;
   for ( int i = 0; i < 3; i++ ) {
     if ( out_event[i] > max_score) {
@@ -1393,12 +1198,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   if(!DeltaEta_selection->passes(event)) return false;
   // fill_histograms(event, "DeltaEtaCut");
-
-  vector<Electron>* electrons = event.electrons;
-  vector<Muon>* muons = event.muons;
-
+  if(debug) cout << "check for signal node" << endl;
   // out0=TTbar, out1=ST, out2=WJets
-  if( out0 == max_score ){  
+  if( out0 == max_score ){
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       fill_histograms(event, "DNN_output0");
       if(Mass_tt>=0 && Mass_tt < 500){
@@ -1433,46 +1235,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       else{
         fill_histograms(event, "DNN_output0_NoTopTag");
       }
-   
-      event.set(h_chi2_SR,BestZprimeCandidate->discriminator("chi2_total"));
-      // event.set(h_M_tt_SR,BestZprimeCandidate->Zprime_v4().M());
-      event.set(h_weight_SR,event.weight);
-      event.set(h_pTlep_SR,BestZprimeCandidate->top_leptonic_v4().Pt());
-      event.set(h_pThad_SR,BestZprimeCandidate->top_hadronic_v4().Pt());
-      if(isMuon){
-        event.set(h_lep1_pt_SR,event.muons->at(0).pt());
-        event.set(h_lep1_eta_SR,event.muons->at(0).eta());
-      }
-      if(isElectron){
-        event.set(h_lep1_pt_SR,event.electrons->at(0).pt());
-        event.set(h_lep1_eta_SR,event.electrons->at(0).eta());
-      }
-      if(event.jets->size()>0){
-        event.set(h_ak4jet1_pt_SR,event.jets->at(0).pt());
-        event.set(h_ak4jet1_eta_SR,event.jets->at(0).eta());
-      // event.set(h_N_jets_SR,event.jets->size());
-      }
-      if(event.topjets->size()>0){
-        event.set(h_ak8jet1_pt_SR,event.topjets->at(0).pt());
-        event.set(h_ak8jet1_eta_SR,event.topjets->at(0).eta());
-      }
-      int Nmuons = muons->size();
-      for(int i=0; i<Nmuons; i++){
-        if(muons->at(i).has_tag(Muon::twodcut_dRmin) && muons->at(i).has_tag(Muon::twodcut_pTrel)){
-          event.set(h_ptrel_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_pTrel));
-          event.set(h_dRmin_mu_jet_SR,muons->at(i).get_tag(Muon::twodcut_dRmin));
-        }
-      }
-      int Nelectrons = electrons->size();
-      for(int i=0; i<Nelectrons; i++){
-        if(electrons->at(i).has_tag(Electron::twodcut_dRmin) && electrons->at(i).has_tag(Electron::twodcut_pTrel)){
-          event.set(h_ptrel_jet_SR,electrons->at(i).get_tag(Electron::twodcut_pTrel));
-          event.set(h_dRmin_jet_SR,electrons->at(i).get_tag(Electron::twodcut_dRmin));
-        }
-      }
-    }//chi2 
+    }//Chi2
   }//out0
-
+  if(debug) cout << "check for ST node" << endl;
   if( out1 == max_score ){
     fill_histograms(event, "DNN_output1");
     if(Mass_tt>=0 && Mass_tt < 500){
@@ -1496,84 +1261,43 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
     }
     if(Mass_tt>=1500){
-      fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
-      h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
-      h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
-    }
-
-    event.set(h_chi2_CR1,BestZprimeCandidate->discriminator("chi2_total"));
-    //event.set(h_M_tt_CR1,BestZprimeCandidate->Zprime_v4().M());
-    event.set(h_weight_CR1,event.weight);
-    event.set(h_pTlep_CR1,BestZprimeCandidate->top_leptonic_v4().Pt());
-    event.set(h_pThad_CR1,BestZprimeCandidate->top_hadronic_v4().Pt());
-    if(isMuon){
-      event.set(h_lep1_pt_CR1,event.muons->at(0).pt());
-      event.set(h_lep1_eta_CR1,event.muons->at(0).eta());
-    }
-    if(isElectron){
-      event.set(h_lep1_pt_CR1,event.electrons->at(0).pt());
-      event.set(h_lep1_eta_CR1,event.electrons->at(0).eta());
-    }
-    if(event.jets->size()>0){
-      event.set(h_ak4jet1_pt_CR1,event.jets->at(0).pt());
-      event.set(h_ak4jet1_eta_CR1,event.jets->at(0).eta());
-    //  event.set(h_N_jets_CR1,event.jets->size());
-    }
-    if(event.topjets->size()>0){
-      event.set(h_ak8jet1_pt_CR1,event.topjets->at(0).pt());
-      event.set(h_ak8jet1_eta_CR1,event.topjets->at(0).eta());
-    }
-    int Nmuons = muons->size();
-    for(int i=0; i<Nmuons; i++){
-      if(muons->at(i).has_tag(Muon::twodcut_dRmin) && muons->at(i).has_tag(Muon::twodcut_pTrel)){
-        event.set(h_ptrel_mu_jet_CR1,muons->at(i).get_tag(Muon::twodcut_pTrel));
-        event.set(h_dRmin_mu_jet_CR1,muons->at(i).get_tag(Muon::twodcut_dRmin));
-      }
-    }
-    int Nelectrons = electrons->size();
-    for(int i=0; i<Nelectrons; i++){
-      if(electrons->at(i).has_tag(Electron::twodcut_dRmin) && electrons->at(i).has_tag(Electron::twodcut_pTrel)){
-        event.set(h_ptrel_jet_CR1,electrons->at(i).get_tag(Electron::twodcut_pTrel));
-        event.set(h_dRmin_jet_CR1,electrons->at(i).get_tag(Electron::twodcut_dRmin));
-      }
-    }
-  }
-  
-  if(debug) cout << "out1 == max_score: ok" << endl;
+              fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
+              h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
+              h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
+            }
+   }//out1
+ 
+  if(debug) cout << "check for WJets node" << endl;
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
     if(Mass_tt>=0 && Mass_tt < 500){
-      fill_histograms(event, "DeltaY_reco_0_500_CR2");
-      h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
-      h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
-    }
+              fill_histograms(event, "DeltaY_reco_0_500_CR2");
+              h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
+            }
     if(Mass_tt>=500 && Mass_tt < 750){
-      fill_histograms(event, "DeltaY_reco_500_750_CR2");
-      h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
-      h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
-    }
+              fill_histograms(event, "DeltaY_reco_500_750_CR2");
+              h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
+            }
     if(Mass_tt>=750 && Mass_tt < 1000){
-      fill_histograms(event, "DeltaY_reco_750_1000_CR2");
-      h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
-      h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
-    }
+              fill_histograms(event, "DeltaY_reco_750_1000_CR2");
+              h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
+            }
     if(Mass_tt>=1000 && Mass_tt < 1500){
-      fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
-      h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
-      h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
-    }
+              fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
+              h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
+            }
     if(Mass_tt>=1500){
-      fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
-      h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
-      h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
-    }
-  }
-
-
-  // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
-
-
+              fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
+              h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
+              h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
+            }
+    }//out2
+  if(debug) cout << "done" << endl;
   return true;
 }
 
