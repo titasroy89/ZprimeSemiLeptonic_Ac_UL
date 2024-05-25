@@ -1650,4 +1650,11 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
     return true;
   }
 
+  //boosted spin correlation variable
+  
+     
+  //end of boosted spin correlation variable
+
+
+
   ////

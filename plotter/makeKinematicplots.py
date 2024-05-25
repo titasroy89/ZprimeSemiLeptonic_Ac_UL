@@ -30,7 +30,7 @@ if os.path.exists(path):
 else:
 	os.mkdir(path)
 if (channel=="electron" or channel=="muon"):
-	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,channel,year,channel)
+	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL_eft/"%(year,channel,year,channel)
 else:
 	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
 
@@ -87,7 +87,7 @@ if year=="2018":
 	period=6
 elif year=="2017":
 	period=5
-elif year=="2016":
+elif year=="2016pre" or year=="2016post" or year=="2016_post_pre_added" :
 	period=4
 H = 600;
 W = 800;
@@ -180,7 +180,21 @@ canvas.ResetDrawn()
 stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kGreen], "Diboson":[kGreen], "QCD":[kGreen],"ST":[kBlue]}
 
 #stackList_orig=OrderedDict()
-histograms={"DeltaY_reco":["\DeltaY", "Events", 2, [-2.5,2.5]],
+histograms={"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
+			"DeltaY_reco_s2":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi<0 )", "Events", 2, [-2.5,2.5]],
+			"DeltaY_reco_s1":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi>0 )", "Events", 2, [-2.5,2.5]],
+			"DeltaY_reco_d2":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi<0 )", "Events", 2, [-2.5,2.5]],
+			"DeltaY_reco_d1":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi>0 )", "Events", 2, [-2.5,2.5]],
+			"Sigma_phi":["\Sigma \phi", "Events", 16, [-3.2,3.2]],
+			"Sigma_phi_high":["\Sigma \phi (top_{h}(p_T)>150 GeV)", "Events", 16, [-3.2,3.2]],
+			"Sigma_phi_low":["\Sigma \phi (top_{h}(p_T)<150 GeV)", "Events", 16, [-3.2,3.2]],
+			"Sigma_phi_1":["\Sigma \phi (top_{h}(p_T)>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
+			"Sigma_phi_2":["\Sigma \phi (top_{h}(p_T)>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
+			"Delta_phi":["\Delta \phi", "Events", 16, [-3.2,3.2]],
+			"Delta_phi_high":["\Delta \phi (top_{h}(p_T)>150 GeV)", "Events", 16, [-3.2,3.2]],
+			"Delta_phi_low":["\Delta \phi (top_{h}(p_T)<150 GeV)", "Events", 16, [-3.2,3.2]],
+			"Delta_phi_1":["\Delta \phi (top_{h}(p_T)>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
+			"Delta_phi_2":["\Delta \phi (top_{h}(p_T)>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
 			"M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 280, [0, 6000]],
  			"M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 140, [0, 6000]],
  			"M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [0, 6000]],
@@ -200,15 +214,120 @@ categories=["output0","output1","output2"]
 test_sample = ('ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar')
 #for key in test_tuple: print(test_dict[key])
 file={}
-histo={}
+histo_={}
 print("working from directory: ",fileDir)
 #print(dict(stackList_orig))
+
+hist_combined={}
+for cat in categories:
+	hist_combined[cat]={}
+	for sample in test_sample:
+		hist_combined[cat][sample]=TH1F("hist_combined","hist_combined",36,1.,37.)
+histos=["DeltaY_reco_1","DeltaY_reco_2","Sigma_phi_1","Sigma_phi_2"]
+for cat in categories:
+	stack = THStack("hs","stack")
+	legend = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
+	legend.SetNColumns(2)
+	legend.SetBorderSize(0)
+	legend.SetFillColor(0)
+	print(cat)
+	for sample in test_sample:
+		for histo in histos:
+			file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
+			temp_hist="DNN_%s_General/%s"%(cat,histo)
+			print(file[sample].Get(temp_hist))
+			histo_[sample]=file[sample].Get(temp_hist)
+			if histo=="DeltaY_reco_1":
+				for i in range(histo_[sample].GetNbinsX()):
+					hist_combined[cat][sample].SetBinContent(1+i,histo_[sample].GetBinContent(i+1))
+					hist_combined[cat][sample].SetBinError(1+i,histo_[sample].GetBinError(i+1))
+			elif histo=="DeltaY_reco_2":
+				for i in range(histo_[sample].GetNbinsX()):
+					hist_combined[cat][sample].SetBinContent(3+i,histo_[sample].GetBinContent(i+1))
+					hist_combined[cat][sample].SetBinError(3+i,histo_[sample].GetBinError(i+1))
+			elif histo=="Sigma_phi_1":
+				for i in range(histo_[sample].GetNbinsX()):
+					hist_combined[cat][sample].SetBinContent(5+i,histo_[sample].GetBinContent(i+1))	
+					hist_combined[cat][sample].SetBinError(5+i,histo_[sample].GetBinError(i+1))	
+			elif histo=="Sigma_phi_2":
+				for i in range(histo_[sample].GetNbinsX()):
+					hist_combined[cat][sample].SetBinContent(21+i,histo_[sample].GetBinContent(i+1))	
+					hist_combined[cat][sample].SetBinError(21+i,histo_[sample].GetBinError(i+1))		
+		hist_combined[cat][sample].SetFillColor(stackList_orig[sample][0])
+		hist_combined[cat][sample].SetLineColor(stackList_orig[sample][0])		
+		if sample=="TTbar":
+			print("adding sample: ",sample)
+			legend.AddEntry(hist_combined[cat][sample],"t#bar{t}",'f')
+		elif sample=="WJets":
+			print("adding sample: ",sample)
+			legend.AddEntry(hist_combined[cat][sample],"W+jets",'f')
+		elif sample=="ST":
+			print("adding sample: ",sample)
+			legend.AddEntry(hist_combined[cat][sample],"ST",'f')
+		print("going to stack")
+		stack.Add(hist_combined[cat][sample])
+
+	legend.SetTextSize(0.05)
+	legend.Draw("SAME")
+	canvas.cd()
+	stack.Draw("HIST")
+	canvas.cd()
+	canvas.ResetDrawn()
+	canvas.Draw()
+	canvas.cd()
+	errorban=stack.GetStack().Last().Clone("errorban")
+	errorban.Sumw2()
+	errorban.SetLineColor(kGray+2)
+	errorban.SetFillColor(kGray+2)
+	errorban.SetFillStyle(3245)
+	errorban.SetMarkerSize(0)
+	legend.AddEntry(errorban,"MC tot. unc.",'f')
+	legend.SetTextSize(0.05)
+	legend.Draw("SAME")
+	log=0
+	maxVal =stack.GetMaximum()
+	minVal = max(stack.GetStack()[0].GetMinimum(),1)
+	if log:
+		print("making log plots")
+		stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
+	else:
+		print("making linear plots")
+		stack.SetMaximum(1.7*maxVal)
+	print("max is: ",maxVal )
+	stack.SetMinimum(minVal)
+	stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
+	stack.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(1.-padRatio+padOverlap))
+	stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
+	stack.GetYaxis().SetTitle("Events")
+	stack.GetXaxis().SetTitle("bins for fitting")
+	stack.GetYaxis().SetMaxDigits(4)
+	stack.GetYaxis().SetRangeUser(0,2.5*maxVal)
+	stack.Draw("HIST")
+	stack.GetYaxis().SetRangeUser(0,2.5*maxVal)
+	# legend.SetTextSize(0.05)
+	# legend.Draw("SAME")
+	errorban.Draw("E2,SAME")
+	CMS_lumi.CMS_lumi(canvas, period, 11)
+	if log:
+		canvas.SaveAs("%s_%s/efthist_%s_log.pdf"%(channel,year,cat))
+	else:
+		canvas.SaveAs("%s_%s/efthist_%s_linear.pdf"%(channel,year,cat))
+	canvas.Clear()
+	pad2.cd()
+
+
+# sys.exit()
+file={}
+histo={}
+
+
+
 
 
 
 
 for hist in histograms:
-	if "DeltaY" in hist: 
+	if "Delta" in hist or "Sigma" in hist: 
 		print("hist is DeltaY")
 		for cat in categories:
 			print("this is ",cat)
@@ -267,7 +386,7 @@ for hist in histograms:
 			stack.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(1.-padRatio+padOverlap))
 			stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
 			stack.GetYaxis().SetTitle("Events")
-			stack.GetXaxis().SetTitle("\Delta Y")
+			stack.GetXaxis().SetTitle(histograms[hist][0])
 			stack.GetYaxis().SetMaxDigits(4)
 			stack.GetYaxis().SetRangeUser(0,2.5*maxVal)
 			#stack.GetYaxis().SetMoreLogLabels()
@@ -292,6 +411,9 @@ for hist in histograms:
 				canvas.SaveAs("%s_%s/%s_%s_linear.pdf"%(channel,year,hist,cat))
 			canvas.Clear()
 			pad2.cd()
+	
+	
+	
 	else:
 		print("hist is: ",hist)
 		for cat in categories:
@@ -317,7 +439,8 @@ for hist in histograms:
 				
 				stack.Add(histo[sample])
 			file_data=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
-			
+			print(file_data)
+			print(temp_hist)
 			dataHist=file_data.Get(temp_hist)
 
 			print("data: ", dataHist.Integral())
