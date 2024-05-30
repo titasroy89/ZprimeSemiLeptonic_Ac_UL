@@ -20,13 +20,15 @@ parser.add_option("-c", "--channel", dest="channel",default="muon",type='str',
                   help="what channel?")
 parser.add_option("-y", "--year", dest="year", default="2018",type='str',
                   help="don't print status messages to stdout")
-parser.add_option("-eft", "--eft", dest="eft", action='store_false',type='str',
-                  help="print eft vars?")
+# parser.add_option("-eft", "--eft", dest="eft", action='store_false',type='str',
+#                   help="print eft vars?")
 
 (options, args) = parser.parse_args()
+eft=False
 channel = options.channel
 year=options.year
-eft=options.eft
+# eft=options.eft
+# eft=False
 path="%s_%s"%(channel,year)
 if os.path.exists(path):
 	print("output directory exists")
@@ -226,7 +228,7 @@ elif(channel=="lepton"):
 					   })
 
 categories=["output0","output1","output2"]
-test_sample = ('ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar')
+test_sample = ['ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar']
 #for key in test_tuple: print(test_dict[key])
 file={}
 histo_={}
@@ -343,8 +345,9 @@ histo={}
 
 
 for hist in histograms:
-	if "Delta" in hist or "Sigma" in hist: 
-		print("hist is DeltaY")
+	# if "Delta" in hist or "Sigma" in hist: 
+	if "Sigma" in hist:
+		print("hist is Sigma")
 		for cat in categories:
 			print("this is ",cat)
 			stack = THStack("hs","stack")
@@ -453,6 +456,9 @@ for hist in histograms:
 					legendR.AddEntry(histo[sample],"W+jets",'f')
 				elif sample=="ST":
 					legendR.AddEntry(histo[sample],"ST",'f')
+				if "DeltaY" in hist:
+					if ("output1" in cat or  "output2" in cat):
+						print(sample, cat,histo[sample].GetBinContent(1),histo[sample].GetBinContent(2))
 				
 				stack.Add(histo[sample])
 			file_data=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
@@ -527,6 +533,7 @@ for hist in histograms:
 			stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
 			stack.GetYaxis().SetMaxDigits(4)
 			stack.GetYaxis().SetTitle("Events")
+			stack.GetYaxis().SetRangeUser(0,1.7*maxVal)
 
 			dataHist.Draw("E,X0,SAME")
 

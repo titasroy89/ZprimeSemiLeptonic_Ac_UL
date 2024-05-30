@@ -95,10 +95,10 @@
 			<InputTree Name="AnalysisTree" />
 		</InputData> -->
 		<!-- TTbar -->
-	    <InputData Lumi="107178313.917" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16preVFP" Cacheable="&b_Cacheable;">
+	    <!-- <InputData Lumi="107178313.917" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTToSemiLeptonic_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
-		</InputData>
+		</InputData> -->
 		<!-- <InputData Lumi="79684571.3184" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTToHadronic_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
@@ -174,28 +174,28 @@
 			<InputTree Name="AnalysisTree"/>
 		</InputData>  -->
 		<!-- Diboson -->
-		<!-- <InputData Lumi="207339.329717" NEventsMax="&NEVT;" Type="MC" Version="WW_UL16preVFP" Cacheable="&b_Cacheable;">
+		<!-- <InputData Lumi="132683.19701124143" NEventsMax="&NEVT;" Type="MC" Version="WW_UL16preVFP" Cacheable="&b_Cacheable;">
 			&WW_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="287010.159652" NEventsMax="&NEVT;" Type="MC" Version="WZ_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="169172.65508301818" NEventsMax="&NEVT;" Type="MC" Version="WZ_UL16preVFP" Cacheable="&b_Cacheable;">
 			&WZ_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="105688.375927" NEventsMax="&NEVT;" Type="MC" Version="ZZ_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="75750.6278058421" NEventsMax="&NEVT;" Type="MC" Version="ZZ_UL16preVFP" Cacheable="&b_Cacheable;">
 			&ZZ_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
-		</InputData>-->
+		</InputData> -->
 		<!-- ST --> 
-		<!-- <InputData Lumi="5186119.82827" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_antitop_5f_NoFullyHadronicDecays_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="5843850.9886959937" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_antitop_5f_NoFullyHadronicDecays_UL16preVFP" Cacheable="&b_Cacheable;">
 			&ST_tW_antitop_5f_NoFullyHadronicDecays_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="5491324.50234" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_top_5f_NoFullyHadronicDecays_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="5905922.089687181" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_top_5f_NoFullyHadronicDecays_UL16preVFP" Cacheable="&b_Cacheable;">
 			&ST_tW_top_5f_NoFullyHadronicDecays_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="24110577.2047" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_antitop_4f_InclusiveDecays_UL16preVFP" Cacheable="&b_Cacheable;"> 
+		<!-- <InputData Lumi="24110577.2047" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_antitop_4f_InclusiveDecays_UL16preVFP" Cacheable="&b_Cacheable;"> 
 			&ST_t-channel_antitop_4f_InclusiveDecays_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>	
