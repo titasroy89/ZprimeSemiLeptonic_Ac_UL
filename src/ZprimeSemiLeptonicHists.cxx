@@ -102,6 +102,11 @@ void ZprimeSemiLeptonicHists::init(){
   reliso_mu1_rebin = book<TH1F>("reliso_mu1_rebin", "#mu 1 rel. Iso ", 400, 0, 5);
   reliso_mu2_rebin = book<TH1F>("reliso_mu2_rebin", "#mu 2 rel. Iso ", 400, 0, 5);
 
+  // N_mu_charge      = book<TH1F>("N_mu_charge", "N^{#mu} charge", 2, -1., 1.);
+  N_lep_charge     = book<TH1F>("N_lep_charge", "lepton charge", 2, -2., 2.);
+  
+
+
   N_ele             = book<TH1F>("N_ele", "N^{e}", 11, -0.5, 10.5);
   pt_ele            = book<TH1F>("pt_ele", "p_{T}^{e} [GeV]", 90, 0, 900);
   pt_ele1           = book<TH1F>("pt_ele1", "p_{T}^{e 1} [GeV]", 90, 0, 900);
@@ -1388,7 +1393,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
-    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+    // float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     ditop_mass->Fill(Mreco, weight);
     M_Zprime->Fill(Mreco, weight);
     M_Zprime_rebin->Fill(Mreco, weight);
@@ -1504,31 +1509,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     float_t DeltaY_gen_best = 99.0;
     float_t DeltaY_reco_best = 99.0;
-    bool isLeptonPositive = false;
-    
-
-    if(debug) cout<< "isMuon: " << isMuon << endl;
-    if(isMuon){
-      if(debug) cout << event.muons->at(0).charge() << endl;
-      if (event.muons->at(0).charge() == 1){
-      if(debug) cout << "lepton is positive" << endl;
-        isLeptonPositive = true;
-      } else {
-        if(debug) cout << "lepton is negative" << endl;
-          isLeptonPositive = false;
-      }
-    }
-
-    if(debug) cout << "isElectron: " << isElectron << endl;
-    if(isElectron){
-      if (event.electrons->at(0).charge() == 1){
-      if(debug) cout << "lepton is positive" << endl;
-        isLeptonPositive = true;
-      } else {
-        if(debug) cout << "lepton is negative" << endl;
-        isLeptonPositive = false;
-      }
-    }
+   
 
     if(debug) cout << "now will check dR " << endl;
     if(debug) cout << deltaR_min_leptonic << endl;
@@ -1551,9 +1532,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     if(debug) cout << "after genparticles->at(best_gen_for_leptop)" << endl;
 
-
+    N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
+    // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
       // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
-      if (isLeptonPositive) {
+    if (BestZprimeCandidate->lepton().charge()>0) {
         DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
         DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
 
@@ -1562,6 +1544,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
 
       }
+    
       
     }
     else {
@@ -1574,10 +1557,14 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
     DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);
     DeltaY_gen_best_plot->Fill(DeltaY_gen_best, weight);
-
+    DeltaY_reco->Fill(DeltaY_reco_best, weight);
     if(debug) cout << "after filling dY hists" << endl;
+  
+  
+  
+  
   //begin spin correlation
- // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+  // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     if (debug) cout << "starting spin corr" << endl;
     bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
     vector <Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);                  // AK4Puppijets that have been matched to CHSjets
@@ -1800,41 +1787,32 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     chi2_Zprime->Fill(chi2, weight);
     chi2_Zprime_rebin->Fill(chi2, weight);
     chi2_Zprime_rebin2->Fill(chi2, weight);
-    bool isLeptonPositive = false;
-    
-    if(isMuon){
-      if(debug) cout << event.muons->at(0).charge() << endl;
-      if (event.muons->at(0).charge() == 1){
-        isLeptonPositive = true;
-      } else {
-        isLeptonPositive = false;
-      }
-    }
-
-    if(isElectron){
-      if (event.electrons->at(0).charge() == 1){
-        isLeptonPositive = true;
-      } else {
-        isLeptonPositive = false;
-      }
-    }
-
+    // cout << "the boolean is: "<< isLeptonPositive << endl;
     float_t dyreco = 0.0;
-    if (isLeptonPositive) {
+    if (BestZprimeCandidate->lepton().charge()>0) {
       dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
     } else {
       dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
     }
-
+    N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
+    // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
     DeltaY_reco->Fill(dyreco, weight);
-    //start spin correlation
+  
+  
+  //start spin correlation
   // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2); 
   bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
   vector <Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);                  // AK4Puppijets that have been matched to CHSjets
   vector <TopJet> TopTaggedJets = event.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
   vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
   float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
-  float btag_WP=0.2783;                                                                   // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
+  float btag_WP=0.2783;  
+  if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
+  if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
+  if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
+  if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
+   
+                                                                // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
                                                 // medium WP for UL18 DeepJet
 
   // Plot pt of hadronic Top jet

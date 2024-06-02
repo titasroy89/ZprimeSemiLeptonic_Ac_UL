@@ -204,21 +204,33 @@ if eft:
 			"Delta_phi_1":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
 			"Delta_phi_2":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
 	}
+bins_jetpt=[0.,20.,40.,60.,80.,100.,120.,140.,160.,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,460.,500.,550.,600.,650.,700.,750.,800.,900.]
+bins_mttbar=[0.,180.,360.,540.,720.,1000.,1500.,6000.]
+
 histograms={"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
 			"M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 280, [0, 6000]],
  			"M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 140, [0, 6000]],
  			"M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [0, 6000]],
-			"M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000]],
+			"M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000],bins_mttbar,7],
 			"N_jets": ["N_{jets}","Events", 21, [-0.5, 20.5]],
-			"pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900]],
+			"pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900],bins_jetpt,30],
+			"deepjetbscore_jet1":["DeepJet b-tag score AK4 jet 1","Events", 20, [0, 1]],
+			"deepjetbscore_jet":["DeepJet b-tag score AK4 jets","Events", 20, [0, 1]],
+			"N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
 }
+
+# sys.exit()
 if channel=="muon" :
-	histograms.update({"dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
+	histograms.update({
+					  "dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
 				      "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
+					#   "N_mu_charge":["Muon charge ", "Events", 2, [-1.0,1.0]],
 					  })
 elif(channel=="electron" ):
-	histograms.update({"dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
+	histograms.update({
+					  "dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
 				      "pt_ele": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
+					#   "N_ele_charge":["Electron charge ", "Events", 2, [-1.0,1.0]],
 					   })
 elif(channel=="lepton"):
 	histograms.update({"dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
@@ -227,7 +239,9 @@ elif(channel=="lepton"):
 				      "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
 					   })
 
-categories=["output0","output1","output2"]
+categories=["DNN_output0","DNN_output1","DNN_output2"]
+# ,"Chi2_passes","Chi2_inverse"]
+
 test_sample = ['ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar']
 #for key in test_tuple: print(test_dict[key])
 file={}
@@ -274,7 +288,8 @@ if (channel=="muon" and year=="2018"):
 						hist_combined[cat][sample].SetBinContent(21+i,histo_[sample].GetBinContent(i+1))	
 						hist_combined[cat][sample].SetBinError(21+i,histo_[sample].GetBinError(i+1))		
 			hist_combined[cat][sample].SetFillColor(stackList_orig[sample][0])
-			hist_combined[cat][sample].SetLineColor(stackList_orig[sample][0])		
+			hist_combined[cat][sample].SetLineColor(stackList_orig[sample][0])	
+			# hist_combined[cat][sample].GetXaxis().SetRangeUser(0,)	
 			if sample=="TTbar":
 				print("adding sample: ",sample)
 				legend.AddEntry(hist_combined[cat][sample],"t#bar{t}",'f')
@@ -286,6 +301,7 @@ if (channel=="muon" and year=="2018"):
 				legend.AddEntry(hist_combined[cat][sample],"ST",'f')
 			print("going to stack")
 			stack.Add(hist_combined[cat][sample])
+			stack.SetMinimum(0.0)
 		canvas.cd()
 		canvas.ResetDrawn()
 		canvas.Draw()
@@ -345,10 +361,8 @@ histo={}
 
 
 for hist in histograms:
-	# if "Delta" in hist or "Sigma" in hist: 
-	if "Sigma" in hist:
-		print("hist is Sigma")
-		for cat in categories:
+	for cat in categories:
+		if "Sigma" in hist or ("DeltaY_reco" in hist and "output0" in cat):
 			print("this is ",cat)
 			stack = THStack("hs","stack")
 			legend = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
@@ -357,7 +371,7 @@ for hist in histograms:
 			legend.SetFillColor(0)
 			for sample in test_sample:
 				file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
-				temp_hist="DNN_%s_General/%s"%(cat,hist)
+				temp_hist="%s_General/%s"%(cat,hist)
 				print(temp_hist, sample)
 				histo[sample]=file[sample].Get(temp_hist)
 				histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0],(histograms[hist][3][1]))
@@ -372,6 +386,7 @@ for hist in histograms:
 				elif sample=="ST":
 					legend.AddEntry(histo[sample],"ST",'f')
 				stack.Add(histo[sample])
+				stack.SetMinimum(0.0)
 			print("maximum is: ",stack.GetMaximum())
 			canvas.cd()
 			stack.Draw("HIST")
@@ -443,13 +458,18 @@ for hist in histograms:
 			legendR.SetBorderSize(0)
 			legendR.SetFillColorAlpha(0,0.35)
 			for sample in test_sample:
-				print("sample is: ", sample)
+				print("sample is: ", sample,cat,hist)
 				file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
-				temp_hist="DNN_%s_General/%s"%(cat,hist)
+				temp_hist="%s_General/%s"%(cat,hist)
 				histo[sample]=file[sample].Get(temp_hist)
 				histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0],(histograms[hist][3][1]))				
 				histo[sample].SetFillColor(stackList_orig[sample][0])
 				histo[sample].SetLineColor(stackList_orig[sample][0])
+				if "M_Zprime_rebin3" in hist or "pt_jet1" in hist:
+					print(histograms[hist][5],histograms[hist][4])
+
+					histo[sample]=histo[sample].Rebin(histograms[hist][5],"",array('d',histograms[hist][4]))
+					
 				if sample=="TTbar":
 					legendR.AddEntry(histo[sample],"t#bar{t}",'f')
 				elif sample=="WJets":
@@ -461,16 +481,21 @@ for hist in histograms:
 						print(sample, cat,histo[sample].GetBinContent(1),histo[sample].GetBinContent(2))
 				
 				stack.Add(histo[sample])
+				stack.SetMinimum(0.0)
 			file_data=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
 			print(file_data)
 			print(temp_hist)
 			dataHist=file_data.Get(temp_hist)
+			if "M_Zprime_rebin3" in hist or "pt_jet1" in hist:
+				print(histograms[hist][5],histograms[hist][4])
+				dataHist=dataHist.Rebin(histograms[hist][5],"",array('d',histograms[hist][4]))
 
 			print("data: ", dataHist.Integral())
 			dataHist.SetMarkerColor(kBlack)
 			dataHist.SetLineColor(kBlack)
 			dataHist.SetYTitle(histograms[hist][1])     
 			dataHist.Draw("pe,x0")
+			stack.SetMinimum(0.)
 			stack.Draw("HIST,SAME")
 
 			errorban=stack.GetStack().Last().Clone("errorban")
@@ -495,8 +520,9 @@ for hist in histograms:
 			if log:
 				stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
 			else:
-				stack.SetMaximum(1.7*maxVal)
-			stack.SetMinimum(minVal)
+				stack.SetMaximum(2.3*maxVal)
+			#stack.SetMinimum(minVal)
+			stack.SetMinimum(0.0)
 
 			errorband=stack.GetStack().Last().Clone("error")
 			errorband.Sumw2()
@@ -533,8 +559,8 @@ for hist in histograms:
 			stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
 			stack.GetYaxis().SetMaxDigits(4)
 			stack.GetYaxis().SetTitle("Events")
-			stack.GetYaxis().SetRangeUser(0,1.7*maxVal)
-
+			# stack.GetYaxis().SetRangeUser(0,1.7*maxVal)
+			stack.SetMinimum(0.)
 			dataHist.Draw("E,X0,SAME")
 
 			errorban.Draw("E2,SAME")
