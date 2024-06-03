@@ -4,7 +4,7 @@ import os
 import sys
 
 parser = OptionParser()
-parser.add_option("-y", "--year", dest="year", help="Specify the year (UL18, UL17, preUL16, postUL16)", type='str')
+parser.add_option("-y", "--year", dest="year", help="Specify the year (UL17, UL17, preUL16, postUL16)", type='str')
 parser.add_option("-m", "--mass_range", dest="mass_range", help="Specify the mass range (0_500, 500_750, 750-1000, 1000-1500, 1500Inf)", type='str')
 parser.add_option("-l", "--lepton_flavor", dest="lepton_flavor", help="Specify the lepton flavor (electron, muon)", type='str')
 parser.add_option("-r", "--region", dest="region", help="Specify the region (SR, CR1, CR2)", type='str')
@@ -22,9 +22,9 @@ def copy_histograms(input_files, output_file_path):
     output_file = ROOT.TFile(output_file_path, 'RECREATE')
 
     directories = {
-        '../individual_files/dY_{}_{}_{}_CR1.root'.format(year, lepton_flavor, mass_range) : 'CR1',
-        '../individual_files/dY_{}_{}_{}_CR2.root'.format(year, lepton_flavor, mass_range): 'CR2',
-        '../individual_files/dY_{}_{}_{}_SR.root'.format(year, lepton_flavor, mass_range) : 'SR'
+        '../individual_files/dY_UL17_{}_{}_CR1.root'.format(lepton_flavor, mass_range) : 'CR1',
+        '../individual_files/dY_UL17_{}_{}_CR2.root'.format(lepton_flavor, mass_range): 'CR2',
+        '../individual_files/dY_UL17_{}_{}_SR.root'.format(lepton_flavor, mass_range) : 'SR'
     }
 
     for input_file_name, dir_name in directories.items():
@@ -49,10 +49,10 @@ def copy_histograms(input_files, output_file_path):
     output_file.Close()
 
 input_files = {
-    '../individual_files/dY_{}_{}_{}_CR1.root'.format(year, lepton_flavor, mass_range) : 'CR1',
-    '../individual_files/dY_{}_{}_{}_CR2.root'.format(year, lepton_flavor, mass_range): 'CR2',
-    '../individual_files/dY_{}_{}_{}_SR.root'.format(year, lepton_flavor, mass_range) : 'SR'
+    '../individual_files/dY_UL17_{}_{}_CR1.root'.format(lepton_flavor, mass_range) : 'CR1',
+    '../individual_files/dY_UL17_{}_{}_CR2.root'.format(lepton_flavor, mass_range): 'CR2',
+    '../individual_files/dY_UL17_{}_{}_SR.root'.format(lepton_flavor, mass_range) : 'SR'
 }
-output_file_path = 'dY_{}_{}_{}.root'.format(year, lepton_flavor, mass_range)
+output_file_path = 'dY_UL17_{}_{}.root'.format(lepton_flavor, mass_range)
 
 copy_histograms(input_files, output_file_path)

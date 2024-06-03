@@ -5,10 +5,10 @@ import math
 from optparse import OptionParser
 from ROOT import TH1D
 import math
-      
+    
 
 parser = OptionParser()
-parser.add_option("-y", "--year", dest="year", help="Specify the year (UL18, UL17, preUL16, postUL16)", type='str')
+parser.add_option("-y", "--year", dest="year", help="Specify the year (UL17, UL17, preUL16, postUL16)", type='str')
 parser.add_option("-m", "--mass_range", dest="mass_range", help="Specify the mass range (0_500, 500_750, 750-1000, 1000-1500, 1500Inf)", type='str')
 parser.add_option("-l", "--lepton_flavor", dest="lepton_flavor", help="Specify the lepton flavor (ele, muon)", type='str')
 parser.add_option("-r", "--region", dest="region", help="Specify the region (SR, CR1, CR2)", type='str')
@@ -30,7 +30,7 @@ region_score = options.region_score if options.region_score else "0"
 
 # finalState = options.channel
 
-inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/newmatching/{}/".format(year, lepton_flavor)
+inputDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/{}/nominal/".format(year, lepton_flavor)
 combine_file_name = 'dY_{}_{}_{}_{}.root'.format(year, lepton_flavor, mass_range, region)
 combine_file = TFile(combine_file_name, 'RECREATE')
 # stackList = {"TTbar", "WJets", "DY", "ST", "Diboson", "QCD", "DATA"}
@@ -408,7 +408,7 @@ def processJERJEC(inputDir, v_samples_ttbar, combine_file, sys_variations):
     for sys_variation in sys_variations: 
         if (debug): print(" --- passed to another JER/JEC variation ---")
         for sample in v_samples_ttbar:
-            sys_file = TFile.Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/{}/workdir_AnalysisDNN_{}_{}_{}_latest_dY/nominal/{}.root".format(year, lepton_flavor, year, lepton_flavor, sys_variation, sample), "READ")
+            sys_file = TFile.Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/{}/workdir_AnalysisDNN_{}_{}_{}/{}.root".format(year, lepton_flavor, year, lepton_flavor, sys_variation, sample), "READ")
             if not sys_file:
                 if (debug): print("Input file for {} variation {} not found.".format(sample, sys_variation))
                 continue
@@ -418,7 +418,7 @@ def processJERJEC(inputDir, v_samples_ttbar, combine_file, sys_variations):
             if sample == "TTbar":
                 if (debug): print("Processing TTbar for {} ".format(sys_variation))
                 
-                matrix_path_jerjec = "DY_ttbar_{}_{}_{}_General/response_matrix".format(mass_range, lepton_flavor, region)
+                matrix_path_jerjec = "DeltaY_reco_{}_{}_General/response_matrix".format(mass_range, region)
                 Matrix = sys_file.Get(matrix_path_jerjec)
                 if not Matrix:
                     print("Nominal matrix not found for TTbar.")

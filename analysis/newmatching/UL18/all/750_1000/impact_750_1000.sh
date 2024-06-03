@@ -78,4 +78,4 @@ echo
 echo
 
 mkdir output_combine
-mv higgs* impacts.json Ac_UL18_muon_750_1000.root combine_logger.out output_combine
+mv higgs* impacts.json Ac_UL18_750_1000.root combine_logger.out output_combine

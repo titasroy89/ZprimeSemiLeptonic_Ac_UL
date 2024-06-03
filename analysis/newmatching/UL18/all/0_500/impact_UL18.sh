@@ -12,7 +12,7 @@ declare -a POIS=(
   "Ac"
 )
 
-export WORKSPACE=Ac_UL18.root
+export WORKSPACE=Ac_UL18_0_500.root
 export VERBOSITY=0
 
 export SetParameters="rgx{r.+}=1,Ac=0.56"
