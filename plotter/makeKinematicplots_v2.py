@@ -177,7 +177,7 @@ canvas.cd()
 
 canvas.ResetDrawn()
 
-stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kOrange], "Diboson":[kYellow], "QCD":[kPink],"ST":[kBlue]}
+stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kGreen], "Diboson":[kGreen], "QCD":[kGreen],"ST":[kBlue]}
 
 #stackList_orig=OrderedDict()
 histograms={"DeltaY_reco":["\DeltaY", "Events", 2, [-2.5,2.5]],
@@ -197,13 +197,12 @@ else:
 				      "pt_ele": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]]
 					   })
 categories=["output0","output1","output2"]
-test_sample = ('TTbar','WJets','ST', 'DYJets', 'Diboson','QCD',)
+test_sample = ('ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar')
 #for key in test_tuple: print(test_dict[key])
 file={}
 histo={}
 print("working from directory: ",fileDir)
 #print(dict(stackList_orig))
-
 
 # Set Y-axis size adjustments
 y_label_size = 0.04  # Decrease this value to make the labels smaller
@@ -255,7 +254,7 @@ for hist in histograms:
                 stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
             else:
                 stack.SetMaximum(1.7*maxVal)
-            stack.SetMinimum(0)  # Set Y-axis minimum to 0
+            stack.SetMinimum(minVal)
             stack.GetYaxis().SetLabelSize(y_label_size)
             stack.GetYaxis().SetTitleSize(y_title_size)
             stack.GetYaxis().SetTitleOffset(y_title_offset)
@@ -325,7 +324,7 @@ for hist in histograms:
                 stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
             else:
                 stack.SetMaximum(1.7*maxVal)
-            stack.SetMinimum(0)  # Set Y-axis minimum to 0
+            stack.SetMinimum(minVal)
             errorband=stack.GetStack().Last().Clone("error")
             errorband.Sumw2()
             errorband.SetLineColor(kBlack)
