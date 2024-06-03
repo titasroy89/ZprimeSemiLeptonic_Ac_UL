@@ -2,24 +2,23 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi "59830.0">
-<!ENTITY PRESELdir "/nfs/dust/cms/group/zprime-uhh/Presel_UL18_hdamp_down/">
+<!ENTITY PRESELdir "/nfs/dust/cms/group/zprime-uhh/Presel_UL18_hdamp_up/">
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT "-1">
 <!ENTITY YEARsuffix "_UL18">
 <!ENTITY IS_HOTVR "false">
 
-<!ENTITY TTToSemiLeptonic SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToSemiLeptonic_hdampDOWN_CP5_powheg-pythia8_Summer20UL18_v1.xml">
-<!ENTITY TTToHadronic SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToHadronic_hdampDOWN_CP5_powheg-pythia8_Summer20UL18_v1.xml">
-<!ENTITY TTTo2L2Nu SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTTo2L2Nu_hdampDOWN_CP5_powheg-pythia8_Summer20UL18_v1.xml">
+<!ENTITY TTToSemiLeptonic SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToSemiLeptonic_hdampUP_CP5_powheg-pythia8_Summer20UL18_v1.xml">
+<!ENTITY TTToHadronic SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTToHadronic_hdampUP_CP5_powheg-pythia8_Summer20UL18_v1.xml">
+<!ENTITY TTTo2L2Nu SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL18/TTTo2L2Nu_hdampUP_CP5_powheg-pythia8_Summer20UL18_v1.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="50" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18_hdamp_down"/>
+<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_Preselection_UL18_hdamp_up"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
-
 	<Library Name="libSUHH2ZprimeSemiLeptonic"/>
 	<Package Name="SUHH2ZprimeSemiLeptonic.par"/>
 
@@ -28,7 +27,7 @@
 		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="277261144.22366405" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-	
+		
 		<UserConfig>
 			<Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>
 			<Item Name="GenParticleCollection" Value="GenParticles"/>
