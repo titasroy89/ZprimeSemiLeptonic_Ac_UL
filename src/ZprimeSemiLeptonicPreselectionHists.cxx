@@ -284,6 +284,11 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   DeltaY_gen_1000_1500  = book<TH1F>("DeltaY_gen_1000_1500", "#Delta Y_{(t,#bar{t}) Mttbar[1000,1500]}",2,-2,2);
   DeltaY_gen_1500Inf    = book<TH1F>("DeltaY_gen_1500Inf", "#Delta Y_{(t,#bar{t})} Mttbar[1500, Inf)",2,-2,2);
 
+  N_mu_charge     = book<TH1F>("N_mu_charge", "Muon charge", 2, -2., 2.);
+  N_ele_charge    = book<TH1F>("N_ele_charge", "Electron charge", 2, -2., 2.);
+
+
+
   //Gen plots
   mttbar          = book<TH1F>("mttbar", "M_{tt} in gen",1000, 0, 5000);
   topgen_pt       = book<TH1F>("topgen_pt", "p_{T}^{top} [GeV] in gen",100, 0, 3000);
@@ -356,43 +361,44 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
   // }
 
-
+  // cout<< "GenParticles" << endl; 
+// 
     // Define variables to store the top quark and the antitop quark
-  GenParticle top, antitop;
-    // Loop over all generated particles in the event
-  for(const GenParticle & gp : *event.genparticles){
+  // GenParticle top, antitop;
+  //   // Loop over all generated particles in the event
+  // for(const GenParticle & gp : *event.genparticles){
 
-    if(gp.pdgId() == 6){
-      top = gp;
-    }
-    else if(gp.pdgId() == -6){
-    antitop = gp;
-      }
-  }
+  //   if(gp.pdgId() == 6){
+  //     top = gp;
+  //   }
+  //   else if(gp.pdgId() == -6){
+  //   antitop = gp;
+  //     }
+  // }
 
-  // Calculate the invariant mass of the top-antitop pair using their 4-momenta
-  float ttbar_mass = inv_mass(top.v4() + antitop.v4());
+  // // Calculate the invariant mass of the top-antitop pair using their 4-momenta
+  // float ttbar_mass = inv_mass(top.v4() + antitop.v4());
 
 
-  float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+  // float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
 
-  DeltaY_gen->Fill(dygen, weight);
+  // DeltaY_gen->Fill(dygen, weight);
 
-  if(ttbar_mass>=0 && ttbar_mass < 500){
-    DeltaY_gen_0_500->Fill(dygen, weight);
-  }
-  if(ttbar_mass>=500 && ttbar_mass < 750){
-    DeltaY_gen_500_750->Fill(dygen, weight);
-  }
-  if(ttbar_mass>=750 && ttbar_mass < 1000){
-    DeltaY_gen_750_1000->Fill(dygen, weight);
-  }
-  if(ttbar_mass>=1000 && ttbar_mass < 1500){
-    DeltaY_gen_1000_1500->Fill(dygen, weight);
-  }
-  if(ttbar_mass>=1500){
-     DeltaY_gen_1500Inf->Fill(dygen, weight);
-  }
+  // if(ttbar_mass>=0 && ttbar_mass < 500){
+  //   DeltaY_gen_0_500->Fill(dygen, weight);
+  // }
+  // if(ttbar_mass>=500 && ttbar_mass < 750){
+  //   DeltaY_gen_500_750->Fill(dygen, weight);
+  // }
+  // if(ttbar_mass>=750 && ttbar_mass < 1000){
+  //   DeltaY_gen_750_1000->Fill(dygen, weight);
+  // }
+  // if(ttbar_mass>=1000 && ttbar_mass < 1500){
+  //   DeltaY_gen_1000_1500->Fill(dygen, weight);
+  // }
+  // if(ttbar_mass>=1500){
+  //    DeltaY_gen_1500Inf->Fill(dygen, weight);
+  // }
 
 
 
@@ -543,6 +549,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   █  █████  ███████    ██    ███████
   */
 
+ 
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
@@ -571,6 +578,8 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
       m_jet3->Fill(jets->at(i).v4().M(),weight);
     }
   }
+
+  // cout<< "Jets: ok" << endl; 
 
 
   /*
@@ -663,6 +672,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
     }
   }
 
+  // cout<< "HOTVR: ok" << endl; 
 
   /*
   █  █████  ██   ██  █████  ██████  ██    ██ ██████  ██████  ██
@@ -756,6 +766,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
     }
   }
 
+  // cout<< "AK8: ok" << endl; 
 
 
   /*
@@ -770,9 +781,13 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   vector<Muon>* muons = event.muons;
   int Nmuons = muons->size();
   N_mu->Fill(Nmuons, weight);
+  cout << "N_mu: " << Nmuons << endl;
+  
+
 
   for(int i=0; i<Nmuons; i++){
 
+    N_mu_charge->Fill(muons->at(i).charge(), weight);
     pt_mu->Fill(muons->at(i).pt(),weight);
     eta_mu->Fill(muons->at(i).eta(),weight);
     phi_mu->Fill(muons->at(i).phi(),weight);
@@ -813,6 +828,8 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
     }
   }
 
+  // cout<< "Muon: ok" << endl; 
+
   /*
   ███████ ██      ███████  ██████ ████████ ██████   ██████  ███    ██ ███████
   ██      ██      ██      ██         ██    ██   ██ ██    ██ ████   ██ ██
@@ -825,8 +842,10 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   vector<Electron>* electrons = event.electrons;
   int Nelectrons = electrons->size();
   N_ele->Fill(Nelectrons, weight);
+  
 
   for(int i=0; i<Nelectrons; i++){
+    N_ele_charge->Fill(electrons->at(i).charge(), weight);
     pt_ele->Fill(electrons->at(i).pt(),weight);
     eta_ele->Fill(electrons->at(i).eta(),weight);
     phi_ele->Fill(electrons->at(i).phi(),weight);
@@ -867,7 +886,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
     }
   }
 
-
+  // cout<< "Electron: ok" << endl; 
   /*
   ██████  ███████ ███    ██ ███████ ██████   █████  ██
   ██      ██      ████   ██ ██      ██   ██ ██   ██ ██
@@ -968,7 +987,10 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
       }
     }
   }
+  // cout<< "general: ok" << endl; 
+
 } //Method
+
 
 
 

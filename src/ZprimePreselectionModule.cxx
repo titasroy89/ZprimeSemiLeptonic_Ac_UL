@@ -197,8 +197,8 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
 bool ZprimePreselectionModule::process(uhh2::Event& event){
 
-  if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
-  if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
+  cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
+  cout << " run.event: " << event.run << ". " << event.event << endl;
   
   if(!event.isRealData){
     if(!SignSplit->passes(event)) return false;
@@ -206,30 +206,30 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
 
   fill_histograms(event, "Input");
 
-  GenParticle top, antitop;
-    // Loop over all generated particles in the event
-  for(const GenParticle & gp : *event.genparticles){
+  // GenParticle top, antitop;
+  //   // Loop over all generated particles in the event
+  // for(const GenParticle & gp : *event.genparticles){
 
-    if(gp.pdgId() == 6){
-      top = gp;
-    }
-    else if(gp.pdgId() == -6){
-    antitop = gp;
-      }
-  }
+  //   if(gp.pdgId() == 6){
+  //     top = gp;
+  //   }
+  //   else if(gp.pdgId() == -6){
+  //   antitop = gp;
+  //     }
+  // }
 
-  // Calculate the invariant mass of the top-antitop pair using their 4-momenta
-  float ttbar_mass = inv_mass(top.v4() + antitop.v4());
+  // // Calculate the invariant mass of the top-antitop pair using their 4-momenta
+  // float ttbar_mass = inv_mass(top.v4() + antitop.v4());
 
 
-  float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
+  // float dygen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
 
-  if(dygen >= 0){
-    fill_histograms(event, "dY_gen_pos");
-  }
-  if(dygen <= 0){
-    fill_histograms(event, "dY_gen_neg");
-  }
+  // if(dygen >= 0){
+  //   fill_histograms(event, "dY_gen_pos");
+  // }
+  // if(dygen <= 0){
+  //   fill_histograms(event, "dY_gen_neg");
+  // }
 
   bool commonResult = common->process(event);
   if (!commonResult) return false;

@@ -116,8 +116,6 @@ protected:
   unique_ptr<Selection> TwoDCut_selection, Jet1_selection, Jet2_selection, Met_selection, Chi2_selection, TTbarMatchable_selection, Chi2CandidateMatched_selection, ZprimeTopTag_selection;
   std::unique_ptr<uhh2::Selection> met_sel;
   std::unique_ptr<uhh2::Selection> htlep_sel;
-  std::unique_ptr<uhh2::Selection> ht_sel;
-  std::unique_ptr<uhh2::Selection> htgen_sel;
   std::unique_ptr<Selection> sel_1btag, sel_2btag;
   std::unique_ptr<Selection> HEM_selection;
   unique_ptr<Selection> SignSplit;
@@ -131,6 +129,7 @@ protected:
   //Handles
   Event::Handle<bool> h_is_zprime_reconstructed_chi2, h_is_zprime_reconstructed_correctmatch;
   Event::Handle<float> h_weight;
+
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
 
   // Lumi hists
@@ -188,7 +187,7 @@ void ZprimeAnalysisModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
-  debug = false;  // false/true
+  debug = false; // false/true
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -215,7 +214,6 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
   isEleTriggerMeasurement = (ctx.get("is_EleTriggerMeasurement") == "true");
 
-  if(debug) cout << "isEleTrigger Def: ok" << endl;
   // Lepton IDs
   ElectronId eleID_low  = ElectronTagID(Electron::mvaEleID_Fall17_iso_V2_wp80);
   ElectronId eleID_high = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp80);
@@ -249,17 +247,13 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   NEle1_selection.reset(new NElectronSelection(1, 1));
 
   // Important selection values
-  // double jet1_pt(50.);
-  // double jet2_pt;
-  double jet1_pt(30.); //eft comparision 
-  double jet2_pt(30.);//eft comparision
+  double jet1_pt(50.);
+  double jet2_pt;
   double chi2_max(30.);
   string trigger_mu_A, trigger_mu_B, trigger_mu_C, trigger_mu_D, trigger_mu_E, trigger_mu_F;
   string trigger_ele_A, trigger_ele_B;
   string trigger_ph_A;
   double MET_cut, HT_lep_cut;
-  // double HT_cut;
-  // double HTGen_cut;
   isMuon = false; isElectron = false;
   channel = ctx.get("channel");
   if(channel == "muon") isMuon = true;
@@ -279,11 +273,9 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     trigger_mu_E = "HLT_OldMu100_v*";
     trigger_mu_F = "HLT_TkMu100_v*";
 
-    // jet2_pt = 50;
+    jet2_pt = 50;
     MET_cut = 70;
     HT_lep_cut = 0;
-    // HT_cut = 800;
-    // HTGen_cut = 800;
   }
   if(isElectron){ // semileptonic electron channel
     trigger_ele_B = "HLT_Ele115_CaloIdVT_GsfTrkIdT_v*";
@@ -302,11 +294,9 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     else{
       trigger_ph_A = "HLT_Photon200_v*";
     }
-    // jet2_pt = 40;
+    jet2_pt = 40;
     MET_cut = 60;
     HT_lep_cut = 0;
-    // HT_cut = 800;
-    // HTGen_cut = 800;
   }
 
 
@@ -319,9 +309,9 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   Sys_TopPt_a = ctx.get("Systematic_TopPt_a");
   Sys_TopPt_b = ctx.get("Systematic_TopPt_b");
 
-  // BTag::algo btag_algo = BTag::DEEPJET;
-  // BTag::wp btag_wp = BTag::WP_MEDIUM;
-  // JetId id_btag = BTag(btag_algo, btag_wp);
+  BTag::algo btag_algo = BTag::DEEPJET;
+  BTag::wp btag_wp = BTag::WP_MEDIUM;
+  JetId id_btag = BTag(btag_algo, btag_wp);
 
   // double a_toppt = 0.0615; // par a TopPt Reweighting
   // double b_toppt = -0.0005; // par b TopPt Reweighting
@@ -332,15 +322,15 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   //TopPtReweight_module.reset(new TopPtReweighting(ctx, a_toppt, b_toppt, Sys_TopPt_a, Sys_TopPt_b, ""));
   MCScale_module.reset(new MCScaleVariation(ctx));
   hadronic_top.reset(new HadronicTop(ctx));
-  if(debug) cout << "Sf begins Def: ok" << endl;
 
   // sf_toptag.reset(new HOTVRScaleFactor(ctx, toptagID, ctx.get("Sys_TopTag", "nominal"), "HadronicTop", "TopTagSF", "HOTVRTopTagSFs"));
   sf_toptag.reset(new TopTagScaleFactor(ctx));
   sf_topmistag.reset(new TopMistagScaleFactor(ctx));
   NLOCorrections_module.reset(new NLOCorrections(ctx));
-  // ps_weights.reset(new PSWeights(ctx));
+  ps_weights.reset(new PSWeights(ctx));
+
   // b-tagging SFs
-  // sf_btagging.reset(new MCBTagDiscriminantReweighting(ctx, BTag::algo::DEEPJET, "CHS_matched"));
+  sf_btagging.reset(new MCBTagDiscriminantReweighting(ctx, BTag::algo::DEEPJET, "CHS_matched"));
 
   // set lepton scale factors: see UHH2/common/include/LeptonScaleFactors.h
   sf_muon_iso_low.reset(new uhh2::MuonIsoScaleFactors(ctx, Muon::Selector::PFIsoTight, Muon::Selector::CutBasedIdTight, true));
@@ -352,8 +342,6 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   sf_ele_id_low.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_iso_V2_wp80, true));
   sf_ele_id_high.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_noIso_V2_wp80, true));
   sf_ele_reco.reset(new uhh2::ElectronRecoScaleFactors(ctx, false, true));
-
-  if(debug) cout << "h_BestZprimeCandidateChi2 Def: ok" << endl;
 
   if(!isEleTriggerMeasurement) sf_ele_trigger.reset( new uhh2::ElecTriggerSF(ctx, "central", "eta_ptbins", year) );
 
@@ -382,15 +370,11 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   Jet2_selection.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
   met_sel.reset(new METCut  (MET_cut   , uhh2::infinity));
   htlep_sel.reset(new HTlepCut(HT_lep_cut, uhh2::infinity));
-  // ht_sel.reset(new HTJetCut(HT_cut, uhh2::infinity ));
-  // htgen_sel.reset(new HTGenJetCut(HTGen_cut, uhh2::infinity ));
 
   Chi2_selection.reset(new Chi2Cut(ctx, 0., chi2_max));
   TTbarMatchable_selection.reset(new TTbarSemiLepMatchableSelection());
   Chi2CandidateMatched_selection.reset(new Chi2CandidateMatchedSelection(ctx));
   ZprimeTopTag_selection.reset(new ZprimeTopTagSelection(ctx));
-  if(debug) cout << "TopTag selection Def: ok" << endl;
-
 
   HEM_selection.reset(new HEMSelection(ctx)); // HEM issue in 2018, veto on leptons and jets
 
@@ -400,7 +384,7 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
 
   // Split interference signal samples by sign
- if(ctx.get("dataset_version").find("_int") != std::string::npos){
+  if(ctx.get("dataset_version").find("_int") != std::string::npos){
     if     (ctx.get("dataset_version").find("_pos") != std::string::npos) SignSplit.reset(new SignSelection("pos"));
     else if(ctx.get("dataset_version").find("_neg") != std::string::npos) SignSplit.reset(new SignSelection("neg"));
     else SignSplit.reset(new uhh2::AndSelection(ctx));
@@ -413,7 +397,6 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
   // Zprime candidate builder
   CandidateBuilder.reset(new ZprimeCandidateBuilder(ctx, mode));
-  if(debug) cout << "Candidate Builder Def: ok" << endl;
 
   // Zprime discriminators
   Chi2DiscriminatorZprime.reset(new ZprimeChi2Discriminator(ctx));
@@ -421,10 +404,9 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   CorrectMatchDiscriminatorZprime.reset(new ZprimeCorrectMatchDiscriminator(ctx));
   h_is_zprime_reconstructed_correctmatch = ctx.get_handle<bool>("is_zprime_reconstructed_correctmatch");
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
-  if(debug) cout << "h_BestZprimeCandidateChi2 Def: ok" << endl;
 
-  // sel_1btag.reset(new NJetSelection(1, -1, id_btag));
-  // sel_2btag.reset(new NJetSelection(2,-1, id_btag));
+  sel_1btag.reset(new NJetSelection(1, -1, id_btag));
+  sel_2btag.reset(new NJetSelection(2,-1, id_btag));
 
   // PUPPI CHS match modules & hists
   AK4PuppiCHS_matching.reset(new PuppiCHS_matching(ctx)); // match AK4 PUPPI jets to AK4 CHS jets for b-tagging
@@ -434,7 +416,6 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   h_CHSMatchHists_afterBTagSF.reset(new ZprimeSemiLeptonicCHSMatchHists(ctx, "CHSMatch_afterBTagSF"));
   h_CHSMatchHists_after2DBTagSF.reset(new ZprimeSemiLeptonicCHSMatchHists(ctx, "CHSMatch_after2DBTagSF"));
   h_CHSMatchHists_afterBTag.reset(new ZprimeSemiLeptonicCHSMatchHists(ctx, "CHSMatch_afterBTag"));
-  if(debug) cout << "CHS Match Def: ok" << endl;
 
   // Book histograms
   vector<string> histogram_tags = {"Weights_Init", "Weights_HEM", "Weights_PU", "Weights_Lumi", "Weights_TopPt", "Weights_MCScale", "Weights_Prefiring", "Weights_PS", "Weights_TopTag_SF", "Weights_TopMistag_SF", "Muon1_LowPt", "Muon1_HighPt", "Muon1_Tot", "Ele1_LowPt", "Ele1_HighPt", "Ele1_Tot", "1Mu1Ele_LowPt", "1Mu1Ele_HighPt", "1Mu1Ele_Tot", "IdMuon_SF", "IdEle_SF", "IsoMuon_SF", "RecoEle_SF", "MuonReco_SF", "TriggerMuon", "TriggerEle", "TriggerMuon_SF", "TwoDCut_Muon", "TwoDCut_Ele", "Jet1", "Jet2", "MET", "HTlep", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "Btags1", "NLOCorrections", "TriggerEle_SF", "TTbarCandidate", "CorrectMatchDiscriminator", "Chi2Discriminator", "NNInputsBeforeReweight"};
@@ -459,10 +440,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   lumihists_MET.reset(new LuminosityHists(ctx, "Lumi_MET"));
   lumihists_HTlep.reset(new LuminosityHists(ctx, "Lumi_HTlep"));
   lumihists_Chi2.reset(new LuminosityHists(ctx, "Lumi_Chi2"));
-  if(debug) cout << "Lumi Def: ok" << endl;
 
   if(isMC){
-    if(debug) cout << "just before process section" << endl;
     TString sample_name = "";
     vector<TString> names = {"ST", "WJets", "DY", "QCD", "ALP_ttbar_signal", "ALP_ttbar_interference", "HscalarToTTTo1L1Nu2J_m365_w36p5_res", "HscalarToTTTo1L1Nu2J_m400_w40p0_res", "HscalarToTTTo1L1Nu2J_m500_w50p0_res", "HscalarToTTTo1L1Nu2J_m600_w60p0_res", "HscalarToTTTo1L1Nu2J_m800_w80p0_res", "HscalarToTTTo1L1Nu2J_m1000_w100p0_res", "HscalarToTTTo1L1Nu2J_m365_w36p5_int_pos", "HscalarToTTTo1L1Nu2J_m400_w40p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w50p0_int_pos", "HscalarToTTTo1L1Nu2J_m600_w60p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w80p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w100p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w36p5_int_neg", "HscalarToTTTo1L1Nu2J_m400_w40p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w50p0_int_neg", "HscalarToTTTo1L1Nu2J_m600_w60p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w80p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w100p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w36p5_res", "HpseudoToTTTo1L1Nu2J_m400_w40p0_res", "HpseudoToTTTo1L1Nu2J_m500_w50p0_res", "HpseudoToTTTo1L1Nu2J_m600_w60p0_res", "HpseudoToTTTo1L1Nu2J_m800_w80p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_res", "HpseudoToTTTo1L1Nu2J_m365_w36p5_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w40p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w50p0_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w60p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w80p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w36p5_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w40p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w50p0_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w60p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w80p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_int_neg", "HscalarToTTTo1L1Nu2J_m365_w91p25_res", "HscalarToTTTo1L1Nu2J_m400_w100p0_res", "HscalarToTTTo1L1Nu2J_m500_w125p0_res", "HscalarToTTTo1L1Nu2J_m600_w150p0_res", "HscalarToTTTo1L1Nu2J_m800_w200p0_res", "HscalarToTTTo1L1Nu2J_m1000_w250p0_res", "HscalarToTTTo1L1Nu2J_m365_w91p25_int_pos", "HscalarToTTTo1L1Nu2J_m400_w100p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w125p0_int_pos", "HscalarToTTTo1L1Nu2J_m600_w150p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w200p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w250p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w91p25_int_neg", "HscalarToTTTo1L1Nu2J_m400_w100p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w125p0_int_neg", "HscalarToTTTo1L1Nu2J_m600_w150p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w200p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w250p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w91p25_res", "HpseudoToTTTo1L1Nu2J_m400_w100p0_res", "HpseudoToTTTo1L1Nu2J_m500_w125p0_res", "HpseudoToTTTo1L1Nu2J_m600_w150p0_res", "HpseudoToTTTo1L1Nu2J_m800_w200p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_res", "HpseudoToTTTo1L1Nu2J_m365_w91p25_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w100p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w125p0_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w150p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w200p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w91p25_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w100p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w125p0_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w150p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w200p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_neg", "HscalarToTTTo1L1Nu2J_m365_w9p125_res", "HscalarToTTTo1L1Nu2J_m400_w10p0_res", "HscalarToTTTo1L1Nu2J_m500_w12p5_res", "HscalarToTTTo1L1Nu2J_m600_w15p0_res", "HscalarToTTTo1L1Nu2J_m800_w20p0_res", "HscalarToTTTo1L1Nu2J_m1000_w25p0_res", "HscalarToTTTo1L1Nu2J_m365_w9p125_int_pos", "HscalarToTTTo1L1Nu2J_m400_w10p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w12p5_int_pos", "HscalarToTTTo1L1Nu2J_m600_w15p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w20p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w25p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w9p125_int_neg", "HscalarToTTTo1L1Nu2J_m400_w10p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w12p5_int_neg", "HscalarToTTTo1L1Nu2J_m600_w15p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w20p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w25p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w9p125_res", "HpseudoToTTTo1L1Nu2J_m400_w10p0_res", "HpseudoToTTTo1L1Nu2J_m500_w12p5_res", "HpseudoToTTTo1L1Nu2J_m600_w15p0_res", "HpseudoToTTTo1L1Nu2J_m800_w20p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_res", "HpseudoToTTTo1L1Nu2J_m365_w9p125_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w10p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w12p5_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w15p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w20p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w9p125_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w10p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w12p5_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w15p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w20p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_int_neg", "RSGluonToTT_M-500", "RSGluonToTT_M-1000", "RSGluonToTT_M-1500", "RSGluonToTT_M-2000", "RSGluonToTT_M-2500", "RSGluonToTT_M-3000", "RSGluonToTT_M-3500", "RSGluonToTT_M-4000", "RSGluonToTT_M-4500", "RSGluonToTT_M-5000", "RSGluonToTT_M-5500", "RSGluonToTT_M-6000", "ZPrimeToTT_M400_W40", "ZPrimeToTT_M500_W50", "ZPrimeToTT_M600_W60", "ZPrimeToTT_M700_W70", "ZPrimeToTT_M800_W80", "ZPrimeToTT_M900_W90", "ZPrimeToTT_M1000_W100", "ZPrimeToTT_M1200_W120", "ZPrimeToTT_M1400_W140", "ZPrimeToTT_M1600_W160", "ZPrimeToTT_M1800_W180", "ZPrimeToTT_M2000_W200", "ZPrimeToTT_M2500_W250", "ZPrimeToTT_M3000_W300", "ZPrimeToTT_M3500_W350", "ZPrimeToTT_M4000_W400", "ZPrimeToTT_M4500_W450", "ZPrimeToTT_M5000_W500", "ZPrimeToTT_M6000_W600",  "ZPrimeToTT_M7000_W700", "ZPrimeToTT_M8000_W800", "ZPrimeToTT_M9000_W900", "ZPrimeToTT_M400_W120", "ZPrimeToTT_M500_W150", "ZPrimeToTT_M600_W180", "ZPrimeToTT_M700_W210", "ZPrimeToTT_M800_W240", "ZPrimeToTT_M900_W270", "ZPrimeToTT_M1000_W300", "ZPrimeToTT_M1200_W360", "ZPrimeToTT_M1400_W420", "ZPrimeToTT_M1600_W480", "ZPrimeToTT_M1800_W540", "ZPrimeToTT_M2000_W600", "ZPrimeToTT_M2500_W750", "ZPrimeToTT_M3000_W900", "ZPrimeToTT_M3500_W1050", "ZPrimeToTT_M4000_W1200", "ZPrimeToTT_M4500_W1350", "ZPrimeToTT_M5000_W1500", "ZPrimeToTT_M6000_W1800", "ZPrimeToTT_M7000_W2100", "ZPrimeToTT_M8000_W2400", "ZPrimeToTT_M9000_W2700", "ZPrimeToTT_M400_W4", "ZPrimeToTT_M500_W5", "ZPrimeToTT_M600_W6", "ZPrimeToTT_M700_W7", "ZPrimeToTT_M800_W8", "ZPrimeToTT_M900_W9", "ZPrimeToTT_M1000_W10", "ZPrimeToTT_M1200_W12", "ZPrimeToTT_M1400_W14", "ZPrimeToTT_M1600_W16", "ZPrimeToTT_M1800_W18", "ZPrimeToTT_M2000_W20", "ZPrimeToTT_M2500_W25", "ZPrimeToTT_M3000_W30", "ZPrimeToTT_M3500_W35", "ZPrimeToTT_M4000_W40", "ZPrimeToTT_M4500_W45", "ZPrimeToTT_M5000_W50", "ZPrimeToTT_M6000_W60", "ZPrimeToTT_M7000_W70", "ZPrimeToTT_M8000_W80", "ZPrimeToTT_M9000_W90", "ZprimeDMToTTbarResoIncl_MZp1000_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp1500_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp2000_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp2500_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp3000_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp3500_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp4000_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp4500_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp5000_Mchi10_V1", "ZprimeDMToTTbarResoIncl_MZp2500_Mchi1000_A1", "ZprimeDMToTTbarResoIncl_MZp2500_Mchi1000_V1", "ZprimeDMToTTbarResoIncl_MZp2500_Mchi10_A1"};
 
@@ -472,18 +451,16 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     if( (ctx.get("dataset_version").find("TTToHadronic") != std::string::npos) || (ctx.get("dataset_version").find("TTToSemiLeptonic") != std::string::npos) || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos) ) sample_name = "TTbar";
     if( (ctx.get("dataset_version").find("WW") != std::string::npos) || (ctx.get("dataset_version").find("ZZ") != std::string::npos) || (ctx.get("dataset_version").find("WZ") != std::string::npos) ) sample_name = "Diboson";
 
-    // if(isMuon){
-    //   TFile* f_btag2Dsf_muon = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
-    //   ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_" + sample_name);
-    //   ratio_hist_muon->SetDirectory(0);
-    //   cout << "passed 1" << endl;
-    // }
-    // else if(!isMuon){
-    //   TFile* f_btag2Dsf_ele = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
-    //   ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_" + sample_name);
-    //   ratio_hist_ele->SetDirectory(0);
-    //   cout << "passed 2" << endl;
-    // }
+    if(isMuon){
+      TFile* f_btag2Dsf_muon = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
+      ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_" + sample_name);
+      ratio_hist_muon->SetDirectory(0);
+    }
+    else if(!isMuon){
+      TFile* f_btag2Dsf_ele = new TFile("/nfs/dust/cms/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
+      ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_" + sample_name);
+      ratio_hist_ele->SetDirectory(0);
+    }
   }
 }
 
@@ -550,24 +527,20 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(debug) cout << "MCScale: ok" << endl;
   fill_histograms(event, "Weights_MCScale");
   lumihists_Weights_MCScale->fill(event);
-  if(debug) cout << "debug 1" << endl;
 
   // Prefiring weights
   if(isMC){
-    if(debug) cout << "debug 2" << endl;
     if (Prefiring_direction == "nominal") event.weight *= event.prefiringWeight;
     else if (Prefiring_direction == "up") event.weight *= event.prefiringWeightUp;
     else if (Prefiring_direction == "down") event.weight *= event.prefiringWeightDown;
-    if(debug) cout << "debug 3" << endl;
   }
   fill_histograms(event, "Weights_Prefiring");
-  if(debug) cout << "debug 4" << endl;
 
   // Write PSWeights from genInfo to own branch in output tree
-  // ps_weights->process(event);
+  ps_weights->process(event);
   if(debug) cout << "Weights_PS: ok" << endl;
-  // fill_histograms(event, "Weights_PS");
-  // lumihists_Weights_PS->fill(event);
+  fill_histograms(event, "Weights_PS");
+  lumihists_Weights_PS->fill(event);
 
   // DeepAK8 TopTag SFs
   if(isdeepAK8) sf_toptag->process(event);
@@ -879,7 +852,6 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(isMuon && !isEleTriggerMeasurement && muon_is_high){
     if(!TwoDCut_selection->passes(event)) return false;
   }
-  if(debug) cout<< "after TwoDCut_selection" <<endl;
   fill_histograms(event, "TwoDCut_Muon");
   lumihists_TwoDCut_Muon->fill(event);
   if(isElectron && ele_is_high){
@@ -887,7 +859,6 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   }
   fill_histograms(event, "TwoDCut_Ele");
   lumihists_TwoDCut_Ele->fill(event);
-  if(debug) cout<< "after TwoDCut_selection lumi" <<endl;
 
   if(isMuon && isEleTriggerMeasurement && (muon_is_high || ele_is_high)){
     if(!TwoDCut_selection->passes(event)) return false;
@@ -895,9 +866,7 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
 
   // match AK4 PUPPI to CHS
   AK4PuppiCHS_matching->process(event);
-  if(debug) cout<< "AK4PuppiCHS_matching" <<endl;
   h_CHSMatchHists->fill(event);
-  if(debug) cout<< "h_CHSMatchHists fill" <<endl;
 
   if(!Jet1_selection->passes(event)) return false;
   if(debug) cout << "Jet1_selection: ok" << endl;
@@ -914,100 +883,54 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(debug) cout << "MET: ok" << endl;
   fill_histograms(event, "MET");
   lumihists_MET->fill(event);
-  // if(isMuon){
-  //   if(!htlep_sel->passes(event)) return false;
-  //   fill_histograms(event, "HTlep");
-  //   lumihists_HTlep->fill(event);
-  //   if(debug) cout << "HTlep: ok" << endl;
-  // }
-
-  // if(event.genjets) {
-  //   for(const auto & genjet : *event.genjets) {
-  //     gen_ht += genjet.pt();
-  //   }
-  // }
-  // if(gen_ht<800){
-  //   cout << "HTgen before:" << gen_ht << endl;
-  // }
-
-  // if(!ht_sel->passes(event)) return false;
-  // if(debug) cout << "HT cut: ok" << endl;
-  // float gen_ht = 0;
-  // if(!htgen_sel->passes(event)) return false;
-  // if(debug) cout << "HT Gen cut: ok" << endl;
-
-  // if(event.genjets) {
-  //   for(const auto & genjet : *event.genjets) {
-  //     gen_ht += genjet.pt();
-  //   }
-  // }
-  // if(gen_ht>800){
-  //   cout << "XXXXXXXXXXXXXX" << endl;
-  //   cout << "HTgen after:" << gen_ht << endl;
-  // }
-
-  // const vector<GenParticle> & genparticles = *(event.genparticles);
-  //   for (unsigned int i = 0; i < genparticles.size(); ++i) {
-  //     const GenParticle &genp = genparticles[i];
-  //     if (abs(genp.pdgId()) == 6) {
-  //       cout<< "abstop pt:" << genp.pt() << endl;
-  //       if (genp.pdgId() == 6) {
-  //         cout<< "top is found" << endl;
-  //         cout << "XXXXXXXXXXXXXX" << endl;
-  //         cout<< "top pt:" << genp.pt() << endl;
-  //       } else if (genp.pdgId() == -6) {
-  //         cout<< "antitop is found" << endl;
-  //         cout << "XXXXXXXXXXXXXX" << endl;
-         
-  //       }
-  //     }
-  //   }
-
+  if(isMuon){
+    if(!htlep_sel->passes(event)) return false;
+    fill_histograms(event, "HTlep");
+    lumihists_HTlep->fill(event);
+    if(debug) cout << "HTlep: ok" << endl;
+  }
 
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
-  // h_CHSMatchHists_beforeBTagSF->fill(event);
+  h_CHSMatchHists_beforeBTagSF->fill(event);
   fill_histograms(event, "BeforeBtagSF");
 
   // btag shape sf (Ak4 chs jets)
   // new: using new modules, with PUPPI-CHS matching
-  // sf_btagging->process(event);
+  sf_btagging->process(event);
 
-  // h_CHSMatchHists_afterBTagSF->fill(event);
-  // fill_histograms(event, "AfterBtagSF");
-  if(debug) cout << "BeforeBtagSF plot: ok" << endl;
+  h_CHSMatchHists_afterBTagSF->fill(event);
+  fill_histograms(event, "AfterBtagSF");
 
   // apply custom SF to correct for BTag SF shape effects on NJets/HT
-  
-  // if(isMC && isMuon){
-  //   float custom_sf;
+  if(isMC && isMuon){
+    float custom_sf;
 
-  //   vector<Jet>* jets = event.jets;
-  //   int Njets = jets->size();
-  //   double st_jets = 0.;
-  //   for(const auto & jet : *jets) st_jets += jet.pt();
-  //   custom_sf = ratio_hist_muon->GetBinContent( ratio_hist_muon->GetXaxis()->FindBin(Njets), ratio_hist_muon->GetYaxis()->FindBin(st_jets) );
+    vector<Jet>* jets = event.jets;
+    int Njets = jets->size();
+    double st_jets = 0.;
+    for(const auto & jet : *jets) st_jets += jet.pt();
+    custom_sf = ratio_hist_muon->GetBinContent( ratio_hist_muon->GetXaxis()->FindBin(Njets), ratio_hist_muon->GetYaxis()->FindBin(st_jets) );
 
-  //   event.weight *= custom_sf;
-  // }
-  // if(isMC && !isMuon){
-  //   float custom_sf;
+    event.weight *= custom_sf;
+  }
+  if(isMC && !isMuon){
+    float custom_sf;
 
-  //   vector<Jet>* jets = event.jets;
-  //   int Njets = jets->size();
-  //   double st_jets = 0.;
-  //   for(const auto & jet : *jets) st_jets += jet.pt();
-  //   custom_sf = ratio_hist_ele->GetBinContent( ratio_hist_ele->GetXaxis()->FindBin(Njets), ratio_hist_ele->GetYaxis()->FindBin(st_jets) );
+    vector<Jet>* jets = event.jets;
+    int Njets = jets->size();
+    double st_jets = 0.;
+    for(const auto & jet : *jets) st_jets += jet.pt();
+    custom_sf = ratio_hist_ele->GetBinContent( ratio_hist_ele->GetXaxis()->FindBin(Njets), ratio_hist_ele->GetYaxis()->FindBin(st_jets) );
 
-  //   event.weight *= custom_sf;
-  // }
-  
-  // h_CHSMatchHists_after2DBTagSF->fill(event);
+    event.weight *= custom_sf;
+  }
+  h_CHSMatchHists_after2DBTagSF->fill(event);
   fill_histograms(event, "AfterCustomBtagSF");
-  if(debug) cout << "custom btag: ok" << endl;
+
   // b-tagging: >= 1 b-tag medium WP (on matched CHS jet)
   // if(!AK4PuppiCHS_BTagging->passes(event)) return false;
-  // fill_histograms(event, "Btags1");
-  // h_CHSMatchHists_afterBTag->fill(event);
+  fill_histograms(event, "Btags1");
+  h_CHSMatchHists_afterBTag->fill(event);
 
   // Higher order corrections - EWK & QCD NLO
   NLOCorrections_module->process(event);
@@ -1017,14 +940,13 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(!isEleTriggerMeasurement) sf_ele_trigger->process(event);
   fill_histograms(event, "TriggerEle_SF");
 
-
   // build all possible ttbar candidates
   CandidateBuilder->process(event);
   fill_histograms(event, "TTbarCandidate");
   if(debug) cout << "CandidateBuilder: ok" << endl;
 
   // matching to gen-level ttbar - to extract chi2 parameters
-  // CorrectMatchDiscriminatorZprime->process(event);
+  CorrectMatchDiscriminatorZprime->process(event);
   fill_histograms(event, "CorrectMatchDiscriminator");
   if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
 
