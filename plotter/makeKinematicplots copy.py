@@ -2,7 +2,6 @@ from ROOT import TFile, TLegend, TCanvas, TPad, THStack, TF1, gROOT, gStyle, kRe
 from optparse import OptionParser
 from numpy import log10
 from array import array
-import os
 
 padRatio = 0.25
 padOverlap = 0.15
@@ -16,11 +15,9 @@ parser.add_option("-y", "--year", dest="year", default="UL17", type='str', help=
 channel = options.channel
 year = options.year
 
-# Define analysis and preselection runs
 analysis_runs = ["UL16", "UL17", "UL18"]
 preselection_runs = ["Preselection_UL16", "Preselection_UL17", "Preselection_UL18"]
 
-# Determine run type based on the year
 if year in analysis_runs:
     run_type = "analysis"
 elif year in preselection_runs:
@@ -28,19 +25,19 @@ elif year in preselection_runs:
 else:
     raise ValueError("Year must be one of the defined analysis or preselection runs")
 
-# Create output directory if it doesn't exist
+
 path = "%s_%s" % (channel, year)
 if not os.path.exists(path):
     os.mkdir(path)
 
-# Set the file directory based on the run type
 if channel in ["electron", "muon"]:
-    if run_type == "analysis":
-        fileDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{year}/{channel}/workdir_AnalysisDNN_{year}_{channel}_chargecheck/nominal".format(year=year, channel=channel)
-    elif run_type == "preselection":
-        fileDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{year}/Preselection/workdir_Preselection_{year}_chargecheck/nominal".format(year=year)
+    if analysis_runs: 
+        fileDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL17/muon/workdir_AnalysisDNN_UL17_muon_chargecheck/nominal"
+    elif preselection_runs:
+    	fileDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL17/Preselection/workdir_Preselection_UL17_chargecheck/nominal"
 else:
-    fileDir = "/nfs/dust/cms/user/titasroy/Ac_{year}/lepton/".format(year=year)
+    fileDir = "/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/" % year
+
 
 print(fileDir)
 
@@ -57,12 +54,15 @@ style = None
 if os.path.isfile('tdrstyle.C'):
     ROOT.gROOT.ProcessLine('.L tdrstyle.C')
     ROOT.setTDRStyle()
+    #print ("Found tdrstyle.C file, using this style.")
     HasCMSStyle = True
     if os.path.isfile('CMSTopStyle.cc'):
         gROOT.ProcessLine('.L CMSTopStyle.cc+')
         style = CMSTopStyle()
         style.setupICHEPv1()
+        #print "Found CMSTopStyle.cc file, use TOP style if requested in xml file."
 if not HasCMSStyle:
+    #print "Using default style defined in cuy package."
     thestyle.SetStyle()
 
 ROOT.gROOT.ForceStyle()
@@ -88,56 +88,70 @@ legendHeightPer = 0.04
 legendStart = 0.69
 legendEnd = 0.97 - (R / W)
 
-legList = stackList.keys()
+legList = stackList.keys() 
 
-canvas = TCanvas('c1', 'c1', W, H)
+canvas = TCanvas('c1','c1',W,H)
 canvas.SetFillColor(0)
 canvas.SetBorderMode(0)
 canvas.SetFrameFillStyle(0)
 canvas.SetFrameBorderMode(0)
-canvas.SetLeftMargin(L / W)
-canvas.SetRightMargin(R / W)
-canvas.SetTopMargin(T / H)
-canvas.SetBottomMargin(B / H)
+canvas.SetLeftMargin( L/W )
+canvas.SetRightMargin( R/W )
+canvas.SetTopMargin( T/H )
+canvas.SetBottomMargin( B/H )
 canvas.SetTickx(1)
 
-canvasRatio = TCanvas('c1Ratio', 'c1Ratio', W, H)
+canvasRatio = TCanvas('c1Ratio','c1Ratio',W,H)
 canvasRatio.SetFillColor(0)
 canvasRatio.SetBorderMode(0)
 canvasRatio.SetFrameFillStyle(0)
 canvasRatio.SetFrameBorderMode(0)
-canvasRatio.SetLeftMargin(L / W)
-canvasRatio.SetRightMargin(R / W)
-canvasRatio.SetTopMargin(T / H)
-canvasRatio.SetBottomMargin(B / H)
+canvasRatio.SetLeftMargin( L/W )
+canvasRatio.SetRightMargin( R/W )
+canvasRatio.SetTopMargin( T/H )
+canvasRatio.SetBottomMargin( B/H )
 canvasRatio.SetTickx(1)
 canvasRatio.SetTicky(1)
 canvasRatio.Draw()
 canvasRatio.cd()
 
-pad1 = TPad("zxc_p1", "zxc_p1", 0, padRatio - padOverlap, 1, 1)
-pad2 = TPad("qwe_p2", "qwe_p2", 0, 0, 1, padRatio + padOverlap)
-pad1.SetLeftMargin(L / W)
-pad1.SetRightMargin(R / W)
-pad1.SetTopMargin(T / H / (1 - padRatio + padOverlap))
-pad1.SetBottomMargin((padOverlap + padGap) / (1 - padRatio + padOverlap))
+
+pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
+pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
+pad1.SetLeftMargin( L/W )
+pad1.SetRightMargin( R/W )
+pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
+pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
+pad2.SetLeftMargin( L/W )
+pad2.SetRightMargin( R/W )
+pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
+pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
 pad1.SetFillColor(0)
+pad1.SetBorderMode(0)
+pad1.SetFrameFillStyle(0)
+pad1.SetFrameBorderMode(0)
 pad1.SetTickx(1)
 pad1.SetTicky(1)
 
-pad2.SetLeftMargin(L / W)
-pad2.SetRightMargin(R / W)
-pad2.SetTopMargin(padOverlap / (padRatio + padOverlap))
-pad2.SetBottomMargin(B / H / (padRatio + padOverlap))
 pad2.SetFillColor(0)
 pad2.SetFillStyle(4000)
+pad2.SetBorderMode(0)
+pad2.SetFrameFillStyle(0)
+pad2.SetFrameBorderMode(0)
 pad2.SetTickx(1)
 pad2.SetTicky(1)
 
 canvasRatio.cd()
 pad1.Draw()
 pad2.Draw()
+
+# canvas.cd()
+
+# canvas.ResetDrawn()
+
 # ========================= CMS Style =====================
+
+
 histograms={
     		"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
 			# "M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 280, [0, 6000]],
@@ -153,77 +167,87 @@ histograms={
 
 if channel == "muon":
     histograms.update({
-        "N_mu_charge": ["Muon charge ", "Events", 2, [-1.0, 1.0]],
+        #   "dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
+		#   "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
+		  "N_mu_charge":["Muon charge ", "Events", 2, [-1.0,1.0]],
     })
 
-elif channel == "electron":
-    histograms.update({
-        "N_ele_charge": ["Electron charge ", "Events", 2, [-1.0, 1.0]],
-    })
+elif(channel=="electron" ):
+	histograms.update({
+		# "dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
+		# "pt_ele": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
+		"N_ele_charge":["Electron charge ", "Events", 2, [-1.0,1.0]],
+	})
 
-elif channel == "lepton":
-    histograms.update({
-        "dRmin_ele_jet": ["#DeltaR_{min}(e, jet)", "Events", 60, [0, 3]],
-        "pt_ele": ["Electron p_{T} [GeV]", "Events", 90, [0, 900]],
-        "dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)", "Events", 60, [0, 3]],
-        "pt_mu": ["Muon p_{T} [GeV]", "Events", 90, [0, 900]],
-    })
+elif(channel=="lepton"):
+	histograms.update({
+     	"dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
+		"pt_ele": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
+		"dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
+		"pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
+	})
 
-categories = ["Input", "MET"] if run_type == "preselection" else ["Weights_Init", "AfterBaseline", "AfterChi2", "DNN_output0", "DNN_output1", "DNN_output2"]
-test_sample = ['TTbar', 'ST', 'WJets', 'DY', 'Diboson', 'QCD']
+if preselection_runs:
+    categories=["Input", "MET"] #Preselection categories, first one is the input category before any cuts, second one is the end of preselection
+else:
+	categories=["Weights_Init", "AfterBaseline", "AfterChi2", "DNN_output0","DNN_output1","DNN_output2"] # Analyis Module categories
 
-file = {}
-histo = {}
+
+test_sample = ['TTbar','ST', 'WJets', 'DY', 'Diboson','QCD']
+
+file={}
+histo_={}
 
 print("Working from directory: ", fileDir)
 
+
 for hist in histograms:
-    print("hist is: ", hist)
+    print("hist is: ",hist)
     for cat in categories:
         stack = THStack("hs", "stack")
         legendR = TLegend(2 * legendStart - legendEnd, 0.99 - (T / H) / (1. - padRatio + padOverlap) - legendHeightPer / (1. - padRatio + padOverlap) * round((len(legList) + 1) / 2.) - 0.1, legendEnd, 0.99 - (T / H) / (1. - padRatio + padOverlap))
         legendR.SetNColumns(2)
         legendR.SetBorderSize(0)
         legendR.SetFillColorAlpha(0, 0.35)
-
+        
         for sample in test_sample:
             print("sample is: ", sample, cat, hist)
             file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root" % (fileDir, sample), "read")
             temp_hist = "%s_General/%s" % (cat, hist)
             histo[sample] = file[sample].Get(temp_hist)
-
+            
             if not histo[sample] or not histo[sample].InheritsFrom("TH1"):
                 print("WARNING! Histogram %s for sample %s does not exist or is not a TH1 object" % (temp_hist, sample))
                 continue
-
+            
             histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0], histograms[hist][3][1])
             histo[sample].SetFillColor(stackList_orig[sample][0])
             histo[sample].SetLineColor(stackList_orig[sample][0])
-
-            if sample == "TTbar":
-                legendR.AddEntry(histo[sample], "t#bar{t}", 'f')
-            elif sample == "WJets":
-                legendR.AddEntry(histo[sample], "W+jets", 'f')
-            elif sample == "ST":
-                legendR.AddEntry(histo[sample], "ST", 'f')
-
+            
+            if sample=="TTbar":
+                legendR.AddEntry(histo[sample],"t#bar{t}",'f')
+            elif sample=="WJets":
+                legendR.AddEntry(histo[sample],"W+jets",'f')
+            elif sample=="ST":
+                legendR.AddEntry(histo[sample],"ST",'f')
+                
             stack.Add(histo[sample])
             stack.SetMinimum(0.0)
-
+            
         file_data = TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root" % fileDir, "read")
         dataHist = file_data.Get(temp_hist)
-
+        
         if not dataHist or not dataHist.InheritsFrom("TH1"):
             print("Warning: Histogram %s for data does not exist or is not a TH1 object" % temp_hist)
             continue
-
+        
         dataHist.SetMarkerColor(kBlack)
         dataHist.SetLineColor(kBlack)
         dataHist.SetYTitle(histograms[hist][1])
         dataHist.Draw("pe,x0")
         stack.SetMinimum(0.0)
         stack.Draw("HIST,SAME")
-
+        
         errorban = stack.GetStack().Last().Clone("errorban")
         errorban.Sumw2()
         errorban.SetLineColor(kGray + 2)
@@ -232,12 +256,12 @@ for hist in histograms:
         errorban.SetMarkerSize(0)
         errorban.Draw("E2,SAME")
         legendR.AddEntry(errorban, "MC tot. unc.", 'f')
-
+        
         oneLine = TF1("oneline", "1", -9e9, 9e9)
         oneLine.SetLineColor(kBlack)
         oneLine.SetLineWidth(1)
         oneLine.SetLineStyle(2)
-
+        
         maxVal = stack.GetMaximum()
         minVal = max(stack.GetStack()[0].GetMinimum(), 1)
         log = 0
@@ -246,7 +270,7 @@ for hist in histograms:
         else:
             stack.SetMaximum(2.3 * maxVal)
         stack.SetMinimum(0.0)
-
+        
         errorband = stack.GetStack().Last().Clone("error")
         errorband.Sumw2()
         errorband.SetLineColor(kBlack)
@@ -263,7 +287,7 @@ for hist in histograms:
 
         pad1.Draw()
         pad2.Draw()
-
+        
         pad1.cd()
         pad1.SetLogy(log)
 
@@ -279,7 +303,7 @@ for hist in histograms:
         stack.GetYaxis().SetTitle("Events")
         stack.SetMinimum(0.0)
         dataHist.Draw("E,X0,SAME")
-
+        
         errorban.Draw("E2,SAME")
         legendR.AddEntry(dataHist, "Data", 'pe')
 
@@ -308,7 +332,7 @@ for hist in histograms:
         ratio.SetLineWidth(dataHist.GetLineWidth())
         ratio.Draw('e,x0')
         errorband.Divide(temp)
-
+        
         for i in range(1, errorband.GetNbinsX() + 1):
             if errorban.GetBinContent(i) == 0:
                 errorband.SetBinError(i, 0)
@@ -322,3 +346,9 @@ for hist in histograms:
             canvasRatio.SaveAs("%s_%s/%s_%s_log_AM.pdf" % (channel, year, hist, cat))
         else:
             canvasRatio.SaveAs("%s_%s/%s_%s_linear_AM.pdf" % (channel, year, hist, cat))
+
+
+
+
+
+	

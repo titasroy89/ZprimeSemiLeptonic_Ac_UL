@@ -9,6 +9,7 @@ from numpy import log10
 from array import array
 from collections import OrderedDict
 
+
 #import cms_figure
 
 padRatio = 0.25
@@ -18,7 +19,7 @@ padGap = 0.01
 parser = OptionParser()
 parser.add_option("-c", "--channel", dest="channel",default="muon",type='str',
                   help="what channel?")
-parser.add_option("-y", "--year", dest="year", default="2018",type='str',
+parser.add_option("-y", "--year", dest="year", default="UL17",type='str',
                   help="don't print status messages to stdout")
 # parser.add_option("-eft", "--eft", dest="eft", action='store_false',type='str',
 #                   help="print eft vars?")
@@ -35,7 +36,8 @@ if os.path.exists(path):
 else:
 	os.mkdir(path)
 if (channel=="electron" or channel=="muon"):
-	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,channel,year,channel)
+	# fileDir ="/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{}/{}/workdir_AnalysisDNN_{}_{}_kinematics/nominal".format(year,channel,year,channel)
+	fileDir ="/nfs/dust/cms/group/zprime-uhh/Analysis_UL17/muon"
 else:
 	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
 
@@ -88,10 +90,10 @@ CMS_lumi.channelText = _channelText
 CMS_lumi.writeChannelText = True
 CMS_lumi.writeExtraText = True
 period=6
-if year=="2018":
+if year=="UL18":
 	period=6
-elif year=="2017":
-	period=5
+elif year=="UL17":
+    	period=5
 elif "2016" in year:
 	period=4
 H = 600;
@@ -181,8 +183,9 @@ canvas.cd()
 
 
 canvas.ResetDrawn()
-
-stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kGreen], "Diboson":[kGreen], "QCD":[kGreen],"ST":[kBlue]}
+# light_blue = TColor.GetColor(135, 206, 235)
+# stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DY":[kYellow], "Diboson":[kOrange], "QCD":[light_blue],"ST":[kBlue]}
+stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DY":[kGreen], "Diboson":[kGreen], "QCD":[kGreen],"ST":[kBlue]}
 
 #stackList_orig=OrderedDict()
 
@@ -207,24 +210,27 @@ if eft:
 bins_jetpt=[0.,20.,40.,60.,80.,100.,120.,140.,160.,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,460.,500.,550.,600.,650.,700.,750.,800.,900.]
 bins_mttbar=[0.,180.,360.,540.,720.,1000.,1500.,6000.]
 
-histograms={"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
-			"M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 280, [0, 6000]],
- 			"M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 140, [0, 6000]],
- 			"M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [0, 6000]],
-			"M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000],bins_mttbar,7],
-			"N_jets": ["N_{jets}","Events", 21, [-0.5, 20.5]],
-			"pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900],bins_jetpt,30],
-			"deepjetbscore_jet1":["DeepJet b-tag score AK4 jet 1","Events", 20, [0, 1]],
-			"deepjetbscore_jet":["DeepJet b-tag score AK4 jets","Events", 20, [0, 1]],
-			"N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
+histograms={
+    # "DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
+			# "M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 280, [0, 6000]],
+ 			# "M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 140, [0, 6000]],
+ 			# "M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [0, 6000]],
+			# "M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000],bins_mttbar,7],
+			# "N_jets": ["N_{jets}","Events", 21, [-0.5, 20.5]],
+			# "pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900],bins_jetpt,30],
+			# "deepjetbscore_jet1":["DeepJet b-tag score AK4 jet 1","Events", 20, [0, 1]],
+			# "deepjetbscore_jet":["DeepJet b-tag score AK4 jets","Events", 20, [0, 1]],
+			# "N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
 }
 
 # sys.exit()
 if channel=="muon" :
 	histograms.update({
-					  "dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
-				      "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
+					#   "dRmin_mu_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
+				    #   "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
 					#   "N_mu_charge":["Muon charge ", "Events", 2, [-1.0,1.0]],
+       				"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
+					"N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
 					  })
 elif(channel=="electron" ):
 	histograms.update({
@@ -242,20 +248,20 @@ elif(channel=="lepton"):
 categories=["DNN_output0","DNN_output1","DNN_output2"]
 # ,"Chi2_passes","Chi2_inverse"]
 
-test_sample = ['ST', 'WJets', 'DYJets', 'Diboson','QCD','TTbar']
+test_sample = ['TTbar','ST', 'WJets', 'DY', 'Diboson','QCD']
 #for key in test_tuple: print(test_dict[key])
 file={}
 histo_={}
 print("working from directory: ",fileDir)
 #print(dict(stackList_orig))
-if (channel=="muon" and year=="2018"):
+if (channel=="muon" and year=="UL18"):
 	hist_combined={}
 	for cat in categories:
 		hist_combined[cat]={}
 		for sample in test_sample:
 			hist_combined[cat][sample]=TH1F("hist_combined","hist_combined",36,1.,37.)
 
-if (channel=="muon" and year=="2018"):
+if (channel=="muon" and year=="UL18"):
 	print("shouldnt be here")
 	histos=["DeltaY_reco_d1","DeltaY_reco_d2","Sigma_phi_1","Sigma_phi_2"]
 	for cat in categories:
@@ -295,11 +301,19 @@ if (channel=="muon" and year=="2018"):
 				legend.AddEntry(hist_combined[cat][sample],"t#bar{t}",'f')
 			elif sample=="WJets":
 				print("adding sample: ",sample)
-				legend.AddEntry(hist_combined[cat][sample],"W+jets",'f')
+				legend.AddEntry(hist_combined[cat][sample],"W+jets + Others",'f')
 			elif sample=="ST":
 				print("adding sample: ",sample)
 				legend.AddEntry(hist_combined[cat][sample],"ST",'f')
-			print("going to stack")
+			# elif sample=="DY":
+			# 	print("adding sample: ",sample)
+			# 	legend.AddEntry(hist_combined[cat][sample],"DY",'f')
+			# elif sample=="Diboson":
+			# 	print("adding sample: ",sample)
+			# 	legend.AddEntry(hist_combined[cat][sample],"Diboson",'f')			# print("going to stack")
+			# elif sample=="QCD":
+			# 	print("adding sample: ",sample)
+			# 	legend.AddEntry(hist_combined[cat][sample],"QCD",'f')
 			stack.Add(hist_combined[cat][sample])
 			stack.SetMinimum(0.0)
 		canvas.cd()
@@ -321,12 +335,12 @@ if (channel=="muon" and year=="2018"):
 		maxVal =stack.GetMaximum()
 		minVal = max(stack.GetStack()[0].GetMinimum(),1)
 		if log:
-			print("making log plots")
+			# print("making log plots")
 			stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
 		else:
-			print("making linear plots")
+			# print("making linear plots")
 			stack.SetMaximum(1.7*maxVal)
-		print("max is: ",maxVal )
+		# print("max is: ",maxVal )
 		stack.SetMinimum(minVal)
 		stack.Draw()
 		stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
@@ -343,9 +357,9 @@ if (channel=="muon" and year=="2018"):
 		errorban.Draw("E2,SAME")
 		CMS_lumi.CMS_lumi(canvas, period, 11)
 		if log:
-			canvas.SaveAs("%s_%s/efthist_%s_log.pdf"%(channel,year,cat))
+			canvas.SaveAs("%s_%s/efthist_%s_log_AM.pdf"%(channel,year,cat))
 		else:
-			canvas.SaveAs("%s_%s/efthist_%s_linear.pdf"%(channel,year,cat))
+			canvas.SaveAs("%s_%s/efthist_%s_linear_AM.pdf"%(channel,year,cat))
 		canvas.Clear()
 		pad2.cd()
 
@@ -358,9 +372,15 @@ histo={}
 
 
 
+# Set Y-axis size adjustments
+y_label_size = 0.04  # Decrease this value to make the labels smaller
+y_title_size = 0.05  # Decrease this value to make the title smaller
+y_title_offset = 1.2  # Adjust this value if needed
 
+# Existing code setting up stackList_orig, histograms, etc.
 
 for hist in histograms:
+	print("hist is: ",hist)
 	for cat in categories:
 		if "Sigma" in hist or ("DeltaY_reco" in hist and "output0" in cat):
 			print("this is ",cat)
@@ -378,16 +398,25 @@ for hist in histograms:
 				histo[sample].SetFillColor(stackList_orig[sample][0])
 				histo[sample].SetLineColor(stackList_orig[sample][0])
 				print("sample is: ", sample)
-				print("with events: ", histo[sample].Integral())
+				# print("with events: ", histo[sample].Integral())
 				if sample=="TTbar":
 					legend.AddEntry(histo[sample],"t#bar{t}",'f')
 				elif sample=="WJets":
-					legend.AddEntry(histo[sample],"W+jets",'f')
+					legend.AddEntry(histo[sample],"W+jets + Others",'f')
 				elif sample=="ST":
 					legend.AddEntry(histo[sample],"ST",'f')
+				# elif sample=="DY":
+				# 	print("adding sample: ",sample)
+				# 	legend.AddEntry(histo[cat][sample],"DYJets",'f')
+				# elif sample=="Diboson":
+				# 	print("adding sample: ",sample)
+				# 	legend.AddEntry(histo[cat][sample],"Diboson",'f')
+				# elif sample=="QCD":
+				# 	print("adding sample: ",sample)
+				# 	legend.AddEntry(histo[cat][sample],"QCD",'f')
 				stack.Add(histo[sample])
 				stack.SetMinimum(0.0)
-			print("maximum is: ",stack.GetMaximum())
+			# print("maximum is: ",stack.GetMaximum())
 			canvas.cd()
 			stack.Draw("HIST")
 			canvas.cd()
@@ -408,12 +437,12 @@ for hist in histograms:
 			minVal = max(stack.GetStack()[0].GetMinimum(),1)
 			# stack.GetYaxis().SetTitle(histograms[hist][1])
 			if log:
-				print("making log plots")
+				# print("making log plots")
 				stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
 			else:
-				print("making linear plots")
+				# print("making linear plots")
 				stack.SetMaximum(1.7*maxVal)
-			print("max is: ",maxVal )
+			# print("max is: ",maxVal )
 			stack.SetMinimum(minVal)
 			#stack.GetXaxis().SetLabelSize(0)
 			# stack.GetYaxis().SetRangeUser(1,10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
@@ -441,9 +470,9 @@ for hist in histograms:
 			# legend.SetTextSize(0.05)
 			# legend.Draw("SAME")
 			if log:
-				canvas.SaveAs("%s_%s/%s_%s_log.pdf"%(channel,year,hist,cat))
+				canvas.SaveAs("%s_%s/%s_%s_log_AM.pdf"%(channel,year,hist,cat))
 			else:
-				canvas.SaveAs("%s_%s/%s_%s_linear.pdf"%(channel,year,hist,cat))
+				canvas.SaveAs("%s_%s/%s_%s_linear_AM.pdf"%(channel,year,hist,cat))
 			canvas.Clear()
 			pad2.cd()
 	
@@ -462,11 +491,12 @@ for hist in histograms:
 				file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
 				temp_hist="%s_General/%s"%(cat,hist)
 				histo[sample]=file[sample].Get(temp_hist)
-				histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0],(histograms[hist][3][1]))				
+				# print("histo[sample]", histo[sample])
+				histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0],(histograms[hist][3][1]))
 				histo[sample].SetFillColor(stackList_orig[sample][0])
 				histo[sample].SetLineColor(stackList_orig[sample][0])
 				if "M_Zprime_rebin3" in hist or "pt_jet1" in hist:
-					print(histograms[hist][5],histograms[hist][4])
+					# print(histograms[hist][5],histograms[hist][4])
 
 					histo[sample]=histo[sample].Rebin(histograms[hist][5],"",array('d',histograms[hist][4]))
 					
@@ -483,14 +513,14 @@ for hist in histograms:
 				stack.Add(histo[sample])
 				stack.SetMinimum(0.0)
 			file_data=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
-			print(file_data)
-			print(temp_hist)
+			# print(file_data)
+			# print(temp_hist)
 			dataHist=file_data.Get(temp_hist)
 			if "M_Zprime_rebin3" in hist or "pt_jet1" in hist:
-				print(histograms[hist][5],histograms[hist][4])
+				# print(histograms[hist][5],histograms[hist][4])
 				dataHist=dataHist.Rebin(histograms[hist][5],"",array('d',histograms[hist][4]))
 
-			print("data: ", dataHist.Integral())
+			# print("data: ", dataHist.Integral())
 			dataHist.SetMarkerColor(kBlack)
 			dataHist.SetLineColor(kBlack)
 			dataHist.SetYTitle(histograms[hist][1])     
@@ -613,6 +643,6 @@ for hist in histograms:
 			canvasRatio.Update()
 			canvasRatio.RedrawAxis()
 			if log:
-				canvasRatio.SaveAs("%s_%s/%s_%s_log.pdf"%(channel,year,hist,cat))
+				canvasRatio.SaveAs("%s_%s/%s_%s_log_AM.pdf"%(channel,year,hist,cat))
 			else:
-				canvasRatio.SaveAs("%s_%s/%s_%s_linear.pdf"%(channel,year,hist,cat))
+				canvasRatio.SaveAs("%s_%s/%s_%s_linear_AM.pdf"%(channel,year,hist,cat))
