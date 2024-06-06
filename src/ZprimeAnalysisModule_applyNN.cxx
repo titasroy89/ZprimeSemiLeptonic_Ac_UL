@@ -937,8 +937,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
 bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
- cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
- cout << " run.event: " << event.run << ". " << event.event << endl;
+ if(debug)cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
+ if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
   // Initialize reco flags with false
   event.set(h_is_zprime_reconstructed_chi2, false);
   event.set(h_is_zprime_reconstructed_correctmatch, false);

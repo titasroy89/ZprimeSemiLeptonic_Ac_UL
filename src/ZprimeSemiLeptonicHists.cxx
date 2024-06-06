@@ -102,11 +102,10 @@ void ZprimeSemiLeptonicHists::init(){
   reliso_mu1_rebin = book<TH1F>("reliso_mu1_rebin", "#mu 1 rel. Iso ", 400, 0, 5);
   reliso_mu2_rebin = book<TH1F>("reliso_mu2_rebin", "#mu 2 rel. Iso ", 400, 0, 5);
 
-  N_mu_charge      = book<TH1F>("N_mu_charge", "N^{#mu} charge", 2, -1., 1.);
+  N_mu_charge      = book<TH1F>("N_mu_charge", "N^{#mu} charge", 2, -2, 2);
   N_lep_charge     = book<TH1F>("N_lep_charge", "lepton charge", 2, -2., 2.);
-  N_ele_charge     = book<TH1F>("N_ele_charge", "N^{e} charge", 2, -1., 1.);
+  N_ele_charge     = book<TH1F>("N_ele_charge", "N^{e} charge", 2, -2., 2.);
   
-
 
   N_ele             = book<TH1F>("N_ele", "N^{e}", 11, -0.5, 10.5);
   pt_ele            = book<TH1F>("pt_ele", "p_{T}^{e} [GeV]", 90, 0, 900);
@@ -1222,6 +1221,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   for(int i=0; i<Nmuons; i++){
 
     N_mu_charge->Fill(muons->at(i).charge(), weight);
+    // cout << "muon charge" << muons->at(i).charge() << endl;
+    // cout << "muon pdgId" << muons->at(i).pdgId() << endl;
     
 
     // if(muons->at(i).charge() > 0){
@@ -1230,6 +1231,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     // cout << "muon charge" << muons->at(i).charge() << endl;
 
     pt_mu->Fill(muons->at(i).pt(),weight);
+    // cout << "muon pt" << muons->at(i).pt() << endl;
+
     eta_mu->Fill(muons->at(i).eta(),weight);
     phi_mu->Fill(muons->at(i).phi(),weight);
     reliso_mu->Fill(muons->at(i).relIso(),weight);
@@ -1545,7 +1548,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       if(debug) cout << "after genparticles->at(best_gen_for_leptop)" << endl;
 
       N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
-      // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
+      // cout <<"Lepton candidate charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
+      // cout << "Lepton candidate pdg ID: " << BestZprimeCandidate->lepton().pdgId() << endl;
       // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
       if (BestZprimeCandidate->lepton().charge()>0) {
         DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));

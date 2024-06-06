@@ -101,7 +101,7 @@
       <OutputTree Name="AnalysisTree" />
     </InputData> -->
     <!-- TTbar -->
-    <InputData Lumi="287297864.349" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL17" Cacheable="&b_Cacheable;">
+    <!-- <InputData Lumi="287297864.349" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL17" Cacheable="&b_Cacheable;">
       &TTToSemiLeptonic_UL17;
       <InputTree Name="AnalysisTree" />
     </InputData>
@@ -112,7 +112,7 @@
     <InputData Lumi="86394848.0821" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL17" Cacheable="&b_Cacheable;">
       &TTTo2L2Nu_UL17;
       <InputTree Name="AnalysisTree" />
-    </InputData>
+    </InputData> -->
     <!-- WJets -->
     <InputData Lumi="34594.902439" NEventsMax="&NEVT;" Type="MC" Version="WJetsToLNu_HT-70To100_UL17" Cacheable="&b_Cacheable;">
       &WJetsToLNu_HT-70To100_UL17;
@@ -204,15 +204,15 @@
       <OutputTree Name="AnalysisTree" />
     </InputData> -->
     <!-- ST -->
-    <InputData Lumi="13807581.5569" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_antitop_5f_NoFullyHadronicDecays_UL17" Cacheable="&b_Cacheable;">
+    <!-- <InputData Lumi="13807581.5569" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_antitop_5f_NoFullyHadronicDecays_UL17" Cacheable="&b_Cacheable;">
       &ST_tW_antitop_5f_NoFullyHadronicDecays_UL17;
       <InputTree Name="AnalysisTree" />
     </InputData>
     <InputData Lumi="13823204.3429" NEventsMax="&NEVT;" Type="MC" Version="ST_tW_top_5f_NoFullyHadronicDecays_UL17" Cacheable="&b_Cacheable;">
       &ST_tW_top_5f_NoFullyHadronicDecays_UL17;
       <InputTree Name="AnalysisTree" />
-    </InputData>
-    <InputData Lumi="54133245.9623" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_antitop_4f_InclusiveDecays_UL17" Cacheable="&b_Cacheable;">
+    </InputData> -->
+    <!-- <InputData Lumi="54133245.9623" NEventsMax="&NEVT;" Type="MC" Version="ST_t-channel_antitop_4f_InclusiveDecays_UL17" Cacheable="&b_Cacheable;">
       &ST_t-channel_antitop_4f_InclusiveDecays_UL17;
       <InputTree Name="AnalysisTree" />
     </InputData>
@@ -223,7 +223,7 @@
     <InputData Lumi="14468534.8492" NEventsMax="&NEVT;" Type="MC" Version="ST_s-channel_4f_leptonDecays_UL17" Cacheable="&b_Cacheable;">
       &ST_s-channel_4f_leptonDecays_UL17;
       <InputTree Name="AnalysisTree" />
-    </InputData>
+    </InputData> -->
     <!-- QCD -->
     <!-- <InputData Lumi="0.140034109736" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT50to100_UL17" Cacheable="&b_Cacheable;">
       &QCD_HT50to100_UL17;
