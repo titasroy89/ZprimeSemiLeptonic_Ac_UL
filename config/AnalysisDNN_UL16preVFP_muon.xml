@@ -10,7 +10,7 @@
 <!ENTITY IS_DEEPAK8          "true">
 <!ENTITY IS_LOOSER_SELECTION "false">
 <!ENTITY CHANNEL             "muon">
-<!ENTITY OUTPUTdir           "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL16preVFP/&CHANNEL;/">
+<!ENTITY OUTPUTdir           "/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/2016pre/&CHANNEL;/">
 
 <!-- DATA -->
 <!ENTITY DATA_SingleMuon_RunB_UL16preVFP SYSTEM "../data/Skimming_datasets_UL16preVFP_muon/DATA_SingleMuon_RunB_UL16preVFP.xml">
@@ -64,7 +64,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_2016pre_muon_kinematics"/>
+<ConfigSGE RAM="2" DISK="2" Mail="titasroy89@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_2016pre_muon"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">

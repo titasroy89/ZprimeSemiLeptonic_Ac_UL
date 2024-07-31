@@ -11,7 +11,7 @@
 <!ENTITY IS_LOOSER_SELECTION "false">
 <!ENTITY IS_ELE_TRIGGER      "false">
 <!ENTITY CHANNEL             "electron">
-<!ENTITY OUTPUTdir           "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL16preVFP/&CHANNEL;/">
+<!ENTITY OUTPUTdir           "/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/2016pre/&CHANNEL;/">
 
 <!-- SingleElectron -->
 <!ENTITY DATA_SingleElectron_RunB_UL16preVFP SYSTEM "../data/Skimming_datasets_UL16preVFP_electron/DATA_SingleElectron_RunB_UL16preVFP.xml">
@@ -71,7 +71,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="5" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="ozekberen@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_2016preVFP_electron_kinematics"/>
+<ConfigSGE RAM="2" DISK="2" Mail="titasroy89@gmail.com" Notification="as" Workdir="workdir_AnalysisDNN_2016pre_electron"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -121,8 +121,8 @@
 		<InputData Lumi="1" NEventsMax="&NEVT;" Type="DATA" Version="DATA_SinglePhoton_RunF_UL16preVFP" Cacheable="&b_Cacheable;">
 			&DATA_SinglePhoton_RunF_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
-		</InputData>
-		<!-- TTbar -->
+		</InputData> 
+		<!-- TTbar-->
 		<InputData Lumi="107178313.917" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTToSemiLeptonic_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
@@ -168,7 +168,7 @@
 			&WJetsToLNu_HT-2500ToInf_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 		</InputData>
-		<!-- DY -->
+		<!-- DY-->
 		<InputData Lumi="46901.5203426" NEventsMax="&NEVT;" Type="MC" Version="DYJetsToLL_M-50_HT-70to100_UL16preVFP" Cacheable="&b_Cacheable;">
 			&DYJetsToLL_M-50_HT-70to100_UL16preVFP;
 			<InputTree Name="AnalysisTree"/>
@@ -184,7 +184,7 @@
 		<InputData Lumi="507504.441008" NEventsMax="&NEVT;" Type="MC" Version="DYJetsToLL_M-50_HT-400to600_UL16preVFP" Cacheable="&b_Cacheable;">
 			&DYJetsToLL_M-50_HT-400to600_UL16preVFP;
 			<InputTree Name="AnalysisTree"/>
-		</InputData>
+		</InputData> 
 		<InputData Lumi="2081707.71212" NEventsMax="&NEVT;" Type="MC" Version="DYJetsToLL_M-50_HT-600to800_UL16preVFP" Cacheable="&b_Cacheable;">
 			&DYJetsToLL_M-50_HT-600to800_UL16preVFP;
 			<InputTree Name="AnalysisTree"/>

@@ -24,9 +24,11 @@ protected:
   TH1F *N_jets, *pt_jet, *pt_jet1, *pt_jet2, *pt_jet3, *eta_jet, *eta_jet1, *eta_jet2, *eta_jet3, *phi_jet, *phi_jet1, *phi_jet2, *phi_jet3, *m_jet, *m_jet1, *m_jet2, *m_jet3, *csv_jet, *csv_jet1, *csv_jet2, *csv_jet3, *N_bJets_loose, *N_bJets_med, *N_bJets_tight;
   TH1F *N_bJetsDeepJet_loose, *N_bJetsDeepJet_med, *N_bJetsDeepJet_tight;
   TH1F *N_mu_charge, *N_mu, *pt_mu, *pt_mu1, *pt_mu2, *eta_mu, *eta_mu1, *eta_mu2, *phi_mu, *phi_mu1, *phi_mu2, *reliso_mu, *reliso_mu1, *reliso_mu2, *reliso_mu_rebin, *reliso_mu1_rebin, *reliso_mu2_rebin;
+  TH1F *dRmin_ele1_jet_matched, *dRmin_mu1_jet_matched,*ptrel_mu1_jet_matched, *ptrel_ele1_jet_matched,  *reliso_mu1_matched, *reliso_ele1_matched;
   TH1F *dR_mu_nearjet, *pt_mu_nearjet;
   TH1F *N_ele_charge, *N_ele, *pt_ele, *pt_ele1, *pt_ele2, *eta_ele, *eta_ele1, *eta_ele2, *phi_ele, *phi_ele1, *phi_ele2, *reliso_ele, *reliso_ele1, *reliso_ele2, *reliso_ele_rebin, *reliso_ele1_rebin, *reliso_ele2_rebin;
   TH1F *pt_ele_lowpt, *pt_ele_midpt, *pt_ele_highpt, *eta_ele_lowpt, *eta_ele_midpt, *eta_ele_highpt, *phi_ele_lowpt, *phi_ele_midpt, *phi_ele_highpt;
+  TH1F *pt_mu_lowpt,*pt_mu_highpt;
   TH1F *dR_ele_nearjet, *pt_ele_nearjet;
   TH1F *M_mumu, *M_ee, *dRmin_mu_jet, *dRmin_mu_jet_scaled, *dRmin_ele_jet, *dRmin_ele_jet_scaled, *ptrel_mu_jet, *ptrel_ele_jet, *dRmin_mu1_jet, *dRmin_mu1_jet_scaled, *dRmin_ele1_jet, *dRmin_ele1_jet_scaled, *ptrel_mu1_jet, *ptrel_ele1_jet;
   TH1F *dRmin_mu_jet_SR, *dRmin_mu_jet_CR1, *dRmin_mu_jet_CR2, *dRmin_ele_jet_SR, *dRmin_ele_jet_CR1, *dRmin_ele_jet_CR2;
@@ -40,6 +42,8 @@ protected:
   TH1F *TOP_20_001_ditopmass_Fig19, *TOP_20_001_ditopmass_Fig25;
   TH1F *NN_Mu_pt, *NN_Mu_eta, *NN_Mu_phi, *NN_Mu_E, *NN_Ele_pt, *NN_Ele_eta, *NN_Ele_phi, *NN_Ele_E, *NN_MET_pt, *NN_MET_phi, *NN_N_Ak4, *NN_Ak4_j1_pt, *NN_Ak4_j1_eta, *NN_Ak4_j1_phi, *NN_Ak4_j1_E, *NN_Ak4_j1_m, *NN_Ak4_j1_btag, *NN_Ak4_j2_pt, *NN_Ak4_j2_eta, *NN_Ak4_j2_phi, *NN_Ak4_j2_E, *NN_Ak4_j2_m, *NN_Ak4_j2_btag, *NN_Ak4_j3_pt, *NN_Ak4_j3_eta, *NN_Ak4_j3_phi, *NN_Ak4_j3_E, *NN_Ak4_j3_m, *NN_Ak4_j3_btag, *NN_Ak4_j4_pt, *NN_Ak4_j4_eta, *NN_Ak4_j4_phi, *NN_Ak4_j4_E, *NN_Ak4_j4_m, *NN_Ak4_j4_btag, *NN_Ak4_j5_pt, *NN_Ak4_j5_eta, *NN_Ak4_j5_phi, *NN_Ak4_j5_E, *NN_Ak4_j5_m, *NN_Ak4_j5_btag, *NN_Ak4_j6_pt, *NN_Ak4_j6_eta, *NN_Ak4_j6_phi, *NN_Ak4_j6_E, *NN_Ak4_j6_m, *NN_Ak4_j6_btag, *NN_N_HOTVR, *NN_HOTVR_j1_pt, *NN_HOTVR_j1_eta, *NN_HOTVR_j1_phi, *NN_HOTVR_j1_E, *NN_HOTVR_j1_mSD, *NN_HOTVR_j1_tau21, *NN_HOTVR_j1_tau32, *NN_HOTVR_j2_pt, *NN_HOTVR_j2_eta, *NN_HOTVR_j2_phi, *NN_HOTVR_j2_E, *NN_HOTVR_j2_mSD, *NN_HOTVR_j2_tau21, *NN_HOTVR_j2_tau32, *NN_HOTVR_j3_pt, *NN_HOTVR_j3_eta, *NN_HOTVR_j3_phi, *NN_HOTVR_j3_E, *NN_HOTVR_j3_mSD, *NN_HOTVR_j3_tau21, *NN_HOTVR_j3_tau32, *NN_M_tt_weighted, *NN_M_tt_notweighted, *NN_chi2, *NN_N_Ak8, *NN_Ak8_j1_pt, *NN_Ak8_j1_eta, *NN_Ak8_j1_phi, *NN_Ak8_j1_E, *NN_Ak8_j1_mSD, *NN_Ak8_j1_tau21, *NN_Ak8_j1_tau32, *NN_Ak8_j1_ttag, *NN_Ak8_j2_pt, *NN_Ak8_j2_eta, *NN_Ak8_j2_phi, *NN_Ak8_j2_E, *NN_Ak8_j2_mSD, *NN_Ak8_j2_tau21, *NN_Ak8_j2_tau32, *NN_Ak8_j2_ttag, *NN_Ak8_j3_pt, *NN_Ak8_j3_eta, *NN_Ak8_j3_phi, *NN_Ak8_j3_E, *NN_Ak8_j3_mSD, *NN_Ak8_j3_tau21, *NN_Ak8_j3_tau32, *NN_Ak8_j3_ttag;
   TH2F *dRmin_ptrel_mu, *dRmin_ptrel_mu1, *dRmin_ptrel_ele, *dRmin_ptrel_ele1;
+  TH2F *dRmin_ptrel_ele1_matched, *dRmin_ptrel_mu1_matched;
+  TH2F *dRmin_pt_ele1, *dRmin_pt_mu1, *ptrel_pt_ele1, *ptrel_pt_mu1, *dRmin_pt_ele1_matched, *dRmin_pt_mu1_matched, *ptrel_pt_ele1_matched, *ptrel_pt_mu1_matched;
   TH1F *deepjetbscore_jet,*deepjetbscore_jet1,*deepjetbscore_jet2,*deepjetbscore_jet3;
   TH1F *deepjet_topscore_jet,*deepjet_topscore_jet1,*deepjet_topscore_jet2,*deepjet_topscore_jet3;
   TH1F *deepjet_wscore_jet,*deepjet_wscore_jet1,*deepjet_wscore_jet2;

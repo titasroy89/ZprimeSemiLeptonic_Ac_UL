@@ -1559,11 +1559,11 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
   ////
 
   MuonRecoSF::MuonRecoSF(uhh2::Context& ctx){
-
+    // cout << "will do muon sf"<<endl;
     year = extract_year(ctx);
     is_mc = ctx.get("dataset_type") == "MC";
     is_Muon = ctx.get("channel") == "muon";
-
+    
     h_muonrecSF_nominal = ctx.declare_event_output<float> ("weight_sfmu_reco");
     h_muonrecSF_up      = ctx.declare_event_output<float> ("weight_sfmu_reco_up");
     h_muonrecSF_down    = ctx.declare_event_output<float> ("weight_sfmu_reco_down");
@@ -1577,7 +1577,11 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
     event.set(h_muonrecSF_down, 1.0);
 
     if(is_mc && is_Muon){
+      // cout << "mc and muon"<<endl;
+      // cout << "pt: "<<event.muons->at(0).pt()<<endl;
+      // cout << "cos: "<<cosh(event.muons->at(0).eta())<<endl;
       float Tot_P = event.muons->at(0).pt()*cosh(event.muons->at(0).eta());
+    //  cout << "Calculated pt"<<endl;
       if(year == Year::isUL16preVFP || year == Year::isUL16postVFP){
         if( abs(event.muons->at(0).eta()) <= 1.6){
           if( 50 < Tot_P && Tot_P <= 100)   { event.set(h_muonrecSF_nominal, 0.9914); event.set(h_muonrecSF_up, 0.9914+0.0008); event.set(h_muonrecSF_down, 0.9914-0.0008); event.weight *= 0.9914; }
@@ -1623,6 +1627,7 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
         }
       }
       if(year == Year::isUL18){
+        // cout <<"in correct year"<<endl;
         if( abs(event.muons->at(0).eta()) <= 1.6){
           if( 50 < Tot_P && Tot_P <= 100)   { event.set(h_muonrecSF_nominal, 0.9943); event.set(h_muonrecSF_up, 0.9943+0.0007); event.set(h_muonrecSF_down, 0.9943-0.0007); event.weight *= 0.9943; }
           if( 100 < Tot_P && Tot_P <= 150)  { event.set(h_muonrecSF_nominal, 0.9948); event.set(h_muonrecSF_up, 0.9948+0.0007); event.set(h_muonrecSF_down, 0.9948-0.0007); event.weight *= 0.9948; }
