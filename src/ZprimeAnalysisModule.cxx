@@ -984,7 +984,7 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   fill_histograms(event, "AfterCustomBtagSF");
 
   // b-tagging: >= 1 b-tag medium WP (on matched CHS jet)
-  // if(!AK4PuppiCHS_BTagging->passes(event)) return false;
+  if(!AK4PuppiCHS_BTagging->passes(event)) return false;
   fill_histograms(event, "Btags1");
   h_CHSMatchHists_afterBTag->fill(event);
 

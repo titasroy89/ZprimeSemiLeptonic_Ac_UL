@@ -37,7 +37,7 @@ for lep in leptons:
                 hist[lep][year][sample][mass]={}
                 x_err[lep][year][sample][mass]={}
 
-latex_names={"MC.TTbar":"$\ttbar$",
+latex_names={"MC.TTbar":"$ttbar$",
              "MC.ST":"Single Top",
              "MC.WJets":"W+jets",
              "MC.DYJets":"Drell-Yan",
@@ -51,7 +51,7 @@ import ctypes
 for lep in leptons:
     for year in years:
         for sample in sample_names:
-            fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,lep,year,lep)
+            fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s/NOMINAL/"%(year,lep,year,lep)
             file[lep][year][sample]=TFile("%s/uhh2.AnalysisModuleRunner.%s.root"%(fileDir,sample),"read")
             for mass in regions:
                 print(lep,year,mass,sample)
@@ -96,31 +96,31 @@ table +=  '\multicolumn{7}{| c | }{} \\ \hline'
 table +=  '\rule{-2pt}{11pt} \\ \hline \n'
 for sample in all_samples:
         print(sample)
-        table += '%s & $%.2f \pm %.2lf$  & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$  \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]['0_500'].Integral() , x_err["muon"]["2016"][sample]['0_500'], hist["muon"]["2017"][sample]['0_500'].Integral(), x_err["muon"]["2017"][sample]["0_500"], hist["muon"]["2016"][sample]["0_500"].Integral(), x_err["muon"]["2016"][sample]["0_500"], hist["electron"]["2016"][sample]["0_500"].Integral(), x_err["electron"]["2016"][sample]["0_500"], hist["electron"]["2017"][sample]["0_500"].Integral(), x_err["electron"]["2017"][sample]["0_500"], hist["electron"]["2018"][sample]["0_500"].Integral(), x_err["electron"]["2018"][sample]["0_500"])
+        table += '%s & $%.2f \pm %.2lf$  & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$ & $%.2f \\pm %.2lf$  \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]['0_500'].Integral() , x_err["muon"]["2016"][sample]['0_500'], hist["muon"]["2017"][sample]['0_500'].Integral(), x_err["muon"]["2017"][sample]["0_500"], hist["muon"]["2018"][sample]["0_500"].Integral(), x_err["muon"]["2018"][sample]["0_500"], hist["electron"]["2016"][sample]["0_500"].Integral(), x_err["electron"]["2016"][sample]["0_500"], hist["electron"]["2017"][sample]["0_500"].Integral(), x_err["electron"]["2017"][sample]["0_500"], hist["electron"]["2018"][sample]["0_500"].Integral(), x_err["electron"]["2018"][sample]["0_500"])
 table +=  '\multicolumn{7}{| c | }{} \\ \n'
 table +=  '\multicolumn{7}{| c | }{$\mttbar \in[500,750] \GeV$}\\ \n'
 table +=  '\multicolumn{7}{| c | }{} \\ \hline \n'
 for sample in all_samples:
         print(sample)
-        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["500_750"].Integral() , x_err["muon"]["2016"][sample]["500_750"], hist["muon"]["2017"][sample]["500_750"].Integral(), x_err["muon"]["2017"][sample]["500_750"], hist["muon"]["2016"][sample]["500_750"].Integral(), x_err["muon"]["2016"][sample]["500_750"], hist["electron"]["2016"][sample]["500_750"].Integral(), x_err["electron"]["2016"][sample]["500_750"], hist["electron"]["2017"][sample]["500_750"].Integral(), x_err["electron"]["2017"][sample]["500_750"], hist["electron"]["2018"][sample]["500_750"].Integral(), x_err["electron"]["2018"][sample]["500_750"])
+        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["500_750"].Integral() , x_err["muon"]["2016"][sample]["500_750"], hist["muon"]["2017"][sample]["500_750"].Integral(), x_err["muon"]["2017"][sample]["500_750"], hist["muon"]["2018"][sample]["500_750"].Integral(), x_err["muon"]["2018"][sample]["500_750"], hist["electron"]["2016"][sample]["500_750"].Integral(), x_err["electron"]["2016"][sample]["500_750"], hist["electron"]["2017"][sample]["500_750"].Integral(), x_err["electron"]["2017"][sample]["500_750"], hist["electron"]["2018"][sample]["500_750"].Integral(), x_err["electron"]["2018"][sample]["500_750"])
 table +=  '\multicolumn{7}{| c | }{} \\ \n'
 table +=  '\multicolumn{7}{| c | }{$\mttbar \in[750,1000] \GeV$}\\ \n'
 table +=  '\multicolumn{7}{| c | }{} \\ \hline \n'
 for sample in all_samples:
         print(sample)
-        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["750_1000"].Integral() , x_err["muon"]["2016"][sample]["750_1000"], hist["muon"]["2017"][sample]["750_1000"].Integral(), x_err["muon"]["2017"][sample]["750_1000"], hist["muon"]["2016"][sample]["750_1000"].Integral(), x_err["muon"]["2016"][sample]["750_1000"], hist["electron"]["2016"][sample]["750_1000"].Integral(), x_err["electron"]["2016"][sample]["750_1000"], hist["electron"]["2017"][sample]["750_1000"].Integral(), x_err["electron"]["2017"][sample]["750_1000"], hist["electron"]["2018"][sample]["750_1000"].Integral(), x_err["electron"]["2018"][sample]["750_1000"])
+        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["750_1000"].Integral() , x_err["muon"]["2016"][sample]["750_1000"], hist["muon"]["2017"][sample]["750_1000"].Integral(), x_err["muon"]["2017"][sample]["750_1000"], hist["muon"]["2018"][sample]["750_1000"].Integral(), x_err["muon"]["2018"][sample]["750_1000"], hist["electron"]["2016"][sample]["750_1000"].Integral(), x_err["electron"]["2016"][sample]["750_1000"], hist["electron"]["2017"][sample]["750_1000"].Integral(), x_err["electron"]["2017"][sample]["750_1000"], hist["electron"]["2018"][sample]["750_1000"].Integral(), x_err["electron"]["2018"][sample]["750_1000"])
 table +=  '\multicolumn{7}{| c | }{} \\ \n'
 table +=  '\multicolumn{7}{| c | }{$\mttbar \in[1000,1500] \GeV$}\\ \n'
 table +=  '\multicolumn{7}{| c | }{} \\ \hline \n'
 for sample in all_samples:
         print(sample)
-        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["1000_1500"].Integral() , x_err["muon"]["2016"][sample]["1000_1500"], hist["muon"]["2017"][sample]["1000_1500"].Integral(), x_err["muon"]["2017"][sample]["1000_1500"], hist["muon"]["2016"][sample]["1000_1500"].Integral(), x_err["muon"]["2016"][sample]["1000_1500"], hist["electron"]["2016"][sample]["1000_1500"].Integral(), x_err["electron"]["2016"][sample]["1000_1500"], hist["electron"]["2017"][sample]["1000_1500"].Integral(), x_err["electron"]["2017"][sample]["1000_1500"], hist["electron"]["2018"][sample]["1000_1500"].Integral(), x_err["electron"]["2018"][sample]["1000_1500"])
+        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["1000_1500"].Integral() , x_err["muon"]["2016"][sample]["1000_1500"], hist["muon"]["2017"][sample]["1000_1500"].Integral(), x_err["muon"]["2017"][sample]["1000_1500"], hist["muon"]["2018"][sample]["1000_1500"].Integral(), x_err["muon"]["2018"][sample]["1000_1500"], hist["electron"]["2016"][sample]["1000_1500"].Integral(), x_err["electron"]["2016"][sample]["1000_1500"], hist["electron"]["2017"][sample]["1000_1500"].Integral(), x_err["electron"]["2017"][sample]["1000_1500"], hist["electron"]["2018"][sample]["1000_1500"].Integral(), x_err["electron"]["2018"][sample]["1000_1500"])
 table +=  '\multicolumn{7}{| c | }{} \\ \n'
 table +=  '\multicolumn{7}{| c | }{$\mttbar \in[1500,Inf] \GeV$}\\ \n'
 table +=  '\multicolumn{7}{| c | }{} \\ \hline \n'
 for sample in all_samples:
         print(sample)
-        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["1500Inf"].Integral() , x_err["muon"]["2016"][sample]["1500Inf"], hist["muon"]["2017"][sample]["1500Inf"].Integral(), x_err["muon"]["2017"][sample]["1500Inf"], hist["muon"]["2016"][sample]["1500Inf"].Integral(), x_err["muon"]["2016"][sample]["1500Inf"], hist["electron"]["2016"][sample]["1500Inf"].Integral(), x_err["electron"]["2016"][sample]["1500Inf"], hist["electron"]["2017"][sample]["1500Inf"].Integral(), x_err["electron"]["2017"][sample]["1500Inf"], hist["electron"]["2018"][sample]["1500Inf"].Integral(), x_err["electron"]["2018"][sample]["1500Inf"])
+        table += '%s & $%.2f \pm %.2f$  & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ & $%.2f \\pm %.2f$ \\\\ \n' % (latex_names[sample],hist["muon"]["2016"][sample]["1500Inf"].Integral() , x_err["muon"]["2016"][sample]["1500Inf"], hist["muon"]["2017"][sample]["1500Inf"].Integral(), x_err["muon"]["2017"][sample]["1500Inf"], hist["muon"]["2018"][sample]["1500Inf"].Integral(), x_err["muon"]["2018"][sample]["1500Inf"], hist["electron"]["2016"][sample]["1500Inf"].Integral(), x_err["electron"]["2016"][sample]["1500Inf"], hist["electron"]["2017"][sample]["1500Inf"].Integral(), x_err["electron"]["2017"][sample]["1500Inf"], hist["electron"]["2018"][sample]["1500Inf"].Integral(), x_err["electron"]["2018"][sample]["1500Inf"])
 table += '\\hline \n'
 table +=  '\end{tabular}'
 table = table.replace("$0.0 \pm 0.0$","---")

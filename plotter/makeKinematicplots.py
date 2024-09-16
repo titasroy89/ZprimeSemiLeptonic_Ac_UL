@@ -17,7 +17,7 @@ channel = options.channel
 year = options.year
 
 # Define analysis and preselection runs
-analysis_runs = ["UL16", "UL17", "UL18"]
+analysis_runs = ["UL16", "UL17", "UL18","all"]
 preselection_runs = ["Preselection_UL16", "Preselection_UL17", "Preselection_UL18"]
 
 # Determine run type based on the year
@@ -40,7 +40,7 @@ if channel in ["electron", "muon"]:
     elif run_type == "preselection":
         fileDir = "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/{year}/Preselection/workdir_Preselection_{year}_chargecheck/nominal".format(year=year)
 else:
-    fileDir = "/nfs/dust/cms/user/titasroy/Ac_{year}/lepton/".format(year=year)
+    fileDir = "/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
 
 print(fileDir)
 
@@ -82,7 +82,7 @@ L = 0.12 * W
 R = 0.1 * W
 
 stackList = {"TTbar": [kRed], "WJets": [kGreen], "ST": [kBlue]}
-stackList_orig = {"TTbar": [kRed], "WJets": [kGreen], "DY": [kGreen], "Diboson": [kGreen], "QCD": [kGreen], "ST": [kBlue]}
+stackList_orig = {"TTbar": [kRed], "WJets": [kGreen], "DYJets": [kGreen], "Diboson": [kGreen], "QCD": [kGreen], "ST": [kBlue]}
 
 legendHeightPer = 0.04
 legendStart = 0.69
@@ -170,7 +170,7 @@ elif channel == "lepton":
     })
 
 categories = ["Input", "MET"] if run_type == "preselection" else ["Weights_Init", "AfterBaseline", "AfterChi2", "DNN_output0", "DNN_output1", "DNN_output2"]
-test_sample = ['TTbar', 'ST', 'WJets', 'DY', 'Diboson', 'QCD']
+test_sample = ['TTbar', 'ST', 'WJets', 'DYJets', 'Diboson', 'QCD']
 
 file = {}
 histo = {}

@@ -781,7 +781,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   vector<Muon>* muons = event.muons;
   int Nmuons = muons->size();
   N_mu->Fill(Nmuons, weight);
-  cout << "N_mu: " << Nmuons << endl;
+  //cout << "N_mu: " << Nmuons << endl;
   
 
 

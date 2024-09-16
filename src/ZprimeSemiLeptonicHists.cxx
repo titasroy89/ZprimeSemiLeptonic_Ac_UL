@@ -40,6 +40,7 @@ Hists(ctx, dirname) {
   if(ctx.get("channel") == "muon") isMuon = true;
   if(ctx.get("channel") == "electron") isElectron = true;
   is_tt = ctx.get("dataset_version").find("TTTo") == 0;
+  gen_match=false;
   if(isdeepAK8){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("DeepAK8TopTags");
   }else if(ishotvr){
@@ -505,6 +506,15 @@ void ZprimeSemiLeptonicHists::init(){
   DeltaY_reco_d2         = book<TH1F>("DeltaY_reco_d2", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_s1         = book<TH1F>("DeltaY_reco_s1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_s2         = book<TH1F>("DeltaY_reco_s2", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+
+
+
+  DeltaY_reco_high_match       = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_low_match        = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d1_match         = book<TH1F>("DeltaY_reco_d1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d2_match         = book<TH1F>("DeltaY_reco_d2_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s1_match         = book<TH1F>("DeltaY_reco_s1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s2_match         = book<TH1F>("DeltaY_reco_s2_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
    //SpinCorr
   Sigma_phi             = book<TH1F>("Sigma_phi", "#Sigma #phi ",16,-3.2,3.2);
   Sigma_phi_high        = book<TH1F>("Sigma_phi_high", "#Sigma #phi ",16,-3.2,3.2);
@@ -512,11 +522,24 @@ void ZprimeSemiLeptonicHists::init(){
   Sigma_phi_1           = book<TH1F>("Sigma_phi_1", "#Sigma #phi ",16,-3.2,3.2);
   Sigma_phi_2           = book<TH1F>("Sigma_phi_2", "#Sigma #phi ",16,-3.2,3.2);
 
+  Sigma_phi_match       = book<TH1F>("Sigma_phi_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_high_match  = book<TH1F>("Sigma_phi_high_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_low_match   = book<TH1F>("Sigma_phi_low_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_1_match     = book<TH1F>("Sigma_phi_1_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_2_match     = book<TH1F>("Sigma_phi_2_match", "#Sigma #phi ",16,-3.2,3.2);
+
+
   Delta_phi             = book<TH1F>("Delta_phi", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_high        = book<TH1F>("Delta_phi_high", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_low         = book<TH1F>("Delta_phi_low", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_1           = book<TH1F>("Delta_phi_1", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_2           = book<TH1F>("Delta_phi_2", "#Delta #phi ",16,-3.2,3.2);
+
+  Delta_phi_match       = book<TH1F>("Delta_phi_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_high_match  = book<TH1F>("Delta_phi_high_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_low_match   = book<TH1F>("Delta_phi_low_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_1_match     = book<TH1F>("Delta_phi_1_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_2_match     = book<TH1F>("Delta_phi_2_match", "#Delta #phi ",16,-3.2,3.2);
 
 
   DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
@@ -1427,9 +1450,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   if(debug) cout << "Before dY lines:" << endl;
 
 
-  // ================== DY new =========================================================
   
-  if(is_zprime_reconstructed_chi2 && is_tt){
+  // ================== DY new check gen matching for ttbar =========================================================
+  
+  if(is_zprime_reconstructed_chi2 && is_tt && gen_match){
+    if(debug)cout << "should not be matching " << endl;
     const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
@@ -1600,35 +1625,35 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
     DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);
     DeltaY_gen_best_plot->Fill(DeltaY_gen_best, weight);
-    DeltaY_reco->Fill(DeltaY_reco_best, weight);
-    if(debug) cout << "about to fill extra hists" << endl;
-    vector<Electron>* electrons = event.electrons;
-    vector<Muon>* muons = event.muons;
-    if(debug) cout << "done defining hists, about to fill matched" << endl;
-    if(isMuon){
-    dRmin_ptrel_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin), muons->at(0).get_tag(Muon::twodcut_pTrel), weight);
-    if(debug) cout << "drmin ptrel mu" << endl;
-    reliso_mu1_matched->Fill(muons->at(0).relIso(),weight);
-    if(debug) cout << "reliso mu" << endl;
-    dRmin_mu1_jet_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin), weight);
-    if(debug) cout << "drmin mu" << endl;
-    dRmin_pt_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin),muons->at(0).pt(),weight); 
-    if(debug) cout << "drmin pt mu" << endl;
-    ptrel_pt_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_pTrel),muons->at(0).pt(),weight); 
-    if(debug) cout << "ptrel pt mu" << endl;
-    }
-    if(isElectron){
-    dRmin_ptrel_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin), electrons->at(0).get_tag(Electron::twodcut_pTrel), weight);
-    if(debug) cout << "drmin ptrel ele" << endl;
-    reliso_ele1_matched->Fill(electrons->at(0).relIso(),weight);
-    if(debug) cout << "reliso ele" << endl;
-    dRmin_ele1_jet_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin), weight);
-    if(debug) cout << "drmin ele" << endl;
-    dRmin_pt_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin),electrons->at(0).pt(),weight); 
-    if(debug) cout << "drmin pt ele" << endl;
-    ptrel_pt_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_pTrel),electrons->at(0).pt(),weight); 
-    if(debug) cout << "ptrel pt ele" << endl;
-    }
+    // DeltaY_reco->Fill(DeltaY_reco_best, weight);
+    // if(debug) cout << "about to fill extra hists" << endl;
+    // // vector<Electron>* electrons = event.electrons;
+    // // vector<Muon>* muons = event.muons;
+    // if(debug) cout << "done defining hists, about to fill matched" << endl;
+    // if(isMuon){
+    // dRmin_ptrel_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin), muons->at(0).get_tag(Muon::twodcut_pTrel), weight);
+    // if(debug) cout << "drmin ptrel mu" << endl;
+    // reliso_mu1_matched->Fill(muons->at(0).relIso(),weight);
+    // if(debug) cout << "reliso mu" << endl;
+    // dRmin_mu1_jet_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin), weight);
+    // if(debug) cout << "drmin mu" << endl;
+    // dRmin_pt_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_dRmin),muons->at(0).pt(),weight); 
+    // if(debug) cout << "drmin pt mu" << endl;
+    // ptrel_pt_mu1_matched->Fill(muons->at(0).get_tag(Muon::twodcut_pTrel),muons->at(0).pt(),weight); 
+    // if(debug) cout << "ptrel pt mu" << endl;
+    // }
+    // if(isElectron){
+    // dRmin_ptrel_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin), electrons->at(0).get_tag(Electron::twodcut_pTrel), weight);
+    // if(debug) cout << "drmin ptrel ele" << endl;
+    // reliso_ele1_matched->Fill(electrons->at(0).relIso(),weight);
+    // if(debug) cout << "reliso ele" << endl;
+    // dRmin_ele1_jet_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin), weight);
+    // if(debug) cout << "drmin ele" << endl;
+    // dRmin_pt_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_dRmin),electrons->at(0).pt(),weight); 
+    // if(debug) cout << "drmin pt ele" << endl;
+    // ptrel_pt_ele1_matched->Fill(electrons->at(0).get_tag(Electron::twodcut_pTrel),electrons->at(0).pt(),weight); 
+    // if(debug) cout << "ptrel pt ele" << endl;
+    // }
  
     
     if(debug) cout << "after filling dY hists" << endl;
@@ -1636,7 +1661,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   
   
   
-  //begin spin correlation
+  //begin spin correlation with matching---------------->
+
   // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     if (debug) cout << "starting spin corr" << endl;
     bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
@@ -1644,11 +1670,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     vector <TopJet> TopTaggedJets = event.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
     vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
     float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions
-    float btag_WP=0.2783;                                                                   // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
-    if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
-    if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
-    if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
-    if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
+    // float btag_WP=0.2783;                                                                   // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
+    // if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
+    // if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
+    // if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
+    // if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
 
     // Plot pt of hadronic Top jet
     float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
@@ -1794,40 +1820,40 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
       if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
       if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
-      Sigma_phi->Fill(sphi,weight);
-      Delta_phi->Fill(dphi,weight);
+      Sigma_phi_match->Fill(sphi,weight);
+      Delta_phi_match->Fill(dphi,weight);
 
         // Plot dphi and sphi for high-pt ranges
       if(pt_hadTop > pt_hadTop_thresh && DeltaY_reco_best >0){
-        Sigma_phi_1->Fill(sphi,weight);
-        Delta_phi_1->Fill(dphi,weight);
+        Sigma_phi_1_match->Fill(sphi,weight);
+        Delta_phi_1_match->Fill(dphi,weight);
       }
       if(pt_hadTop > pt_hadTop_thresh && DeltaY_reco_best <0){
-        Sigma_phi_2->Fill(sphi,weight);
-        Delta_phi_2->Fill(dphi,weight);
+        Sigma_phi_2_match->Fill(sphi,weight);
+        Delta_phi_2_match->Fill(dphi,weight);
       }
       if(pt_hadTop < pt_hadTop_thresh && dphi >0){
-        DeltaY_reco_d1->Fill(DeltaY_reco_best,weight);
+        DeltaY_reco_d1_match->Fill(DeltaY_reco_best,weight);
       }
       if(pt_hadTop < pt_hadTop_thresh && dphi <0){
-        DeltaY_reco_d2->Fill(DeltaY_reco_best,weight);
+        DeltaY_reco_d2_match->Fill(DeltaY_reco_best,weight);
       }
       if(pt_hadTop < pt_hadTop_thresh && sphi >0){
-        DeltaY_reco_s1->Fill(DeltaY_reco_best,weight);
+        DeltaY_reco_s1_match->Fill(DeltaY_reco_best,weight);
       }
       if(pt_hadTop < pt_hadTop_thresh && sphi <0){
-        DeltaY_reco_s2->Fill(DeltaY_reco_best,weight);
+        DeltaY_reco_s2_match->Fill(DeltaY_reco_best,weight);
       }
       if(pt_hadTop > pt_hadTop_thresh){
-        Sigma_phi_high->Fill(sphi,weight);
-        Delta_phi_high->Fill(dphi,weight);
-        DeltaY_reco_high->Fill(DeltaY_reco_best,weight);
+        Sigma_phi_high_match->Fill(sphi,weight);
+        Delta_phi_high_match->Fill(dphi,weight);
+        DeltaY_reco_high_match->Fill(DeltaY_reco_best,weight);
       }
       // Plot dphi and sphi for low-pt ranges
       if(pt_hadTop < pt_hadTop_thresh){
-        Sigma_phi_low->Fill(sphi,weight);
-        Delta_phi_low->Fill(dphi,weight);
-        DeltaY_reco_low->Fill(DeltaY_reco_best,weight);
+        Sigma_phi_low_match->Fill(sphi,weight);
+        Delta_phi_low_match->Fill(dphi,weight);
+        DeltaY_reco_low_match->Fill(DeltaY_reco_best,weight);
       }
       // }
 
@@ -1838,8 +1864,9 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   //end spin correlation
   }
 
-  // for backgrounds and DATA
-  if(is_zprime_reconstructed_chi2 && !is_tt){
+  // for all MC and DATA
+  // if(is_zprime_reconstructed_chi2 && !is_tt){
+  if (is_zprime_reconstructed_chi2){
     if (debug) cout << "shouldnt be here if ttbar : " << endl;
    // const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
@@ -1879,11 +1906,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector <TopJet> TopTaggedJets = event.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
   vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
   float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
-  float btag_WP=0.2783;  
-  if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
-  if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
-  if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
-  if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
+  // float btag_WP=0.2783;  
+  // if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
+  // if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
+  // if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
+  // if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
    
                                                                 // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
                                                 // medium WP for UL18 DeepJet
@@ -1978,7 +2005,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
                             BestZprimeCandidate->top_hadronic_v4().eta(), 
                             BestZprimeCandidate->top_hadronic_v4().phi(), 
                             BestZprimeCandidate->top_hadronic_v4().energy());
-        NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+       NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
                             BestZprimeCandidate->top_leptonic_v4().eta(), 
                             BestZprimeCandidate->top_leptonic_v4().phi(), 
                             BestZprimeCandidate->top_leptonic_v4().energy());

@@ -1,0 +1,437 @@
+from ROOT import TFile, TLegend, TCanvas, TPad, THStack, TF1, TPaveText, TGaxis, SetOwnership, TObject, gStyle,TH1F,TH2F
+from ROOT import *
+import os
+import math
+import sys
+from optparse import OptionParser
+from sys import argv
+from numpy import log10
+from array import array
+from collections import OrderedDict
+
+parser = OptionParser()
+parser.add_option("-c", "--channel", dest="channel",default="muon",type='str',help="what channel?")
+parser.add_option("-y", "--year", dest="year", default="2018",type='str',help="don't print status messages to stdout")
+parser.add_option("-p", "--plots", dest="plost", action='store_false',type='str',help="eft var plots?")
+parser.add_option("-m", "--mass_range", dest="mass_range", help="Specify the mass range (0_500, 500_750, 750-1000, 1000-1500, 1500Inf)", type='str')
+parser.add_option("-r", "--region", dest="region", help="Specify the region (SR, CR1, CR2)", type='str')
+parser.add_option("-s", "--region_score", dest="region_score", help="Specify the region score (0, 1, 2)", type='str')
+
+
+(options, args) = parser.parse_args()
+
+year = options.year if options.year else "UL18"
+mass_range = options.mass_range if options.mass_range else "0_500"
+region = options.region if options.region else "CR2"
+
+region_score = options.region_score if options.region_score else "0"
+
+(options, args) = parser.parse_args()
+stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kGreen], "Diboson":[kGreen], "QCD":[kGreen],"ST":[kBlue],"ST_tW":[kBlue],"ST_s":[kBlue],"ST_t":[kBlue]}
+
+channel = options.channel
+year=options.year
+plots =option.plots
+
+
+gROOT.SetBatch(True)
+path="%s_%s_EFT"%(channel,year)
+print(path)
+if os.path.exists(path):
+	print("output directory exists")
+else:
+	os.mkdir(path)
+YesLog = True
+NoLog=False
+padRatio = 0.25
+padOverlap = 0.15
+
+padGap = 0.01
+if (channel=="electron" or channel=="muon"):
+	#fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,channel,year,channel)
+        fileDir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s//NOMINAL_Sept11/"%(year,channel,year, channel)
+else:
+	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
+
+import CMS_lumi
+
+from Style import *
+
+thestyle = Style()
+
+HasCMSStyle = False
+style = None
+if os.path.isfile('tdrstyle.C'):
+    ROOT.gROOT.ProcessLine('.L tdrstyle.C')
+    ROOT.setTDRStyle()
+    #print ("Found tdrstyle.C file, using this style.")
+    HasCMSStyle = True
+    if os.path.isfile('CMSTopStyle.cc'):
+        gROOT.ProcessLine('.L CMSTopStyle.cc+')
+        style = CMSTopStyle()
+        style.setupICHEPv1()
+        #print "Found CMSTopStyle.cc file, use TOP style if requested in xml file."
+if not HasCMSStyle:
+    #print "Using default style defined in cuy package."
+    thestyle.SetStyle()
+
+ROOT.gROOT.ForceStyle()
+
+if year=="2018":
+	period=6
+elif year=="2017":
+	period=5
+elif "2016" in year:
+	period=4
+elif "all" in year:
+	period=8
+#print stackList
+if channel=="muon":
+	_channelText = "#mu+jets"
+elif(channel=="electron"):
+	_channelText="e+jets"
+elif(channel=="lepton"):
+	_channelText="l+jets"
+H = 600;
+W = 800;
+
+
+# references for T, B, L, R                                                                                                             
+T = 0.08*H
+B = 0.12*H
+L = 0.12*W
+R = 0.1*W
+legendHeightPer = 0.04
+legList = stackList_orig.keys() 
+#legList.reverse()
+
+legendStart = 0.69
+legendEnd = 0.97-(R/W)
+canvasRatio = TCanvas('c1Ratio','c1Ratio',W,H)
+canvasRatio.SetFillColor(0)
+canvasRatio.SetBorderMode(0)
+canvasRatio.SetFrameFillStyle(0)
+canvasRatio.SetFrameBorderMode(0)
+canvasRatio.SetLeftMargin( L/W )
+canvasRatio.SetRightMargin( R/W )
+canvasRatio.SetTopMargin( T/H )
+canvasRatio.SetBottomMargin( B/H )
+canvasRatio.SetTickx(1)
+canvasRatio.SetTicky(1)
+canvasRatio.Draw()
+canvasRatio.cd()
+
+
+pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
+pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
+pad1.SetLeftMargin( L/W )
+pad1.SetRightMargin( R/W )
+pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
+pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
+pad2.SetLeftMargin( L/W )
+pad2.SetRightMargin( R/W )
+pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
+pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
+pad1.SetFillColor(0)
+pad1.SetBorderMode(0)
+pad1.SetFrameFillStyle(0)
+pad1.SetFrameBorderMode(0)
+pad1.SetTickx(1)
+pad1.SetTicky(1)
+
+pad2.SetFillColor(0)
+pad2.SetFillStyle(4000)
+pad2.SetBorderMode(0)
+pad2.SetFrameFillStyle(0)
+pad2.SetFrameBorderMode(0)
+pad2.SetTickx(1)
+pad2.SetTicky(1)
+
+
+canvasRatio.cd()
+pad1.Draw()
+pad2.Draw()
+
+
+
+histograms={"DeltaY_reco_d2":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi<0 )", "Events", 2, [-2.5,2.5]],
+		"DeltaY_reco_d1":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi>0 )", "Events", 2, [-2.5,2.5]],
+		"Sigma_phi_1":["\Sigma \phi (top_{h}(p_{T})>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
+		"Sigma_phi_2":["\Sigma \phi (top_{h}(p_{T})>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
+		}
+
+
+
+
+
+stackList = { "TTbar":[kRed],"WJets":[kGreen], "ST":[kBlue]}
+
+hist_combined={}
+categories=["DNN_output0","DNN_output1","DNN_output2"]
+
+systematic_name_mapping = {
+    "mu_reco": "muonReco",
+    "pu": "pu",
+    "prefiring": "prefiringWeight",
+    "mu_id": "muonID",
+    "mu_iso": "muonIso",
+    "mu_trigger": "muonTrigger",
+    "ele_id" : "eleID",
+    "ele_trigger": "eleTrigger",
+    "ele_reco": "eleReco",
+    "isr": "isr",
+    "fsr": "fsr",
+    "btag_cferr1": "btagCferr1",
+    "btag_cferr2": "btagCferr2",
+    "btag_hf": "btagHf",
+    "btag_hfstats1": "btagHfstats1",
+    "btag_hfstats2": "btagHfstats2",
+    "btag_lf": "btagLf",
+    "btag_lfstats1": "btagLfstats1",
+    "btag_lfstats2": "btagLfstats2",
+    "ttag_corr": "ttagCorr",
+    "ttag_uncorr": "ttagUncorr",
+    "tmistag": "tmistag"
+}
+
+histo_={}
+samples=["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]
+for cat in categories:
+	hist_combined[cat]={}
+    hist_sys[cat]={}
+	for sample in samples:
+		hist_combined[cat][sample]=TH1F("%s_%s_%s_Up"%(cat,sample,sys),"%s_%s_%s_Up"%(cat,sample,sys),36,1.,37.)
+        hist_sys[cat][sample]={}
+        for sys in systematic_name_mapping:
+        if sample!="DATA":
+            hist_sys[cat][sample][sys+"Up"]=TH1F("%s_%s_%s_Up"%(cat,sample,sys),"%s_%s_%s_Up"%(cat,sample,sys),36,1.,37.)
+            hist_sys[cat][sample][sys+"Down"]=TH1F("%s_%s_%s_Down"%(cat,sample,sys),"%s_%s_%s_Down"%(cat,sample,sys),36,1.,37.)
+
+
+file={}
+if plots:
+    for cat in categories:
+        # combine_file.mkdir(cat)
+        # print("created directory: ", cat)
+        # combine_file.cd(cat)
+        stack = THStack("hs","stack")
+        legendR = TLegend(2*legendStart - legendEnd , 0.99 - (T/H)/(1.-padRatio+padOverlap) - legendHeightPer/(1.-padRatio+padOverlap)*round((len(legList)+1)/2.), legendEnd, 0.99-(T/H)/(1.-padRatio+padOverlap))
+        legendR.SetNColumns(2)
+        legendR.SetBorderSize(0)
+        legendR.SetFillColor(0)
+        samples=["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]
+
+        for sample in samples:
+            if sample=="DATA":
+                file[sample]=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
+            else:
+                file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
+            for histo in histograms:
+                temp_hist="%s_General/%s"%(cat,histo)
+                # print(file[sample].Get(temp_hist),fileDir, sample)
+                # print(temp_hist)  
+                histo_[sample]=file[sample].Get(temp_hist)
+                if histo=="DeltaY_reco_d1":
+                    for i in range(histo_[sample].GetNbinsX()):
+                        # print(histo_[sample].GetBinContent(i+1))
+                        hist_combined[cat][sample]["nominal"].SetBinContent(1+i,histo_[sample].GetBinContent(i+1))
+                        hist_combined[cat][sample]["nominal"].SetBinError(1+i,histo_[sample].GetBinError(i+1))
+                elif histo=="DeltaY_reco_d2":
+                    for i in range(histo_[sample].GetNbinsX()):
+                        hist_combined[cat][sample]["nominal"].SetBinContent(3+i,histo_[sample].GetBinContent(i+1))
+                        hist_combined[cat][sample]["nominal"].SetBinError(3+i,histo_[sample].GetBinError(i+1))
+                elif histo=="Sigma_phi_1":
+                    for i in range(histo_[sample].GetNbinsX()):
+                        hist_combined[cat][sample]["nominal"].SetBinContent(5+i,histo_[sample].GetBinContent(i+1))	
+                        hist_combined[cat][sample]["nominal"].SetBinError(5+i,histo_[sample].GetBinError(i+1))	
+                elif histo=="Sigma_phi_2":
+                    for i in range(histo_[sample].GetNbinsX()):
+                        hist_combined[cat][sample]["nominal"].SetBinContent(21+i,histo_[sample].GetBinContent(i+1))	
+                        hist_combined[cat][sample]["nominal"].SetBinError(21+i,histo_[sample].GetBinError(i+1))
+                for sys in systematic_name_mapping:
+                    
+
+
+
+
+
+            if sample!="DATA":		
+                hist_combined[cat][sample]["nominal"].SetFillColor(stackList_orig[sample][0])
+                hist_combined[cat][sample]["nominal"].SetLineColor(stackList_orig[sample][0])
+            if sample=="TTbar":
+                legendR.AddEntry(hist_combined[cat][sample]["nominal"],"t#bar{t}",'f')
+            if sample=="WJets":
+                legendR.AddEntry(hist_combined[cat][sample]["nominal"],"W+jets",'f')
+                hist_combined[cat][sample]["nominal"].Add(hist_combined[cat]["QCD"])
+                hist_combined[cat][sample]["nominal"].Add(hist_combined[cat]["Diboson"])
+                hist_combined[cat][sample]["nominal"].Add(hist_combined[cat]["DYJets"])
+            if sample=="ST":
+                legendR.AddEntry(hist_combined[cat][sample]["nominal"],"ST",'f')
+                # hist_combined[cat][sample].Write(sample)
+            if sample!="DATA" or sample!="DYJets"or sample!="QCD"or sample!="Diboson":	
+                stack.Add(hist_combined[cat][sample]["nominal"])
+    hist_combined[cat]["DATA"].SetMarkerStyle(20)
+    hist_combined[cat]["DATA"].SetMarkerColor(kBlack)
+    hist_combined[cat]["DATA"].SetMarkerSize(0.8)
+    hist_combined[cat]["DATA"].SetLineColor(kBlack)
+    hist_combined[cat]["DATA"].SetYTitle("Events")     
+    hist_combined[cat]["DATA"].Draw("pe,x0")
+    errorban=stack.GetStack().Last().Clone("errorban")
+    errorban.Sumw2()
+    errorban.SetLineColor(kGray+2)
+    errorban.SetFillColor(kGray+2)
+    errorban.SetFillStyle(3245)
+    errorban.SetMarkerSize(0)
+    errorban.Draw("E2,SAME")
+    legendR.AddEntry(errorban,"MC tot. unc.",'f')
+    oneLine = TF1("oneline","1",-9e9,9e9)
+    oneLine.SetLineColor(kBlack)
+    oneLine.SetLineWidth(1)
+    oneLine.SetLineStyle(2)	
+    minVal = max(stack.GetStack()[0].GetMinimum(),1)
+    log=0
+    maxVal =stack.GetMaximum()
+    minVal = max(stack.GetStack()[0].GetMinimum(),1)
+    if log:
+    
+        stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
+    else:
+        
+        stack.SetMaximum(1.5*maxVal)
+    stack.Draw("HIST")
+    stack.GetXaxis().SetLabelSize(0)
+    stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetMaxDigits(5)
+    stack.GetYaxis().SetTitle("Events")
+    stack.SetMinimum(minVal)
+    errorband=stack.GetStack().Last().Clone("error")
+    errorband.Sumw2()
+    errorband.SetLineColor(kBlack)
+    errorband.SetFillColor(kBlack)
+    errorband.SetFillStyle(3245)
+    errorband.SetMarkerSize(0)
+    errorband.SetLineColor(0)
+    pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
+    pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
+    pad1.SetLeftMargin( L/W )
+    pad1.SetRightMargin( R/W )
+    pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
+    pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
+    pad2.SetLeftMargin( L/W )
+    pad2.SetRightMargin( R/W )
+    pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
+    pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
+    pad1.SetFillColor(0)
+    pad1.SetBorderMode(0)
+    pad1.SetFrameFillStyle(0)
+    pad1.SetFrameBorderMode(0)
+    pad1.SetTickx(1)
+    pad1.SetTicky(1)
+    pad2.SetFillColor(0)
+    pad2.SetFillStyle(4000)
+    pad2.SetBorderMode(0)
+    pad2.SetFrameFillStyle(0)
+    pad2.SetFrameBorderMode(0)
+    pad2.SetTickx(1)
+    pad2.SetTicky(1)
+    canvasRatio.cd()
+    canvasRatio.ResetDrawn()
+    canvasRatio.Draw()
+    canvasRatio.cd()
+    pad1.Draw()
+    pad2.Draw()
+    pad1.cd()
+    pad1.SetLogy(log)
+    stack.Draw("HIST")
+    hist_combined[cat]["DATA"].Draw("E,X0,SAME")
+    errorban.Draw("E2,SAME")
+    legendR.AddEntry(hist_combined[cat]["DATA"], "Data", 'pe')
+    ratio = hist_combined[cat]["DATA"].Clone("temp")
+    temp = stack.GetStack().Last().Clone("temp")
+    for i_bin in range(1,temp.GetNbinsX()+1):
+            temp.SetBinError(i_bin,0.)
+    ratio = hist_combined[cat]["DATA"].Clone("temp")
+    ratio.Divide(temp)
+    print("ratio: ", ratio.GetBinContent(1), ratio.GetBinContent(2))
+    ratio.GetXaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
+    ratio.GetXaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
+    ratio.GetYaxis().SetRangeUser(0.2,1.8)
+    ratio.GetYaxis().SetNdivisions(504)
+    ratio.GetXaxis().SetTitle("EFT bins")
+    ratio.GetYaxis().SetTitle("Data/MC")
+    CMS_lumi.CMS_lumi(pad1, period, 11)
+    legendR.SetTextSize(0.05)
+    legendR.Draw("SAME")
+    pad2.cd()
+    ratio.SetMarkerStyle(hist_combined[cat]["DATA"].GetMarkerStyle())
+    ratio.SetMarkerSize(hist_combined[cat]["DATA"].GetMarkerSize())
+    ratio.SetLineColor(kBlack)
+    ratio.SetMarkerColor(kBlack)
+    ratio.SetLineWidth(hist_combined[cat]["DATA"].GetLineWidth())
+    ratio.Draw('e,x0')
+    errorband.Divide(temp)
+    for i in range(1, errorband.GetNbinsX() + 1):
+        if(errorban.GetBinContent(i) == 0):
+            errorband.SetBinError(i,0)
+        else:
+            errorband.SetBinError(i, errorban.GetBinError(i)/errorban.GetBinContent(i))
+    errorband.Draw('e2,same')
+    oneLine.Draw("same")
+    canvasRatio.Update()
+    canvasRatio.RedrawAxis()
+    if log:
+        canvasRatio.SaveAs("%s/EFT_%s_log.pdf"%(path,cat))
+    else:
+        canvasRatio.SaveAs("%s/EFT_%s_linear.pdf"%(path,cat))
+    canvasRatio.Clear()
+
+
+
+# creat root file for combine input
+for cat in categories:
+    for sample in ["DYJets","Diboson","QCD"]:
+        hist_combined[cat]["WJets"].Add(hist_combined[cat][sample])
+cat_region={"DNN_output0":["SR"],"DNN_output1":["CR1"],"DNN_output2":["CR2"]}
+
+
+sample_name={"TTbar":["TTbar"],"ST":["ST"],"WJets":["Others"],"DATA":["data_obs"]}
+
+ombine_file_name = 'EFT_{}_{}.root'.format(year, channel)
+combine_file = TFile(combine_file_name, 'RECREATE')
+for cat in categories:
+    combine_file.mkdir(cat_region[cat][0])
+    combine_file.cd(cat)
+    for sample in ["TTbar","ST","WJets","DATA"]:
+        hist_combined[cat]["TTbar"].Write(sample_name[sample][0])
+
+
+        # for sys in systematic_name_mapping.items():
+        #     if (debug): print sys
+
+        #     for variation in ["up", "down"]:
+        #         sys_hist_name = "DeltaY_{}_{}".format(sys, variation)
+        #         sys_hist = inFile.Get("DeltaY_reco_SystVariations_{}_{}/".format(mass_range, region) + sys_hist_name)
+        #         if sys_hist:
+        #             output_hist_name = "{}_{}{}".format(sample, new_sys_name, variation.capitalize())
+        #             sys_hist.Clone(output_hist_name).Write()
+
+combine_file.Close()
+
+
+
+
+
+
+
+
+
+    
+
+
+            
+			

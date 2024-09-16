@@ -15,8 +15,8 @@ from collections import OrderedDict
 
 categories=["output0","output1","output2"]
 test_sample = ['MC.ST', 'MC.WJets', 'MC.DY', 'MC.Diboson','MC.QCD','MC.TTbar','DATA.DATA']
-for year in ['18']:#,'17']:#,'16pre','16post']:
-    for channel in ['electron','muon']:	
+for year in ['18']:#,'17','16pre','16post']:
+    for channel in ['muon']:	
         for cat in categories:
             for sample in test_sample:
                 if '16' in year:
@@ -29,7 +29,7 @@ for year in ['18']:#,'17']:#,'16pre','16post']:
                 if 'DY' in sample:
                     file_Ac=TFile("/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/20%s/%s/workdir_AnalysisDNN_20%s_%s/NOMINAL/uhh2.AnalysisModuleRunner.%sJets.root"%(year,channel,year,channel,sample))
                 else:
-                    file_Ac=TFile("/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/20%s/%s/workdir_AnalysisDNN_20%s_%s/NOMINAL/uhh2.AnalysisModuleRunner.%s.root"%(year,channel,year,channel,sample))
+                    file_Ac=TFile("/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/20%s/%s/workdir_AnalysisDNN_20%s_%s/NOMINAL_toppt/uhh2.AnalysisModuleRunner.%s.root"%(year,channel,year,channel,sample))
 
                 # print(file_Ac)
 
