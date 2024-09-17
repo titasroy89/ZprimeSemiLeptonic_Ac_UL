@@ -60,10 +60,10 @@ Hists(ctx, dirname){
 
     ss_name << "DeltaY_PDF_" << i+1;
     ss_name_tt << "DeltaY_PDF_RM_" << i+1;
-    ss_name_dy_d1 << "DeltaY_EFTbin1_PDF_RM_" << i+1;
-    ss_name_dy_d2 << "DeltaY_EFTbin2_PDF_RM_" << i+1;
-    ss_name_sigma_1 << "Sigmaphi_EFTbin1_PDF_RM_" << i+1;
-    ss_name_sigma_2 << "Sigmaphi_EFTbin2_PDF_RM_" << i+1;
+    ss_name_dy_d1 << "DeltaY_reco_d1_PDF_" << i+1;
+    ss_name_dy_d2 << "DeltaY_reco_d2_PDF_" << i+1;
+    ss_name_sigma_1 << "Sigma_phi_1_PDF_" << i+1;
+    ss_name_sigma_2 << "Sigma_phi_2_PDF_" << i+1;
 
 
 
@@ -80,9 +80,9 @@ Hists(ctx, dirname){
     ss_title_tt << "#DeltaY_{t#bar{t}} RM for PDF No. "  << i+1 << " out of 100" ;
 
     ss_title_dy_d1 <<"#DeltaY_{t#bar{t}} for #Delta #phi >0 for PDF No. "<< i+1 << " out of 100" ;
-    ss_title_dy_d2 <<"#DeltaY_{t#bar{t}} for #Delta #phi >0 for PDF No. "<< i+1 << " out of 100" ;
+    ss_title_dy_d2 <<"#DeltaY_{t#bar{t}} for #Delta #phi <0 for PDF No. "<< i+1 << " out of 100" ;
 
-    ss_title_sigma_1 <<"#Sigma #phi for #DeltaY <0 for PDF No. "<< i+1 << " out of 100" ;
+    ss_title_sigma_1 <<"#Sigma #phi for #DeltaY >0 for PDF No. "<< i+1 << " out of 100" ;
     ss_title_sigma_2 <<"#Sigma #phi for #DeltaY <0 for PDF No. "<< i+1 << " out of 100" ;
 
     std::string s_name = ss_name.str();

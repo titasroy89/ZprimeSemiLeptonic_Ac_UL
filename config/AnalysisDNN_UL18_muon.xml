@@ -68,10 +68,10 @@
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
-		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunA&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunA; <InputTree Name="AnalysisTree"/> </InputData> 
+		<!-- <InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunA&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunA; <InputTree Name="AnalysisTree"/> </InputData> 
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunB&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunB; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunC&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunC; <InputTree Name="AnalysisTree"/> </InputData>
-		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunD; <InputTree Name="AnalysisTree"/> </InputData> 
+		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="SingleMuon_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &SingleMuon_RunD; <InputTree Name="AnalysisTree"/> </InputData>  -->
 
         <InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>  
@@ -112,8 +112,8 @@
 		<InputData Lumi="12741.016100178891" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1000to1500&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT1000to1500; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="99551.91666666667" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT1500to2000&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT1500to2000; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="239949.0909090909" NEventsMax="&NEVT;" Type="MC" Version="QCD_HT2000toInf&YEARsuffix;" Cacheable="&b_Cacheable;"> &QCD_HT2000toInf; <InputTree Name="AnalysisTree"/> </InputData>  
-		
-		<UserConfig>
+		 
+		<UserConfig> 
 			<Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>
 			<Item Name="GenParticleCollection" Value="GenParticles"/>
 			<Item Name="ElectronCollection" Value="slimmedElectronsUSER"/>
@@ -158,9 +158,12 @@
 				<Item Name="jecsmear_direction" Value="nominal"/>
 				<Item Name="ScaleVariationMuR" Value="nominal"/>
 				<Item Name="ScaleVariationMuF" Value="nominal"/>
-				<Item Name="SystDirection_MuonId" Value="nominal"/>
-				<Item Name="SystDirection_MuonIso" Value="nominal"/>
-				<Item Name="SystDirection_MuonTrigger" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_syst" Value="nominal"/>
 				<Item Name="SystDirection_ElectronId" Value="nominal"/>
 				<Item Name="SystDirection_ElectronReco" Value="nominal"/>
 				<Item Name="Sys_PU" Value="central"/>

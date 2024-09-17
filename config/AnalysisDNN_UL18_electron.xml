@@ -68,10 +68,10 @@
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
-	 	<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunA&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunA; <InputTree Name="AnalysisTree"/> </InputData> 
+	 	<!-- <InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunA&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunA; <InputTree Name="AnalysisTree"/> </InputData> 
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunB&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunB; <InputTree Name="AnalysisTree"/> </InputData>
 		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunC&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunC; <InputTree Name="AnalysisTree"/> </InputData>
-		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunD; <InputTree Name="AnalysisTree"/> </InputData> 
+		<InputData Lumi="1.0" NEventsMax="&NEVT;" Type="DATA" Version="EGamma_RunD&YEARsuffix;" Cacheable="&b_Cacheable;"> &EGamma_RunD; <InputTree Name="AnalysisTree"/> </InputData>  -->
 
 		<InputData Lumi="385941905.855241" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
 	    <InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
@@ -155,9 +155,12 @@
 				<Item Name="jecsmear_direction" Value="nominal"/>
 				<Item Name="ScaleVariationMuR" Value="nominal"/>
 				<Item Name="ScaleVariationMuF" Value="nominal"/>
-				<Item Name="SystDirection_MuonId" Value="nominal"/>
-				<Item Name="SystDirection_MuonIso" Value="nominal"/>
-				<Item Name="SystDirection_MuonTrigger" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_syst" Value="nominal"/>
 				<Item Name="SystDirection_ElectronId" Value="nominal"/>
 				<Item Name="SystDirection_ElectronReco" Value="nominal"/>
 				<Item Name="Sys_PU" Value="central"/>
