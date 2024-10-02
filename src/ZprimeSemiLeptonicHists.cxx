@@ -40,14 +40,14 @@ Hists(ctx, dirname) {
   if(ctx.get("channel") == "muon") isMuon = true;
   if(ctx.get("channel") == "electron") isElectron = true;
   is_tt = ctx.get("dataset_version").find("TTTo") == 0;
-  gen_match=false;
+  gen_match=true;
   if(isdeepAK8){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("DeepAK8TopTags");
   }else if(ishotvr){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("HOTVRTopTags");
   }
   h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
-
+  h_CHSjets = ctx.get_handle< std::vector<Jet> >("jetsAk4CHS");
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   h_BestZprimeCandidateCorrectMatch = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
@@ -57,7 +57,12 @@ Hists(ctx, dirname) {
 }
 
 void ZprimeSemiLeptonicHists::init(){
-
+  //CHS jets
+  CHS_pt_jet   = book<TH1F>("CHS_pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
+  CHS_pt_jet1  = book<TH1F>("CHS_pt_jet1", "p_{T}^{jet 1} [GeV]", 45, 0, 900);
+  CHS_eta_jet  = book<TH1F>("CHS_eta_jet", "#eta^{jets}", 50, -2.5, 2.5);
+  CHS_eta_jet1 = book<TH1F>("CHS_eta_jet1", "#eta^{jet 1}", 50, -2.5, 2.5);
+  dRmin_CHS_Puppi  = book<TH1F>("dRmin_CHS_Puppi", "#DeltaR_{min}(CHS, Puppi)", 60, 0, 3);
   // jets
   N_jets   = book<TH1F>("N_jets", "N_{jets}", 21, -0.5, 20.5);
   pt_jet   = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
@@ -764,11 +769,38 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   █ ██   ██ ██         ██         ██
   █  █████  ███████    ██    ███████
   */
+  //CHS jets
+  
+  vector<Jet> CHSjets = event.get(h_CHSjets);
+  for(unsigned int i=0; i<CHSjets.size(); i++){
+    CHS_pt_jet->Fill(CHSjets.at(i).pt(),weight);
+    CHS_eta_jet->Fill(CHSjets.at(i).eta(),weight);
+    if(i==0){
+      CHS_pt_jet1->Fill(CHSjets.at(i).pt(),weight);
+      CHS_eta_jet1->Fill(CHSjets.at(i).eta(),weight);
+    }
+    // cout<<"CHS pt: "<<CHSjets.at(i).pt()<<endl;
+    // cout<<"CHS eta: "<<CHSjets.at(i).eta()<<endl;
+  }
 
 
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
+  // cout<<"chs jets size: "<<CHSjets.size()<<endl;
+  // cout<<"puppi jets size: "<<jets->size()<<endl;
+  for (unsigned int i=0; i<CHSjets.size(); i++){
+    double dRmin_CHSPuppi = 99999.;
+    for(unsigned int j=0; j<jets->size(); j++){
+      double deltar=deltaR(CHSjets.at(i),jets->at(j));
+      // cout<<deltar<<endl;
+      if(deltar < dRmin_CHSPuppi) dRmin_CHSPuppi = deltar;
+    }
+    // cout<<"dRmin is: "<<dRmin_CHSPuppi<<endl;
+    dRmin_CHS_Puppi->Fill(dRmin_CHSPuppi,weight);
+
+
+  }
 
   // for(unsigned int i=0; i<jets->size(); i++){
   //   cout << "Jet pt: " << jets->at(i).pt() << endl
@@ -1769,7 +1801,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
                             BestZprimeCandidate->top_hadronic_v4().eta(), 
                             BestZprimeCandidate->top_hadronic_v4().phi(), 
                             BestZprimeCandidate->top_hadronic_v4().energy());
-        NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+      NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
                             BestZprimeCandidate->top_leptonic_v4().eta(), 
                             BestZprimeCandidate->top_leptonic_v4().phi(), 
                             BestZprimeCandidate->top_leptonic_v4().energy());
@@ -1781,7 +1813,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         had_top_b.Boost(-ttbar.BoostVector());
         PosTop.Boost(-ttbar.BoostVector());
         NegTop.Boost(-ttbar.BoostVector());
-
         // Rotate vectors into Helicity Frame <<<------//
         // Rotate about beamline
         lep_top_lep.RotateZ(-1.*PosTop.Phi());
@@ -1794,10 +1825,18 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         PosTop.RotateY(-1.*PosTop.Theta());
         NegTop.RotateY(-1.*PosTop.Theta());
 
-        // Boost into ttbar Rest-Frame <<<--------//
-        lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
-        had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
 
+       
+        // Boost into ttbar Rest-Frame depends on lepton charge <<<--------//
+        if(BestZprimeCandidate->lepton().charge() > 0){
+          lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
+          had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+        
+        }
+        else if (BestZprimeCandidate->lepton().charge() < 0){
+          lep_top_lep.Boost(-NegTop.BoostVector()); // Negative charged lepton has Negative Top mother
+          had_top_b.Boost(-PosTop.BoostVector());   // Negative charged lepton means b-jet has Positive Top mother
+        }
       //-------------------------------- End boosting top quarks and their decay products --------------------------------//
   
       // Define angular variables as sum and difference of decay products' phi-coordinates
@@ -2030,9 +2069,19 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
         PosTop.RotateY(-1.*PosTop.Theta());
         NegTop.RotateY(-1.*PosTop.Theta());
 
-        // Boost into ttbar Rest-Frame <<<--------//
+
+        if(BestZprimeCandidate->lepton().charge() > 0){
         lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
         had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+        }
+        else if (BestZprimeCandidate->lepton().charge() < 0){
+        lep_top_lep.Boost(-NegTop.BoostVector()); // Positive charged lepton has Positive Top mother
+        had_top_b.Boost(-PosTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+        }
+
+        // Boost into ttbar Rest-Frame <<<--------//
+        // lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
+        // had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
 
        //-------------------------------- End boosting top quarks and their decay products --------------------------------//
   

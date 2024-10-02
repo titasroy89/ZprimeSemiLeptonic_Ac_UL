@@ -30,7 +30,7 @@ void ZprimeSemiLeptonicCHSMatchHists::init(){
   // jets
   N_jets            = book<TH1F>("N_jets", "N_{jets}", 21, -0.5, 20.5);
   pt_jet            = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 50, 0, 1500);
-  pt_jet1           = book<TH1F>("pt_jet1", "p_{T}^{jet 1} [GeV]", 50, 0, 1500);
+  pt_jet1           = book<TH1F>("pt_jet1", "p_{T}^{jet 1} [GeV]",  50, 0, 1500);
   pt_jet2           = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 50, 0, 1500);
   pt_jet3           = book<TH1F>("pt_jet3", "p_{T}^{jet 3} [GeV]", 50, 0, 1500);
   eta_jet           = book<TH1F>("eta_jet", "#eta^{jets}", 50, -2.5, 2.5);
@@ -55,8 +55,8 @@ void ZprimeSemiLeptonicCHSMatchHists::init(){
 
   // CHS matched jets
   CHS_matched_N_jets            = book<TH1F>("CHS_matched_N_jets", "CHS matched N_{jets}", 21, -0.5, 20.5);
-  CHS_matched_pt_jet            = book<TH1F>("CHS_matched_pt_jet", "CHS matched p_{T}^{jets} [GeV]", 50, 0, 1500);
-  CHS_matched_pt_jet1           = book<TH1F>("CHS_matched_pt_jet1", "CHS matched p_{T}^{jet 1} [GeV]", 50, 0, 1500);
+  CHS_matched_pt_jet            = book<TH1F>("CHS_matched_pt_jet", "CHS matched p_{T}^{jets} [GeV]",  50, 0, 1500);
+  CHS_matched_pt_jet1           = book<TH1F>("CHS_matched_pt_jet1", "CHS matched p_{T}^{jet 1} [GeV]",  50, 0, 1500);
   CHS_matched_pt_jet2           = book<TH1F>("CHS_matched_pt_jet2", "CHS matched p_{T}^{jet 2} [GeV]", 50, 0, 1500);
   CHS_matched_pt_jet3           = book<TH1F>("CHS_matched_pt_jet3", "CHS matched p_{T}^{jet 3} [GeV]", 50, 0, 1500);
   CHS_matched_eta_jet           = book<TH1F>("CHS_matched_eta_jet", "CHS matched #eta^{jets}", 50, -2.5, 2.5);
@@ -78,6 +78,68 @@ void ZprimeSemiLeptonicCHSMatchHists::init(){
   CHS_matched_N_bJets_loose     = book<TH1F>("CHS_matched_N_bJets_loose", "CHS matched N_{jets}^{bscore loose}", 11, -0.5, 10.5);
   CHS_matched_N_bJets_med       = book<TH1F>("CHS_matched_N_bJets_med",   "CHS matched N_{jets}^{bscore medium}", 11, -0.5, 10.5);
   CHS_matched_N_bJets_tight     = book<TH1F>("CHS_matched_N_bJets_tight", "CHS matched N_{jets}^{bscore tight}", 11, -0.5, 10.5);
+  CHS_matched_N_Jets_LepVeto    = book<TH1F>("CHS_matched_N_Jets_LepVeto", "CHS matched N_{jets}^{Tight Lep Veto}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_Tight      = book<TH1F>("CHS_matched_N_Jets_Tight", "CHS matched N_{jets}^{Tight}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_NotTight   = book<TH1F>("CHS_matched_N_Jets_NotTight", "CHS matched N_{jets}^{Not Tight}", 21, -0.5, 20.5);
+
+  CHS_matched_N_Jets_LepVeto_all    = book<TH1F>("CHS_matched_N_Jets_LepVeto_all", "CHS matched N_{jets}^{Tight Lep Veto}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_Tight_all      = book<TH1F>("CHS_matched_N_Jets_Tight_all", "CHS matched N_{jets}^{Tight}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_NotTight_all   = book<TH1F>("CHS_matched_N_Jets_NotTight_all", "CHS matched N_{jets}^{Not Tight}", 21, -0.5, 20.5);
+
+  CHS_matched_N_Jets_LepVeto_1  = book<TH1F>("CHS_matched_N_Jets_LepVeto_1", "CHS matched N_{jets}^{Tight Lep Veto}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_Tight_1    = book<TH1F>("CHS_matched_N_Jets_Tight_1", "CHS matched N_{jets}^{Tight}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_NotTight_1 = book<TH1F>("CHS_matched_N_Jets_NotTight_1", "CHS matched N_{jets}^{Not Tight}", 21, -0.5, 20.5);
+
+  CHS_matched_N_Jets_LepVeto_2  = book<TH1F>("CHS_matched_N_Jets_LepVeto_2", "CHS matched N_{jets}^{Tight Lep Veto}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_Tight_2    = book<TH1F>("CHS_matched_N_Jets_Tight_2", "CHS matched N_{jets}^{Tight}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_NotTight_2 = book<TH1F>("CHS_matched_N_Jets_NotTight_2", "CHS matched N_{jets}^{Not Tight}", 21, -0.5, 20.5);
+
+  CHS_matched_N_Jets_LepVeto_3  = book<TH1F>("CHS_matched_N_Jets_LepVeto_3", "CHS matched N_{jets}^{Tight Lep Veto}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_Tight_3    = book<TH1F>("CHS_matched_N_Jets_Tight_3", "CHS matched N_{jets}^{Tight}", 21, -0.5, 20.5);
+  CHS_matched_N_Jets_NotTight_3 = book<TH1F>("CHS_matched_N_Jets_NotTight_3", "CHS matched N_{jets}^{Not Tight}", 21, -0.5, 20.5);
+
+  //deltaR
+  CHS_matched_deltaRmin_CHS_Puppi  = book<TH1F>("CHS_matched_deltaRmin_CHS_Puppi", "#DeltaR_{min}(CHS jet, Puppi jet)", 120, 0., 3.0);
+  diff_pt                       = book<TH1F>("diff_pt", "#Delta p_{T}(CHS jet, Puppi jet) GeV", 40, -200, 200.);
+  diff_eta                      = book<TH1F>("diff_eta", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
+  ratio_chs_pt                  = book<TH1F>("ratio_chs_pt", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 800, -100, 100.);
+  ratio_puppi_pt                = book<TH1F>("ratio_puppi_pt", "(CHS p_{T}-Puppi p_{T})/Puppi p_{T}", 800, -100, 100.);
+  ratio_chs_eta                 = book<TH1F>("ratio_chs_eta", "(CHS #eta-Puppi #eta)/CHS #eta", 100, -2.5, 2.5);
+  ratio_puppi_eta               = book<TH1F>("ratio_puppi_eta", "(CHS #eta-Puppi #eta)/Puppi #eta", 100, -2.5, 2.5);
+  ratio_chs_puppi_pt            = book<TH1F>("ratio_chs_puppi_pt", "CHS p_{T}/Puppi p_{T}", 800, -100, 100.);
+  ratio_chs_puppi_eta           = book<TH1F>("ratio_puppi_eta", "CHS #eta/Puppi #eta", 100, -2.5, 2.5);
+
+  
+  diff_pt_bin1                  = book<TH1F>("diff_pt_bin1", "#Delta p_{T}(CHS jet, Puppi jet) GeV",  40, -200, 200.);
+  diff_eta_bin1                 = book<TH1F>("diff_eta_bin1", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
+  ratio_chs_pt_bin1             = book<TH1F>("ratio_chs_pt_bin1", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 400, -100, 100.);
+  ratio_puppi_pt_bin1           = book<TH1F>("ratio_puppi_pt_bin1", "(CHS p_{T}-Puppi p_{T})/Puppi p_{T}", 400, -100, 100.);
+  ratio_chs_eta_bin1            = book<TH1F>("ratio_chs_eta_bin1", "#CHS #eta-Puppi #eta)/CHS #eta", 100, -2.5, 2.5);
+  ratio_puppi_eta_bin1          = book<TH1F>("ratio_puppi_eta_bin1", "(CHS #eta-Puppi #eta)/Puppi #eta", 100, -2.5, 2.5);
+  ratio_chs_puppi_pt_bin1       = book<TH1F>("ratio_chs_puppi_pt_bin1", "CHS p_{T}/Puppi p_{T}", 800, -100, 100.);
+  ratio_chs_puppi_eta_bin1      = book<TH1F>("ratio_chs_puppi_eta_bin1", "CHS #eta/Puppi #eta", 100, -2.5, 2.5);
+ 
+  diff_pt_bin2                  = book<TH1F>("diff_pt_bin2", "#Delta p_{T}(CHS jet, Puppi jet) GeV",  40, -200, 200.);
+  diff_eta_bin2                 = book<TH1F>("diff_eta_bin2", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
+  ratio_chs_pt_bin2             = book<TH1F>("ratio_chs_pt_bin2", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 400, -100, 100.);
+  ratio_puppi_pt_bin2           = book<TH1F>("ratio_puppi_pt_bin2", "(CHS p_{T}-Puppi p_{T})/Puppi p_{T}", 400, -100, 100.);
+  ratio_chs_eta_bin2            = book<TH1F>("ratio_chs_eta_bin2", "#CHS #eta-Puppi #eta)/CHS #eta", 100, -2.5, 2.5);
+  ratio_puppi_eta_bin2          = book<TH1F>("ratio_puppi_eta_bin2", "(CHS #eta-Puppi #eta)/Puppi #eta", 100, -2.5, 2.5);
+  ratio_chs_puppi_pt_bin2       = book<TH1F>("ratio_chs_puppi_pt_bin2", "CHS p_{T}/Puppi p_{T}", 800, -100, 100.);
+  ratio_chs_puppi_eta_bin2      = book<TH1F>("ratio_chs_puppi_eta_bin2", "CHS #eta/Puppi #eta", 100, -2.5, 2.5);
+  
+  diff_pt_bin3                  = book<TH1F>("diff_pt_bin3", "#Delta p_{T}(CHS jet, Puppi jet) GeV",  40, -200, 200.);
+  diff_eta_bin3                 = book<TH1F>("diff_eta_bin3", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
+  ratio_chs_pt_bin3             = book<TH1F>("ratio_chs_pt_bin3", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 400, -100, 100.);
+  ratio_puppi_pt_bin3           = book<TH1F>("ratio_puppi_pt_bin3", "(CHS p_{T}-Puppi p_{T})/Puppi p_{T}", 400, -100, 100.);
+  ratio_chs_eta_bin3            = book<TH1F>("ratio_chs_eta_bin3", "#CHS #eta-Puppi #eta)/CHS #eta", 100, -2.5, 2.5);
+  ratio_puppi_eta_bin3          = book<TH1F>("ratio_puppi_eta_bin3", "(CHS #eta-Puppi #eta)/Puppi #eta", 100, -2.5, 2.5);
+  ratio_chs_puppi_pt_bin3       = book<TH1F>("ratio_chs_puppi_pt_bin3", "CHS p_{T}/Puppi p_{T}", 800, -100, 100.);
+  ratio_chs_puppi_eta_bin3      = book<TH1F>("ratio_chs_puppi_eta_bin3", "CHS #eta/Puppi #eta", 100, -2.5, 2.5);
+
+
+  eta_vs_pt     = book<TH2F>("eta_vs_pt", "#Delta(p_{T}) vs. #Delta(#eta); #Delta(#eta); #Delta(p_{T})", 50, -2.5, 2.5, 40, -200, 200.);
+
 
 }
 
@@ -152,10 +214,11 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
   */
 
   //// Matched to Puppi jets
-
+  const JetPFID jetID_CHS(JetPFID::WP_TIGHT_CHS);
   vector<Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);
   int CHS_matched_Njets = AK4CHSjets_matched.size();
   CHS_matched_N_jets->Fill(CHS_matched_Njets, weight);
+  // cout << "does it pass Jet ID Tight?: "
 
   for(unsigned int i=0; i<AK4CHSjets_matched.size(); i++){
     CHS_matched_pt_jet->Fill(AK4CHSjets_matched.at(i).pt(),weight);
@@ -201,6 +264,138 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
   CHS_matched_N_bJets_med->Fill(CHS_matched_Nbjets_medium,weight);
   CHS_matched_N_bJets_tight->Fill(CHS_matched_Nbjets_tight,weight);
 
+
+
+
+  // Check CHS ID working point
+  int CHS_matched_jets_tightlepveto = 0, CHS_matched_jets_tight = 0, CHS_matched_jets_nottight = 0;
+  JetPFID CHS_matched_LepVetoTight = JetPFID(JetPFID::WP_TIGHT_LEPVETO_CHS);
+  JetPFID CHS_matched_Tight  = JetPFID(JetPFID::WP_TIGHT_CHS);
+
+  for (unsigned int i =0; i<AK4CHSjets_matched.size(); i++) {
+    if(CHS_matched_Tight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tight++;
+    if(!CHS_matched_Tight(AK4CHSjets_matched.at(i),event)) CHS_matched_jets_nottight++;
+    
+    if(CHS_matched_LepVetoTight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tightlepveto++;
+  }
+
+  CHS_matched_N_Jets_LepVeto->Fill(CHS_matched_jets_tightlepveto,weight);
+  CHS_matched_N_Jets_Tight->Fill(CHS_matched_jets_tight,weight);
+  CHS_matched_N_Jets_NotTight->Fill(CHS_matched_jets_nottight,weight);
+
+  
+
+
+
+  // vector<Jet>* jets = event.jets;
+  // vector<Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);
+
+  ///calculate deltaR between CHS and Puppi Jet
+  for(unsigned int i=0; i<jets->size(); i++){
+    // cout << "event.run:"<<event.run <<endl;
+    // cout<<"puppi jets size: "<<jets->size()<<endl;
+    double dRmin_CHS_Puppi = 99999;
+    double pt_chs=0;
+    double eta_chs=0;
+    if (jets->size()!=AK4CHSjets_matched.size()){
+    cout << "Puppi size and CHS NOT eqaul"<<endl;
+    }
+    int CHS_matched_jets_tightlepveto_all = 0, CHS_matched_jets_tight_all = 0, CHS_matched_jets_nottight_all = 0;
+    for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+      
+      double dR=deltaR(AK4CHSjets_matched.at(j),jets->at(i));
+      double pt_match=AK4CHSjets_matched.at(j).pt();
+      double eta_match=AK4CHSjets_matched.at(j).eta();
+
+      if(dR < dRmin_CHS_Puppi){
+        dRmin_CHS_Puppi = dR;
+        pt_chs=pt_match;
+        eta_chs=eta_match;
+        if(CHS_matched_Tight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tight_all++;
+        if(!CHS_matched_Tight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_nottight_all++;
+        if(CHS_matched_LepVetoTight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tightlepveto_all++;
+
+      }
+    }
+    CHS_matched_N_Jets_LepVeto_all->Fill(CHS_matched_jets_tightlepveto_all,weight);
+    CHS_matched_N_Jets_Tight_all->Fill(CHS_matched_jets_tight_all,weight);
+    CHS_matched_N_Jets_NotTight_all->Fill(CHS_matched_jets_nottight_all,weight);
+    
+
+
+    // cout << " matched to CHS pt: "<<pt_chs<<endl;
+    diff_pt->Fill(pt_chs-jets->at(i).pt(),weight);
+    diff_eta->Fill(eta_chs-jets->at(i).eta(),weight);
+    ratio_chs_pt->Fill((pt_chs-jets->at(i).pt())/pt_chs,weight);
+    ratio_puppi_pt->Fill((pt_chs-jets->at(i).pt())/jets->at(i).pt(),weight);
+    ratio_chs_puppi_pt->Fill((pt_chs/jets->at(i).pt()),weight);
+    ratio_chs_puppi_eta->Fill((eta_chs/jets->at(i).eta()),weight);
+
+    // cout<<"about to fill all eta"<<endl;
+    ratio_chs_eta->Fill((eta_chs-jets->at(i).eta())/eta_chs,weight);
+    // cout<<"filled all eta"<<endl;
+    ratio_puppi_eta->Fill((eta_chs-jets->at(i).eta())/jets->at(i).eta(),weight);
+
+    if (jets->at(i).pt()>0 and jets->at(i).pt()<50.){
+        diff_pt_bin1->Fill(pt_chs-jets->at(i).pt(),weight);
+        diff_eta_bin1->Fill(eta_chs-jets->at(i).eta(),weight);
+        ratio_chs_pt_bin1->Fill((pt_chs-jets->at(i).pt())/pt_chs,weight);
+        ratio_puppi_pt_bin1->Fill((pt_chs-jets->at(i).pt())/jets->at(i).pt(),weight);
+        ratio_chs_eta_bin1->Fill((eta_chs-jets->at(i).eta())/eta_chs,weight);
+        ratio_puppi_eta_bin1->Fill((eta_chs-jets->at(i).eta())/jets->at(i).eta(),weight);
+        ratio_chs_puppi_pt_bin1->Fill((pt_chs/jets->at(i).pt()),weight);
+        ratio_chs_puppi_eta_bin1->Fill((eta_chs/jets->at(i).eta()),weight);
+        CHS_matched_N_Jets_LepVeto_1->Fill(CHS_matched_jets_tightlepveto_all,weight);
+        CHS_matched_N_Jets_Tight_1->Fill(CHS_matched_jets_tight_all,weight);
+        CHS_matched_N_Jets_NotTight_1->Fill(CHS_matched_jets_nottight_all,weight);
+
+
+      }
+    if (jets->at(i).pt()>50 and jets->at(i).pt()<100.){
+        diff_pt_bin2->Fill(pt_chs-jets->at(i).pt(),weight);
+        diff_eta_bin2->Fill(eta_chs-jets->at(i).eta(),weight);
+        ratio_chs_pt_bin2->Fill((pt_chs-jets->at(i).pt())/pt_chs,weight);
+        ratio_puppi_pt_bin2->Fill((pt_chs-jets->at(i).pt())/jets->at(i).pt(),weight);
+        ratio_chs_eta_bin2->Fill((eta_chs-jets->at(i).eta())/eta_chs,weight);
+        ratio_puppi_eta_bin2->Fill((eta_chs-jets->at(i).eta())/jets->at(i).eta(),weight);
+        ratio_chs_puppi_pt_bin2->Fill((pt_chs/jets->at(i).pt()),weight);
+        ratio_chs_puppi_eta_bin2->Fill((eta_chs/jets->at(i).eta()),weight);
+        CHS_matched_N_Jets_LepVeto_2->Fill(CHS_matched_jets_tightlepveto_all,weight);
+        CHS_matched_N_Jets_Tight_2->Fill(CHS_matched_jets_tight_all,weight);
+        CHS_matched_N_Jets_NotTight_2->Fill(CHS_matched_jets_nottight_all,weight);
+
+
+    }
+    if (jets->at(i).pt()>100){
+       
+        // if ((pt_chs-jets->at(i).pt())<-20){
+        // // cout << "event.run:"<<event.run <<endl;
+        // // // cout << event.run <<endl;
+        // // cout <<" puppi pt: "<<jets->at(i).pt()<<endl;
+        // // cout <<" chs pt: "<<pt_chs<<endl;
+        // // cout <<" diff: "<<pt_chs-jets->at(i).pt()<<endl;
+        // }
+        diff_pt_bin3->Fill(pt_chs-jets->at(i).pt(),weight);
+        ratio_chs_pt_bin3->Fill((pt_chs-jets->at(i).pt())/pt_chs,weight);
+        ratio_puppi_pt_bin3->Fill((pt_chs-jets->at(i).pt())/jets->at(i).pt(),weight);
+        diff_eta_bin3->Fill(eta_chs-jets->at(i).eta());
+        ratio_chs_eta_bin3->Fill((eta_chs-jets->at(i).eta())/eta_chs,weight);
+        // cout<<"about to fill eta"<<endl;
+        ratio_puppi_eta_bin3->Fill((eta_chs-jets->at(i).eta())/jets->at(i).eta(),weight);
+        ratio_chs_puppi_pt_bin3->Fill((pt_chs/jets->at(i).pt()),weight);
+        ratio_chs_puppi_eta_bin3->Fill((eta_chs/jets->at(i).eta()),weight);
+        CHS_matched_N_Jets_LepVeto_3->Fill(CHS_matched_jets_tightlepveto_all,weight);
+        CHS_matched_N_Jets_Tight_3->Fill(CHS_matched_jets_tight_all,weight);
+        CHS_matched_N_Jets_NotTight_3->Fill(CHS_matched_jets_nottight_all,weight);
+
+
+        // cout<<"filled eta"<<endl;
+
+
+    }
+
+    CHS_matched_deltaRmin_CHS_Puppi->Fill(dRmin_CHS_Puppi,weight);
+  }
 
 
 } //Method
