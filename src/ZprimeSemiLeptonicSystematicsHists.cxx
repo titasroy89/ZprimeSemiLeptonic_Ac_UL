@@ -200,6 +200,7 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   // DeltaY_toppt_down         = book<TH1F>("DeltaY_toppt_down", "#DeltaY_{t#bar{t}} [GeV] toppt_down",            2, -2, 2); 
 
   //EFT variables
+  // DeltaY_reco_d1                    = book<TH1F>("DeltaY_reco_d1",   "#DeltaY_reco_d1_{t#bar{t}} ",                                     2, -2.5, 2.5);
   DeltaY_reco_d1_mu_reco_up         = book<TH1F>("DeltaY_reco_d1_mu_reco_up",   "#DeltaY_reco_d1_{t#bar{t}} mu_reco_up",                2, -2.5, 2.5);
   DeltaY_reco_d1_mu_reco_down       = book<TH1F>("DeltaY_reco_d1_mu_reco_down", "#DeltaY_reco_d1_{t#bar{t}} mu_reco_down",              2, -2.5, 2.5);
   DeltaY_reco_d1_pu_up              = book<TH1F>("DeltaY_reco_d1_pu_up",   "#DeltaY_reco_d1_{t#bar{t}} pu_up",                          2, -2.5, 2.5);
@@ -258,7 +259,7 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_reco_d1_tmistag_down       = book<TH1F>("DeltaY_reco_d1_tmistag_down", "#DeltaY_reco_d1_{t#bar{t}} [GeV] tmistag_down",        2, -2.5, 2.5);
 
 
-
+  // DeltaY_reco_d2                    = book<TH1F>("DeltaY_reco_d2",   "#DeltaY_reco_d2_{t#bar{t}} ",                                     2, -2.5, 2.5);
   DeltaY_reco_d2_mu_reco_up         = book<TH1F>("DeltaY_reco_d2_mu_reco_up",   "#DeltaY_reco_d2_{t#bar{t}} mu_reco_up",                2, -2.5, 2.5);
   DeltaY_reco_d2_mu_reco_down       = book<TH1F>("DeltaY_reco_d2_mu_reco_down", "#DeltaY_reco_d2_{t#bar{t}} mu_reco_down",              2, -2.5, 2.5);
   DeltaY_reco_d2_pu_up              = book<TH1F>("DeltaY_reco_d2_pu_up",   "#DeltaY_reco_d2_{t#bar{t}} pu_up",                          2, -2.5, 2.5);
@@ -318,7 +319,7 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
 
 
 
-
+  // Sigma_phi_1                    = book<TH1F>("Sigma_phi_1",   "#Sigma_phi_1_{t#bar{t}} ",                                     16, -3.2, 3.2);
   Sigma_phi_1_mu_reco_up         = book<TH1F>("Sigma_phi_1_mu_reco_up",   "#Sigma_phi_1_{t#bar{t}} mu_reco_up",                16, -3.2, 3.2);
   Sigma_phi_1_mu_reco_down       = book<TH1F>("Sigma_phi_1_mu_reco_down", "#Sigma_phi_1_{t#bar{t}} mu_reco_down",              16,-3.2,3.2);
   Sigma_phi_1_pu_up              = book<TH1F>("Sigma_phi_1_pu_up",   "#Sigma_phi_1_{t#bar{t}} pu_up",                          16,-3.2,3.2);
@@ -376,7 +377,7 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   Sigma_phi_1_tmistag_up         = book<TH1F>("Sigma_phi_1_tmistag_up", "#Sigma_phi_1_{t#bar{t}} [GeV] tmistag_up",            16,-3.2,3.2);
   Sigma_phi_1_tmistag_down       = book<TH1F>("Sigma_phi_1_tmistag_down", "#Sigma_phi_1_{t#bar{t}} [GeV] tmistag_down",        16,-3.2,3.2);
 
-
+  // Sigma_phi_2                    = book<TH1F>("Sigma_phi_2",   "#Sigma_phi_2_{t#bar{t}} ",                                      16, -3.2, 3.2);
   Sigma_phi_2_mu_reco_up         = book<TH1F>("Sigma_phi_2_mu_reco_up",   "# Sigma_phi_2_{t#bar{t}} mu_reco_up",                16, -3.2, 3.2);
   Sigma_phi_2_mu_reco_down       = book<TH1F>("Sigma_phi_2_mu_reco_down", "# Sigma_phi_2_{t#bar{t}} mu_reco_down",              16,-3.2,3.2);
   Sigma_phi_2_pu_up              = book<TH1F>("Sigma_phi_2_pu_up",   "# Sigma_phi_2_{t#bar{t}} pu_up",                          16,-3.2,3.2);
@@ -617,8 +618,8 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   vector<TH1F*> hists_sigma_1_down = {Sigma_phi_1_ele_reco_down, Sigma_phi_1_ele_id_down, Sigma_phi_1_ele_trigger_down, Sigma_phi_1_mu_reco_down, Sigma_phi_1_mu_iso_stat_down, Sigma_phi_1_mu_iso_syst_down, Sigma_phi_1_mu_id_stat_down, Sigma_phi_1_mu_id_syst_down, Sigma_phi_1_mu_trigger_stat_down, Sigma_phi_1_mu_trigger_syst_down, Sigma_phi_1_pu_down, Sigma_phi_1_prefiring_down};
   vector<TH1F*> hists_sigma_2_down = {Sigma_phi_2_ele_reco_down, Sigma_phi_2_ele_id_down, Sigma_phi_2_ele_trigger_down, Sigma_phi_2_mu_reco_down, Sigma_phi_2_mu_iso_stat_down, Sigma_phi_2_mu_iso_syst_down, Sigma_phi_2_mu_id_stat_down, Sigma_phi_2_mu_id_syst_down, Sigma_phi_2_mu_trigger_stat_down, Sigma_phi_2_mu_trigger_syst_down, Sigma_phi_2_pu_down, Sigma_phi_2_prefiring_down};
   
-  vector<TH2F*> hists_up_tt     = {DeltaY_ele_reco_up_tt, DeltaY_ele_id_up_tt, DeltaY_ele_trigger_up_tt, DeltaY_mu_reco_up_tt, DeltaY_mu_iso_stat_up_tt, DeltaY_mu_id_stat_up_tt, DeltaY_mu_trigger_stat_up_tt, DeltaY_mu_iso_syst_up_tt, DeltaY_mu_id_syst_up_tt, DeltaY_mu_trigger_syst_up_tt,  DeltaY_pu_up_tt, DeltaY_prefiring_up_tt};
-  vector<TH2F*> hists_down_tt   = {DeltaY_ele_reco_down_tt, DeltaY_ele_id_down_tt, DeltaY_ele_trigger_down_tt, DeltaY_mu_reco_down_tt, DeltaY_mu_iso_stat_down_tt, DeltaY_mu_id_stat_down_tt, DeltaY_mu_trigger_stat_down_tt, DeltaY_mu_iso_syst_down_tt, DeltaY_mu_id_syst_down_tt, DeltaY_mu_trigger_syst_down_tt, DeltaY_pu_down_tt, DeltaY_prefiring_down_tt};
+  vector<TH2F*> hists_up_tt  = {DeltaY_ele_reco_up_tt, DeltaY_ele_id_up_tt, DeltaY_ele_trigger_up_tt, DeltaY_mu_reco_up_tt, DeltaY_mu_iso_stat_up_tt, DeltaY_mu_id_stat_up_tt, DeltaY_mu_trigger_stat_up_tt, DeltaY_mu_iso_syst_up_tt, DeltaY_mu_id_syst_up_tt, DeltaY_mu_trigger_syst_up_tt,  DeltaY_pu_up_tt, DeltaY_prefiring_up_tt};
+  vector<TH2F*> hists_down_tt= {DeltaY_ele_reco_down_tt, DeltaY_ele_id_down_tt, DeltaY_ele_trigger_down_tt, DeltaY_mu_reco_down_tt, DeltaY_mu_iso_stat_down_tt, DeltaY_mu_id_stat_down_tt, DeltaY_mu_trigger_stat_down_tt, DeltaY_mu_iso_syst_down_tt, DeltaY_mu_id_syst_down_tt, DeltaY_mu_trigger_syst_down_tt, DeltaY_pu_down_tt, DeltaY_prefiring_down_tt};
 
 
   // scale variations need special treatment
@@ -632,7 +633,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   vector<TH2F*> hists_scale_tt = {DeltaY_murmuf_upup_tt, DeltaY_murmuf_upnone_tt, DeltaY_murmuf_noneup_tt, DeltaY_murmuf_nonedown_tt, DeltaY_murmuf_downnone_tt, DeltaY_murmuf_downdown_tt};
 
   // btag variations need special treatment
-  vector<float> syst_btag  = {btag_cferr1_up, btag_cferr1_down, btag_cferr2_up, btag_cferr2_down, btag_hf_up, btag_hf_down, btag_hfstats1_up, btag_hfstats1_down, btag_hfstats2_up, btag_hfstats2_down, btag_lf_up, btag_lf_down, btag_lfstats1_up, btag_lfstats1_down, btag_lfstats2_up, btag_lfstats2_down};
+  vector<float> syst_btag   = {btag_cferr1_up, btag_cferr1_down, btag_cferr2_up, btag_cferr2_down, btag_hf_up, btag_hf_down, btag_hfstats1_up, btag_hfstats1_down, btag_hfstats2_up, btag_hfstats2_down, btag_lf_up, btag_lf_down, btag_lfstats1_up, btag_lfstats1_down, btag_lfstats2_up, btag_lfstats2_down};
   vector<TH1F*> hists_btag  = {DeltaY_btag_cferr1_up, DeltaY_btag_cferr1_down, DeltaY_btag_cferr2_up, DeltaY_btag_cferr2_down, DeltaY_btag_hf_up, DeltaY_btag_hf_down, DeltaY_btag_hfstats1_up, DeltaY_btag_hfstats1_down, DeltaY_btag_hfstats2_up, DeltaY_btag_hfstats2_down, DeltaY_btag_lf_up, DeltaY_btag_lf_down, DeltaY_btag_lfstats1_up, DeltaY_btag_lfstats1_down, DeltaY_btag_lfstats2_up, DeltaY_btag_lfstats2_down};
   vector<TH1F*> hists_btag_dy_d1={DeltaY_reco_d1_btag_cferr1_up, DeltaY_reco_d1_btag_cferr1_down, DeltaY_reco_d1_btag_cferr2_up, DeltaY_reco_d1_btag_cferr2_down, DeltaY_reco_d1_btag_hf_up, DeltaY_reco_d1_btag_hf_down, DeltaY_reco_d1_btag_hfstats1_up, DeltaY_reco_d1_btag_hfstats1_down, DeltaY_reco_d1_btag_hfstats2_up, DeltaY_reco_d1_btag_hfstats2_down, DeltaY_reco_d1_btag_lf_up, DeltaY_reco_d1_btag_lf_down, DeltaY_reco_d1_btag_lfstats1_up, DeltaY_reco_d1_btag_lfstats1_down, DeltaY_reco_d1_btag_lfstats2_up, DeltaY_reco_d1_btag_lfstats2_down};
   vector<TH1F*> hists_btag_dy_d2={DeltaY_reco_d2_btag_cferr1_up, DeltaY_reco_d2_btag_cferr1_down, DeltaY_reco_d2_btag_cferr2_up, DeltaY_reco_d2_btag_cferr2_down, DeltaY_reco_d2_btag_hf_up, DeltaY_reco_d2_btag_hf_down, DeltaY_reco_d2_btag_hfstats1_up, DeltaY_reco_d2_btag_hfstats1_down, DeltaY_reco_d2_btag_hfstats2_up, DeltaY_reco_d2_btag_hfstats2_down, DeltaY_reco_d2_btag_lf_up, DeltaY_reco_d2_btag_lf_down, DeltaY_reco_d2_btag_lfstats1_up, DeltaY_reco_d2_btag_lfstats1_down, DeltaY_reco_d2_btag_lfstats2_up, DeltaY_reco_d2_btag_lfstats2_down};
@@ -683,11 +684,12 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   bool debug=false;
   // Zprime reco
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
+  ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
   if(is_zprime_reconstructed_chi2 && is_mc){
     if(is_tt){
       if (debug)cout << "check ttbar all sys for deltay RM" <<endl;
       const auto& genparticles = event.genparticles;
-      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
 
       GenParticle top, antitop;
       for(const GenParticle & gp : *genparticles){
@@ -863,25 +865,49 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
       if (debug)cout << "done with ttbar RM deltay" <<endl;
     }
-   
-    
     else{
-      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
       // float Mreco = BestZprimeCandidate->Zprime_v4().M();
-      float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
+      if (debug)cout << "in other MC cat"<<endl;
+      if (debug)cout <<"one event loop"<<endl;
+      float deltay=99.;
+      bool isLeptonPositive = false;
+      if (debug)cout << "ttbar all sys calc deltay " <<endl;
+      if(isMuon){
+        if (event.muons->at(0).charge() == 1){
+          isLeptonPositive = true;
+        } else {
+          isLeptonPositive = false;
+        }
+      }
+     
+      if(isElectron){
+        if (event.electrons->at(0).charge() == 1){
+          isLeptonPositive = true;
+        } else {
+          isLeptonPositive = false;
+        }
+      }
+      if (isLeptonPositive) {
+        deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
+      }
+      else {
+        deltay=(TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity())); 
+      }
       DeltaY->Fill(deltay, weight);
-
-      // up/down variations
+      if (debug)cout <<"fill nominal "<<endl;
+      
       for(unsigned int i=0; i<names.size(); i++){
+        if (debug)cout <<"filling : "<<names[i]<<endl;
         hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
         hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
-        
+      
       }
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
         hists_scale.at(i)->Fill(deltay, weight * syst_scale.at(i));
       }
-      // btag variations
+     
       for(unsigned int i=0; i<hists_btag.size(); i++){
         hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
       }
@@ -893,14 +919,18 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
         hists_tmistag.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
       }
-      
+      //isr fsr
       for(unsigned int i=0; i<hists_ps.size(); i++){
-      hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));
+        hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));
       }
-    }
+     
+     }//end loop for all MC but ttbar for Deltay
+    
+    
+    }//end loop for Deltay
     //all MC systematics for EFT
     if(is_zprime_reconstructed_chi2 && is_mc){
-      if (debug)cout << "check ttbar all sys for EFT reco variables" <<endl;
+      if (debug)cout << "check ttbar & all MC sys for EFT reco variables" <<endl;
       ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
       bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction();
       vector <Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);  
@@ -944,267 +974,287 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       TLorentzVector had_top_b(0, 0, 0, 0);
 
           // Resolved topology
-          if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
-            for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
-              float bscore = jets_hadronic_bscores.at(i);
-              if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
-                                                              BestZprimeCandidate->jets_hadronic().at(i).eta(), 
-                                                              BestZprimeCandidate->jets_hadronic().at(i).phi(), 
-                                                              BestZprimeCandidate->jets_hadronic().at(i).energy());
-            }
-          }
+      if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+        for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+          float bscore = jets_hadronic_bscores.at(i);
+          if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                          BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                          BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                          BestZprimeCandidate->jets_hadronic().at(i).energy());
+        }
+      }
           // Merged topology
-          if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
-            for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
-              float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
-              if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
-                                                              BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
-                                                              BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
-                                                              BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
-            }
-          }
+      if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+        for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+          float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+          if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                          BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                          BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                          BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+        }
+      }
 
         // Lepton 4-vector
-          TLorentzVector lep_top_lep(0, 0, 0, 0);
-          LorentzVector lep = BestZprimeCandidate->lepton().v4();
-          lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
-          //------------------------------------Define 4vectors of hadronic b-jet and lepton------------------------------------//
+      TLorentzVector lep_top_lep(0, 0, 0, 0);
+      LorentzVector lep = BestZprimeCandidate->lepton().v4();
+      lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+      //------------------------------------Define 4vectors of hadronic b-jet and lepton------------------------------------//
 
 
-          //-------------------------------- Begin boosting top quarks and their decay products --------------------------------//
-          // Define 4vectors of top quarks
-          TLorentzVector PosTop(0, 0, 0, 0);
-          TLorentzVector NegTop(0, 0, 0, 0);
+      //-------------------------------- Begin boosting top quarks and their decay products --------------------------------//
+      // Define 4vectors of top quarks
+      TLorentzVector PosTop(0, 0, 0, 0);
+      TLorentzVector NegTop(0, 0, 0, 0);
 
           // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
-          if(BestZprimeCandidate->lepton().charge() > 0){
-            // Define ttbar system
-            PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
-                                BestZprimeCandidate->top_leptonic_v4().eta(), 
-                                BestZprimeCandidate->top_leptonic_v4().phi(), 
-                                BestZprimeCandidate->top_leptonic_v4().energy());
-            NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
-                                BestZprimeCandidate->top_hadronic_v4().eta(), 
-                                BestZprimeCandidate->top_hadronic_v4().phi(), 
-                                BestZprimeCandidate->top_hadronic_v4().energy());
-          }
-          else if (BestZprimeCandidate->lepton().charge() < 0)
-          {
-          PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
-                                BestZprimeCandidate->top_hadronic_v4().eta(), 
-                                BestZprimeCandidate->top_hadronic_v4().phi(), 
-                                BestZprimeCandidate->top_hadronic_v4().energy());
-          NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
-                                BestZprimeCandidate->top_leptonic_v4().eta(), 
-                                BestZprimeCandidate->top_leptonic_v4().phi(), 
-                                BestZprimeCandidate->top_leptonic_v4().energy());
-          }
-          
-            TLorentzVector ttbar = PosTop + NegTop;
-            // Boost into ttbar CoM-Frame <<<-------//
-            lep_top_lep.Boost(-ttbar.BoostVector());
-            had_top_b.Boost(-ttbar.BoostVector());
-            PosTop.Boost(-ttbar.BoostVector());
-            NegTop.Boost(-ttbar.BoostVector());
+      if(BestZprimeCandidate->lepton().charge() > 0){
+        // Define ttbar system
+        PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                            BestZprimeCandidate->top_leptonic_v4().eta(), 
+                            BestZprimeCandidate->top_leptonic_v4().phi(), 
+                            BestZprimeCandidate->top_leptonic_v4().energy());
+        NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                            BestZprimeCandidate->top_hadronic_v4().eta(), 
+                            BestZprimeCandidate->top_hadronic_v4().phi(), 
+                            BestZprimeCandidate->top_hadronic_v4().energy());
+      }
+      else if (BestZprimeCandidate->lepton().charge() < 0){
+      PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                            BestZprimeCandidate->top_hadronic_v4().eta(), 
+                            BestZprimeCandidate->top_hadronic_v4().phi(), 
+                            BestZprimeCandidate->top_hadronic_v4().energy());
+      NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                            BestZprimeCandidate->top_leptonic_v4().eta(), 
+                            BestZprimeCandidate->top_leptonic_v4().phi(), 
+                            BestZprimeCandidate->top_leptonic_v4().energy());
+      }
+      
+      TLorentzVector ttbar = PosTop + NegTop;
+      // Boost into ttbar CoM-Frame <<<-------//
+      lep_top_lep.Boost(-ttbar.BoostVector());
+      had_top_b.Boost(-ttbar.BoostVector());
+      PosTop.Boost(-ttbar.BoostVector());
+      NegTop.Boost(-ttbar.BoostVector());
 
-            // Rotate vectors into Helicity Frame <<<------//
-            // Rotate about beamline
-            lep_top_lep.RotateZ(-1.*PosTop.Phi());
-            had_top_b.RotateZ(-1.*PosTop.Phi());
-            PosTop.RotateZ(-1.*PosTop.Phi());
-            NegTop.RotateZ(-1.*PosTop.Phi());
-            // Rotate about y-axis
-            lep_top_lep.RotateY(-1.*PosTop.Theta());
-            had_top_b.RotateY(-1.*PosTop.Theta());
-            PosTop.RotateY(-1.*PosTop.Theta());
-            NegTop.RotateY(-1.*PosTop.Theta());
+      // Rotate vectors into Helicity Frame <<<------//
+      // Rotate about beamline
+      lep_top_lep.RotateZ(-1.*PosTop.Phi());
+      had_top_b.RotateZ(-1.*PosTop.Phi());
+      PosTop.RotateZ(-1.*PosTop.Phi());
+      NegTop.RotateZ(-1.*PosTop.Phi());
+      // Rotate about y-axis
+      lep_top_lep.RotateY(-1.*PosTop.Theta());
+      had_top_b.RotateY(-1.*PosTop.Theta());
+      PosTop.RotateY(-1.*PosTop.Theta());
+      NegTop.RotateY(-1.*PosTop.Theta());
 
-            // Boost into ttbar Rest-Frame <<<--------//
-            lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
-            had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+      // Boost into ttbar Rest-Frame <<<--------//
+      if(BestZprimeCandidate->lepton().charge() > 0){
+        lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
+        had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+      
+      }
+      else if (BestZprimeCandidate->lepton().charge() < 0){
+        lep_top_lep.Boost(-NegTop.BoostVector()); // Negative charged lepton has Negative Top mother
+        had_top_b.Boost(-PosTop.BoostVector());   // Negative charged lepton means b-jet has Positive Top mother
+      }
 
           //-------------------------------- End boosting top quarks and their decay products --------------------------------//
       
           // Define angular variables as sum and difference of decay products' phi-coordinates
           // sphi and dphi = PosTopDecayProd_phi +- NegTopDecayProd_phi
-          float dphi=0.;
-          float sphi = lep_top_lep.Phi() + had_top_b.Phi();
-          if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
-            dphi = lep_top_lep.Phi() - had_top_b.Phi();
-          }
-          if(BestZprimeCandidate->lepton().charge() < 0)
-          {
-            dphi = had_top_b.Phi() - lep_top_lep.Phi();
-          }
-          if (debug)cout <<" about to fill syst histograms" <<endl;
-          if (debug)cout <<" how many sys: "<< names.size() <<endl;
-          if (debug)cout <<" nominal up size: "<< hists_up.size() <<endl;
-          if (debug)cout <<" sigma 1 up size: "<< hists_sigma_1_up.size() <<endl;
-          if (debug)cout <<" sigma 2 up size: "<< hists_sigma_2_up.size() <<endl;
-          if (debug)cout <<" dy 1 up size: "<< hists_dy_d1_up.size() <<endl;
-          if (debug)cout <<" dy 2 up size: "<< hists_dy_d2_up.size() <<endl;
-          if (debug)cout <<" nominal down size: "<< hists_down.size() <<endl;
+      float dphi=0.;
+      float sphi = lep_top_lep.Phi() + had_top_b.Phi();
+      if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+        dphi = lep_top_lep.Phi() - had_top_b.Phi();
+      }
+      if(BestZprimeCandidate->lepton().charge() < 0)
+      {
+        dphi = had_top_b.Phi() - lep_top_lep.Phi();
+      }
+      if (debug)cout <<" about to fill syst histograms" <<endl;
+      if (debug)cout <<" how many sys: "<< names.size() <<endl;
+      if (debug)cout <<" nominal up size: "<< hists_up.size() <<endl;
+      if (debug)cout <<" sigma 1 up size: "<< hists_sigma_1_up.size() <<endl;
+      if (debug)cout <<" sigma 2 up size: "<< hists_sigma_2_up.size() <<endl;
+      if (debug)cout <<" dy 1 up size: "<< hists_dy_d1_up.size() <<endl;
+      if (debug)cout <<" dy 2 up size: "<< hists_dy_d2_up.size() <<endl;
+      if (debug)cout <<" nominal down size: "<< hists_down.size() <<endl;
 
-          if (debug)cout <<" sigma 1 down size: "<< hists_sigma_1_down.size() <<endl;
-          if (debug)cout <<" sigma 2 down size: "<< hists_sigma_2_down.size() <<endl;
-          if (debug)cout <<" dy 1 down size: "<< hists_dy_d1_down.size() <<endl;
-          if (debug)cout <<" dy 2 down size: "<< hists_dy_d2_down.size() <<endl;
+      if (debug)cout <<" sigma 1 down size: "<< hists_sigma_1_down.size() <<endl;
+      if (debug)cout <<" sigma 2 down size: "<< hists_sigma_2_down.size() <<endl;
+      if (debug)cout <<" dy 1 down size: "<< hists_dy_d1_down.size() <<endl;
+      if (debug)cout <<" dy 2 down size: "<< hists_dy_d2_down.size() <<endl;
 
 
-            // Map back into original domain if necessary
-          if(sphi > TMath::Pi()) sphi = sphi - 2*TMath::Pi();
-          if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
-          if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
-          if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
-          float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
-          for(unsigned int i=0; i<names.size(); i++){
-          hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
-          hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
-          if (debug)cout <<" done with dy " <<endl;
-          if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_sigma_1_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
-              hists_sigma_1_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
-              }
-
-          if (debug)cout <<" done with sigma1" <<endl;    
-          if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-            hists_sigma_2_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
-            hists_sigma_2_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
-            }
-          if (debug)cout <<" done with sigma2" <<endl;  
-          if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-            hists_dy_d1_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
-            hists_dy_d1_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
-          }
-          if (debug)cout <<" done with d1" <<endl;  
-          if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-            hists_dy_d2_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
-            hists_dy_d2_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
-            }
-          if (debug)cout <<" done with d2" <<endl;  //}
-          }
+        // Map back into original domain if necessary
+      if(sphi > TMath::Pi()) sphi = sphi - 2*TMath::Pi();
+      if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
+      if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
+      if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
+      bool isLeptonPositive = false;
+      if (debug)cout << "ttbar all sys calc deltay " <<endl;
+      if(isMuon){
+        if (event.muons->at(0).charge() == 1){
+          isLeptonPositive = true;
+        } else {
+          isLeptonPositive = false;
+        }
+      }
+     
+      if(isElectron){
+        if (event.electrons->at(0).charge() == 1){
+          isLeptonPositive = true;
+        } else {
+          isLeptonPositive = false;
+        }
+      }
+      float deltay=99.;
+      if (isLeptonPositive) {
+        deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
+      }
+      else {
+        deltay=(TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity())); 
+      }
+      // float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
+      
+      
+      for(unsigned int i=0; i<names.size(); i++){
+        if (debug)cout <<" done with dy " <<endl;
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+            hists_sigma_1_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
+            hists_sigma_1_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
+        }
+        if (debug)cout <<" done with sigma1" <<endl;    
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_sigma_2_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
+          hists_sigma_2_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
+        }
+        if (debug)cout <<" done with sigma2" <<endl;  
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_dy_d1_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
+          hists_dy_d1_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
+        }
+        if (debug)cout <<" done with d1" <<endl;  
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_dy_d2_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
+          hists_dy_d2_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
+        }
+        if (debug)cout <<" done with d2" <<endl;  //}
+      }
           // scale variations
-          if (debug)cout <<"how many in scale? "<<hists_scale.size() <<endl;
-          if (debug)cout <<"sigma 1 "<<hists_scale_sigma_1.size() <<endl;
-          if (debug)cout <<"sigma 2 "<<hists_scale_sigma_2.size() <<endl;
-          if (debug)cout <<"dy 1 "<<hists_scale_dy_d1.size() <<endl;
-          if (debug)cout <<"dy 2 "<<hists_scale_dy_d2.size() <<endl;
-          for(unsigned int i=0; i<hists_scale.size(); i++){
-            hists_scale.at(i)->Fill(deltay, weight * syst_scale.at(i));
-            if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_scale_sigma_1.at(i)->Fill(sphi, weight * syst_scale.at(i));
-              }
-            if (debug)cout <<" done with s1" <<endl; 
-            if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-              hists_scale_sigma_2.at(i)->Fill(sphi, weight * syst_scale.at(i));
-              }
-            if (debug)cout <<" done with s2" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-              hists_scale_dy_d1.at(i)->Fill(deltay, weight * syst_scale.at(i));
-            }
-            if (debug)cout <<" done with d1" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-              hists_scale_dy_d2.at(i)->Fill(deltay, weight * syst_scale.at(i));
-            }
-            if (debug)cout <<" done with d2" <<endl; 
+      if (debug)cout <<"how many in scale? "<<hists_scale.size() <<endl;
+      if (debug)cout <<"sigma 1 "<<hists_scale_sigma_1.size() <<endl;
+      if (debug)cout <<"sigma 2 "<<hists_scale_sigma_2.size() <<endl;
+      if (debug)cout <<"dy 1 "<<hists_scale_dy_d1.size() <<endl;
+      if (debug)cout <<"dy 2 "<<hists_scale_dy_d2.size() <<endl;
+      for(unsigned int i=0; i<hists_scale.size(); i++){
+       
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+          hists_scale_sigma_1.at(i)->Fill(sphi, weight * syst_scale.at(i));
           }
-          if (debug)cout <<"how many in btag? "<<hists_btag.size() <<endl;
-          if (debug)cout <<"sigma btag 1 "<<hists_btag_sigma_1.size() <<endl;
-          if (debug)cout <<"sigma btag 2 "<<hists_btag_sigma_2.size() <<endl;
-          if (debug)cout <<"dy btag 1 "<<hists_btag_dy_d1.size() <<endl;
-          if (debug)cout <<"dy btag 2 "<<hists_btag_dy_d2.size() <<endl;
+        if (debug)cout <<" done with s1" <<endl; 
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_scale_sigma_2.at(i)->Fill(sphi, weight * syst_scale.at(i));
+          }
+        if (debug)cout <<" done with s2" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_scale_dy_d1.at(i)->Fill(deltay, weight * syst_scale.at(i));
+        }
+        if (debug)cout <<" done with d1" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_scale_dy_d2.at(i)->Fill(deltay, weight * syst_scale.at(i));
+        }
+        if (debug)cout <<" done with d2" <<endl; 
+      }
+      if (debug)cout <<"how many in btag? "<<hists_btag.size() <<endl;
+      if (debug)cout <<"sigma btag 1 "<<hists_btag_sigma_1.size() <<endl;
+      if (debug)cout <<"sigma btag 2 "<<hists_btag_sigma_2.size() <<endl;
+      if (debug)cout <<"dy btag 1 "<<hists_btag_dy_d1.size() <<endl;
+      if (debug)cout <<"dy btag 2 "<<hists_btag_dy_d2.size() <<endl;
           // btag variations
-          for(unsigned int i=0; i<hists_btag.size(); i++){
-            hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-            if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_btag_sigma_1.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
-              }
-            if (debug)cout <<" done with s1 btag " << i << endl; 
-            if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-              hists_btag_sigma_2.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
-              }
-            if (debug)cout <<" done with s2 btag " << i << endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-              hists_btag_dy_d1.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-            }
-            if (debug)cout <<" done with d1 btag " <<i <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-              hists_btag_dy_d2.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-            }
-            if (debug)cout <<" done with d2 btag " <<i << endl; 
-          }
+      for(unsigned int i=0; i<hists_btag.size(); i++){
+       
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+          hists_btag_sigma_1.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
+        }
+        if (debug)cout <<" done with s1 btag " << i << endl; 
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_btag_sigma_2.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
+        }
+        if (debug)cout <<" done with s2 btag " << i << endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_btag_dy_d1.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
+        }
+        if (debug)cout <<" done with d1 btag " <<i <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_btag_dy_d2.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
+        }
+        if (debug)cout <<" done with d2 btag " <<i << endl; 
+      }
           // ttag variations!
-          for(unsigned int i=0; i<hists_ttag.size(); i++){
-            hists_ttag.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
-            if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_ttag_sigma_1.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
-              }
-            if (debug)cout <<" done with s1 ttag" <<endl; 
-            if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-              hists_ttag_sigma_2.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
-              }
-            if (debug)cout <<" done with s2 ttag" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-              hists_ttag_dy_d1.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
-            }
-            if (debug)cout <<" done with d1 ttag" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-              hists_ttag_dy_d2.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
-            }
-            if (debug)cout <<" done with d2 ttag" <<endl; 
-
-
+      for(unsigned int i=0; i<hists_ttag.size(); i++){
+       
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+          hists_ttag_sigma_1.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
           }
+        if (debug)cout <<" done with s1 ttag" <<endl; 
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_ttag_sigma_2.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
+          }
+        if (debug)cout <<" done with s2 ttag" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_ttag_dy_d1.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
+        }
+        if (debug)cout <<" done with d1 ttag" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_ttag_dy_d2.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
+        }
+        if (debug)cout <<" done with d2 ttag" <<endl; 
+      }
           // tmistag variations
-          for(unsigned int i=0; i<hists_tmistag.size(); i++){
-            hists_tmistag.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
-            if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_tmistag_sigma_1.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
-              }
-            if (debug)cout <<" done with s1 mistag" <<endl; 
-            if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-              hists_tmistag_sigma_2.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
-              }
-            if (debug)cout <<" done with s2 mistag" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-              hists_tmistag_dy_d1.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
-            }
-            if (debug)cout <<" done with d1 mistag" <<endl; 
-            if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-              hists_tmistag_dy_d2.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
-            }
-            if (debug)cout <<" done with d2 mistag" <<endl; 
-
+      for(unsigned int i=0; i<hists_tmistag.size(); i++){
+        
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+          hists_tmistag_sigma_1.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
           }
-          
-          for(unsigned int i=0; i<hists_ps.size(); i++){
-          hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));
-          if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-              hists_ps_sigma_1.at(i)->Fill(sphi, weight * syst_ps.at(i));
-              }
-          if (debug)cout <<" done with s1 ps" <<endl;   
-          if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-            hists_ps_sigma_2.at(i)->Fill(sphi, weight * syst_ps.at(i));
-            }
-          if (debug)cout <<" done with s2 ps" <<endl;  
-          if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-            hists_ps_dy_d1.at(i)->Fill(deltay, weight * syst_ps.at(i));
+        if (debug)cout <<" done with s1 mistag" <<endl; 
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_tmistag_sigma_2.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
           }
-          if (debug)cout <<" done with d1 ps" <<endl;  
-          if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-            hists_ps_dy_d2.at(i)->Fill(deltay, weight * syst_ps.at(i));
-          }
-          if (debug)cout <<" done with d2 ps" <<endl;  
+        if (debug)cout <<" done with s2 mistag" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_tmistag_dy_d1.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
+        }
+        if (debug)cout <<" done with d1 mistag" <<endl; 
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_tmistag_dy_d2.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
+        }
+        if (debug)cout <<" done with d2 mistag" <<endl; 
+
+      }
+      
+      for(unsigned int i=0; i<hists_ps.size(); i++){
+        if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+            hists_ps_sigma_1.at(i)->Fill(sphi, weight * syst_ps.at(i));
+        }
+        if (debug)cout <<" done with s1 ps" <<endl;   
+        if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+          hists_ps_sigma_2.at(i)->Fill(sphi, weight * syst_ps.at(i));
+        }
+        if (debug)cout <<" done with s2 ps" <<endl;  
+        if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+          hists_ps_dy_d1.at(i)->Fill(deltay, weight * syst_ps.at(i));
+        }
+        if (debug)cout <<" done with d1 ps" <<endl;  
+        if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+          hists_ps_dy_d2.at(i)->Fill(deltay, weight * syst_ps.at(i));
+        }
+        if (debug)cout <<" done with d2 ps" <<endl;  
+     }
 
 
-
-          }
-
-
-    }//end of all MC systematics for EFT  
-
-
-
+    //}//end of all MC systematics for EFT  
   }
 
 } //Method
