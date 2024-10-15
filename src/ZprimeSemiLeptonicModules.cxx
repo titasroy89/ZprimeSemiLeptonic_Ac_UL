@@ -1522,38 +1522,51 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
 
     h_CHSjets = ctx.get_handle< std::vector<Jet> >("jetsAk4CHS");
     h_CHS_matched_ = ctx.declare_event_output<vector<Jet>>("CHS_matched");
+   
 
   }
 
   bool PuppiCHS_matching::process(uhh2::Event& event){
 
     vector<Jet> CHSjets = event.get(h_CHSjets);
+    
     std::vector<Jet> matched_jets;
     std::vector<Jet> matched_jets_PUPPI;
+    JetPFID CHS_matched_Tight  = JetPFID(JetPFID::WP_TIGHT_CHS);
 
     for(const Jet & jet : *event.jets){ // PUPPI jets
       double deltaR_min = 99;
+     
+      // if (CHSjets.at(0).pt()<50)continue;
 
+      // if (CHSjets.at(1).pt()<45)continue;
       for(const Jet & CHSjet : CHSjets){ // CHS jets
+        if (CHSjets.at(0).pt()<50)continue;
+        if(CHS_matched_Tight(CHSjet,event)){ 
+        // cout << "it passes tight ID" <<endl;
         double deltaR_CHS = deltaR(jet,CHSjet);
         if(deltaR_CHS<deltaR_min) deltaR_min = deltaR_CHS;
+        }
       } // end CHS loop
 
       if(deltaR_min>0.2) continue;
 
       for(const Jet & CHSjet : CHSjets){
-        if(deltaR(jet,CHSjet)!=deltaR_min) continue;
-        else{
-          matched_jets.emplace_back(CHSjet);
-          matched_jets_PUPPI.emplace_back(jet);
+        if(CHS_matched_Tight(CHSjet,event)){ 
+          if(deltaR(jet,CHSjet)!=deltaR_min) continue;
+          else{
+            matched_jets.emplace_back(CHSjet);
+            matched_jets_PUPPI.emplace_back(jet);
+          }
         }
       }
-
+    // }
     } // end PUPPI loop
     std::swap(matched_jets_PUPPI, *event.jets);
     event.set(h_CHS_matched_, matched_jets);
     if(event.jets->size()==0) return false;
     return true;
+    
   }
 
   ////

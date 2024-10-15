@@ -101,6 +101,10 @@ void ZprimeSemiLeptonicCHSMatchHists::init(){
   //deltaR
   CHS_matched_deltaRmin_CHS_Puppi  = book<TH1F>("CHS_matched_deltaRmin_CHS_Puppi", "#DeltaR_{min}(CHS jet, Puppi jet)", 120, 0., 3.0);
   diff_pt                       = book<TH1F>("diff_pt", "#Delta p_{T}(CHS jet, Puppi jet) GeV", 40, -200, 200.);
+  diff_pt_btag                  = book<TH1F>("diff_pt_btag", "#Delta p_{T}(CHS jet, Btagged Puppi jet) GeV", 80, -200, 200.);
+  diff_pt_btag_1                = book<TH1F>("diff_pt_btag_1", "#Delta p_{T}(CHS jet, Btagged Puppi jet) GeV", 80, -200, 200.);
+  diff_pt_btag_2                = book<TH1F>("diff_pt_btag_2", "#Delta p_{T}(CHS jet, Btagged Puppi jet) GeV", 80, -200, 200.);
+  diff_pt_btag_3                = book<TH1F>("diff_pt_btag_3", "#Delta p_{T}(CHS jet, Btagged Puppi jet) GeV", 80, -200, 200.);
   diff_eta                      = book<TH1F>("diff_eta", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
   ratio_chs_pt                  = book<TH1F>("ratio_chs_pt", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 800, -100, 100.);
   ratio_puppi_pt                = book<TH1F>("ratio_puppi_pt", "(CHS p_{T}-Puppi p_{T})/Puppi p_{T}", 800, -100, 100.);
@@ -108,8 +112,25 @@ void ZprimeSemiLeptonicCHSMatchHists::init(){
   ratio_puppi_eta               = book<TH1F>("ratio_puppi_eta", "(CHS #eta-Puppi #eta)/Puppi #eta", 100, -2.5, 2.5);
   ratio_chs_puppi_pt            = book<TH1F>("ratio_chs_puppi_pt", "CHS p_{T}/Puppi p_{T}", 800, -100, 100.);
   ratio_chs_puppi_eta           = book<TH1F>("ratio_puppi_eta", "CHS #eta/Puppi #eta", 100, -2.5, 2.5);
-
+  Puppi_bjet_pt                 = book<TH1F>("Puppi_bjet_pt", "Puppi bjet p_{T}^{jets} [GeV]", 150, 0, 1500);
+  CHS_bjet_pt                   = book<TH1F>("CHS_bjet_pt", "CHS bjet p_{T}^{jets} [GeV]", 150, 0, 1500);
+  diff_bjet_pt                  = book<TH1F>("diff_bjet_pt", "p_{T}(CHS jet- Puppi jet) GeV",  40, -200, 200.);
+  Puppi_bjet1_pt                = book<TH1F>("Puppi_bjet1_pt", "Puppi bjet p_{T}^{jet1} [GeV]", 150, 0, 1500);
+  CHS_bjet1_pt                  = book<TH1F>("CHS_bjet1_pt", "CHS bjet p_{T}^{jet1} [GeV]", 150, 0, 1500);
+  diff_bjet1_pt                 = book<TH1F>("diff_bjet1_pt", "p_{T}(CHS jet1- Puppi1 jet) GeV",  40, -200, 200.);
+  Puppi_bjet2_pt                = book<TH1F>("Puppi_bjet2_pt", "Puppi bjet p_{T}^{jet2} [GeV]", 150, 0, 1500);
+  CHS_bjet2_pt                  = book<TH1F>("CHS_bjet2_pt", "CHS bjet p_{T}^{jet2} [GeV]", 150, 0, 1500);
+  diff_bjet2_pt                 = book<TH1F>("diff_bjet2_pt", "p_{T}(CHS jet2- Puppi2 jet) GeV",  40, -200, 200.);
+ 
   
+  
+  
+  
+  
+  diff_bjet_pt_low              = book<TH1F>("diff_bjet_pt_low", "p_{T}(CHS jet- Puppi jet) GeV",  40, -200, 200.);
+  Puppi_bjet_pt_low             = book<TH1F>("Puppi_bjet_pt_low", "Puppi bjet p_{T}^{jets} [GeV]", 150, 0, 1500);
+  CHS_bjet_pt_low               = book<TH1F>("CHS_bjet_pt_low", "CHS bjet p_{T}^{jets} [GeV]", 150, 0, 1500);
+  ratio_diff_bjet_pt            = book<TH1F>("ratio_diff_bjet_pt", "CHS p_{T}-Puppi p_{T}/CHS p_{T}", 800, -100, 100.);
   diff_pt_bin1                  = book<TH1F>("diff_pt_bin1", "#Delta p_{T}(CHS jet, Puppi jet) GeV",  40, -200, 200.);
   diff_eta_bin1                 = book<TH1F>("diff_eta_bin1", "#Delta #eta(CHS jet, Puppi jet) GeV", 50, -2.5, 2.5);
   ratio_chs_pt_bin1             = book<TH1F>("ratio_chs_pt_bin1", "(CHS p_{T}-Puppi p_{T})/CHS p_{T}", 400, -100, 100.);
@@ -196,7 +217,11 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
 
   for (unsigned int i =0; i<jets->size(); i++) {
     if(Btag_loose(jets->at(i),event))  Nbjets_loose++;
-    if(Btag_medium(jets->at(i),event)) Nbjets_medium++;
+    if(Btag_medium(jets->at(i),event)){
+      Nbjets_medium++;
+      // Puppi_bjet_pt->Fill(jets->at(i).pt(),weight)
+
+    }
     if(Btag_tight(jets->at(i),event))  Nbjets_tight++;
   }
 
@@ -256,7 +281,10 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
 
   for (unsigned int i =0; i<AK4CHSjets_matched.size(); i++) {
     if(CHS_matched_Btag_loose(AK4CHSjets_matched.at(i),event))  CHS_matched_Nbjets_loose++;
-    if(CHS_matched_Btag_medium(AK4CHSjets_matched.at(i),event)) CHS_matched_Nbjets_medium++;
+    if(CHS_matched_Btag_medium(AK4CHSjets_matched.at(i),event)) {
+      CHS_matched_Nbjets_medium++;
+      // CHS_bjet_pt->Fill(AK4CHSjets_matched.at(i).pt(),weight)
+    }
     if(CHS_matched_Btag_tight(AK4CHSjets_matched.at(i),event))  CHS_matched_Nbjets_tight++;
   }
 
@@ -297,6 +325,60 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
     double dRmin_CHS_Puppi = 99999;
     double pt_chs=0;
     double eta_chs=0;
+    double pt_match_chs=0;
+    
+    
+    for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+      // if(CHS_matched_Btag_medium(AK4CHSjets_matched.at(i),event)){
+      double dR_btag=deltaR(AK4CHSjets_matched.at(j),jets->at(i));
+      double pt_match_btag=AK4CHSjets_matched.at(j).pt();
+    // double eta_match=AK4CHSjets_matched.at(j).eta();
+      if(dR_btag < dRmin_CHS_Puppi){
+        dRmin_CHS_Puppi=dR_btag;
+        pt_match_chs=pt_match_btag;
+      }
+    }
+    if (dRmin_CHS_Puppi>0.2)continue;
+    for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+      if(deltaR(AK4CHSjets_matched.at(k),jets->at(i))!=dRmin_CHS_Puppi) continue;
+      else{
+        if(CHS_matched_Btag_medium(AK4CHSjets_matched.at(k),event)){
+          CHS_bjet_pt->Fill(AK4CHSjets_matched.at(k).pt(),weight);
+          Puppi_bjet_pt->Fill(jets->at(i).pt(),weight);
+          diff_bjet_pt->Fill(AK4CHSjets_matched.at(k).pt()-jets->at(i).pt(),weight);
+          ratio_diff_bjet_pt->Fill((AK4CHSjets_matched.at(k).pt()-jets->at(i).pt())/AK4CHSjets_matched.at(k).pt(),weight);
+          if (k==0){
+            CHS_bjet1_pt->Fill(AK4CHSjets_matched.at(k).pt(),weight);
+            Puppi_bjet1_pt->Fill(jets->at(i).pt(),weight);
+            diff_bjet1_pt->Fill(AK4CHSjets_matched.at(k).pt()-jets->at(i).pt(),weight);
+          }
+          if(k==1){
+            CHS_bjet2_pt->Fill(AK4CHSjets_matched.at(k).pt(),weight);
+            Puppi_bjet2_pt->Fill(jets->at(i).pt(),weight);
+            diff_bjet2_pt->Fill(AK4CHSjets_matched.at(k).pt()-jets->at(i).pt(),weight);
+
+          }
+          if (AK4CHSjets_matched.at(k).pt()>30. && AK4CHSjets_matched.at(k).pt()<50.){
+            CHS_bjet_pt_low->Fill(AK4CHSjets_matched.at(k).pt(),weight);
+            Puppi_bjet_pt_low->Fill(jets->at(i).pt(),weight);
+            diff_bjet_pt_low->Fill(AK4CHSjets_matched.at(k).pt()-jets->at(i).pt(),weight);
+
+          }
+        
+        }
+     }
+
+   }
+
+
+        
+    diff_pt_btag->Fill(pt_match_chs-jets->at(i).pt(),weight);    
+  //}
+    // diff_pt_btag->Fill(pt_match_chs-jets->at(i).pt(),weight);
+  //}
+  
+
+
     if (jets->size()!=AK4CHSjets_matched.size()){
     cout << "Puppi size and CHS NOT eqaul"<<endl;
     }
@@ -314,6 +396,8 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
         if(CHS_matched_Tight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tight_all++;
         if(!CHS_matched_Tight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_nottight_all++;
         if(CHS_matched_LepVetoTight(AK4CHSjets_matched.at(i),event))  CHS_matched_jets_tightlepveto_all++;
+        // if(CHS_matched_Btag_medium(AK4CHSjets_matched.at(i),event)) & (Btag_medium(jets->at(i),event))
+
 
       }
     }
@@ -348,6 +432,7 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
         CHS_matched_N_Jets_LepVeto_1->Fill(CHS_matched_jets_tightlepveto_all,weight);
         CHS_matched_N_Jets_Tight_1->Fill(CHS_matched_jets_tight_all,weight);
         CHS_matched_N_Jets_NotTight_1->Fill(CHS_matched_jets_nottight_all,weight);
+        diff_pt_btag_1->Fill(pt_match_chs-jets->at(i).pt(),weight);
 
 
       }
@@ -363,6 +448,7 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
         CHS_matched_N_Jets_LepVeto_2->Fill(CHS_matched_jets_tightlepveto_all,weight);
         CHS_matched_N_Jets_Tight_2->Fill(CHS_matched_jets_tight_all,weight);
         CHS_matched_N_Jets_NotTight_2->Fill(CHS_matched_jets_nottight_all,weight);
+        diff_pt_btag_2->Fill(pt_match_chs-jets->at(i).pt(),weight);
 
 
     }
@@ -387,6 +473,7 @@ void ZprimeSemiLeptonicCHSMatchHists::fill(const Event & event){
         CHS_matched_N_Jets_LepVeto_3->Fill(CHS_matched_jets_tightlepveto_all,weight);
         CHS_matched_N_Jets_Tight_3->Fill(CHS_matched_jets_tight_all,weight);
         CHS_matched_N_Jets_NotTight_3->Fill(CHS_matched_jets_nottight_all,weight);
+        diff_pt_btag_3->Fill(pt_match_chs-jets->at(i).pt(),weight);
 
 
         // cout<<"filled eta"<<endl;

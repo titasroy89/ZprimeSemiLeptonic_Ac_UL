@@ -646,8 +646,10 @@ bool PuppiCHS_BTagging::passes(const Event & event){
     for(const Jet & CHSjet : CHSjets){
       if(deltaR(jet,CHSjet)!=deltaR_min) continue;
       else{
-        if(sel_1btag->passes(event)) {
-          btagged = true;
+        if(sel_1btag->passes(event) ) {
+          if((CHSjets.at(0).pt()>50)){
+            btagged = true;
+          }
         }
       }
     }
