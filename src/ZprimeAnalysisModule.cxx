@@ -76,7 +76,7 @@ public:
 protected:
 
   bool debug;
-
+  std::unique_ptr<CommonModules> common;
   // Cleaners
   std::unique_ptr<MuonCleaner> muon_cleaner_low,muon_cleaner_high;
   std::unique_ptr<ElectronCleaner> electron_cleaner_low,electron_cleaner_high;
@@ -232,6 +232,16 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   double muon_pt_low(30.);
   double electron_pt_high(120.);
   double muon_pt_high(55.);
+  ElectronId eleID_veto = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp90);
+  MuonId     muID_veto  = MuonID(Muon::CutBasedIdTight);
+  const MuonId muonID_veto(AndId<Muon>(PtEtaCut(15., 2.4), muID_veto));
+  const ElectronId electronID_veto(AndId<Electron>(PtEtaSCCut(15., 2.5), eleID_veto));
+  //lower lepton veto pt to 15 GeV
+  common.reset(new CommonModules());
+  common->set_muon_id(muonID_veto);
+  common->set_electron_id(electronID_veto);
+
+
   // const JetPFID jetID_CHS(JetPFID::WP_TIGHT_CHS);
   const MuonId muonID_low(AndId<Muon>(PtEtaCut(muon_pt_low, 2.4), muID_low));
   // const MuonId muonID_mid(AndId<Muon>(PtEtaCut(muon_pt_high, 2.4), muID_mid));
@@ -385,8 +395,15 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   TwoDCut_selection.reset(new TwoDCut(TwoD_dr, TwoD_ptrel));
   TwoDCut_selection_low1.reset(new TwoDCut(0.3, 10.));
   TwoDCut_selection_low2.reset(new TwoDCut(0.3, 15.));
+  // if(isUL16preVFP || isUL16postVFP){ 
+  //   Jet1_selection.reset(new NJetSelection(1, -1, JetId(PtEtaCut(jet1_pt, 2.4))));
+  //   Jet2_selection.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.4))));
+  // }
+  // else{
   Jet1_selection.reset(new NJetSelection(1, -1, JetId(PtEtaCut(jet1_pt, 2.5))));
   Jet2_selection.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
+
+  // }
   met_sel.reset(new METCut  (MET_cut   , uhh2::infinity));
   htlep_sel.reset(new HTlepCut(HT_lep_cut, uhh2::infinity));
 
