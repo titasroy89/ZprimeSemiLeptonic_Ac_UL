@@ -47,6 +47,8 @@
 			<Item Name="genMETName"              Value="slimmedMETs_GenMET"/>
 			<Item Name="additionalBranches"      Value="jetsAk4CHS hotvrGen" />
 
+			<Item Name="EFTWeightsVector" Value="m_systweights"/>
+
 			<Item Name="lumi_file"              Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL17/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON_normtag.root"/>
 			<Item Name="lumihists_lumi_per_bin" Value="500.0"/>
 
