@@ -21,5 +21,5 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python list_branches.py <ROOT_file1> [<ROOT_file2> ...]")
         sys.exit(1)
-    for root_file in sys.argv[1:]:
-        list_branches(root_file)
+    # for root_file in sys.argv[1:]:
+        list_branches("Ntuple_1211.root")
