@@ -15,8 +15,8 @@ declare -a POIS=(
 export WORKSPACE=Ac_UL18_0_500.root
 export VERBOSITY=0
 
-export SetParameters="rgx{r.+}=1,Ac=0.7"
-export SetParametersExplicit="r_neg=1,Ac=0.7"
+export SetParameters="rgx{r.+}=1,Ac=0.56"
+export SetParametersExplicit="r_neg=1,Ac=0.56"
 export SetParameterRanges="rgx{r.+}=0.5,2:Ac=-5,5"
 export redefineSignalPOIs="Ac,r_neg"
 
@@ -56,7 +56,7 @@ echo "STAT ONLY UNCERTAINTY (ALL NUISANCES FROZEN) - performs another MultiDimFi
 echo
 echo
 combine -M MultiDimFit --algo singles -d $WORKSPACE -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges $SetParameterRanges --setParameters $SetParameters --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125 --saveWorkspace -n _paramFit_Test_allConstrainedNuisancesFrozen --freezeParameters allConstrainedNuisances $ASIMOV
-
+combine -M MultiDimFit --algo singles -d $WORKSPACE -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges $SetParameterRanges --setParameters $SetParameters --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125 --saveWorkspace -n _paramFit_Test_allStatsFrozen --freezeParameters prop_bin* $ASIMOV
 
 
 echo

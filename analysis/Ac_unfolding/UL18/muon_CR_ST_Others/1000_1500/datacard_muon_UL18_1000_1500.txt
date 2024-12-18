@@ -20,7 +20,7 @@ lumi_uncorr_18      lnN     1.015      1.015      1.015      1.015      1.015   
 lumi_uncorr_17      lnN     -          -          -          -          -          -          -          -          -          -          -          -
 lumi_uncorr_16      lnN     -          -          -          -          -          -          -          -          -          -          -          -
 TTbar_norm          lnN     1.05       1.05       -          -          1.05       1.05       -          -          1.05       1.05       -          -
-ST_norm             lnN     -          -          1.10       -          -          -          1.10       -          -          -          1.10       -
+ST_norm             lnN     -          -          1.2       -          -          -          1.2       -          -          -          1.2       -
 Others_norm         lnN     -          -          -          1.20       -          -          -          1.20       -          -          -          1.20
 pu                  shape   1          1          1          1          1          1          1          1          1          1          1          1
 prefiringWeight     shape   1          1          1          1          1          1          1          1          1          1          1          1

@@ -15,11 +15,11 @@ def extract_ac_values(file_path):
     return ac_values
 
 json_files = {
-    "[0,500]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/newmatching/all_years/masses/0_500/output_combine/impacts.json",
-    "[500,750]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/newmatching/all_years/masses/500_750/output_combine/impacts.json",
-    "[750,1000]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/newmatching/all_years/masses/750_1000/output_combine/output_combine/impacts.json",
-    "[1000,1500]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/newmatching/all_years/masses/1000_1500/output_combine/impacts.json",
-    "[1500,Inf]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/newmatching/all_years/masses/1500Inf/output_combine/impacts.json"
+    "[0,500]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/Ac_unfolding/UL18/all/0_500/output_combine/impacts.json",
+    "[500,750]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/Ac_unfolding/UL18/all/500_750/output_combine/impacts.json",
+    "[750,1000]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/Ac_unfolding/UL18/all/750_1000/output_combine/impacts.json",
+    "[1000,1500]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/Ac_unfolding/UL18/all/1000_1500/output_combine/impacts.json",
+    "[1500,Inf]": "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/analysis/Ac_unfolding/UL18/all/1500Inf/output_combine/impacts.json"
 }
 
 sm_ac_values = {

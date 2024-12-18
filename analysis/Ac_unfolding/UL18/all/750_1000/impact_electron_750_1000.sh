@@ -15,8 +15,8 @@ declare -a POIS=(
 export WORKSPACE=Ac_UL18_750_1000.root
 export VERBOSITY=0
 
-export SetParameters="rgx{r.+}=1,Ac=0.7"
-export SetParametersExplicit="r_neg=1,Ac=0.7"
+export SetParameters="rgx{r.+}=1,Ac=0.79"
+export SetParametersExplicit="r_neg=1,Ac=0.79"
 export SetParameterRanges="rgx{r.+}=0.5,2:Ac=-5,5"
 export redefineSignalPOIs="Ac,r_neg"
 
@@ -79,3 +79,17 @@ echo
 
 mkdir output_combine
 mv higgs* impacts.json Ac_UL18_750_1000.root combine_logger.out output_combine
+
+# echo
+# echo
+# echo "STAT ONLY UNCERTAINTY (ALL NUISANCES FROZEN) - performs another MultiDimFit, but this time with all constrained nuisance parameters frozen (--freezeParameters allConstrainedNuisances). This can provide insight into how the fit behaves when the nuisances are not allowed to float."
+# echo
+# echo
+# combine -M MultiDimFit --algo singles -d $WORKSPACE -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges $SetParameterRanges --setParameters $SetParameters --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125 --saveWorkspace -n _paramFit_Test_allConstrainedNuisancesFrozen --freezeParameters allConstrainedNuisances $ASIMOV
+# echo
+# echo
+# echo "SYST ONLY UNCERTAINTY (ALL STATS FROZEN)"
+# echo
+# echo
+
+# combine -M MultiDimFit --algo singles -d $WORKSPACE -v $VERBOSITY --redefineSignalPOIs $redefineSignalPOIs --setParameterRanges $SetParameterRanges --setParameters $SetParameters --robustFit 1 --cminDefaultMinimizerStrategy 0 -m 125 --saveWorkspace -n _paramFit_Test_allStatsFrozen --freezeParameters prop_bin* $ASIMOV

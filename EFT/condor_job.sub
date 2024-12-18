@@ -1,0 +1,17 @@
+# condor_job.sub
+Universe              = vanilla
+Executable            = condor.sh
+output                = logs/$(Cluster)_$(Process).out
+error                 = logs/$(Cluster)_$(Process).err
+log                   = logs/$(Cluster)_$(Process).log
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files  = invariantmass.py
+transfer_output_files = mttbar_$(Process).png,histograms_$(Process).root
+
+# Define a Queue for each ROOT file
+# Pass only the ROOT file name and Process ID as arguments
+arguments             = Ntuple_1211.root $(Process)
+Queue
+arguments             = Ntuple_1595.root $(Process)
+Queue

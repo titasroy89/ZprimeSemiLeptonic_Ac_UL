@@ -45,7 +45,7 @@ jer_UL16            shape   -          -          -          -          -       
 jer_UL17            shape   -          -          -          -          -          -          -          -          -          -          -          -
 jer_UL18            shape   1          1          -          -          1          1          -          -          1          1          -          -
 jec                 shape   1          1          -          -          1          1          -          -          1          1          -          -
-hdamp               shape   1          1          1          -          1          1          1          -          1          1          1          -
+#hdamp               shape   1          1          -          -          1          1          -          -          1          1          -          -
 btagCferr1          shape   1          1          1          1          1          1          1          1          1          1          1          1
 btagCferr2          shape   1          1          1          1          1          1          1          1          1          1          1          1
 btagHf              shape   1          1          1          1          1          1          1          1          1          1          1          1

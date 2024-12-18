@@ -1,0 +1,9 @@
+<library file="plugins/LHEMttbarAnalyzer.cc">
+  <use name="FWCore/Framework"/>
+  <use name="FWCore/ParameterSet"/>
+  <use name="DataFormats/HepMCCandidate"/>
+  <use name="SimDataFormats/GeneratorProducts"/>
+  <use name="CommonTools/UtilAlgos"/>
+  <use name="PhysicsTools/Utilities"/>
+  <use name="ROOT::Core"/>
+</library>

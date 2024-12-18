@@ -33,7 +33,6 @@ systematic_name_mapping_electron = {
     "eleID", 
     "eleTrigger",
     "eleReco",
-    "electronIso", 
     "btagCferr1", 
     "btagCferr2", 
     "btagHf",  
@@ -108,10 +107,10 @@ systematic_name_mapping_tt_electron = {
 
 samples_tt = {"TTbar_1", "TTbar_2"}
 # samples = {"ST", "Others"}
-samples = {"Others"}
+samples = {"ST", "Others"}
 
 input_directory = "../combine_input/individual_files"
-output_directory = "output_plots_backgroundAll"
+output_directory = "output_plots_Others_ST"
 
 if not os.path.exists(output_directory):
     os.makedirs(output_directory)
