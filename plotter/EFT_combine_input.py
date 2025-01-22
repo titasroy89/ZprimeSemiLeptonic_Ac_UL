@@ -198,18 +198,18 @@ systematic_name_mapping = {
     "btag_lfstats2": "btagLfstats2",
     "ttag_corr": "ttagCorr",
     "ttag_uncorr": "ttagUncorr",
-    "murmuf_upup": "murmuf_upup",
-    "murmuf_upnone":"murmuf_upnone",
-    "murmuf_noneup":"murmuf_noneup",
-    "murmuf_nonedown":"murmuf_nonedown",
-    "murmuf_downnone": "murmuf_downnone",
-    "murmuf_downdown":"murmuf_downdown",
+    # "murmuf_upup": "murmuf_upup",
+    # "murmuf_upnone":"murmuf_upnone",
+    # "murmuf_noneup":"murmuf_noneup",
+    # "murmuf_nonedown":"murmuf_nonedown",
+    # "murmuf_downnone": "murmuf_downnone",
+    # "murmuf_downdown":"murmuf_downdown",
     # "tmistag": "tmistag"
 }
 
-for i in range(1,101):
-    print("updating: ",i)
-    systematic_name_mapping.update({"PDF_%i"%(i):"PDF_%i"%(i),})
+# for i in range(1,101):
+#     print("updating: ",i)
+#     systematic_name_mapping.update({"PDF_%i"%(i):"PDF_%i"%(i),})
 
 
 
@@ -252,11 +252,11 @@ for cat in categories:
     legendR.SetBorderSize(0)
     legendR.SetFillColor(0)
     samples=["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]
-    # print("is systematic histo defined here? : ", hist_sys_comb['0_500_SR']['DYJets']['prefiring']["Up"])
-   
-    for histo in histograms:
+    for sample in ["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]:
+        print sample
+        for histo in histograms:
         # print("at histo loop: ",hist_sys_comb['0_500_SR']['DYJets']['prefiring']["Up"])
-        for sample in ["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]:
+        # for sample in ["DATA","DYJets", "Diboson","QCD", "WJets", "ST","TTbar"]:
             if sample=="DATA":
                 file[sample]=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
             else:
@@ -266,6 +266,7 @@ for cat in categories:
             histo_[sample]=file[sample].Get(temp_hist)
             if sample!="DATA":
                 for sys in systematic_name_mapping:
+                    # print sys, sample, cat
                     if "PDF" in sys :
                         sys_hist_up="DeltaY_reco_PDFVariations_%s/%s_%s"%(cat,histo,sys)
                         sys_hist_down="DeltaY_reco_PDFVariations_%s/%s_%s"%(cat,histo,sys)
@@ -330,145 +331,146 @@ for cat in categories:
             hist_combined[cat][sample].SetFillColor(stackList_orig[sample][0])
             hist_combined[cat][sample].SetLineColor(stackList_orig[sample][0])
         if sample=="TTbar":
+            print("writing ttbar")
             legendR.AddEntry(hist_combined[cat][sample],"t#bar{t}",'f')
-        if sample=="WJets":
-            legendR.AddEntry(hist_combined[cat][sample],"W+jets",'f')
-            hist_combined[cat][sample].Add(hist_combined[cat]["QCD"])
-            hist_combined[cat][sample].Add(hist_combined[cat]["Diboson"])
-            hist_combined[cat][sample].Add(hist_combined[cat]["DYJets"])
-            # for sys in systematic_name_mapping:
-            #     hist_sys_comb[cat][sample][sys]["Up"].Add(hist_sys_comb[cat]["QCD"][sys]["Up"])
-            #     hist_sys_comb[cat][sample][sys]["Up"].Add(hist_sys_comb[cat]["Diboson"][sys]["Up"])
-            #     hist_sys_comb[cat][sample][sys]["Up"].Add(hist_sys_comb[cat]["DYJets"][sys]["Up"])
-            #     hist_sys_comb[cat][sample][sys]["Down"].Add(hist_sys_comb[cat]["QCD"][sys]["Down"])
-            #     hist_sys_comb[cat][sample][sys]["Down"].Add(hist_sys_comb[cat]["Diboson"][sys]["Down"])
-            #     hist_sys_comb[cat][sample][sys]["Down"].Add(hist_sys_comb[cat]["DYJets"][sys]["Down"])
-
-
-        if sample=="ST":
-            legendR.AddEntry(hist_combined[cat][sample]["nominal"],"ST",'f')
-            # hist_combined[cat][sample].Write(sample)
-        if sample!="DATA" or sample!="DYJets"or sample!="QCD"or sample!="Diboson":	
             stack.Add(hist_combined[cat][sample])
-hist_combined[cat]["DATA"].SetMarkerStyle(20)
-hist_combined[cat]["DATA"].SetMarkerColor(kBlack)
-hist_combined[cat]["DATA"].SetMarkerSize(0.8)
-hist_combined[cat]["DATA"].SetLineColor(kBlack)
-hist_combined[cat]["DATA"].SetYTitle("Events")     
-hist_combined[cat]["DATA"].Draw("pe,x0")
-errorban=stack.GetStack().Last().Clone("errorban")
-errorban.Sumw2()
-errorban.SetLineColor(kGray+2)
-errorban.SetFillColor(kGray+2)
-errorban.SetFillStyle(3245)
-errorban.SetMarkerSize(0)
-errorban.Draw("E2,SAME")
-legendR.AddEntry(errorban,"MC tot. unc.",'f')
-oneLine = TF1("oneline","1",-9e9,9e9)
-oneLine.SetLineColor(kBlack)
-oneLine.SetLineWidth(1)
-oneLine.SetLineStyle(2)	
-minVal = max(stack.GetStack()[0].GetMinimum(),1)
-log=0
-maxVal =stack.GetMaximum()
-minVal = max(stack.GetStack()[0].GetMinimum(),1)
-if log:
-
-    stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
-else:
+        if sample=="ST":
+            legendR.AddEntry(hist_combined[cat][sample],"ST",'f')
+            stack.Add(hist_combined[cat][sample])
+        if sample=="WJets":
+            print("writing wjets")
+            legendR.AddEntry(hist_combined[cat][sample],"W+jets",'f')
+        total_mc=hist_combined[cat]["TTbar"].GetBinContent(1)+hist_combined[cat]["ST"].GetBinContent(1)
+        print("total MC: ",total_mc)
     
-    stack.SetMaximum(1.5*maxVal)
-stack.Draw("HIST")
-stack.GetXaxis().SetLabelSize(0)
-stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
-stack.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(1.-padRatio+padOverlap))
-stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
-stack.GetYaxis().SetMaxDigits(5)
-stack.GetYaxis().SetTitle("Events")
-stack.SetMinimum(minVal)
-errorband=stack.GetStack().Last().Clone("error")
-errorband.Sumw2()
-errorband.SetLineColor(kBlack)
-errorband.SetFillColor(kBlack)
-errorband.SetFillStyle(3245)
-errorband.SetMarkerSize(0)
-errorband.SetLineColor(0)
-pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
-pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
-pad1.SetLeftMargin( L/W )
-pad1.SetRightMargin( R/W )
-pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
-pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
-pad2.SetLeftMargin( L/W )
-pad2.SetRightMargin( R/W )
-pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
-pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
-pad1.SetFillColor(0)
-pad1.SetBorderMode(0)
-pad1.SetFrameFillStyle(0)
-pad1.SetFrameBorderMode(0)
-pad1.SetTickx(1)
-pad1.SetTicky(1)
-pad2.SetFillColor(0)
-pad2.SetFillStyle(4000)
-pad2.SetBorderMode(0)
-pad2.SetFrameFillStyle(0)
-pad2.SetFrameBorderMode(0)
-pad2.SetTickx(1)
-pad2.SetTicky(1)
-canvasRatio.cd()
-canvasRatio.ResetDrawn()
-canvasRatio.Draw()
-canvasRatio.cd()
-pad1.Draw()
-pad2.Draw()
-pad1.cd()
-pad1.SetLogy(log)
-stack.Draw("HIST")
-hist_combined[cat]["DATA"].Draw("E,X0,SAME")
-errorban.Draw("E2,SAME")
-legendR.AddEntry(hist_combined[cat]["DATA"], "Data", 'pe')
-ratio = hist_combined[cat]["DATA"].Clone("temp")
-temp = stack.GetStack().Last().Clone("temp")
-for i_bin in range(1,temp.GetNbinsX()+1):
-        temp.SetBinError(i_bin,0.)
-ratio = hist_combined[cat]["DATA"].Clone("temp")
-ratio.Divide(temp)
-# print("ratio: ", ratio.GetBinContent(1), ratio.GetBinContent(2))
-ratio.GetXaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
-ratio.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
-ratio.GetXaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
-ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
-ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
-ratio.GetYaxis().SetRangeUser(0.2,1.8)
-ratio.GetYaxis().SetNdivisions(504)
-ratio.GetXaxis().SetTitle("EFT bins")
-ratio.GetYaxis().SetTitle("Data/MC")
-CMS_lumi.CMS_lumi(pad1, period, 11)
-legendR.SetTextSize(0.05)
-legendR.Draw("SAME")
-pad2.cd()
-ratio.SetMarkerStyle(hist_combined[cat]["DATA"].GetMarkerStyle())
-ratio.SetMarkerSize(hist_combined[cat]["DATA"].GetMarkerSize())
-ratio.SetLineColor(kBlack)
-ratio.SetMarkerColor(kBlack)
-ratio.SetLineWidth(hist_combined[cat]["DATA"].GetLineWidth())
-ratio.Draw('e,x0')
-errorband.Divide(temp)
-for i in range(1, errorband.GetNbinsX() + 1):
-    if(errorban.GetBinContent(i) == 0):
-        errorband.SetBinError(i,0)
+    hist_combined[cat]["WJets"].Add(hist_combined[cat]["Diboson"])
+    hist_combined[cat]["WJets"].Add(hist_combined[cat]["DYJets"])
+    stack.Add(hist_combined[cat]["WJets"])
+    hist_combined[cat]["DATA"].SetMarkerStyle(20)
+    hist_combined[cat]["DATA"].SetMarkerColor(kBlack)
+    hist_combined[cat]["DATA"].SetMarkerSize(0.8)
+    hist_combined[cat]["DATA"].SetLineColor(kBlack)
+    hist_combined[cat]["DATA"].SetYTitle("Events")     
+    hist_combined[cat]["DATA"].Draw("pe,x0")
+    data_total=hist_combined[cat]["DATA"].GetBinContent(1)
+    print("DATA: ",hist_combined[cat]["DATA"].GetBinContent(1) )
+    print(cat)
+    print("DATA/MC ratio: ",total_mc/data_total)
+    errorban=stack.GetStack().Last().Clone("errorban")
+    errorban.Sumw2()
+    errorban.SetLineColor(kGray+2)
+    errorban.SetFillColor(kGray+2)
+    errorban.SetFillStyle(3245)
+    errorban.SetMarkerSize(0)
+    errorban.Draw("E2,SAME")
+    legendR.AddEntry(errorban,"MC tot. unc.",'f')
+    oneLine = TF1("oneline","1",-9e9,9e9)
+    oneLine.SetLineColor(kBlack)
+    oneLine.SetLineWidth(1)
+    oneLine.SetLineStyle(2)	
+    minVal = max(stack.GetStack()[0].GetMinimum(),1)
+    log=1
+    maxVal =stack.GetMaximum()
+    minVal = max(stack.GetStack()[0].GetMinimum(),1)
+    if log:
+
+        stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
     else:
-        errorband.SetBinError(i, errorban.GetBinError(i)/errorban.GetBinContent(i))
-errorband.Draw('e2,same')
-oneLine.Draw("same")
-canvasRatio.Update()
-canvasRatio.RedrawAxis()
-if log:
-    canvasRatio.SaveAs("%s/EFT_%s_log.pdf"%(path,cat))
-else:
-    canvasRatio.SaveAs("%s/EFT_%s_linear.pdf"%(path,cat))
-canvasRatio.Clear()
+        
+        stack.SetMaximum(1.5*maxVal)
+    stack.Draw("HIST,SAME")
+    stack.GetXaxis().SetLabelSize(0)
+    stack.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(1.-padRatio+padOverlap))
+    stack.GetYaxis().SetMaxDigits(5)
+    stack.GetYaxis().SetTitle("Events")
+    stack.SetMinimum(minVal)
+    errorband=stack.GetStack().Last().Clone("error")
+    errorband.Sumw2()
+    errorband.SetLineColor(kBlack)
+    errorband.SetFillColor(kBlack)
+    errorband.SetFillStyle(3245)
+    errorband.SetMarkerSize(0)
+    errorband.SetLineColor(0)
+    pad1 = TPad("zxc_p1","zxc_p1",0,padRatio-padOverlap,1,1)
+    pad2 = TPad("qwe_p2","qwe_p2",0,0,1,padRatio+padOverlap)
+    pad1.SetLeftMargin( L/W )
+    pad1.SetRightMargin( R/W )
+    pad1.SetTopMargin( T/H/(1-padRatio+padOverlap) )
+    pad1.SetBottomMargin( (padOverlap+padGap)/(1-padRatio+padOverlap) )
+    pad2.SetLeftMargin( L/W )
+    pad2.SetRightMargin( R/W )
+    pad2.SetTopMargin( (padOverlap)/(padRatio+padOverlap) )
+    pad2.SetBottomMargin( B/H/(padRatio+padOverlap) )
+    pad1.SetFillColor(0)
+    pad1.SetBorderMode(0)
+    pad1.SetFrameFillStyle(0)
+    pad1.SetFrameBorderMode(0)
+    pad1.SetTickx(1)
+    pad1.SetTicky(1)
+    pad2.SetFillColor(0)
+    pad2.SetFillStyle(4000)
+    pad2.SetBorderMode(0)
+    pad2.SetFrameFillStyle(0)
+    pad2.SetFrameBorderMode(0)
+    pad2.SetTickx(1)
+    pad2.SetTicky(1)
+    canvasRatio.cd()
+    canvasRatio.ResetDrawn()
+    canvasRatio.Draw()
+    canvasRatio.cd()
+    pad1.Draw()
+    pad2.Draw()
+    pad1.cd()
+    pad1.SetLogy(log)
+    stack.Draw("HIST")
+    hist_combined[cat]["DATA"].Draw("E,X0,SAME")
+    errorban.Draw("E2,SAME")
+    legendR.AddEntry(hist_combined[cat]["DATA"], "Data", 'pe')
+    ratio = hist_combined[cat]["DATA"].Clone("ratio")
+    temp = stack.GetStack().Last().Clone("temp")
+    for i_bin in range(1,temp.GetNbinsX()+1):
+            temp.SetBinError(i_bin,0.)
+    # ratio = hist_combined[cat]["DATA"].Clone("temp")
+    ratio.Divide(temp)
+    print("DATA/MC ratio: ",total_mc/data_total)
+    print("ratio: ", ratio.GetBinContent(1))
+    ratio.GetXaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetLabelSize(gStyle.GetLabelSize()/(padRatio+padOverlap))
+    ratio.GetXaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetTitleSize(gStyle.GetTitleSize()/(padRatio+padOverlap))
+    ratio.GetYaxis().SetTitleOffset(gStyle.GetTitleYOffset()*(padRatio+padOverlap-padGap))
+    ratio.GetYaxis().SetRangeUser(0.2,1.8)
+    ratio.GetYaxis().SetNdivisions(504)
+    ratio.GetXaxis().SetTitle("EFT bins")
+    ratio.GetYaxis().SetTitle("Data/MC")
+    CMS_lumi.CMS_lumi(pad1, period, 11)
+    legendR.SetTextSize(0.05)
+    legendR.Draw("SAME")
+    pad2.cd()
+    ratio.SetMarkerStyle(hist_combined[cat]["DATA"].GetMarkerStyle())
+    ratio.SetMarkerSize(hist_combined[cat]["DATA"].GetMarkerSize())
+    ratio.SetLineColor(kBlack)
+    ratio.SetMarkerColor(kBlack)
+    ratio.SetLineWidth(hist_combined[cat]["DATA"].GetLineWidth())
+    ratio.Draw('e,x0')
+    errorband.Divide(temp)
+    for i in range(1, errorband.GetNbinsX() + 1):
+        if(errorban.GetBinContent(i) == 0):
+            errorband.SetBinError(i,0)
+        else:
+            errorband.SetBinError(i, errorban.GetBinError(i)/errorban.GetBinContent(i))
+    errorband.Draw('e2,same')
+    oneLine.Draw("same")
+    canvasRatio.Update()
+    canvasRatio.RedrawAxis()
+    if log:
+        canvasRatio.SaveAs("%s/EFT_%s_log.pdf"%(path,cat))
+    else:
+        canvasRatio.SaveAs("%s/EFT_%s_linear.pdf"%(path,cat))
+    canvasRatio.Clear()
+# sys.exit()
 hist_scale_Up={}
 hist_scale_Down={}
 v_samples_ttbar = ["TTbar"]
@@ -477,33 +479,33 @@ combine_file_name = 'EFT_{}_{}_{}.root'.format(year, channel,mass_range)
 combine_file = TFile(combine_file_name, 'RECREATE')
 
 norm={}
-for cat in categories:
-    for sys in ["murmuf_upup", "murmuf_upnone", "murmuf_noneup", "murmuf_nonedown", "murmuf_downnone", "murmuf_downdown"]:
-        norm[sys]= hist_sys_comb[cat]["TTbar"][sys]["Up"].GetBinContent(1)/hist_combined[cat]["TTbar"].GetBinContent(1)
-        print("normalizing by: ", norm[sys])
-        hist_sys_comb[cat]["TTbar"][sys]["Up"].Scale(1/norm[sys])
-    hist_scale_Up[cat]=hist_sys_comb[cat]["TTbar"]["murmuf_upup"]["Up"].Clone("mcscale_Up")
-    hist_scale_Down[cat]=hist_sys_comb[cat]["TTbar"]["murmuf_upup"]["Up"].Clone("mcscale_Down")
-    for j in range(hist_scale_Up[cat].GetNbinsX()):
-        max=0.
-        min=10000000000.
-        for sys in ["murmuf_upup", "murmuf_upnone", "murmuf_noneup", "murmuf_nonedown", "murmuf_downnone", "murmuf_downdown"]:
-            print(j,sys)
-            bin_content = hist_sys_comb[cat]["TTbar"][sys]["Up"].GetBinContent(j)
-            if(bin_content > max) :
-                max = bin_content
-            if(bin_content < min) :
-                min = bin_content
+# for cat in categories:
+#     for sys in ["murmuf_upup", "murmuf_upnone", "murmuf_noneup", "murmuf_nonedown", "murmuf_downnone", "murmuf_downdown"]:
+#         norm[sys]= hist_sys_comb[cat]["TTbar"][sys]["Up"].GetBinContent(1)/hist_combined[cat]["TTbar"].GetBinContent(1)
+#         print("normalizing by: ", norm[sys])
+#         hist_sys_comb[cat]["TTbar"][sys]["Up"].Scale(1/norm[sys])
+#     hist_scale_Up[cat]=hist_sys_comb[cat]["TTbar"]["murmuf_upup"]["Up"].Clone("mcscale_Up")
+#     hist_scale_Down[cat]=hist_sys_comb[cat]["TTbar"]["murmuf_upup"]["Up"].Clone("mcscale_Down")
+#     for j in range(hist_scale_Up[cat].GetNbinsX()):
+#         max=0.
+#         min=10000000000.
+#         for sys in ["murmuf_upup", "murmuf_upnone", "murmuf_noneup", "murmuf_nonedown", "murmuf_downnone", "murmuf_downdown"]:
+#             print(j,sys)
+#             bin_content = hist_sys_comb[cat]["TTbar"][sys]["Up"].GetBinContent(j)
+#             if(bin_content > max) :
+#                 max = bin_content
+#             if(bin_content < min) :
+#                 min = bin_content
 
-        hist_scale_Up[cat].SetBinContent(j, max)
-        hist_scale_Down[cat].SetBinContent(j, min)
-#PDF rms calculation
-norm_pdf=array('d')
-for cat in categories:
-    for sample in sample_name:
-    norm_pdf=array('d')
-        for i in range(1,101):
-            norm_pdf.append(hist_sys_comb[cat][sample]["PDF_%i"%(i)]["Down"].GetBinContent(1)/hist_combined[cat][sample].GetBinContent(1))
+#         hist_scale_Up[cat].SetBinContent(j, max)
+#         hist_scale_Down[cat].SetBinContent(j, min)
+# #PDF rms calculation
+# norm_pdf=array('d')
+# for cat in categories:
+#     for sample in sample_name:
+#         norm_pdf=array('d')
+#         for i in range(1,101):
+#             norm_pdf.append(hist_sys_comb[cat][sample]["PDF_%i"%(i)]["Down"].GetBinContent(1)/hist_combined[cat][sample].GetBinContent(1))
             
 
 
@@ -512,7 +514,10 @@ for cat in categories:
 # creat root file for combine inp
 for cat in categories:
     for sample in ["DYJets","Diboson","QCD"]:
-        hist_combined[cat]["WJets"].Add(hist_combined[cat][sample])
+        # hist_combined[cat]["WJets"].Add(hist_combined[cat][sample])
+        for sys in systematic_name_mapping:
+            hist_sys_comb[cat]["WJets"][sys]["Up"].Add(hist_sys_comb[cat][sample][sys]["Up"])
+            hist_sys_comb[cat]["WJets"][sys]["Down"].Add(hist_sys_comb[cat][sample][sys]["Down"])
 
 cat_region={"%s_SR"%(mass_range):["SR"],"%s_CR1"%(mass_range):["CR1"],"%s_CR2"%(mass_range):["CR2"]}
 
@@ -544,19 +549,19 @@ systematic_name_mapping = {
     "btag_lfstats2": "btagLfstats2",
     "ttag_corr": "ttagCorr",
     "ttag_uncorr": "ttagUncorr",
-    "murmuf": "murmuf",
+    # "murmuf": "murmuf",
     # "tmistag": "tmistag"
 }
 
 for cat in categories:
     combine_file.mkdir(cat_region[cat][0])
-    print("making directory: ", cat_region[cat][0])
+    # print("making directory: ", cat_region[cat][0])
     combine_file.cd(cat_region[cat][0])
     for sample in ["TTbar","ST","WJets","DATA"]:
         hist_combined[cat][sample].Write(sample_name[sample][0])
         if sample!="DATA":
             for sys in systematic_name_mapping:
-                print(cat,sample,sys)
+                # print(cat,sample,sys)
                 if "murmuf" in sys and sample!="TTbar":
                     continue
                 if "murmuf" in sys and sample=="TTbar":

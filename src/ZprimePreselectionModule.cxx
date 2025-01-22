@@ -26,6 +26,8 @@
 #include <UHH2/common/include/JetHists.h>
 #include <UHH2/common/include/EventHists.h>
 #include <UHH2/common/include/CommonModules.h>
+// #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
+// #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
 
 #include <UHH2/ZprimeSemiLeptonic/include/ModuleBASE.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicSelections.h>
@@ -48,6 +50,7 @@ public:
 
 protected:
   bool debug;
+  // edm::EDGetTokenT<LHEEventProduct> src_;
 
   // Corrections
   std::unique_ptr<CommonModules> common;
@@ -199,11 +202,22 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
 
   cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
   cout << " run.event: " << event.run << ". " << event.event << endl;
-  cout << "titas area" <<endl; 
+  cout <<" year? :" << event.year << endl; 
+  cout << "size of lhe weight:"<<event.genInfo->systweights().size() <<endl; 
+   cout << "reference point: "<<event.genInfo->systweights().at(0)<<endl;
+  for(int i=0; i<354; i++){
+    double EFT_weight = event.genInfo->systweights().at(i+1);
+    cout << "EFT weights: "<< EFT_weight<<endl;
+
+  }
   if(!event.isRealData){
     if(!SignSplit->passes(event)) return false;
   }
-
+  // src_ = consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("src"));
+  // edm::Handle<LHEEventProduct> EvtHandle;
+  // iEvent.getByToken(src_, EvtHandle);
+  // std::vector<lhef::HEPEUP::FiveVector> lheParticles = EvtHandle->hepeup().PUP;
+  // cout<<" check LHE: "<< lheParticles.size()<<endl;
   fill_histograms(event, "Input");
 
   // GenParticle top, antitop;

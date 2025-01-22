@@ -353,30 +353,42 @@ float match_dr(const Particle & p, const std::vector<T> & jets, int& index){
 }
 
 ZprimeCorrectMatchDiscriminator::ZprimeCorrectMatchDiscriminator(uhh2::Context& ctx){
-
+  cout<<"starting ZCMD"<<endl;
   h_ZprimeCandidates_ = ctx.get_handle< std::vector<ZprimeCandidate> >("ZprimeCandidates");
+  cout<<"got ZprimeCandidates handle"<<endl;
   h_ttbargen_ = ctx.get_handle<TTbarGen>("ttbargen");
+  cout<<"got ttbar gen handle"<<endl;
   h_is_zprime_reconstructed_ = ctx.get_handle< bool >("is_zprime_reconstructed_correctmatch");
+  cout<<"set zprime bool"<<endl;
   h_BestCandidate_ = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
+  cout<<"set best candidate"<<endl;
 
   is_mc = ctx.get("dataset_type") == "MC";
   if(is_mc) ttgenprod.reset(new TTbarGenProducer(ctx));
+  cout<<"set ttgenprod"<<endl;
 }
 
 bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
 
   if(!is_mc) return false;
-
+  cout<<"starting ZCMD bool"<<endl;
   // Check if event contains == 2 top quarks
   assert(event.genparticles);
+  cout<<"get gen particles"<<endl;
   int n_top = 0, n_antitop = 0;
   for(const auto & gp : *event.genparticles){
     if(gp.pdgId() == 6) n_top++;
     else if(gp.pdgId() == -6) n_antitop++;
   }
+  cout << n_top << n_antitop <<endl;
   if(n_top != 1 || n_antitop != 1) return false;
-  bool check_decay = ttgenprod->process(event);
-  if(!check_decay) return false; //FixME: sometimes decay prodcts of ttbar are not Wb+Wb. Why?
+  cout << n_top << n_antitop <<endl;
+  cout<<"checked for top/antitop"<<endl;
+  // bool check_decay = ttgenprod->process(event);
+  cout <<ttgenprod->process(event)<<endl;
+  // cout<<check_decay<<endl;
+  //cout<<"check decay"<<endl;
+  //if(!check_decay) return false; //FixME: sometimes decay prodcts of ttbar are not Wb+Wb. Why?
 
   vector<ZprimeCandidate>& candidates = event.get(h_ZprimeCandidates_);
   if(candidates.size() < 1) return false;
