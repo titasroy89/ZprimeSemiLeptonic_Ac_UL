@@ -195,14 +195,18 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
 bool ZprimePreselectionModule::process(uhh2::Event& event){
 
-  cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
-  cout << " run.event: " << event.run << ". " << event.event << endl;
+  if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
+  if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
+
+  if(debug) cout << " event.year: " << event.year << ". " << event.event << endl;
 
   if(!event.isRealData){
     if(!SignSplit->passes(event)) return false;
   }
+  if(debug) cout << "beginning: ok" << endl;
 
   fill_histograms(event, "Input");
+   if(debug) cout << "first plots input: ok" << endl;
 
   bool commonResult = common->process(event);
   if (!commonResult) return false;

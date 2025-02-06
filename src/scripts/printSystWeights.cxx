@@ -6,7 +6,7 @@
 void printSystWeights() {
     std::cout << "Opening file..." << std::endl;
 
-    TFile *file = TFile::Open("/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Analysis_UL18_muon_combine/uhh2.AnalysisModuleRunner.MC.TTToSemiLeptonic_UL18_29.root");
+    TFile *file = TFile::Open("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_combine/UL18/muon/workdir_Analysis_UL18_muon_combine/uhh2.AnalysisModuleRunner.MC.TTToSemiLeptonic_UL18_29.root");
     if (!file || file->IsZombie()) {
         std::cerr << "File not found or is corrupted." << std::endl;
         return;
