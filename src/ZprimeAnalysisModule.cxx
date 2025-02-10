@@ -188,7 +188,7 @@ void ZprimeAnalysisModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
-  debug = true; // false/true
+  debug = false; // false/true
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -1054,9 +1054,9 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   if(debug) cout << "CandidateBuilder: ok" << endl;
 
   // matching to gen-level ttbar - to extract chi2 parameters
-  CorrectMatchDiscriminatorZprime->process(event);
-  fill_histograms(event, "CorrectMatchDiscriminator");
-  if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
+  // CorrectMatchDiscriminatorZprime->process(event);
+  // fill_histograms(event, "CorrectMatchDiscriminator");
+  // if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
 
   // select ttbar candidate with smallest chi2, fill Mtt hists
   Chi2DiscriminatorZprime->process(event);
