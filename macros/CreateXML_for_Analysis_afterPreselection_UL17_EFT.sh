@@ -1,16 +1,17 @@
 #!/bin/bash
 
 #where UHH2 code installed
-pathGL_code=/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2
+pathGL_code=/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2
 #where (NOT MERGED) trees after preselection stored
-path_data=/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_EFT/Preselection/workdir_Preselection_EFT_UL17_700-Inf/uhh2.AnalysisModuleRunner.
+path_data=/data/dust/group/cms/zprime-uhh/Preselection_EFT_UL17/workdir_Preselection_EFT_UL17_0_700/uhh2.AnalysisModuleRunner.
 
 mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_afterpreselection_EFT
 cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_afterpreselection_EFT
 
 
 # MC
-for sample_name in MC_EFT_Mttbar_700-900_UL17 MC_EFT_Mttbar_900-Inf_UL17
+for sample_name in MC_EFT_Mttbar_0-700_UL17
+# MC_EFT_Mttbar_700-900_UL17 MC_EFT_Mttbar_900-Inf_UL17
 do
     echo $sample_name
     $pathGL_code/scripts/create-dataset-xmlfile ${path_data}"MC."${sample_name}"*.root" MC_$sample_name.xml

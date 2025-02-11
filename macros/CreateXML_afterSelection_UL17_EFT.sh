@@ -4,15 +4,15 @@
 shopt -s globstar
 
 # Where UHH2 code is installed
-pathGL_code="/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/"
+pathGL_code="/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/"
 # Where (NOT MERGED) trees - preselection stored
 
 #0-700
-# path_data="/pnfs/desy.de/cms/tier2/store/group/uhh/uhh2ntuples/RunII_106X_v2/UL17/TTtoLNu2Q-1Jets-smeft_MTT-0to700_TuneCP5_13TeV_madgraphMLM-pythia8/crab_TTtoLNu2Q-1Jets-smeft_MTT-0to700_CP5_madgraphMLM-pythia8_Summer20UL17_v3/"
+path_data="/pnfs/desy.de/cms/tier2/store/group/uhh/uhh2ntuples/RunII_106X_v2/UL17/TTtoLNu2Q-1Jets-smeft_MTT-0to700_TuneCP5_13TeV_madgraphMLM-pythia8/crab_TTtoLNu2Q-1Jets-smeft_MTT-0to700_CP5_madgraphMLM-pythia8_Summer20UL17_v3/250108_055525/"
 #700-900
 # path_data="/pnfs/desy.de/cms/tier2/store/group/uhh/uhh2ntuples/RunII_106X_v2/UL17/TTtoLNu2Q-1Jets-smeft_MTT-700to900_TuneCP5_13TeV_madgraphMLM-pythia8/crab_TTtoLNu2Q-1Jets-smeft_MTT-700to900_CP5_madgraphMLM-pythia8_Summer20UL17_v2/241018_210040/"
 #900-Inf
-path_data="/pnfs/desy.de/cms/tier2/store/group/uhh/uhh2ntuples/RunII_106X_v2/UL17/TTtoLNu2Q-1Jets-smeft_MTT-900toInf_TuneCP5_13TeV_madgraphMLM-pythia8/crab_TTtoLNu2Q-1Jets-smeft_MTT-900toInf_CP5_madgraphMLM-pythia8_Summer20UL17_v2/241105_230722/"
+# path_data="/pnfs/desy.de/cms/tier2/store/group/uhh/uhh2ntuples/RunII_106X_v2/UL17/TTtoLNu2Q-1Jets-smeft_MTT-900toInf_TuneCP5_13TeV_madgraphMLM-pythia8/crab_TTtoLNu2Q-1Jets-smeft_MTT-900toInf_CP5_madgraphMLM-pythia8_Summer20UL17_v2/241105_230722/"
 
 # Define the output directory
 output_dir="$pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_2017_preselection"
@@ -21,9 +21,9 @@ output_dir="$pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_2017_pres
 mkdir -p "$output_dir"
 cd "$output_dir" || { echo "Failed to enter directory: $output_dir"; exit 1; }
 
-# samples=("EFT_Mttbar_0-700")
+samples=("EFT_Mttbar_0-700")
 # samples=("EFT_Mttbar_700-900")
-samples=("EFT_Mttbar_900-Inf")
+# samples=("EFT_Mttbar_900-Inf")
 
 
 # Loop over each sample
