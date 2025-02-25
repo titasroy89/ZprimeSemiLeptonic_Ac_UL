@@ -1,0 +1,42 @@
+1) Preselection Step:
+For EFT samples, all EFT weights from genInfo->systweights() are stored as branches in the output tree
+Each weight gets its own branch named eft_weight_N
+Also stores n_eft_weights and nominal_weight
+
+2) Analysis Module Step:
+Can access these weights through the event object
+The weights are now preserved in the ntuples
+
+3) Analysis Module DNN Step:
+Can use these weights to create the histograms in different regions
+The weights are available just like any other branch in the ntuple
+
+The key points:
+We store ALL weights during preselection (not just a subset)
+No weights are lost between steps
+No special handling needed in non-EFT samples
+The weights are stored with clear names
+
+
+In ZprimePreselectionModule.cxx:
+1) Correctly identifies EFT samples using dataset_version
+
+2) Declares output handles for:
+Number of weights (n_eft_weights)
+Reference point weight (ref_point_weight)
+Individual EFT weights (eft_weight_0 to eft_weight_N)
+
+3) Stores weights in the event processing:
+    1) Gets systweights from genInfo
+    2) Stores reference point weight (systweights[0])
+    3) Stores total number of weights
+    4) Stores all available weights
+    5) Handles edge cases (fills remaining slots with reference weight)
+
+
+In ZprimeSemiLeptonicEFTHists.cxx:
+1) Properly initializes for EFT samples
+2) Creates histograms for each weight
+3) Handles weight vs mass correlations
+4) Correctly normalizes weights relative to nominal weight
+

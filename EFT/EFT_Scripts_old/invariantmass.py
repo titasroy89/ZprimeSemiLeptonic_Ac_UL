@@ -1,10 +1,8 @@
-#!/usr/bin/env python2
 
 import ROOT
 import sys
 import argparse
 
-# Set debug to False to suppress debug prints
 debug = False
 
 def reconstruct_particle(particle1, particle2):

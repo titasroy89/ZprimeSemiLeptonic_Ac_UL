@@ -251,9 +251,10 @@ void NeuralNetworkModule::CreateInputs(Event & event){
   //NN - DON'T FORGET TO CHANGE!
   //Muon
   ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  
   //Electron
   // ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
-//  cout<<"read txt"<<endl;
+  
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
     for(int i = 0; i < 59; ++i)
@@ -369,7 +370,7 @@ protected:
   // DNN multiclass output hist
   std::unique_ptr<Hists> h_MulticlassNN_output;
 
-  // ================ SR ==================================================================================================================================================================================================================
+  // ================ SR ============s======================================================================================================================================================================================================
   //muon and ele systematics
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_SR;
@@ -965,14 +966,11 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  // if(isMuon){
-  //   // cout <<"get muon models" << endl;
   NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
-  // }//electron
-  // else{
-    // cout <<"get electron models" << endl;
+  
+  //electron
   // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
-  // }
+  
 
 }
 

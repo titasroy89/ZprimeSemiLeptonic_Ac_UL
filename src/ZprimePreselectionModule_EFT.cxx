@@ -1,5 +1,7 @@
 #include <iostream>
 #include <memory>
+#include <map>
+#include <fstream>
 
 #include <UHH2/core/include/AnalysisModule.h>
 #include <UHH2/core/include/Event.h>
@@ -38,16 +40,20 @@
 using namespace std;
 using namespace uhh2;
 
-class ZprimePreselectionModule : public ModuleBASE {
+class ZprimePreselectionModule_EFT : public ModuleBASE {
 
 public:
-  explicit ZprimePreselectionModule(uhh2::Context&);
+  explicit ZprimePreselectionModule_EFT(uhh2::Context&);
   virtual bool process(uhh2::Event&) override;
   void book_histograms(uhh2::Context&, vector<string>);
   void fill_histograms(uhh2::Event&, string);
 
 protected:
   bool debug;
+
+  // Weight ID mapping
+  std::map<int, std::string> weight_id_map;
+  void load_weight_ids(const std::string& filename);
 
   // Corrections
   std::unique_ptr<CommonModules> common;
@@ -74,27 +80,69 @@ protected:
   TString METcollection;
 
   bool isUL16preVFP, isUL16postVFP, isUL17, isUL18;
+  bool isEFT;  // Flag for EFT samples
+
+  // Output handles for EFT weights
+  std::vector<Event::Handle<float>> h_eft_weights;  // Vector of handles for each EFT weight
+  Event::Handle<int> h_n_eft_weights;  // Handle for number of weights
+  Event::Handle<float> h_ref_point_weight;  // Handle for reference point weight (systweights[0])
 
   // additional branch with AK4 CHS jets -> for b-tagging
   Event::Handle<vector<Jet>> h_CHSjets;
 
 };
 
-void ZprimePreselectionModule::book_histograms(uhh2::Context& ctx, vector<string> tags){
+void ZprimePreselectionModule_EFT::book_histograms(uhh2::Context& ctx, vector<string> tags){
   for(const auto & tag : tags){
     string mytag = tag+"_General";
     book_HFolder(mytag, new ZprimeSemiLeptonicPreselectionHists(ctx,mytag));
   }
 }
 
-void ZprimePreselectionModule::fill_histograms(uhh2::Event& event, string tag){
+void ZprimePreselectionModule_EFT::fill_histograms(uhh2::Event& event, string tag){
   string mytag = tag+"_General";
   HFolder(mytag)->fill(event);
 }
 
+void ZprimePreselectionModule_EFT::load_weight_ids(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string line;
+    int index = 0;
+    
+    while(std::getline(file, line)) {
+        // Skip empty lines
+        if(line.empty()) continue;
+        
+        // Check if line contains "Weight ID:"
+        if(line.find("Weight ID:") != std::string::npos) {
+            // Extract the weight ID (between "Weight ID:" and ", Weight value:")
+            size_t start = line.find("Weight ID:") + 10;  // +10 to skip "Weight ID:"
+            size_t end = line.find(", Weight value:");
+            
+            if(end != std::string::npos) {
+                std::string weight_id = line.substr(start, end - start);
+                // Trim whitespace
+                weight_id.erase(0, weight_id.find_first_not_of(" \t"));
+                weight_id.erase(weight_id.find_last_not_of(" \t") + 1);
+                
+                // Add to both maps
+                weight_id_map[index] = weight_id;
+                index++;
+            }
+        }
+    }
 
+    // Print first few mappings for verification
+    cout << "\nWeight ID Mapping (first 5 entries):\n";
+    for(int i = 0; i < 5; i++) {
+        if(weight_id_map.find(i) != weight_id_map.end()) {
+            cout << "Index " << i << ":\n  " << weight_id_map[i] << "\n";
+        }
+    }
+    cout << "Total weights mapped: " << weight_id_map.size() << "\n";
+}
 
-ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
+ZprimePreselectionModule_EFT::ZprimePreselectionModule_EFT(uhh2::Context& ctx){
 
   debug = false; // true/false
 
@@ -108,6 +156,31 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   isHOTVR = ctx.get("is_HOTVR") == "true";
   Sys_PU  = ctx.get("Sys_PU");
 
+  // Check if this is an EFT sample and setup EFT weights
+  isEFT = ctx.get("dataset_version").find("EFT") != string::npos;
+  if(isEFT && isMC) {
+    // Total number of EFT weights in the sample
+    // Structure of weights:
+    // - systweights[0]: Reference point weight (SM point)
+    // - systweights[1-1676]: EFT parameter variations
+    const int N_EFT_WEIGHTS = 1677;
+    
+    // Initialize handles for EFT weights
+    h_n_eft_weights = ctx.declare_event_output<int>("n_eft_weights");
+    h_ref_point_weight = ctx.declare_event_output<float>("ref_point_weight");
+    
+    // Create handles for each EFT weight
+    h_eft_weights.reserve(N_EFT_WEIGHTS);  // Reserve space for efficiency
+    for(int i = 0; i < N_EFT_WEIGHTS; i++) {
+      std::string name = "eft_weight_" + std::to_string(i);
+      h_eft_weights.push_back(ctx.declare_event_output<float>(name));
+    }
+  }
+
+  // Print diagnostic information about weights in the first event
+  // if(isEFT && isMC) {
+  //   ctx.declare_event_output<bool>("first_event_processed", "first_event_processed");
+  // }
 
   isUL16preVFP  = (ctx.get("dataset_version").find("UL16preVFP")  != std::string::npos);
   isUL16postVFP = (ctx.get("dataset_version").find("UL16postVFP") != std::string::npos);
@@ -186,6 +259,13 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   // additional branch with Ak4 CHS jets
   h_CHSjets = ctx.get_handle<vector<Jet>>("jetsAk4CHS");
 
+  // Load weight IDs from file if this is an EFT sample
+  if(isEFT && isMC) {
+    string weight_id_file = ctx.get("weightIDFile", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFT/EFTweights.txt");
+    cout << "Loading weight IDs from: " << weight_id_file << endl;
+    load_weight_ids(weight_id_file);
+  }
+
   // Book histograms
   vector<string> histogram_tags = {"Input", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET"};
   book_histograms(ctx, histogram_tags);
@@ -193,14 +273,51 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   lumihists.reset(new LuminosityHists(ctx, "lumi"));
 }
 
+bool ZprimePreselectionModule_EFT::process(uhh2::Event& event){
 
-bool ZprimePreselectionModule::process(uhh2::Event& event){
+  // Store EFT weights if this is an EFT sample
+  if(!event.isRealData && event.genInfo && isEFT) {
+    // Store number of weights
+    event.set(h_n_eft_weights, event.genInfo->systweights().size());
+    
+    // Store reference point weight (first weight)
+    if(event.genInfo->systweights().size() > 0) {
+      event.set(h_ref_point_weight, event.genInfo->systweights().at(0));
+    }
+    
+    // Store all weights
+    for(size_t i = 0; i < event.genInfo->systweights().size() && i < h_eft_weights.size(); i++) {
+      event.set(h_eft_weights[i], event.genInfo->systweights().at(i));
+    }
 
-  if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
-  if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
+    // Print weights for first event only (for debugging)
+    static bool first_event = true;
+    if(first_event) {
+      cout << "\n=== Weight Information ===\n";
+      size_t n_weights = event.genInfo->systweights().size();
+      cout << "Total number of weights: " << n_weights << "\n\n";
+      
+      // Print first 10 weights with their names
+      size_t weights_to_print = std::min(size_t(10), n_weights);
+      cout << "First " << weights_to_print << " weights:\n";
+      for(size_t i = 0; i < weights_to_print; i++) {
+        cout << weight_id_map[i] << " = " << event.genInfo->systweights().at(i);
+        if(i == 0) cout << " (reference point)";
+        cout << "\n";
+      }
+      
+      // Print last 10 weights if there are more than 20 weights
+      if(n_weights > 20) {
+        cout << "\nLast " << weights_to_print << " weights:\n";
+        for(size_t i = n_weights - weights_to_print; i < n_weights; i++) {
+          cout << weight_id_map[i] << " = " << event.genInfo->systweights().at(i) << "\n";
+        }
+      }
+      cout << "=========================\n\n";
+      first_event = false;
+    }
+  }
 
-  if(debug) cout << " event.year: " << event.year << ". " << event.event << endl;
- 
   if(!event.isRealData){
     if(!SignSplit->passes(event)) return false;
   }
@@ -307,4 +424,4 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   return true;
 }
 
-UHH2_REGISTER_ANALYSIS_MODULE(ZprimePreselectionModule)
+UHH2_REGISTER_ANALYSIS_MODULE(ZprimePreselectionModule_EFT)

@@ -1,0 +1,7 @@
+1) locate the EFT weights in the samples. -> check_weights.py
+run check_weights.py to find the branches that contain the weights. 
+
+2) Once I identify where the weights are stored, I can modify the weight collection code. 
+run collect_EFT_reweight.py to collect the weights into a single branch. 
+
+3) run reweight_events.py to reweight the events. 
