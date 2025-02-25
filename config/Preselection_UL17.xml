@@ -344,11 +344,10 @@
 
 			<Item Name="use_sframe_weight"  Value="false"/>
 			<Item Name="jersmear_direction" Value="nominal"/>
-			<Item Name="jecsmear_direction" Value="up"/>
+			<Item Name="jecsmear_direction" Value="nominal"/>
 
 			<Item Name="AnalysisModule" Value="ZprimePreselectionModule"/>
 		</UserConfig>
-
 
 	</Cycle>
 </JobConfiguration>
