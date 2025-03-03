@@ -1,5 +1,13 @@
 #include <iostream>
 #include <memory>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <stdexcept>
+#include <cctype>
+
 
 #include <UHH2/core/include/AnalysisModule.h>
 #include <UHH2/core/include/Event.h>
@@ -56,6 +64,15 @@
 using namespace std;
 using namespace uhh2;
 
+/** A small struct to hold:
+ *  (1) the desired TTree branch name,
+ *  (2) which index in event.genInfo->systweights() we read from each event.
+ */
+struct NamedWeight {
+    std::string branch_name;
+    int idx_syst; // index inside systweights()
+};
+
 /*
 ██████  ███████ ███████ ██ ███    ██ ██ ████████ ██  ██████  ███    ██
 ██   ██ ██      ██      ██ ████   ██ ██    ██    ██ ██    ██ ████   ██
@@ -64,11 +81,11 @@ using namespace uhh2;
 ██████  ███████ ██      ██ ██   ████ ██    ██    ██  ██████  ██   ████
 */
 
-class ZprimeAnalysisModule_EFT : public ModuleBASE {
+class ZprimeAnalysisModule_EFT_weightsbranch : public ModuleBASE {
 
 public:
 
-  explicit ZprimeAnalysisModule_EFT(uhh2::Context&);
+  explicit ZprimeAnalysisModule_EFT_weightsbranch(uhh2::Context&);
   virtual bool process(uhh2::Event&) override;
   void book_histograms(uhh2::Context&, vector<string>);
   void fill_histograms(uhh2::Event&, string);
@@ -133,9 +150,6 @@ protected:
 
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
 
-  // Add DeltaY_reco handle
-  Event::Handle<float> h_DeltaY_reco;
-
   // Lumi hists
   std::unique_ptr<Hists> lumihists_Weights_Init, lumihists_Weights_PU, lumihists_Weights_Lumi, lumihists_Weights_TopPt, lumihists_Weights_MCScale, lumihists_Weights_PS, lumihists_Muon1_LowPt, lumihists_Muon1_HighPt, lumihists_Ele1_LowPt, lumihists_Ele1_HighPt, lumihists_TriggerMuon, lumihists_TriggerEle, lumihists_TwoDCut_Muon, lumihists_TwoDCut_Ele, lumihists_Jet1, lumihists_Jet2, lumihists_MET, lumihists_HTlep, lumihists_Chi2;
 
@@ -166,9 +180,31 @@ protected:
   TH2F *ratio_hist_muon;
   TH2F *ratio_hist_ele;
 
+  // EFT WEIGHT LINES
+
+  // --- EFT Weight members ---
+  // These are the preselection output handles
+  std::vector<Event::Handle<float>> h_eft_weights;
+  Event::Handle<int> h_n_eft_weights;
+  Event::Handle<float> h_ref_point_weight;
+  // And our vector of NamedWeight (which stores the branch name we want and the corresponding systweights() index)
+  std::vector<NamedWeight> m_all_weights;
+  // And the vector of output handles (one per named weight)
+  std::vector<Event::Handle<float>> m_all_handles;
+  
+  void parse_single_block(const std::string & block, int index);
+  
+  // No separate load_first_355_eft: our load_weight_ids() now fills the maps and (for indices <355) m_all_weights.
+  
+  float get_weight_by_name(const uhh2::Event& event, const std::string& weight_name);
+
+  // Add these lines:
+  std::map<int, std::string> weight_index_to_name;    // Maps index to weight name
+  std::map<std::string, int> weight_name_to_index;    // Maps weight name to index
+  void load_weight_ids(const std::string& filename);   // Function to load weight IDs
 };
 
-void ZprimeAnalysisModule_EFT::book_histograms(uhh2::Context& ctx, vector<string> tags){
+void ZprimeAnalysisModule_EFT_weightsbranch::book_histograms(uhh2::Context& ctx, vector<string> tags){
   for(const auto & tag : tags){
     string mytag = tag + "_Skimming";
     mytag = tag + "_General";
@@ -176,10 +212,152 @@ void ZprimeAnalysisModule_EFT::book_histograms(uhh2::Context& ctx, vector<string
   }
 }
 
-void ZprimeAnalysisModule_EFT::fill_histograms(uhh2::Event& event, string tag){
+void ZprimeAnalysisModule_EFT_weightsbranch::fill_histograms(uhh2::Event& event, string tag){
   string mytag = tag + "_Skimming";
   mytag = tag + "_General";
   HFolder(mytag)->fill(event);
+}
+
+// EFT WEIGHT LINES
+
+// ------------------------------------------------------------------
+// parse_single_block(...) : Extract the string after "Weight ID:"
+// and up to ", Weight value:"; for indices <355, also add to m_all_weights.
+// ------------------------------------------------------------------
+void ZprimeAnalysisModule_EFT_weightsbranch::parse_single_block(const std::string & block, int index) {
+    size_t start_pos = block.find("Weight ID:");
+    if(start_pos == std::string::npos) return;
+    start_pos += 10; // skip "Weight ID:"
+    size_t end_pos = block.find(", Weight value:");
+    if(end_pos == std::string::npos) end_pos = block.size();
+    std::string name = block.substr(start_pos, end_pos - start_pos);
+    // remove spaces from name
+    name.erase(name.begin(), std::find_if(name.begin(), name.end(), [](int ch) {
+      return !std::isspace(ch);
+    }));
+    name.erase(std::find_if(name.rbegin(), name.rend(), [](int ch) {
+      return !std::isspace(ch);
+    }).base(), name.end());
+    // Fill the mapping:
+    weight_index_to_name[index] = name;
+    weight_name_to_index[name] = index;
+    if(debug && index < 10) {
+      std::cout << "parse_single_block: index " << index 
+                << " => name: " << name << std::endl;
+    }
+    // For the first 355 EFT weights, add them to m_all_weights
+    if(index < 355) {
+      NamedWeight w;
+      w.branch_name = name;
+      w.idx_syst = index;
+      m_all_weights.push_back(w);
+    }
+}
+
+// ------------------------------------------------------------------
+// load_weight_ids(...) : Read the text file line by line, build entire blocks and parse them.
+// ------------------------------------------------------------------
+void ZprimeAnalysisModule_EFT_weightsbranch::load_weight_ids(const std::string& filename) {
+  // First load the EFT weights from file (first 355)
+  std::ifstream file(filename);
+  if(!file.is_open()) {
+      cout << "ERROR: Could not open weight ID file: " << filename << "\n";
+      return;
+  }
+
+  std::string current_block;
+  int index = 0;
+  std::string line;
+  
+  cout << "\n=== Starting Weight ID Mapping ===\n";
+  
+  while(std::getline(file, line)) {
+        if(line.find("Weight ID:") != std::string::npos) {
+            // Process previous block if it exists
+            if(!current_block.empty()) {
+                parse_single_block(current_block, index++);
+            }
+            current_block = line;
+        } else if(!line.empty()) {
+            current_block += "\n" + line;
+        }
+    }
+    // Process the last block
+    if(!current_block.empty()) {
+        parse_single_block(current_block, index++);
+    }
+
+    // Now add the scale variation weights (next 7)
+    std::vector<int> scale_ids = {1001, 1006, 1011, 1016, 1021, 1031, 1041};
+    std::vector<std::string> scale_names = {
+        "mur1_muf1", "mur2_muf1", "mur0p5_muf1", 
+        "mur1_muf2", "mur2_muf2", "mur1_muf0p5", "mur0p5_muf0p5"
+    };
+    
+    // Add scale variation weights to the maps
+    for(unsigned i = 0; i < scale_ids.size(); i++) {
+        int offset = scale_ids[i] - 1001;  // how far from 1001?
+        int idx_syst = 355 + offset;       // 355 is the systweights index for ID=1001
+        weight_index_to_name[idx_syst] = scale_names[i];
+        weight_name_to_index[scale_names[i]] = idx_syst;
+    }
+
+    // Add PDF weights (last 101)
+    int pdf_id_start = 1151;
+    int pdf_id_end = 1251;
+    for(int pdf_id = pdf_id_start; pdf_id <= pdf_id_end; pdf_id++) {
+        int offset = pdf_id - 1001;       // how far from 1001?
+        int idx_syst = 355 + offset;      // e.g., for 1151: offset=150, so idx=505
+        int pdf_num = pdf_id - pdf_id_start + 1; // 1..101
+        std::string pdf_name = "PDF_" + std::to_string(pdf_num);
+        weight_index_to_name[idx_syst] = pdf_name;
+        weight_name_to_index[pdf_name] = idx_syst;
+    }
+
+    // Print verification
+    cout << "\n=== Weight Mapping Verification ===\n";
+    
+    // Verify EFT weights (first 355)
+    cout << "EFT weights (should be 355):\n";
+    cout << "First EFT weight: " << weight_index_to_name[0] << "\n";
+    cout << "Last EFT weight: " << weight_index_to_name[354] << "\n";
+    cout << "Number of EFT weights mapped: " << 355 << "\n\n";
+
+    // Verify scale variation weights (next 7)
+    cout << "Scale variation weights (should be 7):\n";
+    for(unsigned i = 0; i < scale_ids.size(); i++) {
+        int idx_syst = 355 + (scale_ids[i] - 1001);
+        cout << "Weight " << idx_syst << ": " << weight_index_to_name[idx_syst] << "\n";
+    }
+    cout << "\n";
+
+    // Verify PDF weights (last 101)
+    cout << "PDF weights (should be 101):\n";
+    int first_pdf_idx = 355 + (pdf_id_start - 1001);
+    int last_pdf_idx = 355 + (pdf_id_end - 1001);
+    cout << "First PDF weight (" << first_pdf_idx << "): " << weight_index_to_name[first_pdf_idx] << "\n";
+    cout << "Last PDF weight (" << last_pdf_idx << "): " << weight_index_to_name[last_pdf_idx] << "\n";
+    cout << "Number of PDF weights mapped: " << (pdf_id_end - pdf_id_start + 1) << "\n\n";
+
+    cout << "=== Summary ===\n";
+    cout << "Total weights mapped: " << weight_name_to_index.size() << "\n";
+    cout << "Expected total: 463 (355 EFT + 7 murmuf + 101 PDF)\n";
+    cout << "Mapping complete: " << (weight_name_to_index.size() == 463 ? "YES" : "NO") << "\n";
+    cout << "==============================\n\n";
+}
+// ------------------------------------------------------------------
+// get_weight_by_name(...) : Retrieve the float from event by the given weight name.
+// ------------------------------------------------------------------
+float ZprimeAnalysisModule_EFT_weightsbranch::get_weight_by_name(const uhh2::Event& event, const std::string& weight_name) {
+  auto it = weight_name_to_index.find(weight_name);
+  if(it == weight_name_to_index.end()) {
+    throw std::runtime_error("Weight name not found in map: " + weight_name);
+  }
+  int idx = it->second;
+  if(idx < 0 || idx >= static_cast<int>(h_eft_weights.size())) {
+    throw std::runtime_error("Weight index out of range: " + std::to_string(idx));
+  }
+  return event.get(h_eft_weights[idx]);
 }
 
 /*
@@ -189,8 +367,7 @@ void ZprimeAnalysisModule_EFT::fill_histograms(uhh2::Event& event, string tag){
 █ ██      ██    ██ ██  ██ ██      ██    ██    ██   ██ ██    ██ ██         ██    ██    ██ ██   ██
 █  ██████  ██████  ██   ████ ███████    ██    ██   ██  ██████   ██████    ██     ██████  ██   ██
 */
-
-ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
+ZprimeAnalysisModule_EFT_weightsbranch::ZprimeAnalysisModule_EFT_weightsbranch(uhh2::Context& ctx){
 
   debug = false; // false/true
 
@@ -210,10 +387,10 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
   isUL16postVFP = (ctx.get("dataset_version").find("UL16postVFP") != std::string::npos);
   isUL17        = (ctx.get("dataset_version").find("UL17")        != std::string::npos);
   isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
-  if(isUL16preVFP) year = "UL16preVFP";
+  if(isUL16preVFP)  year = "UL16preVFP";
   if(isUL16postVFP) year = "UL16postVFP";
-  if(isUL17) year = "UL17";
-  if(isUL18) year = "UL18";
+  if(isUL17)        year = "UL17";
+  if(isUL18)        year = "UL18";
 
   isPhoton = (ctx.get("dataset_version").find("SinglePhoton") != std::string::npos);
 
@@ -350,6 +527,7 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
   // b-tagging SFs
   sf_btagging.reset(new MCBTagDiscriminantReweighting(ctx, BTag::algo::DEEPJET, "CHS_matched"));
 
+  // Muon SF
   // set lepton scale factors: see UHH2/common/include/LeptonScaleFactors.h
   sf_muon_iso_stat_low.reset(new uhh2::MuonIsoScaleFactors_stat(ctx, Muon::Selector::PFIsoTight, Muon::Selector::CutBasedIdTight, true));
   sf_muon_iso_syst_low.reset(new uhh2::MuonIsoScaleFactors_syst(ctx, Muon::Selector::PFIsoTight, Muon::Selector::CutBasedIdTight, true));
@@ -365,6 +543,7 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
   sf_muon_trigger_syst_high.reset(new uhh2::MuonTriggerScaleFactors_syst(ctx, true, false));
 
   sf_muon_reco.reset(new MuonRecoSF(ctx));
+  // Electron SF
   sf_ele_id_low.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_iso_V2_wp80, true));
   sf_ele_id_high.reset(new uhh2::ElectronIdScaleFactors(ctx, Electron::tag::mvaEleID_Fall17_noIso_V2_wp80, true));
   sf_ele_reco.reset(new uhh2::ElectronRecoScaleFactors(ctx, false, true));
@@ -444,9 +623,6 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
   CorrectMatchDiscriminatorZprime.reset(new ZprimeCorrectMatchDiscriminator(ctx));
   h_is_zprime_reconstructed_correctmatch = ctx.get_handle<bool>("is_zprime_reconstructed_correctmatch");
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
-
-  // Add DeltaY_reco handle
-  h_DeltaY_reco = ctx.declare_event_output<float>("DeltaY_reco");
 
   sel_1btag.reset(new NJetSelection(1, -1, id_btag));
   sel_2btag.reset(new NJetSelection(2,-1, id_btag));
@@ -540,7 +716,79 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
       ratio_hist_ele->SetDirectory(0);
     }
   }
+  // EFT WEIGHT LINES
+    
+  // Initialize EFT-related variables and handles
+  isEFT = ctx.get("dataset_version").find("EFT") != string::npos;
+  if(isEFT) {
+    // Get handles to access weights stored during preselection
+    h_n_eft_weights    = ctx.get_handle<int>("n_eft_weights");
+    h_ref_point_weight = ctx.get_handle<float>("ref_point_weight");
+    
+    // Prepare handles for all EFT weights
+    // Initialize handles for all weights
+    const int N_EFT_WEIGHTS = 1677;
+    h_eft_weights.reserve(N_EFT_WEIGHTS);
+    for(int i = 0; i < N_EFT_WEIGHTS; i++) {
+      h_eft_weights.push_back(ctx.get_handle<float>("eft_weight_" + std::to_string(i)));
+    }
+    // Load the weight IDs from the text file (this call fills both mapping and, for indices <355, m_all_weights)
+    string weight_id_file = ctx.get("weightIDFile", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/src/EFTweights.txt");
+    if(debug) cout << "Loading weight IDs from: " << weight_id_file << endl;
+    load_weight_ids(weight_id_file);
+  }
+
+
+  // additional weights (7 scale (μR/μF) IDs and PDFs)
+  // Note: the 355-th index is ID=1001 in systweights
+  // ID=1001 -> index = 355
+  // ID=1006 -> index=355+(1006-1001)=360
+  // ID=1011 -> 365
+  // ID=1016 -> 370
+  // ID=1021 -> 375
+  // ID=1031 -> 385
+  // ID=1041 -> 395
+  // The names will be double or half with murmuf μR/μF
+  std::vector<int> scale_ids = {1001, 1006, 1011, 1016, 1021, 1031, 1041};
+  std::vector<std::string> scale_names = {
+    "mur2_muf1", "mur0p5_muf1", "mur1_muf2", 
+    "mur1_muf2", "mur1_muf0p5", "mur1_muf0p5", "mur0p5_muf0p5"
+  };
+  for(unsigned i = 0; i < scale_ids.size(); i++){
+      int offset = scale_ids[i] - 1001;  // how far from 1001?
+      int idx_syst = 355 + offset;       // 355 is the systweights index for ID=1001
+      NamedWeight w;
+      w.branch_name = scale_names[i];
+      w.idx_syst = idx_syst;
+      m_all_weights.push_back(w);
+  }
+
+  // 3) PDF:  IDs=1151..1251 => 101 weights
+  //    ID=1151 => index=355+(1151-1001)=355+150=505
+  //    ID=1152 => 506, ...
+  //    ID=1251 => 505+(1251-1151)=505+100=605
+  // We'll name them "PDF_1"... "PDF_101"
+  int pdf_id_start = 1151;
+  int pdf_id_end = 1251;
+  for(int pdf_id = pdf_id_start; pdf_id <= pdf_id_end; pdf_id++){
+      int offset = pdf_id - 1001;       // how far from 1001?
+      int idx_syst = 355 + offset;        // e.g., for 1151: offset=150, so idx=505.
+      int pdf_num = pdf_id - pdf_id_start + 1; // 1..101
+      NamedWeight w;
+      w.branch_name = "PDF_" + std::to_string(pdf_num);
+      w.idx_syst = idx_syst;
+      m_all_weights.push_back(w);
+  }
+
+  // a big vector "m_all_weights" containing:
+  //  * first 355 EFT
+  //  * 7 scale variations
+  //  * 101 PDF
+  for(const auto & w : m_all_weights){
+      m_all_handles.push_back(ctx.declare_event_output<float>(w.branch_name));
+  }
 }
+
 
 /*
 ██████  ██████   ██████   ██████ ███████ ███████ ███████
@@ -550,17 +798,65 @@ ZprimeAnalysisModule_EFT::ZprimeAnalysisModule_EFT(uhh2::Context& ctx){
 ██      ██   ██  ██████   ██████ ███████ ███████ ███████
 */
 
-bool ZprimeAnalysisModule_EFT::process(uhh2::Event& event){
+bool ZprimeAnalysisModule_EFT_weightsbranch::process(uhh2::Event& event){
 
-  if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
-  if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
-
+  if(debug) {
+    std::cout << "++++++++++++ NEW EVENT ++++++++++++++" << std::endl;
+    std::cout << " run.event: " << event.run << ", " << event.event << std::endl;
+  }
   // Initialize reco flags with false
   event.set(h_is_zprime_reconstructed_chi2, false);
   event.set(h_is_zprime_reconstructed_correctmatch, false);
 
-  if(!event.isRealData){
-    if(!SignSplit->passes(event)) return false;
+  // EFT WEIGHT LINES
+
+  if(!event.isRealData && !SignSplit->passes(event)) return false;
+
+  // Retrieve systweights from GenInfo.
+  const auto & sw = event.genInfo->systweights();
+  // ensure sw.size() is large enough to contain all indices
+  if(sw.size() < 606) { 
+    if(debug) std::cout << "Not enough systweights: " << sw.size() << std::endl;
+    return false;
+  }
+
+  // Loop over all named weights and fill the corresponding output branch.
+  for(unsigned i = 0; i < m_all_weights.size(); i++){
+      int idx = m_all_weights[i].idx_syst;
+      float val = sw[idx];
+      event.set(m_all_handles[i], val);
+      if(debug && i < 5) {
+          std::cout << "Filling branch " << m_all_weights[i].branch_name 
+                    << " from systweights index " << idx << " with value " << val << std::endl;
+      }
+  }
+
+  //print first five EFT weights if EFT is enabled:
+  if(isEFT && !event.isRealData && debug) {
+      static bool first_event = true;
+      if(first_event) {
+          std::cout << "\n=== First Event EFT Weights ===" << std::endl;
+          try {
+              float refw = get_weight_by_name(event, "reference_point");
+              std::cout << "Reference point weight: " << refw << "\n" << std::endl;
+          } catch(...) {
+              std::cout << "Could not retrieve 'reference_point'" << std::endl;
+          }
+          std::cout << "First 5 EFT weights:" << std::endl;
+          for (int i = 0; i < 5; i++){
+              if(weight_index_to_name.find(i) != weight_index_to_name.end()){
+                  std::string name = weight_index_to_name[i];
+                  try {
+                      float val = get_weight_by_name(event, name);
+                      std::cout << "Weight " << i << ": Name: " << name << ", Value: " << val << std::endl;
+                  } catch(std::runtime_error &e) {
+                      std::cout << "Error retrieving weight " << i << ": " << e.what() << std::endl;
+                  }
+              }
+          }
+          std::cout << "===========================" << std::endl;
+          first_event = false;
+      }
   }
 
   // cout << "n_eft_weights: " << event.genInfo->systweights().size() << endl;
@@ -1115,21 +1411,6 @@ bool ZprimeAnalysisModule_EFT::process(uhh2::Event& event){
   fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "NNInputsBeforeReweight: ok" << endl;
 
-  // Calculate and store DeltaY_reco
-  event.set(h_DeltaY_reco, -100);
-  if(event.get(h_BestZprimeCandidateChi2)){
-    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-    float_t dyreco = 0.0;
-    if (BestZprimeCandidate->lepton().charge() > 0) {
-      // For positive lepton charge (antilepton)
-      dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
-    } else {
-      // For negative lepton charge (lepton)
-      dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
-    }
-    event.set(h_DeltaY_reco, dyreco);
-  }
-
   // histograms for systematics
   // if(!isEleTriggerMeasurement) SystematicsModule->process(event);
 
@@ -1138,4 +1419,4 @@ bool ZprimeAnalysisModule_EFT::process(uhh2::Event& event){
   return true;
 }
 
-UHH2_REGISTER_ANALYSIS_MODULE(ZprimeAnalysisModule_EFT)
+UHH2_REGISTER_ANALYSIS_MODULE(ZprimeAnalysisModule_EFT_weightsbranch)
