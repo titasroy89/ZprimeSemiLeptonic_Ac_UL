@@ -1664,7 +1664,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   
   //begin spin correlation with matching and deltay for all else(all MC and data)---------------->
   // for all MC and DATA
-  if (is_zprime_reconstructed_chi2 ){
+if (is_zprime_reconstructed_chi2 ){
    
     // if (debug) cout << "shouldnt be here if ttbar : " << endl;
    // const auto& genparticles = event.genparticles;
@@ -1866,7 +1866,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     Sigma_phi->Fill(sphi,weight);
     Delta_phi->Fill(dphi,weight);
 
-        // Plot dphi and sphi for high-pt ranges
+    // Plot dphi and sphi for high-pt ranges
     if(pt_hadTop > pt_hadTop_thresh && dyreco >0){
       Sigma_phi_1->Fill(sphi,weight);
       Delta_phi_1->Fill(dphi,weight);
