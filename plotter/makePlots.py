@@ -29,7 +29,7 @@ channel = options.channel
 year=options.year
 # eft=options.eft
 # eft=False
-path="%s_%s_Plots_Nov"%(channel,year)
+path="%s_%s_Plots_Feb25"%(channel,year)
 #if channel=="muon" and year=="2018":
 #	path="muon_ext_2018"
 print(path)
@@ -38,13 +38,13 @@ if os.path.exists(path):
 else:
 	os.mkdir(path)
 if (channel=="electron" or channel=="muon"):
-	#fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,channel,year,channel)
-        fileDir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s//NOMINAL/"%(year,channel,year, channel)
+	#fileDir ="/data/dust/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s_dY/NOMINAL/"%(year,channel,year,channel)
+        fileDir="/data/dust/user/titasroy/Ac_UL_ntuples/%s/%s/workdir_AnalysisDNN_%s_%s//NOMINAL/"%(year,channel,year, channel)
 else:
-	fileDir ="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
+	fileDir ="/data/dust/user/titasroy/Ac_UL_ntuples/%s/lepton/"%(year)
 
 # if channel=="muon" and year=="2018":
-	# fileDir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/2018/muon/workdir_AnalysisDNN_2018_muonlow1/NOMINAL/"
+	# fileDir="/data/dust/user/titasroy/Ac_UL_ntuples/2018/muon/workdir_AnalysisDNN_2018_muonlow1/NOMINAL/"
 
 print(fileDir)
 print eft
@@ -196,23 +196,24 @@ stackList_orig={"TTbar":[kRed],"WJets":[kGreen], "DYJets":[kGreen], "Diboson":[k
 #stackList_orig=OrderedDict()
 eft=True
 if eft:
-	histograms_eft={"DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
-			"DeltaY_reco_s2":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi<0 )", "Events", 2, [-2.5,2.5]],
-			"DeltaY_reco_s1":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi>0 )", "Events", 2, [-2.5,2.5]],
+	histograms={
+			# "DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
+			# "DeltaY_reco_s2":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi<0 )", "Events", 2, [-2.5,2.5]],
+			# "DeltaY_reco_s1":["\DeltaY (t_{h}(p_T)<150 GeV,\Sigma \phi>0 )", "Events", 2, [-2.5,2.5]],
 			"DeltaY_reco_d2":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi<0 )", "Events", 2, [-2.5,2.5]],
 			"DeltaY_reco_d1":["\DeltaY (t_{h}(p_T)<150 GeV,\Delta \phi>0 )", "Events", 2, [-2.5,2.5]],
-			"Delta_phi_high":["\DeltaY (t_{h}(p_T)>150 GeV )", "Events", 2, [-2.5,2.5]],
-			"Delta_phi_low":["\DeltaY (t_{h}(p_T)<150 GeV )", "Events", 2, [-2.5,2.5]],
-			"Sigma_phi":["\Sigma \phi", "Events", 16, [-3.2,3.2]],
-			"Sigma_phi_high":["\Sigma \phi (top_{h}(p_{T})>150 GeV)", "Events", 16, [-3.2,3.2]],
-			"Sigma_phi_low":["\Sigma \phi (top_{h}(p_{T})<150 GeV)", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi_high":["\DeltaY (t_{h}(p_T)>150 GeV )", "Events", 2, [-2.5,2.5]],
+			# "Delta_phi_low":["\DeltaY (t_{h}(p_T)<150 GeV )", "Events", 2, [-2.5,2.5]],
+			# "Sigma_phi":["\Sigma \phi", "Events", 16, [-3.2,3.2]],
+			# "Sigma_phi_high":["\Sigma \phi (top_{h}(p_{T})>150 GeV)", "Events", 16, [-3.2,3.2]],
+			# "Sigma_phi_low":["\Sigma \phi (top_{h}(p_{T})<150 GeV)", "Events", 16, [-3.2,3.2]],
 			"Sigma_phi_1":["\Sigma \phi (top_{h}(p_{T})>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
 			"Sigma_phi_2":["\Sigma \phi (top_{h}(p_{T})>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
-			"Delta_phi":["\Delta \phi", "Events", 16, [-3.2,3.2]],
-			"Delta_phi_high":["\Delta \phi (top_{h}(p_{T})>150 GeV)", "Events", 16, [-3.2,3.2]],
-			"Delta_phi_low":["\Delta \phi (top_{h}(p_{T})<150 GeV)", "Events", 16, [-3.2,3.2]],
-			"Delta_phi_1":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
-			"Delta_phi_2":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi":["\Delta \phi", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi_high":["\Delta \phi (top_{h}(p_{T})>150 GeV)", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi_low":["\Delta \phi (top_{h}(p_{T})<150 GeV)", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi_1":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY > 0)", "Events", 16, [-3.2,3.2]],
+			# "Delta_phi_2":["\Delta \phi (top_{h}(p_{T})>150 GeV,\DeltaY < 0)", "Events", 16, [-3.2,3.2]],
 	}
 # bins_jetpt=[0.,20.,40.,60.,80.,100.,120.,140.,160.,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,.,750.,800.,900.]
 bins_mttbar=[0.,180.,360.,540.,720.,1000.,1500.,6000.]
@@ -234,44 +235,33 @@ for i in range(100,3501,50):
 # print bins_mttbar_rebin
 # # sys.exit()
 # print(len(bins_mttbar_rebin))
-histograms={ "M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 160, [300, 3500]],
-  	    "M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 160, [250, 3500], bins_mttbar_rebin,len(bins_mttbar_rebin)-1],
-  	    # "M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [300, 3500]],
-        # "M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000],bins_mttbar,7],
- 	    "DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
- 	    "N_jets": ["N_{jets}","Events", 9, [1.5, 10.5]],
- 	    "pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900],bins_jetpt,len(bins_jetpt)-1],
-		"eta_jet1" :["#eta^{jet 1}","Events", 50, [-2.5, 2.5]],
-		"pt_jet" :["p_{T}^{jets} [GeV]","Events", 45, [0, 900],bins_jetpt,len(bins_jetpt)-1],
-		"eta_jet" :["#eta^{jets}","Events", 50, [-2.5, 2.5]],
- 	    "deepjetbscore_jet1":["DeepJet b-tag score AK4 jet 1","Events", 20, [0, 1]],
- 	    "deepjetbscore_jet":["DeepJet b-tag score AK4 jets","Events", 20, [0, 1]],
- 	    # "N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
- }
+# histograms={ "M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 160, [300, 3500]],
+#   	    "M_Zprime_rebin": ["M_{t#bar{t}} [GeV]","Events", 160, [250, 3500], bins_mttbar_rebin,len(bins_mttbar_rebin)-1],
+#   	    # "M_Zprime_rebin2": ["M_{t#bar{t}} [GeV]","Events", 70, [300, 3500]],
+#         # "M_Zprime_rebin3": ["M_{t#bar{t}} [GeV]","Events", 35, [0, 6000],bins_mttbar,7],
+#  	    "DeltaY_reco":["\DeltaY ", "Events", 2, [-2.5,2.5]],
+#  	    "N_jets": ["N_{jets}","Events", 9, [1.5, 10.5]],
+#  	    "pt_jet1" :["p_{T}^{jet 1} [GeV]","Events", 45, [0, 900],bins_jetpt,len(bins_jetpt)-1],
+# 		"eta_jet1" :["#eta^{jet 1}","Events", 50, [-2.5, 2.5]],
+# 		"pt_jet" :["p_{T}^{jets} [GeV]","Events", 45, [0, 900],bins_jetpt,len(bins_jetpt)-1],
+# 		"eta_jet" :["#eta^{jets}","Events", 50, [-2.5, 2.5]],
+#  	    "deepjetbscore_jet1":["DeepJet b-tag score AK4 jet 1","Events", 20, [0, 1]],
+#  	    "deepjetbscore_jet":["DeepJet b-tag score AK4 jets","Events", 20, [0, 1]],
+#  	    # "N_lep_charge":["Lepton charge ", "Events", 2, [-2.0,2.0]],
+#  }
 
 # sys.exit()
 # if channel=="muon" :
 #  	histograms.update({
 #  					  "dRmin_mu1_jet": ["#DeltaR_{min}(#mu, jet)","Events", 60, [0, 3]],
 # 					  "pt_mu1": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
-
-# 					#   "ptrel_mu1_jet":["p_{T}^{rel}(#mu, jet)","Events", 50, [0, 500]],
-					#   "dRmin_ptrel_mu1":["p_{T}^{rel}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet)","Events",60,[ 0, 3], 50, [0, 500]],
-					# #   "pt_mu_lowpt": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
-					#   "pt_mu_midpt": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
-					#   "N_mu_charge":["Electron charge ", "Events", 2, [-1.0,1.0]],
- 					#   })
+# 					  "ptrel_mu1_jet":["p_{T}^{rel}(#mu, jet)","Events", 50, [0, 500]],
+#  					  })
 # elif(channel=="electron" ):
 #  	histograms.update({
 #  					  "dRmin_ele1_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
 #  				      "pt_ele1": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
-# 					#   "ptrel_ele1_jet":["p_{T}^{rel}(e, jet)","Events", 50, [0, 500]],
-# 					#   "dRmin_ptrel_ele1":["p_{T}^{rel}(e1, jet) vs. #DeltaR_{min}(e1, jet)","Events",60,[ 0, 3], 50, [0, 500]],
-
-# 					#   "pt_ele_lowpt": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
-# 					#   "pt_ele_midpt": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
-# 					#   "pt_ele_highpt": ["Electron p_{T} [GeV]","Events",90,[ 0, 900]],
-# # 					#   "N_ele_charge":["Electron charge ", "Events", 2, [-1.0,1.0]],
+# 					  "ptrel_ele1_jet":["p_{T}^{rel}(e, jet)","Events", 50, [0, 500]],
 #  					   })
 # elif(channel=="lepton"):
 # 	histograms.update({"dRmin_ele_jet": ["#DeltaR_{min}(e, jet)","Events", 60, [0, 3]],
@@ -280,14 +270,8 @@ histograms={ "M_Zprime":["M_{t#bar{t}} [GeV]", "Events", 160, [300, 3500]],
 # 				      "pt_mu": ["Muon p_{T} [GeV]","Events",90,[ 0, 900]],
 # 					   })
 
-# categories=["Weights_TopTag_SF","TwoDCut_low1","TwoDCut_low1","DNN_output0","DNN_output1","DNN_output2","DNN_output0_TopTag","DNN_output0_NoTopTag"]
 categories=["DNN_output0","DNN_output1","DNN_output2"]
-# ,"DNN_output0_nochi2","DNN_output1","DNN_output1_chi2","DNN_output2_chi2","DNN_output2","DNN_output0_TopTag","DNN_output0_NoTopTag"]
-# ,"Chi2_passes","Chi2_inverse"]
-# categories=["AfterBtagSF","BeforeBtagSF"]
-#test_sample = ['TTbar','ST_s','ST_t','ST_tW', 'WJets', 'DYJets', 'Diboson','QCD']
 test_sample = ['WJets', 'DYJets', 'Diboson','QCD','ST','TTbar']
-#for key in test_tuple: print(test_dict[key])
 file={}
 histo_={}
 
@@ -407,10 +391,10 @@ file={}
 histo={}
 
 # Scale factors for Asimov post fits
-SFs={"TTbar":[1-2.78e-11,1-2.48e-9],
-    "WJets": [1-7.27e-12,1-2.49e-9],
-	"ST": [1-2.54e-12,1-3.16e-9],
-	}
+# SFs={"TTbar":[1-2.78e-11,1-2.48e-9],
+#     "WJets": [1-7.27e-12,1-2.49e-9],
+# 	"ST": [1-2.54e-12,1-3.16e-9],
+# 	}
 
 
 
@@ -552,14 +536,10 @@ for hist in histograms:
 		for sample in test_sample:
 			print("sample is: ", sample,cat,hist)
 			file[sample] = TFile("%s/uhh2.AnalysisModuleRunner.MC.%s.root"%(fileDir,sample),"read")
-			temp_hist="%s_General/%s"%(cat,hist)
+			temp_hist="DeltaY_reco_0_500_CR2_General/%s"%(hist)
 			print(temp_hist)
 			histo[sample]=file[sample].Get(temp_hist)
-			# if "N_jets" in hist:
-			# 	print("NJets hist: ",histograms[hist][3][0],histograms[hist][3][1])
-			# histo[sample].GetXaxis().SetRangeUser(histograms[hist][3][0],histograms[hist][3][1])
-			# if "dRmin_ptrel" in hist:
-			# 	histo[sample].GetYaxis().SetRangeUser(histograms[hist][5][0],histograms[hist][5][1])
+			
 			histo[sample].SetFillColor(stackList_orig[sample][0])
 			histo[sample].SetLineColor(stackList_orig[sample][0])
 			# if "M_Zprime_rebin3" in hist or (hist=="M_Zprime_rebin") or "pt_jet1" in hist:
@@ -602,9 +582,17 @@ for hist in histograms:
 			stack.SetMinimum(0.0)
 		
 		file_data=TFile("%s/uhh2.AnalysisModuleRunner.DATA.DATA.root"%(fileDir),"read")
-		# print(file_data)
+		file_eft=TFile("%s/uhh2.AnalysisModuleRunner.MC.MC_EFT.root"%(fileDir),"read")
+		print("data file: ",file_data)
+		print("eft file: ",file_eft)
 		print(temp_hist)
+		eft_hist1="DeltaY_reco_PDFVariations_0_500_CR2/%s_PDF_1"%(hist)
+		eft_hist2="DeltaY_reco_PDFVariations_0_500_CR2/%s_PDF_2"%(hist)
+		print(eft_hist1)
+		print(eft_hist2)
 		dataHist=file_data.Get(temp_hist)
+		eftHist1=file_eft.Get(eft_hist1)
+		eftHist2=file_eft.Get(eft_hist2)
 		print("data: ",dataHist.GetBinContent(1),dataHist.GetBinContent(2))
 		print(hist,cat,sample)
 		# dataHist.GetXaxis().SetRangeUser(histograms[hist][3][0],(histograms[hist][3][1]))
@@ -620,6 +608,22 @@ for hist in histograms:
 		dataHist.SetYTitle(histograms[hist][1])     
 		dataHist.Draw("pe,x0")
 		stack.SetMinimum(0.)
+		eftHist1.SetMarkerStyle(42)
+		eftHist1.SetMarkerColor(6)
+		eftHist1.SetMarkerSize(0.8)
+		eftHist1.SetLineColor(6)
+		eftHist1.SetYTitle(histograms[hist][1])     
+		eftHist1.Draw("pe,x0,SAME")
+
+		eftHist2.SetMarkerStyle(28)
+		eftHist2.SetMarkerColor(7)
+		eftHist2.SetMarkerSize(0.8)
+		eftHist2.SetLineColor(7)
+		eftHist2.SetYTitle(histograms[hist][1])     
+		eftHist2.Draw("pe,x0,SAME")
+
+
+
 		# stack.Draw("HIST,SAME")
 
 		errorban=stack.GetStack().Last().Clone("errorban")
@@ -653,7 +657,7 @@ for hist in histograms:
 			
 		if log:
 		
-			stack.SetMaximum(10**(1.5*log10(maxVal) - 0.5*log10(minVal)))
+			stack.SetMaximum(10**(2.5*log10(maxVal) - 0.5*log10(minVal)))
 		else:
 			
 			stack.SetMaximum(1.7*maxVal)
@@ -699,9 +703,13 @@ for hist in histograms:
 		else:
 			stack.Draw("HIST")
 		dataHist.Draw("E,X0,SAME")
+		eftHist1.Draw("E,X0,SAME")
+		eftHist2.Draw("E,X0,SAME")
 		errorban.Draw("E2,SAME")
 		# print("draw done")
 		legendR.AddEntry(dataHist, "Data", 'pe')
+		legendR.AddEntry(eftHist1, "EFT ref pt ", 'pe')
+		legendR.AddEntry(eftHist2, "EFT rwght pt", 'pe')
 		# pad1.SetLogy(1)
 		ratio = dataHist.Clone("temp")
 		temp = stack.GetStack().Last().Clone("temp")
@@ -753,9 +761,9 @@ for hist in histograms:
 		canvasRatio.Update()
 		canvasRatio.RedrawAxis()
 		if log:
-			canvasRatio.SaveAs("%s/%s_%s_log.pdf"%(path,hist,cat))
+			canvasRatio.SaveAs("%s/%s_%s_0_500_CR2_log.pdf"%(path,hist,cat))
 		else:
-			canvasRatio.SaveAs("%s/%s_%s_linear.pdf"%(path,hist,cat))
+			canvasRatio.SaveAs("%s/%s_%s_0_500_CR2_linear.pdf"%(path,hist,cat))
 
 
 

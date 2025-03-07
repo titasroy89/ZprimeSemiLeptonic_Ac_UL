@@ -204,7 +204,7 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   cout << " run.event: " << event.run << ". " << event.event << endl;
   cout <<" year? :" << event.year << endl; 
   cout << "size of lhe weight:"<<event.genInfo->systweights().size() <<endl; 
-   cout << "reference point: "<<event.genInfo->systweights().at(0)<<endl;
+  cout << "reference point: "<<event.genInfo->systweights().at(0)<<endl;
   for(int i=0; i<354; i++){
     double EFT_weight = event.genInfo->systweights().at(i+1);
     cout << "EFT weights: "<< EFT_weight<<endl;
