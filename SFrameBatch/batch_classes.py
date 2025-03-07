@@ -9,7 +9,7 @@ from tree_checker import *
 #from fhadd import fhadd
 
 
-SINGULARITY_IMG = os.path.expandvars("/nfs/dust/cms/user/$USER/slc6_latest.sif")
+SINGULARITY_IMG = os.path.expandvars("/data/dust/user/$USER/slc6_latest.sif")
 
 
 def write_script(name,workdir,header,sl6_container=False):
@@ -24,14 +24,14 @@ def write_script(name,workdir,header,sl6_container=False):
 cat /etc/redhat-release
 echo $APPTAINER_CONTAINER
 #source /cvmfs/cms.cern.ch/cmsset_default.sh
-#cd /nfs/dust/cms/user/titasroy/Ac_UL/CMSSW_10_6_28
+#cd /data/dust/user/titasroy/Ac_UL/CMSSW_10_6_28
 #cmsenv
-#source /nfs/dust/cms/user/titasroy/Ac_UL/SFrame/setup.sh
+#source /data/dust/user/titasroy/Ac_UL/SFrame/setup.sh
 #cd -
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH_STORED:$LD_LIBRARY_PATH
 #export PATH=$PATH_STORED:$PATH
 WORKDIR=$PWD
-source /nfs/dust/cms/user/titasroy/setup_UL_Ac.sh
+source /data/dust/user/titasroy/setup_UL_Ac.sh
 cd $WORKDIR
 # echo "**** BEGIN ENV"
 # printenv
@@ -64,7 +64,7 @@ sframe_main $1
         if not os.path.isfile(SINGULARITY_IMG):
             print '\033[93m',"Please pull the SLC6 image to your NFS:",'\033[0m'
             print ""
-            print '\033[93m','SINGULARITY_CACHEDIR="/nfs/dust/cms/user/$USER/singularity" singularity pull', SINGULARITY_IMG, 'docker://cmssw/slc6:latest','\033[0m'
+            print '\033[93m','SINGULARITY_CACHEDIR="/data/dust/user/$USER/singularity" singularity pull', SINGULARITY_IMG, 'docker://cmssw/slc6:latest','\033[0m'
             print ""
             raise RuntimeError("\033[91mCannot find image, %s. Do not use one from /afs or /cvmfs.\033[0m" % SINGULARITY_IMG)
         worker_str += '+MySingularityImage="'+SINGULARITY_IMG+'"\n'
@@ -126,7 +126,7 @@ def resub_script(name,workdir,header,sl6_container=False):
         if not os.path.isfile(SINGULARITY_IMG):
             print '\033[93m',"Please pull the SLC6 image to your NFS:",'\033[0m'
             print ""
-            print '\033[93m','SINGULARITY_CACHEDIR="/nfs/dust/cms/user/$USER/singularity" singularity pull', SINGULARITY_IMG, 'docker://cmssw/slc6:latest','\033[0m'
+            print '\033[93m','SINGULARITY_CACHEDIR="/data/dust/user/$USER/singularity" singularity pull', SINGULARITY_IMG, 'docker://cmssw/slc6:latest','\033[0m'
             print ""
             raise RuntimeError("\033[91mCannot find image, %s. Do not use one from /afs or /cvmfs.\033[0m" % SINGULARITY_IMG)
         worker_str += '+MySingularityImage="'+SINGULARITY_IMG+'"\n'

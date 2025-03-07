@@ -7,11 +7,12 @@ channel="muon" # electron / muon
 UHH_dir="/nfs/dust/cms/user/titasroy/Ac_UL/CMSSW_10_6_28/src/UHH2/"
 
 #where (NOT MERGED) trees after preselection stored
-input_dir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/2018/${channel}/workdir_Analysis_${year}_${channel}_low1/uhh2.AnalysisModuleRunner."
+# input_dir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/2018/${channel}/workdir_Analysis_${year}_${channel}_low1/uhh2.AnalysisModuleRunner."
 # input_dir="/nfs/dust/cms/group/zprime-uhh/Analysis_${year}/${channel}/workdir_Analysis_${year}_${channel}/uhh2.AnalysisModuleRunner."
+input_dir="/nfs/dust/cms/user/titasroy/Ac_UL_ntuples/Analysis/2018/muon/workdir_Analysis_UL18_muon/uhh2.AnalysisModuleRunner."
 echo $input_dir
 # output dir
-output_dir=$UHH_dir/ZprimeSemiLeptonic/data/Skimming_datasets_isolow_${year}_${channel}
+output_dir=$UHH_dir/ZprimeSemiLeptonic/data/Skimming_datasets_new_${year}_${channel}
 
 if [ -d "${output_dir}" ]; then
     echo "output directory exists, will be deleted..."

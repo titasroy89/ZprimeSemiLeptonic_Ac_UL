@@ -250,11 +250,10 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //NN - DON'T FORGET TO CHANGE!
   //Muon
-  ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
-  
+  ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //Electron
-  // ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
-  
+  // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+//  cout<<"read txt"<<endl;
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
     for(int i = 0; i < 59; ++i)
@@ -353,6 +352,10 @@ protected:
 
   // NN variables handles
   unique_ptr<Variables_NN> Variables_module;
+  unique_ptr<Variables_EFT_SR> VariablesEFTSR_module;
+  unique_ptr<Variables_EFT_CR1> VariablesEFTCR1_module;
+  unique_ptr<Variables_EFT_CR2> VariablesEFTCR2_module;
+
 
   //Handles
   Event::Handle<bool> h_is_zprime_reconstructed_chi2, h_is_zprime_reconstructed_correctmatch;
@@ -715,6 +718,10 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   DeltaEta_selection.reset(new DeltaEtaSelection()); // Cut on DeltaEta(j1,j2)<3. to reduce QCD spikes
 
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
+  VariablesEFTSR_module.reset(new Variables_EFT_SR(ctx, mode)); // variables for EFT SR
+  VariablesEFTCR1_module.reset(new Variables_EFT_CR1(ctx, mode)); // variables for EFT CR1
+  VariablesEFTCR2_module.reset(new Variables_EFT_CR2(ctx, mode)); // variables for EFT CR2
+
 
  //  if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
 
@@ -966,11 +973,14 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
-  
-  //electron
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
-  
+  // if(isMuon){
+  //   // cout <<"get muon models" << endl;
+  NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  // }//electron
+  // else{
+    // cout <<"get electron models" << endl;
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  // }
 
 }
 
@@ -1367,7 +1377,7 @@ if(debug)  cout<<"test4"<<endl;
 
   // Variables for NN
   if(debug) cout << "before var module" << endl;
-  Variables_module->process(event);
+  // Variables_module->process(event);
   // fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "Variables_module: ok" << endl;
 
@@ -1416,12 +1426,14 @@ if(debug)  cout<<"test4"<<endl;
   if(debug) cout << "check for signal node" << endl;
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
+    // Variable_EFT_SR->passes
     fill_histograms(event, "DNN_output0_nochi2");
     if(debug) cout << "signal DNN output0" << endl;
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       if(debug) cout << "signal DNN output0 chi2" << endl;
       h_CHSMatchHists->fill(event);
       fill_histograms(event, "DNN_output0");
+      VariablesEFTSR_module->process(event);
       if(Mass_tt>=0 && Mass_tt < 500){
         fill_histograms(event, "DeltaY_reco_0_500_SR");
         if(debug) cout << "signal DNN output0 chi2 0_500" << endl;
@@ -1465,6 +1477,8 @@ if(debug)  cout<<"test4"<<endl;
   if( out1 == max_score ){
 
     fill_histograms(event, "DNN_output1");
+    VariablesEFTCR1_module->process(event);
+
     if(Mass_tt>=0 && Mass_tt < 500){
       fill_histograms(event, "DeltaY_reco_0_500_CR1");
       h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
@@ -1499,6 +1513,8 @@ if(debug)  cout<<"test4"<<endl;
 
   if( out2 == max_score ){
     fill_histograms(event, "DNN_output2");
+    VariablesEFTCR2_module->process(event);
+
     if(Mass_tt>=0 && Mass_tt < 500){
               fill_histograms(event, "DeltaY_reco_0_500_CR2");
               h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);

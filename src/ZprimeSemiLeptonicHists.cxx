@@ -1813,32 +1813,125 @@ if (is_zprime_reconstructed_chi2 ){
     }
       
     TLorentzVector ttbar = PosTop + NegTop;
+    TLorentzVector lep_top_lep_CoM = lep_top_lep;
     // Boost into ttbar CoM-Frame <<<-------//
-    lep_top_lep.Boost(-ttbar.BoostVector());
-    had_top_b.Boost(-ttbar.BoostVector());
-    PosTop.Boost(-ttbar.BoostVector());
-    NegTop.Boost(-ttbar.BoostVector());
+    lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+    TLorentzVector had_top_b_CoM = had_top_b;
+    had_top_b_CoM.Boost(-ttbar.BoostVector());
+    TLorentzVector PosTop_CoM = PosTop;
+    PosTop_CoM.Boost(-ttbar.BoostVector());
+    TLorentzVector NegTop_CoM = NegTop;
+    NegTop_CoM.Boost(-ttbar.BoostVector());
 
-    // Rotate vectors into Helicity Frame <<<------//
+
+    ///old
+    // lep_top_lep.Boost(-ttbar.BoostVector());
+    // had_top_b.Boost(-ttbar.BoostVector());
+    // PosTop.Boost(-ttbar.BoostVector());
+    // NegTop.Boost(-ttbar.BoostVector());
+
+
+    // Beam unit vector in COM frame
+    TVector3 beam_axis(0,0,1);
+
+
+   // Calculating top scattering angle for PosTop only
+    double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+    double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+    // The sign of cos_PosTop_beam to account for Bose symmetry
+    double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+    // // The sign based on PosTop and NegTop's rapidity
+    // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+    // Bernreuther basis vectors
+    TVector3 kbase = PosTop_CoM.Vect().Unit();
+    TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+    TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+    // Rotate vectors into Helicity Frame <<<-----------//
     // Rotate about beamline
-    lep_top_lep.RotateZ(-1.*PosTop.Phi());
-    had_top_b.RotateZ(-1.*PosTop.Phi());
-    PosTop.RotateZ(-1.*PosTop.Phi());
-    NegTop.RotateZ(-1.*PosTop.Phi());
+    TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+    lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector had_top_b_H = had_top_b_CoM;
+    had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector PosTop_H = PosTop_CoM;
+    PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector NegTop_H = NegTop_CoM;
+    NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+    TVector3 kbase_H = kbase;
+    kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TVector3 rbase_H = rbase;
+    rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TVector3 nbase_H = nbase;
+    nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
     // Rotate about y-axis
-    lep_top_lep.RotateY(-1.*PosTop.Theta());
-    had_top_b.RotateY(-1.*PosTop.Theta());
-    PosTop.RotateY(-1.*PosTop.Theta());
-    NegTop.RotateY(-1.*PosTop.Theta());
+    TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+    lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector had_top_b_Hel = had_top_b_H;
+    had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector PosTop_Hel = PosTop_H;
+    PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector NegTop_Hel = NegTop_H;
+    NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+    TVector3 kbase_Hel = kbase_H;
+    kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TVector3 rbase_Hel = rbase_H;
+    rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TVector3 nbase_Hel = nbase_H;
+    nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+    // Rotation to align with Bernreuther basis <<<---------//
+    TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+    TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+    TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+    TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+    TVector3 kbase_BoseSymm = kbase_Hel;
+    TVector3 rbase_BoseSymm = rbase_Hel;
+    TVector3 nbase_BoseSymm = nbase_Hel;
+
+    if(sign_cos_PosTop_beam > 0.){
+      lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+      kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    }
+    else{
+      lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+      had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+      PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+      NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+      kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+      rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+      nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    }
+     // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+    TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+    TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+    TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+    TLorentzVector NegTop_Rest = NegTop_BoseSymm;
 
 
+
+
+
+  //old code
     if(BestZprimeCandidate->lepton().charge() > 0){
-      lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
-      had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+      lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+      had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
     }
     else if (BestZprimeCandidate->lepton().charge() < 0){
-      lep_top_lep.Boost(-NegTop.BoostVector()); // Positive charged lepton has Positive Top mother
-      had_top_b.Boost(-PosTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+      lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+      had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
     }
 
         // Boost into ttbar Rest-Frame <<<--------//
@@ -1850,12 +1943,12 @@ if (is_zprime_reconstructed_chi2 ){
       // Define angular variables as sum and difference of decay products' phi-coordinates
       // sphi and dphi = PosTopDecayProd_phi +- NegTopDecayProd_phi
     float dphi=0.;
-    float sphi = lep_top_lep.Phi() + had_top_b.Phi();
+    float sphi = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
     if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
-      dphi = lep_top_lep.Phi() - had_top_b.Phi();
+      dphi = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
     }
     if(BestZprimeCandidate->lepton().charge() < 0){
-      dphi = had_top_b.Phi() - lep_top_lep.Phi();
+      dphi = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
     }
     
         // Map back into original domain if necessary

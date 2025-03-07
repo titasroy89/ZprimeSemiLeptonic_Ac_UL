@@ -26,6 +26,8 @@
 #include <UHH2/common/include/JetHists.h>
 #include <UHH2/common/include/EventHists.h>
 #include <UHH2/common/include/CommonModules.h>
+// #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
+// #include "SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h"
 
 #include <UHH2/ZprimeSemiLeptonic/include/ModuleBASE.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicSelections.h>
@@ -48,6 +50,7 @@ public:
 
 protected:
   bool debug;
+  // edm::EDGetTokenT<LHEEventProduct> src_;
 
   // Corrections
   std::unique_ptr<CommonModules> common;

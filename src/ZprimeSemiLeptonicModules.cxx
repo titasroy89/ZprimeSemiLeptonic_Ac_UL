@@ -351,32 +351,66 @@ float match_dr(const Particle & p, const std::vector<T> & jets, int& index){
   }
   return mindr;
 }
+// bool Ac_SpinCorr_candidatesBuilder::Ac_SpinCorr_candidatesBuilder(uhh2::Context& ctx){
+//   h_Ac_SpinCorrCandidates_ = ctx.get_handle< vector<h_Ac_SpinCorrCandidate> >("h_Ac_SpinCorrCandidates");
+//   h_ZprimeCandidates_ = ctx.get_handle< std::vector<ZprimeCandidate> >("ZprimeCandidates");
+//   h_is_zprime_reconstructed_ = ctx.get_handle< bool >("is_zprime_reconstructed_chi2");
+//   h_BestCandidate_ = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
+
+  
+  
+// }
+
+// bool Ac_SpinCorr_candidatesBuilder::process(uhh2::Event& event){
+// if (BestZprimeCandidate->lepton().charge()>0) {
+//       dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+//     } else {
+//       dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+//     }
+
+//     //set the members that would be accessible:
+//     candidate.set_DeltaY_reco(dyreco);
+//     return true;
+// }
+
 
 ZprimeCorrectMatchDiscriminator::ZprimeCorrectMatchDiscriminator(uhh2::Context& ctx){
-
+  cout<<"starting ZCMD"<<endl;
   h_ZprimeCandidates_ = ctx.get_handle< std::vector<ZprimeCandidate> >("ZprimeCandidates");
+  cout<<"got ZprimeCandidates handle"<<endl;
   h_ttbargen_ = ctx.get_handle<TTbarGen>("ttbargen");
+  cout<<"got ttbar gen handle"<<endl;
   h_is_zprime_reconstructed_ = ctx.get_handle< bool >("is_zprime_reconstructed_correctmatch");
+  cout<<"set zprime bool"<<endl;
   h_BestCandidate_ = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
+  cout<<"set best candidate"<<endl;
 
   is_mc = ctx.get("dataset_type") == "MC";
   if(is_mc) ttgenprod.reset(new TTbarGenProducer(ctx));
+  cout<<"set ttgenprod"<<endl;
 }
 
 bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
 
   if(!is_mc) return false;
-
+  cout<<"starting ZCMD bool"<<endl;
   // Check if event contains == 2 top quarks
   assert(event.genparticles);
+  cout<<"get gen particles"<<endl;
   int n_top = 0, n_antitop = 0;
   for(const auto & gp : *event.genparticles){
     if(gp.pdgId() == 6) n_top++;
     else if(gp.pdgId() == -6) n_antitop++;
   }
+  cout << n_top << n_antitop <<endl;
   if(n_top != 1 || n_antitop != 1) return false;
-  bool check_decay = ttgenprod->process(event);
-  if(!check_decay) return false; //FixME: sometimes decay prodcts of ttbar are not Wb+Wb. Why?
+  cout << n_top << n_antitop <<endl;
+  cout<<"checked for top/antitop"<<endl;
+  // bool check_decay = ttgenprod->process(event);
+  cout <<ttgenprod->process(event)<<endl;
+  // cout<<check_decay<<endl;
+  //cout<<"check decay"<<endl;
+  //if(!check_decay) return false; //FixME: sometimes decay prodcts of ttbar are not Wb+Wb. Why?
 
   vector<ZprimeCandidate>& candidates = event.get(h_ZprimeCandidates_);
   if(candidates.size() < 1) return false;
@@ -1003,6 +1037,17 @@ Variables_NN::Variables_NN(uhh2::Context& ctx, TString mode): mode_(mode){
 
   ///  M ttbar
   h_M_tt = ctx.declare_event_output<float>("M_tt");
+  //Ac and spic corr
+  h_dyreco = ctx.declare_event_output<float>("dyreco");
+  h_dyreco_1 = ctx.declare_event_output<float>("dyreco_1");
+  h_dyreco_2 = ctx.declare_event_output<float>("dyreco_2");
+
+  h_Sigma_phi_1=ctx.declare_event_output<float>("Sigma_phi_1");
+  h_Sigma_phi_2=ctx.declare_event_output<float>("Sigma_phi_2");
+  h_Sigma_phi = ctx.declare_event_output<float>("Sigma_phi");
+  h_Delta_phi = ctx.declare_event_output<float>("Delta_phi");
+
+  
   // chi^2
   h_chi2 = ctx.declare_event_output<float>("chi2");
 
@@ -1319,21 +1364,1376 @@ bool Variables_NN::process(uhh2::Event& evt){
   evt.set(h_M_tt, -10);
   evt.set(h_chi2, -10);
   bool is_zprime_reconstructed_chi2 = evt.get(h_is_zprime_reconstructed_chi2);
+  ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
+  // vector <Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);  
+  //                 // AK4Puppijets that have been matched to CHSjets
+ 
+  // vector <TopJet> TopTaggedJets = evt.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
+  vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
+  float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
+
   if(is_zprime_reconstructed_chi2){
-    ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+    // ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
     float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
     evt.set(h_M_tt, Mass_tt);
     evt.set(h_chi2, chi2);
   }
+  // EFT Ac and spin correlation variables:
+  // Plot pt of hadronic Top jet
+  float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
+  
+  float bscore_max = -2;
+  if(!is_toptag_reconstruction){
+      // Loop over resolved hadronic jets to find their bscore via CHS jets
+    for(unsigned int i=0; i<BestZprimeCandidate->jets_hadronic().size(); i++){
+      double deltaR_min = 99;
+      // Match resolved hadronic jets to CHS jets (which have bscores)
+      for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+        double deltaR_CHS = deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(j));
+        if(deltaR_CHS < deltaR_min) deltaR_min = deltaR_CHS;
+        }
+      // Build bScore-vector for resolved hadronic jets whose bscore will correspond by index
+      for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+        if(deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(k)) == deltaR_min) 
+        jets_hadronic_bscores.emplace_back(AK4CHSjets_matched.at(k).btag_DeepJet());
+        } // Using DeepJet btag score
+    }
+    // Loop over bScores-vector to extract highest bscor
+    for(unsigned int i=0; i<jets_hadronic_bscores.size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore > bscore_max) bscore_max = bscore;
+    }
+    //is not top tag
+  }
+  if(is_toptag_reconstruction){
+    // Loop over hadronic top's subjets to extract highest bscore
+  for(unsigned int i=0; i < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); i++){
+    float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(i).btag_DeepJet(); // Using DeepJet btag score
+    if(bscore > bscore_max) bscore_max = bscore;
+  }
 
-  // random generator with eta-dependend random seed for k-fold validation
+}
+  TLorentzVector had_top_b(0, 0, 0, 0);
+
+// Resolved topology
+  if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+    for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).energy());
+    }
+  }
+  // Merged topology
+  if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+    for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+      float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+    }
+  }
+  TLorentzVector lep_top_lep(0, 0, 0, 0);
+  LorentzVector lep = BestZprimeCandidate->lepton().v4();
+  lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+    // Define 4vectors of top quarks
+  TLorentzVector PosTop(0, 0, 0, 0);
+  TLorentzVector NegTop(0, 0, 0, 0);
+
+      // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    // Define ttbar system
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+  }
+      
+  TLorentzVector ttbar = PosTop + NegTop;
+  TLorentzVector lep_top_lep_CoM = lep_top_lep;
+  // Boost into ttbar CoM-Frame <<<-------//
+  lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+  TLorentzVector had_top_b_CoM = had_top_b;
+  had_top_b_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector PosTop_CoM = PosTop;
+  PosTop_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector NegTop_CoM = NegTop;
+  NegTop_CoM.Boost(-ttbar.BoostVector());
+  // Beam unit vector in COM frame
+  TVector3 beam_axis(0,0,1);
+  // Calculating top scattering angle for PosTop only
+  double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+  double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+  // The sign of cos_PosTop_beam to account for Bose symmetry
+  double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+  // // The sign based on PosTop and NegTop's rapidity
+  // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+  // Bernreuther basis vectors
+  TVector3 kbase = PosTop_CoM.Vect().Unit();
+  TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+  TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+  // Rotate vectors into Helicity Frame <<<-----------//
+  // Rotate about beamline
+  TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+  lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector had_top_b_H = had_top_b_CoM;
+  had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector PosTop_H = PosTop_CoM;
+  PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector NegTop_H = NegTop_CoM;
+  NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  TVector3 kbase_H = kbase;
+  kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 rbase_H = rbase;
+  rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 nbase_H = nbase;
+  nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  // Rotate about y-axis
+  TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+  lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector had_top_b_Hel = had_top_b_H;
+  had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector PosTop_Hel = PosTop_H;
+  PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector NegTop_Hel = NegTop_H;
+  NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  TVector3 kbase_Hel = kbase_H;
+  kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 rbase_Hel = rbase_H;
+  rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 nbase_Hel = nbase_H;
+  nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  // Rotation to align with Bernreuther basis <<<---------//
+  TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+  TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+  TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+  TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+  TVector3 kbase_BoseSymm = kbase_Hel;
+  TVector3 rbase_BoseSymm = rbase_Hel;
+  TVector3 nbase_BoseSymm = nbase_Hel;
+
+  if(sign_cos_PosTop_beam > 0.){
+    lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  }
+  else{
+    lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  }
+   // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+  TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+  TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+  TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+  TLorentzVector NegTop_Rest = NegTop_BoseSymm;
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+    had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+    had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
+  }
+
+  float dphi=0.;
+  float sphi = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
+  if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+    dphi = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
+  }
+  if(BestZprimeCandidate->lepton().charge() < 0){
+    dphi = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
+  }
+
+  evt.set(h_Sigma_phi,-10);
+  evt.set(h_Delta_phi,-10);
+  evt.set(h_Sigma_phi_1,-10);
+  evt.set(h_Sigma_phi_2,-10);
+  evt.set(h_dyreco_1,-10);
+  evt.set(h_dyreco_2,-10);
+
+
+  if(sphi > TMath::Pi()) sphi = sphi - 2*TMath::Pi();
+  if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
+  if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
+  if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
+  
+  evt.set(h_Sigma_phi,sphi);
+  evt.set(h_Delta_phi,dphi);
+  
+
+
+
+  evt.set(h_dyreco,-10);
+  float dyreco=0;
+  // ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  if (BestZprimeCandidate->lepton().charge()>0) {
+    dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+  } else {
+    dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+  }
+  evt.set(h_dyreco,dyreco);
+
+  if(pt_hadTop > pt_hadTop_thresh && dyreco >0){
+    evt.set(h_Sigma_phi_1,sphi);
+  }
+  if(pt_hadTop > pt_hadTop_thresh && dyreco <0){
+    evt.set(h_Sigma_phi_2,sphi);
+
+  }
+
+  if(pt_hadTop < pt_hadTop_thresh && dphi >0){
+    evt.set(h_dyreco_1,dyreco);
+  }
+  if(pt_hadTop < pt_hadTop_thresh && dphi <0){
+    evt.set(h_dyreco_2,dyreco);
+  }
+// random generator with eta-dependend random seed for k-fold validation
   double leading_jet_phi = Ak4jets->at(0).v4().phi();
   std::srand((int)(1000 * leading_jet_phi));
   evt.set(h_uniform_random, ((double) rand()) / RAND_MAX);
 
   return true;
 }
+
+
+////////////////////////////////////////////////////////////////
+/////Saving EFT variables to TTree at different DNN stages//////
+////////////////////////////////////////////////////////////////
+
+Variables_EFT_SR::Variables_EFT_SR(uhh2::Context& ctx, TString mode): mode_(mode){
+  h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
+  h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
+  h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
+  h_eventweight_SR = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_SR = ctx.declare_event_output<float>("dyreco_SR");
+  h_Sigma_phi_SR = ctx.declare_event_output<float>("Sigma_phi_SR");
+  h_Delta_phi_SR = ctx.declare_event_output<float>("Delta_phi_SR");
+
+  h_Delta_phi_1_SR = ctx.declare_event_output<float>("Delta_phi_1_SR");
+  h_Delta_phi_2_SR = ctx.declare_event_output<float>("Delta_phi_2_SR");
+
+  
+  h_dyreco_1_SR = ctx.declare_event_output<float>("dyreco_1_SR");
+  h_dyreco_1_SR_0_500 = ctx.declare_event_output<float>("dyreco_1_SR_0_500");
+  h_dyreco_1_SR_500_750 = ctx.declare_event_output<float>("dyreco_1_SR_500_750");
+  h_dyreco_1_SR_750_1000 = ctx.declare_event_output<float>("dyreco_1_SR_750_1000");
+  h_dyreco_1_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_1_SR_1000_1500");
+  h_dyreco_1_SR_1500_Inf = ctx.declare_event_output<float>("dyreco_1_SR_1500_Inf");
+
+  h_dyreco_2_SR = ctx.declare_event_output<float>("dyreco_2_SR");
+  h_dyreco_2_SR_0_500 = ctx.declare_event_output<float>("dyreco_2_SR_0_500");
+  h_dyreco_2_SR_500_750 = ctx.declare_event_output<float>("dyreco_2_SR_500_750");
+  h_dyreco_2_SR_750_1000 = ctx.declare_event_output<float>("dyreco_2_SR_750_1000");
+  h_dyreco_2_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_2_SR_1000_1500");
+  h_dyreco_2_SR_1500_Inf = ctx.declare_event_output<float>("dyreco_2_SR_1500_Inf");
+
+  h_Sigma_phi_1_SR=ctx.declare_event_output<float>("Sigma_phi_1_SR");
+  h_Sigma_phi_1_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_1_SR_0_500");
+  h_Sigma_phi_1_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_1_SR_500_750");
+  h_Sigma_phi_1_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_SR_750_1000");
+  h_Sigma_phi_1_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_SR_1000_1500");
+  h_Sigma_phi_1_SR_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_SR_1000_1500");
+
+  h_Sigma_phi_2_SR=ctx.declare_event_output<float>("Sigma_phi_2_SR");
+  h_Sigma_phi_2_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_2_SR_0_500");
+  h_Sigma_phi_2_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_2_SR_500_750");
+  h_Sigma_phi_2_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_SR_750_1000");
+  h_Sigma_phi_2_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_SR_1000_1500");
+  h_Sigma_phi_2_SR_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_SR_1000_1500");
+
+}
+
+bool Variables_EFT_SR::process(uhh2::Event& evt){
+
+  double weight = evt.weight;
+  evt.set(h_eventweight_SR, -10);
+  evt.set(h_eventweight_SR, weight);
+
+  // bool is_zprime_reconstructed_chi2 = evt.get(h_is_zprime_reconstructed_chi2);
+  ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
+  vector <Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);  
+  //                 // AK4Puppijets that have been matched to CHSjets
+ 
+  // vector <TopJet> TopTaggedJets = evt.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
+  vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
+  float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
+
+  // EFT Ac and spin correlation variables:
+  // Plot pt of hadronic Top jet
+  float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
+  
+  float bscore_max = -2;
+  if(!is_toptag_reconstruction){
+      // Loop over resolved hadronic jets to find their bscore via CHS jets
+    for(unsigned int i=0; i<BestZprimeCandidate->jets_hadronic().size(); i++){
+      double deltaR_min = 99;
+      // Match resolved hadronic jets to CHS jets (which have bscores)
+      for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+        double deltaR_CHS = deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(j));
+        if(deltaR_CHS < deltaR_min) deltaR_min = deltaR_CHS;
+        }
+      // Build bScore-vector for resolved hadronic jets whose bscore will correspond by index
+      for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+        if(deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(k)) == deltaR_min) 
+        jets_hadronic_bscores.emplace_back(AK4CHSjets_matched.at(k).btag_DeepJet());
+        } // Using DeepJet btag score
+    }
+    // Loop over bScores-vector to extract highest bscor
+    for(unsigned int i=0; i<jets_hadronic_bscores.size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore > bscore_max) bscore_max = bscore;
+    }
+    //is not top tag
+  }
+  if(is_toptag_reconstruction){
+    // Loop over hadronic top's subjets to extract highest bscore
+  for(unsigned int i=0; i < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); i++){
+    float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(i).btag_DeepJet(); // Using DeepJet btag score
+    if(bscore > bscore_max) bscore_max = bscore;
+  }
+
+}
+  TLorentzVector had_top_b(0, 0, 0, 0);
+
+// Resolved topology
+  if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+    for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).energy());
+    }
+  }
+  // Merged topology
+  if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+    for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+      float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+    }
+  }
+  TLorentzVector lep_top_lep(0, 0, 0, 0);
+  LorentzVector lep = BestZprimeCandidate->lepton().v4();
+  lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+    // Define 4vectors of top quarks
+  TLorentzVector PosTop(0, 0, 0, 0);
+  TLorentzVector NegTop(0, 0, 0, 0);
+
+      // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    // Define ttbar system
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+  }
+      
+  TLorentzVector ttbar = PosTop + NegTop;
+  TLorentzVector lep_top_lep_CoM = lep_top_lep;
+  // Boost into ttbar CoM-Frame <<<-------//
+  lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+  TLorentzVector had_top_b_CoM = had_top_b;
+  had_top_b_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector PosTop_CoM = PosTop;
+  PosTop_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector NegTop_CoM = NegTop;
+  NegTop_CoM.Boost(-ttbar.BoostVector());
+  // Beam unit vector in COM frame
+  TVector3 beam_axis(0,0,1);
+  // Calculating top scattering angle for PosTop only
+  double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+  double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+  // The sign of cos_PosTop_beam to account for Bose symmetry
+  double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+  // // The sign based on PosTop and NegTop's rapidity
+  // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+  // Bernreuther basis vectors
+  TVector3 kbase = PosTop_CoM.Vect().Unit();
+  TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+  TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+  // Rotate vectors into Helicity Frame <<<-----------//
+  // Rotate about beamline
+  TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+  lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector had_top_b_H = had_top_b_CoM;
+  had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector PosTop_H = PosTop_CoM;
+  PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector NegTop_H = NegTop_CoM;
+  NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  TVector3 kbase_H = kbase;
+  kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 rbase_H = rbase;
+  rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 nbase_H = nbase;
+  nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  // Rotate about y-axis
+  TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+  lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector had_top_b_Hel = had_top_b_H;
+  had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector PosTop_Hel = PosTop_H;
+  PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector NegTop_Hel = NegTop_H;
+  NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  TVector3 kbase_Hel = kbase_H;
+  kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 rbase_Hel = rbase_H;
+  rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 nbase_Hel = nbase_H;
+  nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  // Rotation to align with Bernreuther basis <<<---------//
+  TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+  TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+  TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+  TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+  TVector3 kbase_BoseSymm = kbase_Hel;
+  TVector3 rbase_BoseSymm = rbase_Hel;
+  TVector3 nbase_BoseSymm = nbase_Hel;
+
+  if(sign_cos_PosTop_beam > 0.){
+    lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  }
+  else{
+    lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  }
+   // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+  TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+  TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+  TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+  TLorentzVector NegTop_Rest = NegTop_BoseSymm;
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+    had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+    had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
+  }
+
+  float dphi_SR=0.;
+  float sphi_SR = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
+  if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+    dphi_SR = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
+  }
+  if(BestZprimeCandidate->lepton().charge() < 0){
+    dphi_SR = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
+  }
+
+  evt.set(h_Sigma_phi_SR,-10);
+  evt.set(h_Delta_phi_SR,-10);
+  evt.set(h_Sigma_phi_1_SR,-10);
+  evt.set(h_Sigma_phi_2_SR,-10);
+  evt.set(h_dyreco_1_SR,-10);
+  evt.set(h_dyreco_2_SR,-10);
+
+
+  if(sphi_SR > TMath::Pi()) sphi_SR = sphi_SR - 2*TMath::Pi();
+  if(sphi_SR < -TMath::Pi()) sphi_SR = sphi_SR + 2*TMath::Pi();
+  if(dphi_SR > TMath::Pi()) dphi_SR = dphi_SR - 2*TMath::Pi();
+  if(dphi_SR < -TMath::Pi()) dphi_SR = dphi_SR + 2*TMath::Pi();
+  
+  evt.set(h_Sigma_phi_SR,sphi_SR);
+  evt.set(h_Delta_phi_SR,dphi_SR);
+  
+
+
+
+  evt.set(h_dyreco_SR,-10);
+  float dy_reco_SR=0;
+  // ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  if (BestZprimeCandidate->lepton().charge()>0) {
+    dy_reco_SR = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+  } else {
+    dy_reco_SR = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+  }
+  evt.set(h_dyreco_SR,dy_reco_SR);
+  float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+  
+
+
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_SR >0){
+    evt.set(h_Sigma_phi_1_SR,sphi_SR);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_1_SR_0_500,sphi_SR);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_1_SR_500_750,sphi_SR);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_1_SR_750_1000,sphi_SR);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_1_SR_1000_1500,sphi_SR);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_1_SR_1500_Inf,sphi_SR);
+    }
+
+  }
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_SR <0){
+    evt.set(h_Sigma_phi_2_SR,sphi_SR);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_2_SR_0_500,sphi_SR);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_2_SR_500_750,sphi_SR);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_2_SR_750_1000,sphi_SR);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_2_SR_1000_1500,sphi_SR);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_2_SR_1500_Inf,sphi_SR);
+    }
+
+  }
+
+  if(pt_hadTop < pt_hadTop_thresh && dphi_SR >0){
+    evt.set(h_dyreco_1_SR,dy_reco_SR);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_1_SR_0_500,dy_reco_SR);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_1_SR_500_750,dy_reco_SR);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_1_SR_750_1000,dy_reco_SR);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_1_SR_1000_1500,dy_reco_SR);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_1_SR_1500_Inf,dy_reco_SR);
+    }
+
+  }
+  if(pt_hadTop < pt_hadTop_thresh && dphi_SR <0){
+    evt.set(h_dyreco_2_SR,dy_reco_SR);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_2_SR_0_500,dy_reco_SR);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_2_SR_500_750,dy_reco_SR);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_2_SR_750_1000,dy_reco_SR);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_2_SR_1000_1500,dy_reco_SR);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_2_SR_1500_Inf,dy_reco_SR);
+    }
+
+
+
+  }
+  if(pt_hadTop < pt_hadTop_thresh){
+    evt.set(h_Delta_phi_1_SR,dphi_SR);
+
+  }
+  if(pt_hadTop > pt_hadTop_thresh){
+    evt.set(h_Delta_phi_2_SR,dphi_SR);
+  }
+
+
+  return true;
+}
+
+
+/////CR1///////
+
+Variables_EFT_CR1::Variables_EFT_CR1(uhh2::Context& ctx, TString mode): mode_(mode){
+  h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
+  h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
+  h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
+  h_eventweight_CR1 = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_CR1 = ctx.declare_event_output<float>("dyreco_CR1");
+  h_Sigma_phi_CR1 = ctx.declare_event_output<float>("Sigma_phi_CR1");
+  h_Delta_phi_CR1 = ctx.declare_event_output<float>("Delta_phi_CR1");
+
+  h_Delta_phi_1_CR1 = ctx.declare_event_output<float>("Delta_phi_1_CR1");
+  h_Delta_phi_2_CR1 = ctx.declare_event_output<float>("Delta_phi_2_CR1");
+
+  
+  h_dyreco_1_CR1 = ctx.declare_event_output<float>("dyreco_1_CR1");
+  h_dyreco_1_CR1_0_500 = ctx.declare_event_output<float>("dyreco_1_CR1_0_500");
+  h_dyreco_1_CR1_500_750 = ctx.declare_event_output<float>("dyreco_1_CR1_500_750");
+  h_dyreco_1_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR1_750_1000");
+  h_dyreco_1_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR1_1000_1500");
+  h_dyreco_1_CR1_1500_Inf = ctx.declare_event_output<float>("dyreco_1_CR1_1500_Inf");
+
+  h_dyreco_2_CR1 = ctx.declare_event_output<float>("dyreco_2_CR1");
+  h_dyreco_2_CR1_0_500 = ctx.declare_event_output<float>("dyreco_2_CR1_0_500");
+  h_dyreco_2_CR1_500_750 = ctx.declare_event_output<float>("dyreco_2_CR1_500_750");
+  h_dyreco_2_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR1_750_1000");
+  h_dyreco_2_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR1_1000_1500");
+  h_dyreco_2_CR1_1500_Inf = ctx.declare_event_output<float>("dyreco_2_CR1_1500_Inf");
+
+  h_Sigma_phi_1_CR1=ctx.declare_event_output<float>("Sigma_phi_1_CR1");
+  h_Sigma_phi_1_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_0_500");
+  h_Sigma_phi_1_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR1_500_750");
+  h_Sigma_phi_1_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR1_750_1000");
+  h_Sigma_phi_1_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_1000_1500");
+  h_Sigma_phi_1_CR1_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_CR1_1000_1500");
+
+  h_Sigma_phi_2_CR1=ctx.declare_event_output<float>("Sigma_phi_2_CR1");
+  h_Sigma_phi_2_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_0_500");
+  h_Sigma_phi_2_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR1_500_750");
+  h_Sigma_phi_2_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR1_750_1000");
+  h_Sigma_phi_2_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
+  h_Sigma_phi_2_CR1_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
+
+
+}
+
+bool Variables_EFT_CR1::process(uhh2::Event& evt){
+
+  double weight = evt.weight;
+  evt.set(h_eventweight_CR1, -10);
+  evt.set(h_eventweight_CR1, weight);
+
+  // bool is_zprime_reconstructed_chi2 = evt.get(h_is_zprime_reconstructed_chi2);
+  ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
+  vector <Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);  
+  //                 // AK4Puppijets that have been matched to CHSjets
+ 
+  // vector <TopJet> TopTaggedJets = evt.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
+  vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
+  float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
+
+  
+  // EFT Ac and spin correlation variables:
+  // Plot pt of hadronic Top jet
+  float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
+  
+  float bscore_max = -2;
+  if(!is_toptag_reconstruction){
+      // Loop over resolved hadronic jets to find their bscore via CHS jets
+    for(unsigned int i=0; i<BestZprimeCandidate->jets_hadronic().size(); i++){
+      double deltaR_min = 99;
+      // Match resolved hadronic jets to CHS jets (which have bscores)
+      for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+        double deltaR_CHS = deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(j));
+        if(deltaR_CHS < deltaR_min) deltaR_min = deltaR_CHS;
+        }
+      // Build bScore-vector for resolved hadronic jets whose bscore will correspond by index
+      for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+        if(deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(k)) == deltaR_min) 
+        jets_hadronic_bscores.emplace_back(AK4CHSjets_matched.at(k).btag_DeepJet());
+        } // Using DeepJet btag score
+    }
+    // Loop over bScores-vector to extract highest bscor
+    for(unsigned int i=0; i<jets_hadronic_bscores.size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore > bscore_max) bscore_max = bscore;
+    }
+    //is not top tag
+  }
+  if(is_toptag_reconstruction){
+    // Loop over hadronic top's subjets to extract highest bscore
+  for(unsigned int i=0; i < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); i++){
+    float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(i).btag_DeepJet(); // Using DeepJet btag score
+    if(bscore > bscore_max) bscore_max = bscore;
+  }
+
+}
+  TLorentzVector had_top_b(0, 0, 0, 0);
+
+// Resolved topology
+  if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+    for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).energy());
+    }
+  }
+  // Merged topology
+  if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+    for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+      float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+    }
+  }
+  TLorentzVector lep_top_lep(0, 0, 0, 0);
+  LorentzVector lep = BestZprimeCandidate->lepton().v4();
+  lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+    // Define 4vectors of top quarks
+  TLorentzVector PosTop(0, 0, 0, 0);
+  TLorentzVector NegTop(0, 0, 0, 0);
+
+      // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    // Define ttbar system
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+  }
+      
+  TLorentzVector ttbar = PosTop + NegTop;
+  TLorentzVector lep_top_lep_CoM = lep_top_lep;
+  // Boost into ttbar CoM-Frame <<<-------//
+  lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+  TLorentzVector had_top_b_CoM = had_top_b;
+  had_top_b_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector PosTop_CoM = PosTop;
+  PosTop_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector NegTop_CoM = NegTop;
+  NegTop_CoM.Boost(-ttbar.BoostVector());
+  // Beam unit vector in COM frame
+  TVector3 beam_axis(0,0,1);
+  // Calculating top scattering angle for PosTop only
+  double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+  double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+  // The sign of cos_PosTop_beam to account for Bose symmetry
+  double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+  // // The sign based on PosTop and NegTop's rapidity
+  // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+  // Bernreuther basis vectors
+  TVector3 kbase = PosTop_CoM.Vect().Unit();
+  TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+  TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+  // Rotate vectors into Helicity Frame <<<-----------//
+  // Rotate about beamline
+  TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+  lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector had_top_b_H = had_top_b_CoM;
+  had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector PosTop_H = PosTop_CoM;
+  PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector NegTop_H = NegTop_CoM;
+  NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  TVector3 kbase_H = kbase;
+  kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 rbase_H = rbase;
+  rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 nbase_H = nbase;
+  nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  // Rotate about y-axis
+  TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+  lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector had_top_b_Hel = had_top_b_H;
+  had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector PosTop_Hel = PosTop_H;
+  PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector NegTop_Hel = NegTop_H;
+  NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  TVector3 kbase_Hel = kbase_H;
+  kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 rbase_Hel = rbase_H;
+  rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 nbase_Hel = nbase_H;
+  nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  // Rotation to align with Bernreuther basis <<<---------//
+  TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+  TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+  TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+  TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+  TVector3 kbase_BoseSymm = kbase_Hel;
+  TVector3 rbase_BoseSymm = rbase_Hel;
+  TVector3 nbase_BoseSymm = nbase_Hel;
+
+  if(sign_cos_PosTop_beam > 0.){
+    lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  }
+  else{
+    lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  }
+   // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+  TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+  TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+  TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+  TLorentzVector NegTop_Rest = NegTop_BoseSymm;
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+    had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+    had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
+  }
+
+  float dphi_CR1=0.;
+  float sphi_CR1 = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
+  if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+    dphi_CR1 = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
+  }
+  if(BestZprimeCandidate->lepton().charge() < 0){
+    dphi_CR1 = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
+  }
+
+  evt.set(h_Sigma_phi_CR1,-10);
+  evt.set(h_Delta_phi_CR1,-10);
+  evt.set(h_Sigma_phi_1_CR1,-10);
+  evt.set(h_Sigma_phi_2_CR1,-10);
+  evt.set(h_dyreco_1_CR1,-10);
+  evt.set(h_dyreco_2_CR1,-10);
+
+
+  if(sphi_CR1 > TMath::Pi()) sphi_CR1 = sphi_CR1 - 2*TMath::Pi();
+  if(sphi_CR1 < -TMath::Pi()) sphi_CR1 = sphi_CR1 + 2*TMath::Pi();
+  if(dphi_CR1 > TMath::Pi()) dphi_CR1 = dphi_CR1 - 2*TMath::Pi();
+  if(dphi_CR1 < -TMath::Pi()) dphi_CR1 = dphi_CR1 + 2*TMath::Pi();
+  
+  evt.set(h_Sigma_phi_CR1,sphi_CR1);
+  evt.set(h_Delta_phi_CR1,dphi_CR1);
+  
+
+float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+
+
+  evt.set(h_dyreco_CR1,-10);
+  float dy_reco_CR1=0;
+  // ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  if (BestZprimeCandidate->lepton().charge()>0) {
+    dy_reco_CR1 = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+  } else {
+    dy_reco_CR1 = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+  }
+  evt.set(h_dyreco_CR1,dy_reco_CR1);
+
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR1 >0){
+    evt.set(h_Sigma_phi_1_CR1,sphi_CR1);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_1_CR1_0_500,sphi_CR1);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_1_CR1_500_750,sphi_CR1);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_1_CR1_750_1000,sphi_CR1);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_1_CR1_1000_1500,sphi_CR1);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_1_CR1_1500_Inf,sphi_CR1);
+    }    
+
+
+  }
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR1 <0){
+    evt.set(h_Sigma_phi_2_CR1,sphi_CR1);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_2_CR1_0_500,sphi_CR1);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_2_CR1_500_750,sphi_CR1);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_2_CR1_750_1000,sphi_CR1);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_2_CR1_1000_1500,sphi_CR1);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_2_CR1_1500_Inf,sphi_CR1);
+    }  
+
+  }
+
+  if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 >0){
+    evt.set(h_dyreco_1_CR1,dy_reco_CR1);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_1_CR1_0_500,dy_reco_CR1);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_1_CR1_500_750,dy_reco_CR1);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_1_CR1_750_1000,dy_reco_CR1);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_1_CR1_1000_1500,dy_reco_CR1);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_1_CR1_1500_Inf,dy_reco_CR1);
+    }  
+
+  }
+  if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 <0){
+    evt.set(h_dyreco_2_CR1,dy_reco_CR1);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_2_CR1_0_500,dy_reco_CR1);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_2_CR1_500_750,dy_reco_CR1);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_2_CR1_750_1000,dy_reco_CR1);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_2_CR1_1000_1500,dy_reco_CR1);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_2_CR1_1500_Inf,dy_reco_CR1);
+    }  
+
+
+  }
+  if(pt_hadTop < pt_hadTop_thresh){
+    evt.set(h_Delta_phi_1_CR1,dphi_CR1);
+  }
+  if(pt_hadTop > pt_hadTop_thresh){
+    evt.set(h_Delta_phi_2_CR1,dphi_CR1);
+  }
+
+
+  return true;
+}
+
+
+////CR2//////
+
+
+Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mode){
+  h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
+  h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
+  h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
+  h_eventweight_CR2 = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_1_CR2 = ctx.declare_event_output<float>("dyreco_1_CR2");
+  h_dyreco_1_CR2_0_500 = ctx.declare_event_output<float>("dyreco_1_CR2_0_500");
+  h_dyreco_1_CR2_500_750 = ctx.declare_event_output<float>("dyreco_1_CR2_500_750");
+  h_dyreco_1_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR2_750_1000");
+  h_dyreco_1_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR2_1000_1500");
+  h_dyreco_1_CR2_1500_Inf = ctx.declare_event_output<float>("dyreco_1_CR2_1500_Inf");
+
+  h_dyreco_2_CR2 = ctx.declare_event_output<float>("dyreco_2_CR2");
+  h_dyreco_2_CR2_0_500 = ctx.declare_event_output<float>("dyreco_2_CR2_0_500");
+  h_dyreco_2_CR2_500_750 = ctx.declare_event_output<float>("dyreco_2_CR2_500_750");
+  h_dyreco_2_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR2_750_1000");
+  h_dyreco_2_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR2_1000_1500");
+  h_dyreco_2_CR2_1500_Inf = ctx.declare_event_output<float>("dyreco_2_CR2_1500_Inf");
+
+  h_Sigma_phi_1_CR2=ctx.declare_event_output<float>("Sigma_phi_1_CR2");
+  h_Sigma_phi_1_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_0_500");
+  h_Sigma_phi_1_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR2_500_750");
+  h_Sigma_phi_1_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR2_750_1000");
+  h_Sigma_phi_1_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_1000_1500");
+  h_Sigma_phi_1_CR2_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_CR2_1000_1500");
+
+  h_Sigma_phi_2_CR2=ctx.declare_event_output<float>("Sigma_phi_2_CR2");
+  h_Sigma_phi_2_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_0_500");
+  h_Sigma_phi_2_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR2_500_750");
+  h_Sigma_phi_2_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR2_750_1000");
+  h_Sigma_phi_2_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
+  h_Sigma_phi_2_CR2_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
+
+
+
+}
+
+bool Variables_EFT_CR2::process(uhh2::Event& evt){
+
+  double weight = evt.weight;
+  evt.set(h_eventweight_CR2, -10);
+  evt.set(h_eventweight_CR2, weight);
+
+  // bool is_zprime_reconstructed_chi2 = evt.get(h_is_zprime_reconstructed_chi2);
+  ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
+  vector <Jet> AK4CHSjets_matched = evt.get(h_CHSjets_matched);  
+  //                 // AK4Puppijets that have been matched to CHSjets
+ 
+  // vector <TopJet> TopTaggedJets = evt.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
+  vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
+  float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
+
+  // EFT Ac and spin correlation variables:
+  // Plot pt of hadronic Top jet
+  float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
+  
+  float bscore_max = -2;
+  if(!is_toptag_reconstruction){
+      // Loop over resolved hadronic jets to find their bscore via CHS jets
+    for(unsigned int i=0; i<BestZprimeCandidate->jets_hadronic().size(); i++){
+      double deltaR_min = 99;
+      // Match resolved hadronic jets to CHS jets (which have bscores)
+      for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+        double deltaR_CHS = deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(j));
+        if(deltaR_CHS < deltaR_min) deltaR_min = deltaR_CHS;
+        }
+      // Build bScore-vector for resolved hadronic jets whose bscore will correspond by index
+      for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+        if(deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(k)) == deltaR_min) 
+        jets_hadronic_bscores.emplace_back(AK4CHSjets_matched.at(k).btag_DeepJet());
+        } // Using DeepJet btag score
+    }
+    // Loop over bScores-vector to extract highest bscor
+    for(unsigned int i=0; i<jets_hadronic_bscores.size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore > bscore_max) bscore_max = bscore;
+    }
+    //is not top tag
+  }
+  if(is_toptag_reconstruction){
+    // Loop over hadronic top's subjets to extract highest bscore
+  for(unsigned int i=0; i < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); i++){
+    float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(i).btag_DeepJet(); // Using DeepJet btag score
+    if(bscore > bscore_max) bscore_max = bscore;
+  }
+
+}
+  TLorentzVector had_top_b(0, 0, 0, 0);
+
+// Resolved topology
+  if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+    for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+      float bscore = jets_hadronic_bscores.at(i);
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                      BestZprimeCandidate->jets_hadronic().at(i).energy());
+    }
+  }
+  // Merged topology
+  if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+    for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+      float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+      if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                      BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+    }
+  }
+  TLorentzVector lep_top_lep(0, 0, 0, 0);
+  LorentzVector lep = BestZprimeCandidate->lepton().v4();
+  lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+    // Define 4vectors of top quarks
+  TLorentzVector PosTop(0, 0, 0, 0);
+  TLorentzVector NegTop(0, 0, 0, 0);
+
+      // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    // Define ttbar system
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                        BestZprimeCandidate->top_hadronic_v4().eta(), 
+                        BestZprimeCandidate->top_hadronic_v4().phi(), 
+                        BestZprimeCandidate->top_hadronic_v4().energy());
+    NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                        BestZprimeCandidate->top_leptonic_v4().eta(), 
+                        BestZprimeCandidate->top_leptonic_v4().phi(), 
+                        BestZprimeCandidate->top_leptonic_v4().energy());
+  }
+      
+  TLorentzVector ttbar = PosTop + NegTop;
+  TLorentzVector lep_top_lep_CoM = lep_top_lep;
+  // Boost into ttbar CoM-Frame <<<-------//
+  lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+  TLorentzVector had_top_b_CoM = had_top_b;
+  had_top_b_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector PosTop_CoM = PosTop;
+  PosTop_CoM.Boost(-ttbar.BoostVector());
+  TLorentzVector NegTop_CoM = NegTop;
+  NegTop_CoM.Boost(-ttbar.BoostVector());
+  // Beam unit vector in COM frame
+  TVector3 beam_axis(0,0,1);
+  // Calculating top scattering angle for PosTop only
+  double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+  double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+  // The sign of cos_PosTop_beam to account for Bose symmetry
+  double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+  // // The sign based on PosTop and NegTop's rapidity
+  // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+  // Bernreuther basis vectors
+  TVector3 kbase = PosTop_CoM.Vect().Unit();
+  TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+  TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+  // Rotate vectors into Helicity Frame <<<-----------//
+  // Rotate about beamline
+  TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+  lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector had_top_b_H = had_top_b_CoM;
+  had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector PosTop_H = PosTop_CoM;
+  PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TLorentzVector NegTop_H = NegTop_CoM;
+  NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  TVector3 kbase_H = kbase;
+  kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 rbase_H = rbase;
+  rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+  TVector3 nbase_H = nbase;
+  nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+  // Rotate about y-axis
+  TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+  lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector had_top_b_Hel = had_top_b_H;
+  had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector PosTop_Hel = PosTop_H;
+  PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TLorentzVector NegTop_Hel = NegTop_H;
+  NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  TVector3 kbase_Hel = kbase_H;
+  kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 rbase_Hel = rbase_H;
+  rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+  TVector3 nbase_Hel = nbase_H;
+  nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+  // Rotation to align with Bernreuther basis <<<---------//
+  TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+  TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+  TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+  TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+  TVector3 kbase_BoseSymm = kbase_Hel;
+  TVector3 rbase_BoseSymm = rbase_Hel;
+  TVector3 nbase_BoseSymm = nbase_Hel;
+
+  if(sign_cos_PosTop_beam > 0.){
+    lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  }
+  else{
+    lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+    had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+    PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+    NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+    kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  }
+   // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+  TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+  TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+  TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+  TLorentzVector NegTop_Rest = NegTop_BoseSymm;
+  if(BestZprimeCandidate->lepton().charge() > 0){
+    lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+    had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
+  }
+  else if (BestZprimeCandidate->lepton().charge() < 0){
+    lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+    had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
+  }
+
+  float dphi_CR2=0.;
+  float sphi_CR2 = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
+  if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+    dphi_CR2 = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
+  }
+  if(BestZprimeCandidate->lepton().charge() < 0){
+    dphi_CR2 = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
+  }
+
+  evt.set(h_Sigma_phi_CR2,-10);
+  evt.set(h_Delta_phi_CR2,-10);
+  evt.set(h_Sigma_phi_1_CR2,-10);
+  evt.set(h_Sigma_phi_2_CR2,-10);
+  evt.set(h_dyreco_1_CR2,-10);
+  evt.set(h_dyreco_2_CR2,-10);
+
+
+  if(sphi_CR2 > TMath::Pi()) sphi_CR2 = sphi_CR2 - 2*TMath::Pi();
+  if(sphi_CR2 < -TMath::Pi()) sphi_CR2 = sphi_CR2 + 2*TMath::Pi();
+  if(dphi_CR2 > TMath::Pi()) dphi_CR2 = dphi_CR2 - 2*TMath::Pi();
+  if(dphi_CR2 < -TMath::Pi()) dphi_CR2 = dphi_CR2 + 2*TMath::Pi();
+  
+  evt.set(h_Sigma_phi_CR2,sphi_CR2);
+  evt.set(h_Delta_phi_CR2,dphi_CR2);
+  
+
+
+
+  evt.set(h_dyreco_CR2,-10);
+  float dy_reco_CR2=0;
+  // ZprimeCandidate* BestZprimeCandidate = evt.get(h_BestZprimeCandidateChi2);
+  if (BestZprimeCandidate->lepton().charge()>0) {
+    dy_reco_CR2 = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+  } else {
+    dy_reco_CR2 = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+  }
+  evt.set(h_dyreco_CR2,dy_reco_CR2);
+
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR2 >0){
+    evt.set(h_Sigma_phi_1_CR2,sphi_CR2);
+  }
+  if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR2 <0){
+    evt.set(h_Sigma_phi_2_CR2,sphi_CR2);
+
+  }
+
+  if(pt_hadTop < pt_hadTop_thresh && dphi_CR2 >0){
+    evt.set(h_dyreco_1_CR2,dy_reco_CR2);
+  }
+  if(pt_hadTop < pt_hadTop_thresh && dphi_CR2 <0){
+    evt.set(h_dyreco_2_CR2,dy_reco_CR2);
+  }
+  if(pt_hadTop < pt_hadTop_thresh){
+    evt.set(h_Delta_phi_1_CR2,dphi_CR2);
+  }
+  if(pt_hadTop > pt_hadTop_thresh){
+    evt.set(h_Delta_phi_2_CR2,dphi_CR2);
+  }
+
+
+  return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //////////////////////////////////
 //  EWK corrections
