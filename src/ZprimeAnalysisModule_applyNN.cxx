@@ -429,7 +429,7 @@ protected:
   int runnr_oldtriggers = 299368;
 
   bool isUL16preVFP, isUL16postVFP, isUL17, isUL18;
-  bool isMuon, isElectron;
+  bool isMuon, isElectron, isEFT;
   bool isPhoton;
   TString year;
 
@@ -555,6 +555,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   }
   // Configuration
   isMC = (ctx.get("dataset_type") == "MC");
+  isEFT = (ctx.get("is_EFT") == "true");
   ishotvr = (ctx.get("is_hotvr") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
   TString mode = "hotvr";
@@ -867,23 +868,22 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
     // 2D b-tag SF reading with the new logic (EFT or others):
     if(isMuon){
-      TFile* f_btag2Dsf = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
+      TFile* f_btag2Dsf_muon = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
       if(isEFT){
-        // *** CHANGED *** For EFT muon: always use TTbar
-        ratio_hist_muon = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_TTbar");
+        ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_TTbar");
       }
-      else {
-        ratio_hist_muon = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
-      }
+      else{
+        ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_" + sample_name);
+      } 
       ratio_hist_muon->SetDirectory(0);
     }
     else if(!isMuon){
-      TFile* f_btag2Dsf = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
+      TFile* f_btag2Dsf_ele = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
       if(isEFT){
-        ratio_hist_ele = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_TTbar");
-      } 
+        ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_TTbar");
+      }
       else{
-        ratio_hist_ele = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
+        ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_" + sample_name);
       }
       ratio_hist_ele->SetDirectory(0);
     }
@@ -1345,14 +1345,9 @@ if(debug)  cout<<"test4"<<endl;
   CandidateBuilder->process(event);
   if(debug) cout << "CandidateBuilder: ok" << endl;
   Chi2DiscriminatorZprime->process(event);
-    if(debug) cout << "Chi2DiscriminatorZprime: ok" << endl;
-
-  //  *** CHANGED ***
-  if(!isEFT){
-    CorrectMatchDiscriminatorZprime->process(event);
-    if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
-  }
-  
+  if(debug) cout << "Chi2DiscriminatorZprime: ok" << endl;
+  // CorrectMatchDiscriminatorZprime->process(event);
+  // if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
   
   //check SR and CR without DNN
   if(Chi2_selection->passes(event)){
