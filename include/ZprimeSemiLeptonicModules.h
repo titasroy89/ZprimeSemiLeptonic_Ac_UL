@@ -16,6 +16,7 @@
 #include <UHH2/ZprimeSemiLeptonic/include/constants.hpp>
 
 #include "TH1.h"
+#include <TLorentzVector.h>
 
 float inv_mass(const LorentzVector&);
 
@@ -205,14 +206,88 @@ private:
   uhh2::Event::Handle<float> h_Ak4_j4_pt, h_Ak4_j4_eta, h_Ak4_j4_phi, h_Ak4_j4_E, h_Ak4_j4_m, h_Ak4_j4_deepjetbscore;
   uhh2::Event::Handle<float> h_Ak4_j5_pt, h_Ak4_j5_eta, h_Ak4_j5_phi, h_Ak4_j5_E, h_Ak4_j5_m, h_Ak4_j5_deepjetbscore;
   uhh2::Event::Handle<float> h_Ak4_j6_pt, h_Ak4_j6_eta, h_Ak4_j6_phi, h_Ak4_j6_E, h_Ak4_j6_m, h_Ak4_j6_deepjetbscore;
-  uhh2::Event::Handle<float> h_M_tt, h_chi2;
+  uhh2::Event::Handle<float> h_M_tt, h_chi2, h_dyreco,h_dyreco_1, h_dyreco_2, h_Sigma_phi, h_Sigma_phi_1,h_Sigma_phi_2, h_Delta_phi;
   uhh2::Event::Handle<float> h_uniform_random;
 
   TString mode_;
 
 };
 
-////
+////////EFT SR//////
+class Variables_EFT_SR : uhh2::AnalysisModule{
+
+  public:
+    explicit Variables_EFT_SR(uhh2::Context&, TString mode);
+    virtual bool process(uhh2::Event&) override;
+  
+  private:
+  uhh2::Event::Handle<bool> h_is_zprime_reconstructed_chi2;
+  uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
+  uhh2::Event::Handle<std::vector<Jet> > h_CHSjets_matched;
+  uhh2::Event::Handle<float> h_eventweight_SR;
+  uhh2::Event::Handle<float> h_dyreco_SR, h_dyreco_1_SR, h_dyreco_2_SR;  
+  uhh2::Event::Handle<float> h_dyreco_1_SR_0_500, h_dyreco_1_SR_500_750, h_dyreco_1_SR_750_1000, h_dyreco_1_SR_1000_1500, h_dyreco_1_SR_1500_Inf;
+  uhh2::Event::Handle<float> h_dyreco_2_SR_0_500, h_dyreco_2_SR_500_750, h_dyreco_2_SR_750_1000, h_dyreco_2_SR_1000_1500, h_dyreco_2_SR_1500_Inf;
+  uhh2::Event::Handle<float> h_Sigma_phi_1_SR, h_Sigma_phi_2_SR, h_Sigma_phi_SR; 
+  uhh2::Event::Handle<float> h_Sigma_phi_1_SR_0_500, h_Sigma_phi_1_SR_500_750, h_Sigma_phi_1_SR_750_1000, h_Sigma_phi_1_SR_1000_1500, h_Sigma_phi_1_SR_1500_Inf;
+  uhh2::Event::Handle<float> h_Delta_phi_1_SR, h_Delta_phi_2_SR, h_Delta_phi_SR; 
+  uhh2::Event::Handle<float> h_Sigma_phi_2_SR_0_500, h_Sigma_phi_2_SR_500_750, h_Sigma_phi_2_SR_750_1000, h_Sigma_phi_2_SR_1000_1500, h_Sigma_phi_2_SR_1500_Inf;
+  TString mode_;
+};
+
+
+////CR1///////
+
+class Variables_EFT_CR1 : uhh2::AnalysisModule{
+
+  public:
+    explicit Variables_EFT_CR1(uhh2::Context&, TString mode);
+    virtual bool process(uhh2::Event&) override;
+  
+  private:
+  uhh2::Event::Handle<bool> h_is_zprime_reconstructed_chi2;
+  uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
+  uhh2::Event::Handle<std::vector<Jet> > h_CHSjets_matched;
+  uhh2::Event::Handle<float> h_eventweight_CR1;
+  uhh2::Event::Handle<float> h_dyreco_CR1, h_dyreco_1_CR1, h_dyreco_2_CR1;  
+  uhh2::Event::Handle<float> h_dyreco_1_CR1_0_500, h_dyreco_1_CR1_500_750, h_dyreco_1_CR1_750_1000, h_dyreco_1_CR1_1000_1500, h_dyreco_1_CR1_1500_Inf;
+  uhh2::Event::Handle<float> h_dyreco_2_CR1_0_500, h_dyreco_2_CR1_500_750, h_dyreco_2_CR1_750_1000, h_dyreco_2_CR1_1000_1500, h_dyreco_2_CR1_1500_Inf;
+  uhh2::Event::Handle<float> h_Sigma_phi_1_CR1, h_Sigma_phi_2_CR1, h_Sigma_phi_CR1; 
+  uhh2::Event::Handle<float> h_Sigma_phi_1_CR1_0_500, h_Sigma_phi_1_CR1_500_750, h_Sigma_phi_1_CR1_750_1000, h_Sigma_phi_1_CR1_1000_1500, h_Sigma_phi_1_CR1_1500_Inf;
+  uhh2::Event::Handle<float> h_Delta_phi_1_CR1, h_Delta_phi_2_CR1, h_Delta_phi_CR1; 
+  uhh2::Event::Handle<float> h_Sigma_phi_2_CR1_0_500, h_Sigma_phi_2_CR1_500_750, h_Sigma_phi_2_CR1_750_1000, h_Sigma_phi_2_CR1_1000_1500, h_Sigma_phi_2_CR1_1500_Inf;
+  TString mode_;
+
+
+};
+
+
+//////CR2////////
+
+class Variables_EFT_CR2 : uhh2::AnalysisModule{
+
+  public:
+    explicit Variables_EFT_CR2(uhh2::Context&, TString mode);
+    virtual bool process(uhh2::Event&) override;
+  
+  private:
+  uhh2::Event::Handle<bool> h_is_zprime_reconstructed_chi2;
+  uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
+  uhh2::Event::Handle<std::vector<Jet> > h_CHSjets_matched;
+  uhh2::Event::Handle<float> h_eventweight_CR2;
+  uhh2::Event::Handle<float> h_dyreco_CR2, h_dyreco_1_CR2, h_dyreco_2_CR2;  
+  uhh2::Event::Handle<float> h_dyreco_1_CR2_0_500, h_dyreco_1_CR2_500_750, h_dyreco_1_CR2_750_1000, h_dyreco_1_CR2_1000_1500, h_dyreco_1_CR2_1500_Inf;
+  uhh2::Event::Handle<float> h_dyreco_2_CR2_0_500, h_dyreco_2_CR2_500_750, h_dyreco_2_CR2_750_1000, h_dyreco_2_CR2_1000_1500, h_dyreco_2_CR2_1500_Inf;
+  uhh2::Event::Handle<float> h_Sigma_phi_1_CR2, h_Sigma_phi_2_CR2, h_Sigma_phi_CR2; 
+  uhh2::Event::Handle<float> h_Sigma_phi_1_CR2_0_500, h_Sigma_phi_1_CR2_500_750, h_Sigma_phi_1_CR2_750_1000, h_Sigma_phi_1_CR2_1000_1500, h_Sigma_phi_1_CR2_1500_Inf;
+  uhh2::Event::Handle<float> h_Delta_phi_1_CR2, h_Delta_phi_2_CR2, h_Delta_phi_CR2; 
+  uhh2::Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf;
+  TString mode_;
+
+};
+
+
+
 
 // Generic Class for Applying SFs - from Andrea
 class ScaleFactorsFromHistos : public uhh2::AnalysisModule {
