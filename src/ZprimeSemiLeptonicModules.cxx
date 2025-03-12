@@ -1637,6 +1637,8 @@ bool Variables_NN::process(uhh2::Event& evt){
 /////Saving EFT variables to TTree at different DNN stages//////
 ////////////////////////////////////////////////////////////////
 
+
+
 Variables_EFT_SR::Variables_EFT_SR(uhh2::Context& ctx, TString mode): mode_(mode){
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
@@ -1649,7 +1651,6 @@ Variables_EFT_SR::Variables_EFT_SR(uhh2::Context& ctx, TString mode): mode_(mode
 
   h_Delta_phi_1_SR = ctx.declare_event_output<float>("Delta_phi_1_SR");
   h_Delta_phi_2_SR = ctx.declare_event_output<float>("Delta_phi_2_SR");
-
   
   h_dyreco_1_SR = ctx.declare_event_output<float>("dyreco_1_SR");
   h_dyreco_1_SR_0_500 = ctx.declare_event_output<float>("dyreco_1_SR_0_500");
@@ -1904,6 +1905,29 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
   evt.set(h_Sigma_phi_2_SR,-10);
   evt.set(h_dyreco_1_SR,-10);
   evt.set(h_dyreco_2_SR,-10);
+  evt.set(h_Delta_phi_1_SR,-10);
+  evt.set(h_Delta_phi_2_SR,-10);
+  evt.set(h_Sigma_phi_1_SR_0_500,-10);
+  evt.set(h_Sigma_phi_1_SR_500_750,-10);
+  evt.set(h_Sigma_phi_1_SR_750_1000,-10);
+  evt.set(h_Sigma_phi_1_SR_1000_1500,-10);
+  evt.set(h_Sigma_phi_1_SR_1500_Inf,-10);
+  evt.set(h_Sigma_phi_2_SR_0_500,-10);
+  evt.set(h_Sigma_phi_2_SR_500_750,-10);
+  evt.set(h_Sigma_phi_2_SR_750_1000,-10);
+  evt.set(h_Sigma_phi_2_SR_1000_1500,-10);
+  evt.set(h_Sigma_phi_2_SR_1500_Inf,-10);
+  evt.set(h_dyreco_1_SR_0_500,-10);
+  evt.set(h_dyreco_1_SR_500_750,-10);
+  evt.set(h_dyreco_1_SR_750_1000,-10);
+  evt.set(h_dyreco_1_SR_1000_1500,-10);
+  evt.set(h_dyreco_1_SR_1500_Inf,-10);
+  evt.set(h_dyreco_2_SR_0_500,-10);
+  evt.set(h_dyreco_2_SR_500_750,-10);
+  evt.set(h_dyreco_2_SR_750_1000,-10);
+  evt.set(h_dyreco_2_SR_1000_1500,-10);
+  evt.set(h_dyreco_2_SR_1500_Inf,-10);
+
 
 
   if(sphi_SR > TMath::Pi()) sphi_SR = sphi_SR - 2*TMath::Pi();
@@ -1927,8 +1951,6 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
   }
   evt.set(h_dyreco_SR,dy_reco_SR);
   float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-  
-
 
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_SR >0){
     evt.set(h_Sigma_phi_1_SR,sphi_SR);
@@ -1947,7 +1969,6 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_1_SR_1500_Inf,sphi_SR);
     }
-
   }
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_SR <0){
     evt.set(h_Sigma_phi_2_SR,sphi_SR);
@@ -1966,7 +1987,6 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_2_SR_1500_Inf,sphi_SR);
     }
-
   }
 
   if(pt_hadTop < pt_hadTop_thresh && dphi_SR >0){
@@ -1986,7 +2006,6 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
     if(Mass_tt>=1500){
       evt.set(h_dyreco_1_SR_1500_Inf,dy_reco_SR);
     }
-
   }
   if(pt_hadTop < pt_hadTop_thresh && dphi_SR <0){
     evt.set(h_dyreco_2_SR,dy_reco_SR);
@@ -2005,13 +2024,9 @@ bool Variables_EFT_SR::process(uhh2::Event& evt){
     if(Mass_tt>=1500){
       evt.set(h_dyreco_2_SR_1500_Inf,dy_reco_SR);
     }
-
-
-
   }
   if(pt_hadTop < pt_hadTop_thresh){
     evt.set(h_Delta_phi_1_SR,dphi_SR);
-
   }
   if(pt_hadTop > pt_hadTop_thresh){
     evt.set(h_Delta_phi_2_SR,dphi_SR);
@@ -2036,7 +2051,6 @@ Variables_EFT_CR1::Variables_EFT_CR1(uhh2::Context& ctx, TString mode): mode_(mo
 
   h_Delta_phi_1_CR1 = ctx.declare_event_output<float>("Delta_phi_1_CR1");
   h_Delta_phi_2_CR1 = ctx.declare_event_output<float>("Delta_phi_2_CR1");
-
   
   h_dyreco_1_CR1 = ctx.declare_event_output<float>("dyreco_1_CR1");
   h_dyreco_1_CR1_0_500 = ctx.declare_event_output<float>("dyreco_1_CR1_0_500");
@@ -2065,8 +2079,6 @@ Variables_EFT_CR1::Variables_EFT_CR1(uhh2::Context& ctx, TString mode): mode_(mo
   h_Sigma_phi_2_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR1_750_1000");
   h_Sigma_phi_2_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
   h_Sigma_phi_2_CR1_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
-
-
 }
 
 bool Variables_EFT_CR1::process(uhh2::Event& evt){
@@ -2085,7 +2097,6 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
   vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
   float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
 
-  
   // EFT Ac and spin correlation variables:
   // Plot pt of hadronic Top jet
   float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
@@ -2293,6 +2304,29 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
   evt.set(h_Sigma_phi_2_CR1,-10);
   evt.set(h_dyreco_1_CR1,-10);
   evt.set(h_dyreco_2_CR1,-10);
+  evt.set(h_Delta_phi_1_CR1,-10);
+  evt.set(h_Delta_phi_2_CR1,-10);
+  evt.set(h_Sigma_phi_1_CR1_0_500,-10);
+  evt.set(h_Sigma_phi_1_CR1_500_750,-10);
+  evt.set(h_Sigma_phi_1_CR1_750_1000,-10);
+  evt.set(h_Sigma_phi_1_CR1_1000_1500,-10);
+  evt.set(h_Sigma_phi_1_CR1_1500_Inf,-10);
+  evt.set(h_Sigma_phi_2_CR1_0_500,-10);
+  evt.set(h_Sigma_phi_2_CR1_500_750,-10);
+  evt.set(h_Sigma_phi_2_CR1_750_1000,-10);
+  evt.set(h_Sigma_phi_2_CR1_1000_1500,-10);
+  evt.set(h_Sigma_phi_2_CR1_1500_Inf,-10);
+  evt.set(h_dyreco_1_CR1_0_500,-10);
+  evt.set(h_dyreco_1_CR1_500_750,-10);
+  evt.set(h_dyreco_1_CR1_750_1000,-10);
+  evt.set(h_dyreco_1_CR1_1000_1500,-10);
+  evt.set(h_dyreco_1_CR1_1500_Inf,-10);
+  evt.set(h_dyreco_2_CR1_0_500,-10);
+  evt.set(h_dyreco_2_CR1_500_750,-10);
+  evt.set(h_dyreco_2_CR1_750_1000,-10);
+  evt.set(h_dyreco_2_CR1_1000_1500,-10);
+  evt.set(h_dyreco_2_CR1_1500_Inf,-10);
+
 
 
   if(sphi_CR1 > TMath::Pi()) sphi_CR1 = sphi_CR1 - 2*TMath::Pi();
@@ -2304,7 +2338,6 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
   evt.set(h_Delta_phi_CR1,dphi_CR1);
   
 
-float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
 
   evt.set(h_dyreco_CR1,-10);
@@ -2316,6 +2349,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     dy_reco_CR1 = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
   }
   evt.set(h_dyreco_CR1,dy_reco_CR1);
+  float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR1 >0){
     evt.set(h_Sigma_phi_1_CR1,sphi_CR1);
@@ -2333,9 +2367,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     }
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_1_CR1_1500_Inf,sphi_CR1);
-    }    
-
-
+    }
   }
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR1 <0){
     evt.set(h_Sigma_phi_2_CR1,sphi_CR1);
@@ -2353,8 +2385,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     }
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_2_CR1_1500_Inf,sphi_CR1);
-    }  
-
+    }
   }
 
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 >0){
@@ -2373,8 +2404,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     }
     if(Mass_tt>=1500){
       evt.set(h_dyreco_1_CR1_1500_Inf,dy_reco_CR1);
-    }  
-
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 <0){
     evt.set(h_dyreco_2_CR1,dy_reco_CR1);
@@ -2392,9 +2422,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
     }
     if(Mass_tt>=1500){
       evt.set(h_dyreco_2_CR1_1500_Inf,dy_reco_CR1);
-    }  
-
-
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh){
     evt.set(h_Delta_phi_1_CR1,dphi_CR1);
@@ -2408,7 +2436,7 @@ float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 }
 
 
-////CR2//////
+// // ////CR2//////
 
 
 Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mode){
@@ -2417,6 +2445,13 @@ Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mo
   h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
   h_eventweight_CR2 = ctx.declare_event_output<float> ("eventweight");
 
+  h_dyreco_CR2 = ctx.declare_event_output<float>("dyreco_CR2");
+  h_Sigma_phi_CR2 = ctx.declare_event_output<float>("Sigma_phi_CR2");
+  h_Delta_phi_CR2 = ctx.declare_event_output<float>("Delta_phi_CR2");
+
+  h_Delta_phi_1_CR2 = ctx.declare_event_output<float>("Delta_phi_1_CR2");
+  h_Delta_phi_2_CR2 = ctx.declare_event_output<float>("Delta_phi_2_CR2");
+  
   h_dyreco_1_CR2 = ctx.declare_event_output<float>("dyreco_1_CR2");
   h_dyreco_1_CR2_0_500 = ctx.declare_event_output<float>("dyreco_1_CR2_0_500");
   h_dyreco_1_CR2_500_750 = ctx.declare_event_output<float>("dyreco_1_CR2_500_750");
@@ -2444,9 +2479,6 @@ Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mo
   h_Sigma_phi_2_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR2_750_1000");
   h_Sigma_phi_2_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
   h_Sigma_phi_2_CR2_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
-
-
-
 }
 
 bool Variables_EFT_CR2::process(uhh2::Event& evt){
@@ -2672,6 +2704,29 @@ bool Variables_EFT_CR2::process(uhh2::Event& evt){
   evt.set(h_Sigma_phi_2_CR2,-10);
   evt.set(h_dyreco_1_CR2,-10);
   evt.set(h_dyreco_2_CR2,-10);
+  evt.set(h_Delta_phi_1_CR2,-10);
+  evt.set(h_Delta_phi_2_CR2,-10);
+  evt.set(h_Sigma_phi_1_CR2_0_500,-10);
+  evt.set(h_Sigma_phi_1_CR2_500_750,-10);
+  evt.set(h_Sigma_phi_1_CR2_750_1000,-10);
+  evt.set(h_Sigma_phi_1_CR2_1000_1500,-10);
+  evt.set(h_Sigma_phi_1_CR2_1500_Inf,-10);
+  evt.set(h_Sigma_phi_2_CR2_0_500,-10);
+  evt.set(h_Sigma_phi_2_CR2_500_750,-10);
+  evt.set(h_Sigma_phi_2_CR2_750_1000,-10);
+  evt.set(h_Sigma_phi_2_CR2_1000_1500,-10);
+  evt.set(h_Sigma_phi_2_CR2_1500_Inf,-10);
+  evt.set(h_dyreco_1_CR2_0_500,-10);
+  evt.set(h_dyreco_1_CR2_500_750,-10);
+  evt.set(h_dyreco_1_CR2_750_1000,-10);
+  evt.set(h_dyreco_1_CR2_1000_1500,-10);
+  evt.set(h_dyreco_1_CR2_1500_Inf,-10);
+  evt.set(h_dyreco_2_CR2_0_500,-10);
+  evt.set(h_dyreco_2_CR2_500_750,-10);
+  evt.set(h_dyreco_2_CR2_750_1000,-10);
+  evt.set(h_dyreco_2_CR2_1000_1500,-10);
+  evt.set(h_dyreco_2_CR2_1500_Inf,-10);
+
 
 
   if(sphi_CR2 > TMath::Pi()) sphi_CR2 = sphi_CR2 - 2*TMath::Pi();
@@ -2694,20 +2749,80 @@ bool Variables_EFT_CR2::process(uhh2::Event& evt){
     dy_reco_CR2 = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
   }
   evt.set(h_dyreco_CR2,dy_reco_CR2);
+  float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
 
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR2 >0){
     evt.set(h_Sigma_phi_1_CR2,sphi_CR2);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_1_CR2_0_500,sphi_CR2);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_1_CR2_500_750,sphi_CR2);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_1_CR2_750_1000,sphi_CR2);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_1_CR2_1000_1500,sphi_CR2);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_1_CR2_1500_Inf,sphi_CR2);
+    }
   }
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR2 <0){
     evt.set(h_Sigma_phi_2_CR2,sphi_CR2);
-
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_Sigma_phi_2_CR2_0_500,sphi_CR2);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_Sigma_phi_2_CR2_500_750,sphi_CR2);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_Sigma_phi_2_CR2_750_1000,sphi_CR2);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_Sigma_phi_2_CR2_1000_1500,sphi_CR2);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_Sigma_phi_2_CR2_1500_Inf,sphi_CR2);
+    }
   }
 
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR2 >0){
     evt.set(h_dyreco_1_CR2,dy_reco_CR2);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_1_CR2_0_500,dy_reco_CR2);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_1_CR2_500_750,dy_reco_CR2);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_1_CR2_750_1000,dy_reco_CR2);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_1_CR2_1000_1500,dy_reco_CR2);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_1_CR2_1500_Inf,dy_reco_CR2);
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR2 <0){
     evt.set(h_dyreco_2_CR2,dy_reco_CR2);
+    if(Mass_tt>=0 && Mass_tt < 500){
+      evt.set(h_dyreco_2_CR2_0_500,dy_reco_CR2);
+    }
+    if(Mass_tt>=500 && Mass_tt < 750){
+      evt.set(h_dyreco_2_CR2_500_750,dy_reco_CR2);
+    }
+    if(Mass_tt>=750 && Mass_tt < 1000){
+      evt.set(h_dyreco_2_CR2_750_1000,dy_reco_CR2);
+    }
+    if(Mass_tt>=1000 && Mass_tt < 1500){
+      evt.set(h_dyreco_2_CR2_1000_1500,dy_reco_CR2);
+    }
+    if(Mass_tt>=1500){
+      evt.set(h_dyreco_2_CR2_1500_Inf,dy_reco_CR2);
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh){
     evt.set(h_Delta_phi_1_CR2,dphi_CR2);
@@ -2715,25 +2830,8 @@ bool Variables_EFT_CR2::process(uhh2::Event& evt){
   if(pt_hadTop > pt_hadTop_thresh){
     evt.set(h_Delta_phi_2_CR2,dphi_CR2);
   }
-
-
   return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //////////////////////////////////
 //  EWK corrections

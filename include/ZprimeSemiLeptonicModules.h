@@ -177,7 +177,7 @@ protected:
 };
 
 
-////////////////////////    NN vars
+////////////////////////    NN vars //////////////
 class Variables_NN : uhh2::AnalysisModule{
 
 public:
@@ -257,8 +257,6 @@ class Variables_EFT_CR1 : uhh2::AnalysisModule{
   uhh2::Event::Handle<float> h_Delta_phi_1_CR1, h_Delta_phi_2_CR1, h_Delta_phi_CR1; 
   uhh2::Event::Handle<float> h_Sigma_phi_2_CR1_0_500, h_Sigma_phi_2_CR1_500_750, h_Sigma_phi_2_CR1_750_1000, h_Sigma_phi_2_CR1_1000_1500, h_Sigma_phi_2_CR1_1500_Inf;
   TString mode_;
-
-
 };
 
 
@@ -283,7 +281,6 @@ class Variables_EFT_CR2 : uhh2::AnalysisModule{
   uhh2::Event::Handle<float> h_Delta_phi_1_CR2, h_Delta_phi_2_CR2, h_Delta_phi_CR2; 
   uhh2::Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf;
   TString mode_;
-
 };
 
 

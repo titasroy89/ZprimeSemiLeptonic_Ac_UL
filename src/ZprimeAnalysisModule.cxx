@@ -122,7 +122,9 @@ protected:
 
   // NN variables handles
   unique_ptr<Variables_NN> Variables_module;
-
+  unique_ptr<Variables_EFT_SR> VariablesEFTSR_module;
+  unique_ptr<Variables_EFT_CR1> VariablesEFTCR1_module;
+  unique_ptr<Variables_EFT_CR2> VariablesEFTCR2_module;
   // systematics handles
   // unique_ptr<ZprimeSemiLeptonicSystematicsModule> SystematicsModule;
 
@@ -188,7 +190,7 @@ void ZprimeAnalysisModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
-  debug = false; // false/true
+  debug =false; // false/true
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -416,8 +418,11 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   HEM_selection.reset(new HEMSelection(ctx)); // HEM issue in 2018, veto on leptons and jets
 
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
-
+  VariablesEFTSR_module.reset(new Variables_EFT_SR(ctx, mode)); // variables for NN
+  VariablesEFTCR1_module.reset(new Variables_EFT_CR1(ctx, mode)); // variables for NN
+  VariablesEFTCR2_module.reset(new Variables_EFT_CR2(ctx, mode)); // variables for NN
   // if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
+
 
 
   // Split interference signal samples by sign
@@ -1079,6 +1084,14 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   sort_by_pt<Jet>(*event.jets);
   if(debug) cout << "sorted jets" <<endl;
   Variables_module->process(event);
+  if(debug) cout << "done NN" <<endl;
+  VariablesEFTSR_module->process(event);
+  if(debug) cout << "done EFT SR" <<endl;
+
+  VariablesEFTCR1_module->process(event);
+  if(debug) cout << "done CR1" <<endl;
+  VariablesEFTCR2_module->process(event);
+  if(debug) cout << "done CR2" <<endl;
   fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "NNInputsBeforeReweight: ok" << endl;
 
