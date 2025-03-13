@@ -250,10 +250,10 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //NN - DON'T FORGET TO CHANGE!
   //Muon
-  ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //Electron
-  // ifstream normfile ("/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
-//  cout<<"read txt"<<endl;
+  // ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+  
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
     for(int i = 0; i < 59; ++i)
@@ -299,7 +299,7 @@ protected:
 
   bool debug;
   bool isEFT;
-
+  
   // Cleaners
   std::unique_ptr<MuonCleaner>     muon_cleaner_low, muon_cleaner_high;
   std::unique_ptr<ElectronCleaner> electron_cleaner_low, electron_cleaner_high;
@@ -322,7 +322,10 @@ protected:
   unique_ptr<AnalysisModule> LumiWeight_module, PUWeight_module, TopPtReweight_module, MCScale_module;
   unique_ptr<AnalysisModule> NLOCorrections_module;
   unique_ptr<PSWeights> ps_weights;
-
+  
+  // Structure Constants Calculator for EFT
+  unique_ptr<StructureConstantsCalculator> structure_constants_calculator;
+  uhh2::Event::Handle<std::vector<float>> h_structure_constants;
 
   // Top tagging
   unique_ptr<HOTVRTopTagger> TopTaggerHOTVR;
@@ -361,6 +364,31 @@ protected:
   Event::Handle<bool> h_is_zprime_reconstructed_chi2, h_is_zprime_reconstructed_correctmatch;
   Event::Handle<float> h_chi2;
   Event::Handle<float> h_weight;
+  Event::Handle<float> h_eventweight_SR;
+  Event::Handle<float> h_dyreco_SR, h_dyreco_1_SR, h_dyreco_2_SR;  
+  Event::Handle<float> h_dyreco_1_SR_0_500, h_dyreco_1_SR_500_750, h_dyreco_1_SR_750_1000, h_dyreco_1_SR_1000_1500, h_dyreco_1_SR_1500_Inf;
+  Event::Handle<float> h_dyreco_2_SR_0_500, h_dyreco_2_SR_500_750, h_dyreco_2_SR_750_1000, h_dyreco_2_SR_1000_1500, h_dyreco_2_SR_1500_Inf;
+  Event::Handle<float> h_Sigma_phi_1_SR, h_Sigma_phi_2_SR, h_Sigma_phi_SR; 
+  Event::Handle<float> h_Sigma_phi_1_SR_0_500, h_Sigma_phi_1_SR_500_750, h_Sigma_phi_1_SR_750_1000, h_Sigma_phi_1_SR_1000_1500, h_Sigma_phi_1_SR_1500_Inf;
+  Event::Handle<float> h_Delta_phi_1_SR, h_Delta_phi_2_SR, h_Delta_phi_SR; 
+  Event::Handle<float> h_Sigma_phi_2_SR_0_500, h_Sigma_phi_2_SR_500_750, h_Sigma_phi_2_SR_750_1000, h_Sigma_phi_2_SR_1000_1500, h_Sigma_phi_2_SR_1500_Inf;
+  Event::Handle<float> h_eventweight_CR1;
+  Event::Handle<float> h_dyreco_CR1, h_dyreco_1_CR1, h_dyreco_2_CR1;  
+  Event::Handle<float> h_dyreco_1_CR1_0_500, h_dyreco_1_CR1_500_750, h_dyreco_1_CR1_750_1000, h_dyreco_1_CR1_1000_1500, h_dyreco_1_CR1_1500_Inf;
+  Event::Handle<float> h_dyreco_2_CR1_0_500, h_dyreco_2_CR1_500_750, h_dyreco_2_CR1_750_1000, h_dyreco_2_CR1_1000_1500, h_dyreco_2_CR1_1500_Inf;
+  Event::Handle<float> h_Sigma_phi_1_CR1, h_Sigma_phi_2_CR1, h_Sigma_phi_CR1; 
+  Event::Handle<float> h_Sigma_phi_1_CR1_0_500, h_Sigma_phi_1_CR1_500_750, h_Sigma_phi_1_CR1_750_1000, h_Sigma_phi_1_CR1_1000_1500, h_Sigma_phi_1_CR1_1500_Inf;
+  Event::Handle<float> h_Delta_phi_1_CR1, h_Delta_phi_2_CR1, h_Delta_phi_CR1; 
+  Event::Handle<float> h_Sigma_phi_2_CR1_0_500, h_Sigma_phi_2_CR1_500_750, h_Sigma_phi_2_CR1_750_1000, h_Sigma_phi_2_CR1_1000_1500, h_Sigma_phi_2_CR1_1500_Inf;
+  Event::Handle<float> h_eventweight_CR2;
+  Event::Handle<float> h_dyreco_CR2, h_dyreco_1_CR2, h_dyreco_2_CR2;  
+  Event::Handle<float> h_dyreco_1_CR2_0_500, h_dyreco_1_CR2_500_750, h_dyreco_1_CR2_750_1000, h_dyreco_1_CR2_1000_1500, h_dyreco_1_CR2_1500_Inf;
+  Event::Handle<float> h_dyreco_2_CR2_0_500, h_dyreco_2_CR2_500_750, h_dyreco_2_CR2_750_1000, h_dyreco_2_CR2_1000_1500, h_dyreco_2_CR2_1500_Inf;
+  Event::Handle<float> h_Sigma_phi_1_CR2, h_Sigma_phi_2_CR2, h_Sigma_phi_CR2; 
+  Event::Handle<float> h_Sigma_phi_1_CR2_0_500, h_Sigma_phi_1_CR2_500_750, h_Sigma_phi_1_CR2_750_1000, h_Sigma_phi_1_CR2_1000_1500, h_Sigma_phi_1_CR2_1500_Inf;
+  Event::Handle<float> h_Delta_phi_1_CR2, h_Delta_phi_2_CR2, h_Delta_phi_CR2; 
+  Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf;
+
 
   
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
@@ -373,7 +401,9 @@ protected:
   // DNN multiclass output hist
   std::unique_ptr<Hists> h_MulticlassNN_output;
 
-  // ================ SR ============s======================================================================================================================================================================================================
+
+
+  // ================ SR ==================================================================================================================================================================================================================
   //muon and ele systematics
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_SR;
@@ -429,7 +459,7 @@ protected:
   int runnr_oldtriggers = 299368;
 
   bool isUL16preVFP, isUL16postVFP, isUL17, isUL18;
-  bool isMuon, isElectron, isEFT;
+  bool isMuon, isElectron;
   bool isPhoton;
   TString year;
 
@@ -555,7 +585,6 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   }
   // Configuration
   isMC = (ctx.get("dataset_type") == "MC");
-  isEFT = (ctx.get("is_EFT") == "true");
   ishotvr = (ctx.get("is_hotvr") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
   TString mode = "hotvr";
@@ -570,13 +599,10 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   if(isUL16postVFP) year = "UL16postVFP";
   if(isUL17) year = "UL17";
   if(isUL18) year = "UL18";
-
-  
   
 
   isPhoton = (ctx.get("dataset_version").find("SinglePhoton") != std::string::npos);
   // isEleTriggerMeasurement = (ctx.get("isTriggerMeasurement") == "true");
-
 
   // Lepton IDs
   ElectronId eleID_low  = ElectronTagID(Electron::mvaEleID_Fall17_iso_V2_wp80);
@@ -745,6 +771,114 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_chi2 = ctx.declare_event_output<float> ("rec_chi2");
   h_weight = ctx.declare_event_output<float> ("weight");
+  h_eventweight_SR = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_SR = ctx.declare_event_output<float>("dyreco_SR");
+  h_Sigma_phi_SR = ctx.declare_event_output<float>("Sigma_phi_SR");
+  h_Delta_phi_SR = ctx.declare_event_output<float>("Delta_phi_SR");
+
+  h_Delta_phi_1_SR = ctx.declare_event_output<float>("Delta_phi_1_SR");
+  h_Delta_phi_2_SR = ctx.declare_event_output<float>("Delta_phi_2_SR");
+  
+  h_dyreco_1_SR = ctx.declare_event_output<float>("dyreco_1_SR");
+  h_dyreco_1_SR_0_500 = ctx.declare_event_output<float>("dyreco_1_SR_0_500");
+  h_dyreco_1_SR_500_750 = ctx.declare_event_output<float>("dyreco_1_SR_500_750");
+  h_dyreco_1_SR_750_1000 = ctx.declare_event_output<float>("dyreco_1_SR_750_1000");
+  h_dyreco_1_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_1_SR_1000_1500");
+  h_dyreco_1_SR_1500_Inf = ctx.declare_event_output<float>("dyreco_1_SR_1500_Inf");
+
+  h_dyreco_2_SR = ctx.declare_event_output<float>("dyreco_2_SR");
+  h_dyreco_2_SR_0_500 = ctx.declare_event_output<float>("dyreco_2_SR_0_500");
+  h_dyreco_2_SR_500_750 = ctx.declare_event_output<float>("dyreco_2_SR_500_750");
+  h_dyreco_2_SR_750_1000 = ctx.declare_event_output<float>("dyreco_2_SR_750_1000");
+  h_dyreco_2_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_2_SR_1000_1500");
+  h_dyreco_2_SR_1500_Inf = ctx.declare_event_output<float>("dyreco_2_SR_1500_Inf");
+
+  h_Sigma_phi_1_SR=ctx.declare_event_output<float>("Sigma_phi_1_SR");
+  h_Sigma_phi_1_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_1_SR_0_500");
+  h_Sigma_phi_1_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_1_SR_500_750");
+  h_Sigma_phi_1_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_SR_750_1000");
+  h_Sigma_phi_1_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_SR_1000_1500");
+  h_Sigma_phi_1_SR_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_SR_1000_1500");
+
+  h_Sigma_phi_2_SR=ctx.declare_event_output<float>("Sigma_phi_2_SR");
+  h_Sigma_phi_2_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_2_SR_0_500");
+  h_Sigma_phi_2_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_2_SR_500_750");
+  h_Sigma_phi_2_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_SR_750_1000");
+  h_Sigma_phi_2_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_SR_1000_1500");
+  h_Sigma_phi_2_SR_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_SR_1000_1500");
+  h_eventweight_CR1 = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_CR1 = ctx.declare_event_output<float>("dyreco_CR1");
+  h_Sigma_phi_CR1 = ctx.declare_event_output<float>("Sigma_phi_CR1");
+  h_Delta_phi_CR1 = ctx.declare_event_output<float>("Delta_phi_CR1");
+
+  h_Delta_phi_1_CR1 = ctx.declare_event_output<float>("Delta_phi_1_CR1");
+  h_Delta_phi_2_CR1 = ctx.declare_event_output<float>("Delta_phi_2_CR1");
+  
+  h_dyreco_1_CR1 = ctx.declare_event_output<float>("dyreco_1_CR1");
+  h_dyreco_1_CR1_0_500 = ctx.declare_event_output<float>("dyreco_1_CR1_0_500");
+  h_dyreco_1_CR1_500_750 = ctx.declare_event_output<float>("dyreco_1_CR1_500_750");
+  h_dyreco_1_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR1_750_1000");
+  h_dyreco_1_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR1_1000_1500");
+  h_dyreco_1_CR1_1500_Inf = ctx.declare_event_output<float>("dyreco_1_CR1_1500_Inf");
+
+  h_dyreco_2_CR1 = ctx.declare_event_output<float>("dyreco_2_CR1");
+  h_dyreco_2_CR1_0_500 = ctx.declare_event_output<float>("dyreco_2_CR1_0_500");
+  h_dyreco_2_CR1_500_750 = ctx.declare_event_output<float>("dyreco_2_CR1_500_750");
+  h_dyreco_2_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR1_750_1000");
+  h_dyreco_2_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR1_1000_1500");
+  h_dyreco_2_CR1_1500_Inf = ctx.declare_event_output<float>("dyreco_2_CR1_1500_Inf");
+
+  h_Sigma_phi_1_CR1=ctx.declare_event_output<float>("Sigma_phi_1_CR1");
+  h_Sigma_phi_1_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_0_500");
+  h_Sigma_phi_1_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR1_500_750");
+  h_Sigma_phi_1_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR1_750_1000");
+  h_Sigma_phi_1_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_1000_1500");
+  h_Sigma_phi_1_CR1_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_CR1_1000_1500");
+
+  h_Sigma_phi_2_CR1=ctx.declare_event_output<float>("Sigma_phi_2_CR1");
+  h_Sigma_phi_2_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_0_500");
+  h_Sigma_phi_2_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR1_500_750");
+  h_Sigma_phi_2_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR1_750_1000");
+  h_Sigma_phi_2_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
+  h_Sigma_phi_2_CR1_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
+  h_eventweight_CR2 = ctx.declare_event_output<float> ("eventweight");
+
+  h_dyreco_CR2 = ctx.declare_event_output<float>("dyreco_CR2");
+  h_Sigma_phi_CR2 = ctx.declare_event_output<float>("Sigma_phi_CR2");
+  h_Delta_phi_CR2 = ctx.declare_event_output<float>("Delta_phi_CR2");
+
+  h_Delta_phi_1_CR2 = ctx.declare_event_output<float>("Delta_phi_1_CR2");
+  h_Delta_phi_2_CR2 = ctx.declare_event_output<float>("Delta_phi_2_CR2");
+  
+  h_dyreco_1_CR2 = ctx.declare_event_output<float>("dyreco_1_CR2");
+  h_dyreco_1_CR2_0_500 = ctx.declare_event_output<float>("dyreco_1_CR2_0_500");
+  h_dyreco_1_CR2_500_750 = ctx.declare_event_output<float>("dyreco_1_CR2_500_750");
+  h_dyreco_1_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR2_750_1000");
+  h_dyreco_1_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR2_1000_1500");
+  h_dyreco_1_CR2_1500_Inf = ctx.declare_event_output<float>("dyreco_1_CR2_1500_Inf");
+
+  h_dyreco_2_CR2 = ctx.declare_event_output<float>("dyreco_2_CR2");
+  h_dyreco_2_CR2_0_500 = ctx.declare_event_output<float>("dyreco_2_CR2_0_500");
+  h_dyreco_2_CR2_500_750 = ctx.declare_event_output<float>("dyreco_2_CR2_500_750");
+  h_dyreco_2_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR2_750_1000");
+  h_dyreco_2_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR2_1000_1500");
+  h_dyreco_2_CR2_1500_Inf = ctx.declare_event_output<float>("dyreco_2_CR2_1500_Inf");
+
+  h_Sigma_phi_1_CR2=ctx.declare_event_output<float>("Sigma_phi_1_CR2");
+  h_Sigma_phi_1_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_0_500");
+  h_Sigma_phi_1_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR2_500_750");
+  h_Sigma_phi_1_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR2_750_1000");
+  h_Sigma_phi_1_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_1000_1500");
+  h_Sigma_phi_1_CR2_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_1_CR2_1000_1500");
+
+  h_Sigma_phi_2_CR2=ctx.declare_event_output<float>("Sigma_phi_2_CR2");
+  h_Sigma_phi_2_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_0_500");
+  h_Sigma_phi_2_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR2_500_750");
+  h_Sigma_phi_2_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR2_750_1000");
+  h_Sigma_phi_2_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
+  h_Sigma_phi_2_CR2_1500_Inf=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
 
   
   h_CHSMatchHists.reset(new ZprimeSemiLeptonicCHSMatchHists(ctx, "CHSMatch"));
@@ -820,6 +954,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1", "DeltaY_reco_0_500_CR1",   
   "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_500_CR2", 
 };
+
+
   book_histograms(ctx, histogram_tags);
 
   h_MulticlassNN_output.reset(new ZprimeSemiLeptonicMulticlassNNHists(ctx, "MulticlassNN"));
@@ -831,13 +967,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // lumihists_Weights_MCScale.reset(new LuminosityHists(ctx, "Lumi_Weights_MCScale"));
   // lumihists_Weights_PS.reset(new LuminosityHists(ctx, "Lumi_Weights_PS"));
   // lumihists_Chi2.reset(new LuminosityHists(ctx, "Lumi_Chi2"));
-
- // *** CHANGED ***
+  
+  // *** CHANGED ***
   bool isEFT = false; // default false
- 
+
  if(isMC){
     TString sample_name = "";
-    vector<TString> names = {"MC_EFT_Mttbar_0-700_UL17", "MC_EFT_Mttbar_700-900_UL17", "MC_EFT_Mttbar_900-Inf_UL17","ST", "WJets", "DY", "QCD", "ALP_ttbar_signal", "ALP_ttbar_interference", "HscalarToTTTo1L1Nu2J_m365_w36p5_res", "HscalarToTTTo1L1Nu2J_m400_w40p0_res", "HscalarToTTTo1L1Nu2J_m500_w50p0_res", "HscalarToTTTo1L1Nu2J_m600_w60p0_res", "HscalarToTTTo1L1Nu2J_m800_w80p0_res", "HscalarToTTTo1L1Nu2J_m1000_w100p0_res", "HscalarToTTTo1L1Nu2J_m365_w36p5_int_pos", "HscalarToTTTo1L1Nu2J_m400_w40p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w50p0_int_pos", "HscalarToTTTo1L1Nu2J_m600_w60p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w80p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w100p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w36p5_int_neg", "HscalarToTTTo1L1Nu2J_m400_w40p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w50p0_int_neg", "HscalarToTTTo1L1Nu2J_m600_w60p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w80p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w100p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w36p5_res", "HpseudoToTTTo1L1Nu2J_m400_w40p0_res", "HpseudoToTTTo1L1Nu2J_m500_w50p0_res", "HpseudoToTTTo1L1Nu2J_m600_w60p0_res", "HpseudoToTTTo1L1Nu2J_m800_w80p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_res", "HpseudoToTTTo1L1Nu2J_m365_w36p5_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w40p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w50p0_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w60p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w80p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w36p5_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w40p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w50p0_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w60p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w80p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w100p0_int_neg", "HscalarToTTTo1L1Nu2J_m365_w91p25_res", "HscalarToTTTo1L1Nu2J_m400_w100p0_res", "HscalarToTTTo1L1Nu2J_m500_w125p0_res", "HscalarToTTTo1L1Nu2J_m600_w150p0_res", "HscalarToTTTo1L1Nu2J_m800_w200p0_res", "HscalarToTTTo1L1Nu2J_m1000_w250p0_res", "HscalarToTTTo1L1Nu2J_m365_w91p25_int_pos", "HscalarToTTTo1L1Nu2J_m400_w100p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w125p0_int_pos", "HscalarToTTTo1L1Nu2J_m600_w150p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w200p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w250p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w91p25_int_neg", "HscalarToTTTo1L1Nu2J_m400_w100p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w125p0_int_neg", "HscalarToTTTo1L1Nu2J_m600_w150p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w200p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w250p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w91p25_res", "HpseudoToTTTo1L1Nu2J_m400_w100p0_res", "HpseudoToTTTo1L1Nu2J_m500_w125p0_res", "HpseudoToTTTo1L1Nu2J_m600_w150p0_res", "HpseudoToTTTo1L1Nu2J_m800_w200p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_res", "HpseudoToTTTo1L1Nu2J_m365_w91p25_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w100p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w125p0_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w150p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w200p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w91p25_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w100p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w125p0_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w150p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w200p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w250p0_int_neg", "HscalarToTTTo1L1Nu2J_m365_w9p125_res", "HscalarToTTTo1L1Nu2J_m400_w10p0_res", "HscalarToTTTo1L1Nu2J_m500_w12p5_res", "HscalarToTTTo1L1Nu2J_m600_w15p0_res", "HscalarToTTTo1L1Nu2J_m800_w20p0_res", "HscalarToTTTo1L1Nu2J_m1000_w25p0_res", "HscalarToTTTo1L1Nu2J_m365_w9p125_int_pos", "HscalarToTTTo1L1Nu2J_m400_w10p0_int_pos", "HscalarToTTTo1L1Nu2J_m500_w12p5_int_pos", "HscalarToTTTo1L1Nu2J_m600_w15p0_int_pos", "HscalarToTTTo1L1Nu2J_m800_w20p0_int_pos", "HscalarToTTTo1L1Nu2J_m1000_w25p0_int_pos", "HscalarToTTTo1L1Nu2J_m365_w9p125_int_neg", "HscalarToTTTo1L1Nu2J_m400_w10p0_int_neg", "HscalarToTTTo1L1Nu2J_m500_w12p5_int_neg", "HscalarToTTTo1L1Nu2J_m600_w15p0_int_neg", "HscalarToTTTo1L1Nu2J_m800_w20p0_int_neg", "HscalarToTTTo1L1Nu2J_m1000_w25p0_int_neg", "HpseudoToTTTo1L1Nu2J_m365_w9p125_res", "HpseudoToTTTo1L1Nu2J_m400_w10p0_res", "HpseudoToTTTo1L1Nu2J_m500_w12p5_res", "HpseudoToTTTo1L1Nu2J_m600_w15p0_res", "HpseudoToTTTo1L1Nu2J_m800_w20p0_res", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_res", "HpseudoToTTTo1L1Nu2J_m365_w9p125_int_pos", "HpseudoToTTTo1L1Nu2J_m400_w10p0_int_pos", "HpseudoToTTTo1L1Nu2J_m500_w12p5_int_pos", "HpseudoToTTTo1L1Nu2J_m600_w15p0_int_pos", "HpseudoToTTTo1L1Nu2J_m800_w20p0_int_pos", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_int_pos", "HpseudoToTTTo1L1Nu2J_m365_w9p125_int_neg", "HpseudoToTTTo1L1Nu2J_m400_w10p0_int_neg", "HpseudoToTTTo1L1Nu2J_m500_w12p5_int_neg", "HpseudoToTTTo1L1Nu2J_m600_w15p0_int_neg", "HpseudoToTTTo1L1Nu2J_m800_w20p0_int_neg", "HpseudoToTTTo1L1Nu2J_m1000_w25p0_int_neg", "RSGluonToTT_M-500", "RSGluonToTT_M-1000", "RSGluonToTT_M-1500", "RSGluonToTT_M-2000", "RSGluonToTT_M-2500", "RSGluonToTT_M-3000", "RSGluonToTT_M-3500", "RSGluonToTT_M-4000", "RSGluonToTT_M-4500", "RSGluonToTT_M-5000", "RSGluonToTT_M-5500", "RSGluonToTT_M-6000", "ZPrimeToTT_M400_W40", "ZPrimeToTT_M500_W50", "ZPrimeToTT_M600_W60", "ZPrimeToTT_M700_W70", "ZPrimeToTT_M800_W80", "ZPrimeToTT_M900_W90", "ZPrimeToTT_M1000_W100", "ZPrimeToTT_M1200_W120", "ZPrimeToTT_M1400_W140", "ZPrimeToTT_M1600_W160", "ZPrimeToTT_M1800_W180", "ZPrimeToTT_M2000_W200", "ZPrimeToTT_M2500_W250", "ZPrimeToTT_M3000_W300", "ZPrimeToTT_M3500_W350", "ZPrimeToTT_M4000_W400", "ZPrimeToTT_M4500_W450", "ZPrimeToTT_M5000_W500", "ZPrimeToTT_M6000_W600",  "ZPrimeToTT_M7000_W700", "ZPrimeToTT_M8000_W800", "ZPrimeToTT_M9000_W900", "ZPrimeToTT_M400_W120", "ZPrimeToTT_M500_W150", "ZPrimeToTT_M600_W180", "ZPrimeToTT_M700_W210", "ZPrimeToTT_M800_W240", "ZPrimeToTT_M900_W270", "ZPrimeToTT_M1000_W300", "ZPrimeToTT_M1200_W360", "ZPrimeToTT_M1400_W420", "ZPrimeToTT_M1600_W480", "ZPrimeToTT_M1800_W540", "ZPrimeToTT_M2000_W600", "ZPrimeToTT_M2500_W750", "ZPrimeToTT_M3000_W900", "ZPrimeToTT_M3500_W1050", "ZPrimeToTT_M4000_W1200", "ZPrimeToTT_M4500_W1350", "ZPrimeToTT_M5000_W1500", "ZPrimeToTT_M6000_W1800", "ZPrimeToTT_M7000_W2100", "ZPrimeToTT_M8000_W2400", "ZPrimeToTT_M9000_W2700", "ZPrimeToTT_M400_W4", "ZPrimeToTT_M500_W5", "ZPrimeToTT_M600_W6", "ZPrimeToTT_M700_W7", "ZPrimeToTT_M800_W8", "ZPrimeToTT_M900_W9", "ZPrimeToTT_M1000_W10", "ZPrimeToTT_M1200_W12", "ZPrimeToTT_M1400_W14", "ZPrimeToTT_M1600_W16", "ZPrimeToTT_M1800_W18", "ZPrimeToTT_M2000_W20", "ZPrimeToTT_M2500_W25", "ZPrimeToTT_M3000_W30", "ZPrimeToTT_M3500_W35", "ZPrimeToTT_M4000_W40", "ZPrimeToTT_M4500_W45", "ZPrimeToTT_M5000_W50", "ZPrimeToTT_M6000_W60", "ZPrimeToTT_M7000_W70", "ZPrimeToTT_M8000_W80", "ZPrimeToTT_M9000_W90"};
+    vector<TString> names = {"MC_EFT_Mttbar_0-700_UL17", "MC_EFT_Mttbar_700-900_UL17", "MC_EFT_Mttbar_900-Inf_UL17","ST", "WJets", "DY", "QCD"};
 
     for(unsigned int i=0; i<names.size(); i++){
       if( ctx.get("dataset_version").find(names.at(i)) != std::string::npos ) sample_name = names.at(i);
@@ -973,15 +1109,16 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  // if(isMuon){
-  //   // cout <<"get muon models" << endl;
-  NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
-  // }//electron
-  // else{
-    // cout <<"get electron models" << endl;
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
-  // }
+  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  
+  //electron
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
 
+  // Structure Constants Calculator for EFT
+  // This calculates structure constants for each event using EFT weights
+  // with the correct mapping from configurations to weight indices
+  structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
+  h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
 }
 
 /*
@@ -1002,6 +1139,98 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_chi2,-100);
   event.set(h_weight,-100);
   
+  //EFT vars SR
+  event.set(h_Sigma_phi_SR,-10);
+  event.set(h_Delta_phi_SR,-10);
+  event.set(h_Sigma_phi_1_SR,-10);
+  event.set(h_Sigma_phi_2_SR,-10);
+  event.set(h_dyreco_1_SR,-10);
+  event.set(h_dyreco_2_SR,-10);
+  event.set(h_Delta_phi_1_SR,-10);
+  event.set(h_Delta_phi_2_SR,-10);
+  event.set(h_Sigma_phi_1_SR_0_500,-10);
+  event.set(h_Sigma_phi_1_SR_500_750,-10);
+  event.set(h_Sigma_phi_1_SR_750_1000,-10);
+  event.set(h_Sigma_phi_1_SR_1000_1500,-10);
+  event.set(h_Sigma_phi_1_SR_1500_Inf,-10);
+  event.set(h_Sigma_phi_2_SR_0_500,-10);
+  event.set(h_Sigma_phi_2_SR_500_750,-10);
+  event.set(h_Sigma_phi_2_SR_750_1000,-10);
+  event.set(h_Sigma_phi_2_SR_1000_1500,-10);
+  event.set(h_Sigma_phi_2_SR_1500_Inf,-10);
+  event.set(h_dyreco_1_SR_0_500,-10);
+  event.set(h_dyreco_1_SR_500_750,-10);
+  event.set(h_dyreco_1_SR_750_1000,-10);
+  event.set(h_dyreco_1_SR_1000_1500,-10);
+  event.set(h_dyreco_1_SR_1500_Inf,-10);
+  event.set(h_dyreco_2_SR_0_500,-10);
+  event.set(h_dyreco_2_SR_500_750,-10);
+  event.set(h_dyreco_2_SR_750_1000,-10);
+  event.set(h_dyreco_2_SR_1000_1500,-10);
+  event.set(h_dyreco_2_SR_1500_Inf,-10);
+  event.set(h_dyreco_SR,-10);  
+  //EFT vars CR1
+  event.set(h_Sigma_phi_CR1,-10);
+  event.set(h_Delta_phi_CR1,-10);
+  event.set(h_Sigma_phi_1_CR1,-10);
+  event.set(h_Sigma_phi_2_CR1,-10);
+  event.set(h_dyreco_1_CR1,-10);
+  event.set(h_dyreco_2_CR1,-10);
+  event.set(h_Delta_phi_1_CR1,-10);
+  event.set(h_Delta_phi_2_CR1,-10);
+  event.set(h_Sigma_phi_1_CR1_0_500,-10);
+  event.set(h_Sigma_phi_1_CR1_500_750,-10);
+  event.set(h_Sigma_phi_1_CR1_750_1000,-10);
+  event.set(h_Sigma_phi_1_CR1_1000_1500,-10);
+  event.set(h_Sigma_phi_1_CR1_1500_Inf,-10);
+  event.set(h_Sigma_phi_2_CR1_0_500,-10);
+  event.set(h_Sigma_phi_2_CR1_500_750,-10);
+  event.set(h_Sigma_phi_2_CR1_750_1000,-10);
+  event.set(h_Sigma_phi_2_CR1_1000_1500,-10);
+  event.set(h_Sigma_phi_2_CR1_1500_Inf,-10);
+  event.set(h_dyreco_1_CR1_0_500,-10);
+  event.set(h_dyreco_1_CR1_500_750,-10);
+  event.set(h_dyreco_1_CR1_750_1000,-10);
+  event.set(h_dyreco_1_CR1_1000_1500,-10);
+  event.set(h_dyreco_1_CR1_1500_Inf,-10);
+  event.set(h_dyreco_2_CR1_0_500,-10);
+  event.set(h_dyreco_2_CR1_500_750,-10);
+  event.set(h_dyreco_2_CR1_750_1000,-10);
+  event.set(h_dyreco_2_CR1_1000_1500,-10);
+  event.set(h_dyreco_2_CR1_1500_Inf,-10);
+  event.set(h_dyreco_CR1,-10);  
+  //EFT CR2
+  event.set(h_Sigma_phi_CR2,-10);
+  event.set(h_Delta_phi_CR2,-10);
+  event.set(h_Sigma_phi_1_CR2,-10);
+  event.set(h_Sigma_phi_2_CR2,-10);
+  event.set(h_dyreco_1_CR2,-10);
+  event.set(h_dyreco_2_CR2,-10);
+  event.set(h_Delta_phi_1_CR2,-10);
+  event.set(h_Delta_phi_2_CR2,-10);
+  event.set(h_Sigma_phi_1_CR2_0_500,-10);
+  event.set(h_Sigma_phi_1_CR2_500_750,-10);
+  event.set(h_Sigma_phi_1_CR2_750_1000,-10);
+  event.set(h_Sigma_phi_1_CR2_1000_1500,-10);
+  event.set(h_Sigma_phi_1_CR2_1500_Inf,-10);
+  event.set(h_Sigma_phi_2_CR2_0_500,-10);
+  event.set(h_Sigma_phi_2_CR2_500_750,-10);
+  event.set(h_Sigma_phi_2_CR2_750_1000,-10);
+  event.set(h_Sigma_phi_2_CR2_1000_1500,-10);
+  event.set(h_Sigma_phi_2_CR2_1500_Inf,-10);
+  event.set(h_dyreco_1_CR2_0_500,-10);
+  event.set(h_dyreco_1_CR2_500_750,-10);
+  event.set(h_dyreco_1_CR2_750_1000,-10);
+  event.set(h_dyreco_1_CR2_1000_1500,-10);
+  event.set(h_dyreco_1_CR2_1500_Inf,-10);
+  event.set(h_dyreco_2_CR2_0_500,-10);
+  event.set(h_dyreco_2_CR2_500_750,-10);
+  event.set(h_dyreco_2_CR2_750_1000,-10);
+  event.set(h_dyreco_2_CR2_1000_1500,-10);
+  event.set(h_dyreco_2_CR2_1500_Inf,-10);
+  event.set(h_dyreco_CR2,-10);  
+  
+  //////////////end EFT vars ///////////
 
   event.set(h_NNoutput0, 0);
   event.set(h_NNoutput1, 0);
@@ -1207,7 +1436,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     }
     fill_histograms(event, "IdEle_SF");
   }
-if(debug)  cout<<"test1"<<endl;
+
   // apply muon isolation scale factors (low pT only)
   if(isMuon){
     if(muon_is_low){
@@ -1228,8 +1457,6 @@ if(debug)  cout<<"test1"<<endl;
     sf_muon_iso_stat_low_dummy->process(event);
     sf_muon_iso_syst_low_dummy->process(event);
   }
-  if(debug)  cout<<"test2"<<endl;
-
   // apply muon id scale factors
   if(isMuon){
     if(muon_is_low){
@@ -1251,7 +1478,6 @@ if(debug)  cout<<"test1"<<endl;
     sf_muon_id_syst_dummy->process(event);
 
   }
-if(debug)  cout<<"test3"<<endl;
 
   // apply electron reco scale factors
   if(isMuon){
@@ -1261,13 +1487,11 @@ if(debug)  cout<<"test3"<<endl;
     sf_ele_reco->process(event);
     fill_histograms(event, "RecoEle_SF");
   }
-if(debug)  cout<<"test4"<<endl;
 
   // apply muon reco scale factors
   sf_muon_reco->process(event);
   fill_histograms(event, "MuonReco_SF");
    
-  if(debug)  cout<<"is Muon middle"<<endl;
 
   // apply lepton trigger scale factors
   if(isMuon){
@@ -1295,14 +1519,10 @@ if(debug)  cout<<"test4"<<endl;
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
   fill_histograms(event, "BeforeBtagSF");
 
-  if(debug) cout << "test5" << endl;
   // btag shape sf (Ak4 chs jets)
   // new: using new modules, with PUPPI-CHS matching
   sf_btagging->process(event);
-  if(debug) cout << "test6" << endl;
   fill_histograms(event, "AfterBtagSF");
-
-  if(debug) cout << "test6" << endl;
 
   // apply custom SF to correct for BTag SF shape effects on NJets/HT
   if(isMC && isMuon){
@@ -1316,7 +1536,6 @@ if(debug)  cout<<"test4"<<endl;
 
     event.weight *= custom_sf;
   }
-  if(debug) cout << "test7" << endl;
   if(isMC && !isMuon){
     float custom_sf;
 
@@ -1330,18 +1549,15 @@ if(debug)  cout<<"test4"<<endl;
   }
   fill_histograms(event, "AfterCustomBtagSF");
   
-   if(debug)  cout<<"is Muon ends"<<endl;
-
   // Higher order corrections - EWK & QCD NLO
   NLOCorrections_module->process(event);
   fill_histograms(event, "NLOCorrections");
   
-  if(debug)  cout<<"NLO corrections module"<<endl;
   //apply ele trigger sf
   sf_ele_trigger->process(event);
   fill_histograms(event, "TriggerEle_SF");
   fill_histograms(event, "AfterBaseline");
-  if(debug)  cout<<"sf ele trigger "<<endl;
+
   CandidateBuilder->process(event);
   if(debug) cout << "CandidateBuilder: ok" << endl;
   Chi2DiscriminatorZprime->process(event);
@@ -1372,7 +1588,7 @@ if(debug)  cout<<"test4"<<endl;
 
   // Variables for NN
   if(debug) cout << "before var module" << endl;
-  // Variables_module->process(event);
+  Variables_module->process(event);
   // fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "Variables_module: ok" << endl;
 
@@ -1417,18 +1633,26 @@ if(debug)  cout<<"test4"<<endl;
   if(Chi2_selection->passes(event)){ 
     fill_histograms(event, "AfterChi2");
   }
+  // VariablesEFTSR_module->process(event);
+  // if(debug) cout << "done EFT SR" << endl;
+  // VariablesEFTCR1_module->process(event);
+  // if(debug) cout << "done EFT CR1" << endl;
 
-  if(debug) cout << "check for signal node" << endl;
+  // VariablesEFTCR2_module->process(event);
+  // if(debug) cout << "done EFT CR2" << endl;
+
+
+
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
-    // Variable_EFT_SR->passes
+    if(debug) cout << "inside signal node, about to process EFT vars" << endl;
+    VariablesEFTSR_module->process(event);
     fill_histograms(event, "DNN_output0_nochi2");
     if(debug) cout << "signal DNN output0" << endl;
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
       if(debug) cout << "signal DNN output0 chi2" << endl;
-      h_CHSMatchHists->fill(event);
+      // h_CHSMatchHists->fill(event);
       fill_histograms(event, "DNN_output0");
-      VariablesEFTSR_module->process(event);
       if(Mass_tt>=0 && Mass_tt < 500){
         fill_histograms(event, "DeltaY_reco_0_500_SR");
         if(debug) cout << "signal DNN output0 chi2 0_500" << endl;
@@ -1436,25 +1660,27 @@ if(debug)  cout<<"test4"<<endl;
         if(debug) cout << "signal PDF 0_500" << endl;
         h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
         if(debug) cout << "signal all syst vars" << endl;
-        // h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
-        //  if(debug) cout << "signal PDF vars" << endl;
       }
       if(Mass_tt>=500 && Mass_tt < 750){
+        if(debug) cout << "signal DNN output0 chi2 500_750" << endl;
         fill_histograms(event, "DeltaY_reco_500_750_SR");
         h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
         h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
       }
       if(Mass_tt>=750 && Mass_tt < 1000){
+        if(debug) cout << "signal DNN output0 chi2 750_1000" << endl;
         fill_histograms(event, "DeltaY_reco_750_1000_SR");
         h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
         h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
       }
       if(Mass_tt>=1000 && Mass_tt < 1500){
+        if(debug) cout << "signal DNN output0 chi2 1000_1500" << endl;
         fill_histograms(event, "DeltaY_reco_1000_1500_SR");
         h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
         h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
       }
       if(Mass_tt>=1500){
+        if(debug) cout << "signal DNN output0 chi2 1500_1000" << endl;
         fill_histograms(event, "DeltaY_reco_1500Inf_SR");
         h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
         h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
@@ -1466,13 +1692,15 @@ if(debug)  cout<<"test4"<<endl;
       else{
         fill_histograms(event, "DNN_output0_NoTopTag");
       }
+      if(debug) cout << "done with output0" << endl;
+
     }//Chi2
   }//out0
-  if(debug) cout << "check for ST node" << endl;
   if( out1 == max_score ){
-
-    fill_histograms(event, "DNN_output1");
+    if(debug) cout << "inside ST node, about to process EFT vars" << endl;
     VariablesEFTCR1_module->process(event);
+    fill_histograms(event, "DNN_output1");
+    if (debug)cout<<"processed CR1"<<endl;
 
     if(Mass_tt>=0 && Mass_tt < 500){
       fill_histograms(event, "DeltaY_reco_0_500_CR1");
@@ -1495,51 +1723,92 @@ if(debug)  cout<<"test4"<<endl;
       h_DeltaY_reco_PDFVariations_1000_1500_CR1->fill(event);
     }
     if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
-              h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_1500Inf_CR1");
+      h_DeltaY_reco_SystVariations_1500Inf_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_1500Inf_CR1->fill(event);
+    }
     if(Chi2_selection->passes(event)){ 
       fill_histograms(event,"DNN_output1_chi2");
     }
    }//out1
  
-  if(debug) cout << "check for WJets node" << endl;
+  // if(debug) cout << "check for WJets node" << endl;
 
   if( out2 == max_score ){
-    fill_histograms(event, "DNN_output2");
+    if (debug)cout<<"inside WJets node about to process EFT vars"<<endl;
     VariablesEFTCR2_module->process(event);
-
+    fill_histograms(event, "DNN_output2");
     if(Mass_tt>=0 && Mass_tt < 500){
-              fill_histograms(event, "DeltaY_reco_0_500_CR2");
-              h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_0_500_CR2");
+      h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
+    }
     if(Mass_tt>=500 && Mass_tt < 750){
-              fill_histograms(event, "DeltaY_reco_500_750_CR2");
-              h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_500_750_CR2");
+      h_DeltaY_reco_SystVariations_500_750_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_500_750_CR2->fill(event);
+    }
     if(Mass_tt>=750 && Mass_tt < 1000){
-              fill_histograms(event, "DeltaY_reco_750_1000_CR2");
-              h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_750_1000_CR2");
+      h_DeltaY_reco_SystVariations_750_1000_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_750_1000_CR2->fill(event);
+    }
     if(Mass_tt>=1000 && Mass_tt < 1500){
-              fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
-              h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_1000_1500_CR2");
+      h_DeltaY_reco_SystVariations_1000_1500_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_1000_1500_CR2->fill(event);
+    }
     if(Mass_tt>=1500){
-              fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
-              h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
-              h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
-            }
+      fill_histograms(event, "DeltaY_reco_1500Inf_CR2");
+      h_DeltaY_reco_SystVariations_1500Inf_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_1500Inf_CR2->fill(event);
+    }
     if(Chi2_selection->passes(event)){ 
       fill_histograms(event,"DNN_output2_chi2");
     }
-    }//out2
+  }//out2
   if(debug) cout << "done" << endl;
+  // if(debug) cout << "done" << endl;
+
+  // Calculate structure constants for EFT weights
+  // This accesses EFT weights starting at index 202 in event.genInfo->systweights()
+  // and calculates structure constants that can be used to compute weights for any WC values
+
+  // calculates the structure constants for each event.
+  structure_constants_calculator->process(event);
+
+  // Shows the number of structure constants stored in the event
+  // Displays the first few structure constants
+  // Shows the constant term (SM point) and a few linear terms
+  // Prints for the first 5 EFT events
+  
+  // Debug output for structure constants (only for first few events)
+  if (debug) {static int event_counter = 0;
+    if (isEFT && event_counter < 5) {
+      // Get the structure constants from the event
+      if (event.is_valid(h_structure_constants)) {
+        std::vector<float> structure_constants = event.get(h_structure_constants);
+        
+        std::cout << "===== Structure Constants Debug (Event " << event_counter << ") =====" << std::endl;
+        std::cout << "Number of structure constants: " << structure_constants.size() << std::endl;
+        
+        if (!structure_constants.empty()) {
+          // Print first few constants
+          std::cout << "First few constants: ";
+          for (size_t i = 0; i < std::min(size_t(10), structure_constants.size()); ++i) {
+            std::cout << structure_constants[i] << " ";
+          }
+          std::cout << std::endl;
+        }
+        
+        // Increment counter after printing
+        event_counter++;
+      } else {
+        std::cout << "Structure constants not found in event!" << std::endl;
+      }
+    }
+  }
+
   return true;
 }
 

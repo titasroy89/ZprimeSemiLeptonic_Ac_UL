@@ -14,14 +14,14 @@
 <!ENTITY OUTPUTdir           "/data/dust/group/cms/zprime-uhh/AnalysisDNN_EFT_UL17/&CHANNEL;">
 
 <!-- TTbar -->
-<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_0-700_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_700-900_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_semilepton/MC_MC_EFT_Mttbar_0-700_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_semilepton/MC_MC_EFT_Mttbar_700-900_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_muon_DNNafterselection_semilepton/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_muon_dilepton"/>
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_muon_semilepton_structureconstants"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -35,19 +35,19 @@
     <InputData Lumi="20062.54" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_0-700_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_0-700_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>
 
     <InputData Lumi="52879.35" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_700-900_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_700-900_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>
 
     <InputData Lumi="91527.92" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_900-Inf_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_900-Inf_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>  
 
     <UserConfig>
