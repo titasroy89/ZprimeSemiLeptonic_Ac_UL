@@ -15,7 +15,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="50" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Preselection_UL17_JEC_down_RelativePtHF"/>
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Preselection_UL17_JEC_up_RelativeSample"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -67,9 +67,9 @@
 			<Item Name="Sys_PU"   Value="central"/>
 
 			<Item Name="use_sframe_weight"  Value="false"/>
-			<Item Name="jecsmear_source" Value="RelativePtHF"/>
+			<Item Name="jecsmear_source" Value="RelativeSample"/>
 			<Item Name="jersmear_direction" Value="nominal"/>
-			<Item Name="jecsmear_direction" Value="down"/>
+			<Item Name="jecsmear_direction" Value="up"/>
 
 			<Item Name="AnalysisModule" Value="ZprimePreselectionModule"/>
 		</UserConfig>

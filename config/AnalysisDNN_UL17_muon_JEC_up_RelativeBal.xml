@@ -13,14 +13,14 @@
 <!ENTITY CHANNEL             "muon">
 <!ENTITY OUTPUTdir           "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_JEC/UL17/&CHANNEL;/">
 
-<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativePtHF/MC_TTToSemiLeptonic_UL17.xml">
-<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativePtHF/MC_TTToHadronic_UL17.xml">
-<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativePtHF/MC_TTTo2L2Nu_UL17.xml">
+<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativeBal/MC_TTToSemiLeptonic_UL17.xml">
+<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativeBal/MC_TTToHadronic_UL17.xml">
+<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL17_forAnalysisDNN_muon_JEC_up_RelativeBal/MC_TTTo2L2Nu_UL17.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_muon_JEC_up_RelativePtHF"/>
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_muon_JEC_up_RelativeBal"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -76,7 +76,7 @@
 
       <Item Name="use_sframe_weight" Value="false"/>
       
-      <Item Name="jecsmear_source" Value="RelativePtHF"/>
+      <Item Name="jecsmear_source" Value="RelativeBal"/>
       <Item Name="jersmear_direction" Value="nominal"/>
       <Item Name="jecsmear_direction" Value="up"/>
 

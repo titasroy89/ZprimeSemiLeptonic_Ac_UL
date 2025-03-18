@@ -358,7 +358,7 @@ ZprimeCorrectMatchDiscriminator::ZprimeCorrectMatchDiscriminator(uhh2::Context& 
   h_ttbargen_ = ctx.get_handle<TTbarGen>("ttbargen");
   h_is_zprime_reconstructed_ = ctx.get_handle< bool >("is_zprime_reconstructed_correctmatch");
   h_BestCandidate_ = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
-  
+
   is_mc = ctx.get("dataset_type") == "MC";
   if(is_mc) ttgenprod.reset(new TTbarGenProducer(ctx));
 }
@@ -2351,7 +2351,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
     }
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_2_CR1_1500_Inf,sphi_CR1);
-    }
+    }  
   }
 
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 >0){
@@ -2497,10 +2497,10 @@ bool Variables_EFT_CR2::process(uhh2::Event& evt){
     if(bscore > bscore_max) bscore_max = bscore;
   }
 
-  }
+}
   TLorentzVector had_top_b(0, 0, 0, 0);
 
-  // Resolved topology
+// Resolved topology
   if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
     for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
       float bscore = jets_hadronic_bscores.at(i);
@@ -2977,7 +2977,7 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
 
 
     return true;
-    }
+  }
 
 
   ////
@@ -3130,7 +3130,7 @@ TopPtReweighting::TopPtReweighting(uhh2::Context& ctx,
 
 
     return true;
-}
+  }
 
   //boosted spin correlation variable
   
