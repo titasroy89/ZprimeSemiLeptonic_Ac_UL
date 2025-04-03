@@ -366,8 +366,6 @@ bool ZprimePreselectionModule_dY::process(uhh2::Event& event){
 
   double_t DeltaY_gen= TMath::Abs(0.5*TMath::Log((top.energy() + top.pt()*TMath::SinH(top.eta()))/(top.energy() - top.pt()*TMath::SinH(top.eta())))) - TMath::Abs(0.5*TMath::Log((antitop.energy() + antitop.pt()*TMath::SinH(antitop.eta()))/(antitop.energy() - antitop.pt()*TMath::SinH(antitop.eta()))));
 
-
-
   if((DeltaY_gen < 0)) {
     fill_histograms(event, "Gen_N");
   }
@@ -375,7 +373,6 @@ bool ZprimePreselectionModule_dY::process(uhh2::Event& event){
   if((DeltaY_gen > 0)) {
     fill_histograms(event, "Gen_P");
   }
-
 
 //////////////////////////////////////
  /////////////////////////////////////

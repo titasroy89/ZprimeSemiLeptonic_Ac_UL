@@ -1,0 +1,31 @@
+/var/lib/condor/execute/dir_2182195/condor.sh[23]: source: /cvmfs/cms.cern.ch/cmsset_default.sh: syntax error at line 47: `(' unexpected
+/var/lib/condor/execute/dir_2182195/condor.sh[26]: scramv1: not found
+/var/lib/condor/execute/dir_2182195/condor.sh[27]: cd: CMSSW_10_6_28/src/: [No such file or directory]
+/var/lib/condor/execute/dir_2182195/condor.sh[28]: scramv1: not found
+TClass::Init:0: RuntimeWarning: no dictionary for class GenJet is available
+TClass::Init:0: RuntimeWarning: no dictionary for class FlavorParticle is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Particle is available
+TClass::Init:0: RuntimeWarning: no dictionary for class MET is available
+TClass::Init:0: RuntimeWarning: no dictionary for class PrimaryVertex is available
+TClass::Init:0: RuntimeWarning: no dictionary for class GenInfo is available
+TClass::Init:0: RuntimeWarning: no dictionary for class GenParticle is available
+TClass::Init:0: RuntimeWarning: no dictionary for class TopJet is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Jet is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Tags is available
+TClass::Init:0: RuntimeWarning: no dictionary for class GenTopJet is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Electron is available
+TClass::Init:0: RuntimeWarning: no dictionary for class RecParticle is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Photon is available
+TClass::Init:0: RuntimeWarning: no dictionary for class Muon is available
+TClass::Init:0: RuntimeWarning: no dictionary for class source_candidate is available
+Traceback (most recent call last):
+  File "/var/lib/condor/execute/dir_2182195/invariantmass.py", line 180, in <module>
+    events_processed_in_file = process_file(
+  File "/var/lib/condor/execute/dir_2182195/invariantmass.py", line 48, in process_file
+    genparticles = getattr(tree, "GenParticles")
+  File "/usr/lib64/python3.9/site-packages/ROOT/_pythonization/_ttree.py", line 243, in _TTree__getattr__
+    out = cppyy.ll.cast[cast_type](out)
+TypeError: Could not find "cppyy_cast<vector<GenParticle>*>" (set cppyy.set_debug() for C++ errors):
+  Failed to instantiate "cppyy_cast<vector<GenParticle>*>(long)"
+mv: cannot stat 'mttbar.png': No such file or directory
+mv: cannot stat 'histograms.root': No such file or directory

@@ -27,17 +27,17 @@ protected:
   bool is_htott_pseudo;
   bool is_zprimetott;
 
-TH1F *DeltaY,*DeltaY_reco, *DeltaY_gen, *DeltaY_ele, *DeltaY_N_ele, *DeltaY_P_ele, *DeltaY_muon, *DeltaY_N_muon, *DeltaY_P_muon, *M_top, *M_antitop, *Pt_ttbar, *Pt_top, *Pt_antitop, *Eta_ttbar, *Eta_top, *Eta_antitop; //-beren # of events gen info
+TH1F *DeltaY,*DeltaY_reco, *DeltaY_gen, *DeltaY_gen_0_500, *DeltaY_gen_500_750, *DeltaY_gen_750_1000, *DeltaY_gen_1000_1500, *DeltaY_gen_1500Inf,  *DeltaY_ele, *DeltaY_N_ele, *DeltaY_P_ele, *DeltaY_muon, *DeltaY_N_muon, *DeltaY_P_muon, *M_top, *M_antitop, *Pt_ttbar, *Pt_top, *Pt_antitop, *Eta_ttbar, *Eta_top, *Eta_antitop; //-beren # of events gen info
 
-TH1F *leadingJetPtHist, *mttbar, *topgen_pt, *topgen_eta, *antitopgen_pt, *antitopgen_eta, *leptongen_pt, *leptongen_eta, *muongen_pt, *muongen_eta, *electrongen_pt, *electrongen_eta, *bquarkgen_pt, *bquarkgen_eta;
+TH1F *leadingJetPtHist, *genHT_dist, *mttbar, *topgen_pt, *topgen_eta, *antitopgen_pt, *antitopgen_eta, *leptongen_pt, *leptongen_eta, *muongen_pt, *muongen_eta, *electrongen_pt, *electrongen_eta, *bquarkgen_pt, *bquarkgen_eta;
 
 TH1F *N_jets, *pt_jet, *pt_jet1, *pt_jet2, *pt_jet3, *eta_jet, *eta_jet1, *eta_jet2, *eta_jet3, *phi_jet, *phi_jet1, *phi_jet2, *phi_jet3, *m_jet, *m_jet1, *m_jet2, *m_jet3, *csv_jet, *csv_jet1, *csv_jet2, *csv_jet3, *N_bJets_loose, *N_bJets_med, *N_bJets_tight;
 
 TH1F *N_mu, *pt_mu, *pt_mu1, *pt_mu2, *eta_mu, *eta_mu1, *eta_mu2, *phi_mu, *phi_mu1, *phi_mu2, *reliso_mu, *reliso_mu1, *reliso_mu2, *reliso_mu_rebin, *reliso_mu1_rebin, *reliso_mu2_rebin;
 
-TH1F *N_ele, *pt_ele, *pt_ele1, *pt_ele2, *eta_ele, *eta_ele1, *eta_ele2, *phi_ele, *phi_ele1, *phi_ele2, *reliso_ele, *reliso_ele1, *reliso_ele2, *reliso_ele_rebin, *reliso_ele1_rebin, *reliso_ele2_rebin;
+TH1F *N_ele_charge, *N_ele, *pt_ele, *pt_ele1, *pt_ele2, *eta_ele, *eta_ele1, *eta_ele2, *phi_ele, *phi_ele1, *phi_ele2, *reliso_ele, *reliso_ele1, *reliso_ele2, *reliso_ele_rebin, *reliso_ele1_rebin, *reliso_ele2_rebin;
 
-TH1F *M_mumu, *M_ee, *dRmin_mu_jet, *dRmin_mu_jet_scaled, *dRmin_ele_jet, *dRmin_ele_jet_scaled, *ptrel_mu_jet, *ptrel_ele_jet, *dRmin_mu1_jet, *dRmin_mu1_jet_scaled, *dRmin_ele1_jet, *dRmin_ele1_jet_scaled, *ptrel_mu1_jet, *ptrel_ele1_jet;
+TH1F *N_mu_charge, *M_mumu, *M_ee, *dRmin_mu_jet, *dRmin_mu_jet_scaled, *dRmin_ele_jet, *dRmin_ele_jet_scaled, *ptrel_mu_jet, *ptrel_ele_jet, *dRmin_mu1_jet, *dRmin_mu1_jet_scaled, *dRmin_ele1_jet, *dRmin_ele1_jet_scaled, *ptrel_mu1_jet, *ptrel_ele1_jet;
 
 TH1F *N_HOTVRjets, *pt_HOTVRjet, *pt_HOTVRjet1, *pt_HOTVRjet2, *pt_HOTVRjet3, *eta_HOTVRjet, *eta_HOTVRjet1, *eta_HOTVRjet2, *eta_HOTVRjet3, *phi_HOTVRjet, *phi_HOTVRjet1, *phi_HOTVRjet2, *phi_HOTVRjet3, *m_HOTVRjet, *m_HOTVRjet1, *m_HOTVRjet2, *m_HOTVRjet3, *N_subjets_HOTVRjet, *N_subjets_HOTVRjet1, *N_subjets_HOTVRjet2, *N_subjets_HOTVRjet3, *N_daughters_HOTVRjet, *N_daughters_HOTVRjet1, *N_daughters_HOTVRjet2, *N_daughters_HOTVRjet3, *dRmin_AK8Puppi_HOTVRjet, *dRmin_AK8Puppi_HOTVRjet1, *dRmin_AK8Puppi_HOTVRjet2, *dRmin_AK8Puppi_HOTVRjet3, *dRmin_mu_HOTVRjet, *dRmin_mu_HOTVRjet1, *dRmin_mu_HOTVRjet2, *dRmin_mu_HOTVRjet3, *tau1_HOTVRjet, *tau1_HOTVRjet1, *tau1_HOTVRjet2, *tau1_HOTVRjet3, *tau2_HOTVRjet, *tau2_HOTVRjet1, *tau2_HOTVRjet2, *tau2_HOTVRjet3, *tau3_HOTVRjet, *tau3_HOTVRjet1, *tau3_HOTVRjet2, *tau3_HOTVRjet3, *tau21_HOTVRjet, *tau21_HOTVRjet1, *tau21_HOTVRjet2, *tau21_HOTVRjet3, *tau32_HOTVRjet, *tau32_HOTVRjet1, *tau32_HOTVRjet2, *tau32_HOTVRjet3;
 

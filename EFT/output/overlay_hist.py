@@ -1,0 +1,62 @@
+import ROOT
+
+def overlay_histograms_normalized():
+    file1 = ROOT.TFile.Open("mttbar_multiprocess_0_700.root")
+    file2 = ROOT.TFile.Open("mttbar_multiprocess_700_900.root")
+
+    hist1 = file1.Get("hist_mttbar_reconstructed")
+    hist2 = file2.Get("hist_mttbar_reconstructed")
+
+    print("Integral before scaling (hist1):", hist1.Integral("width"))
+    print("Integral before scaling (hist2):", hist2.Integral("width"))
+
+    integral1 = hist1.Integral("width")
+    if integral1 != 0:
+        hist1.Scale(1.0 / integral1)
+    else:
+        print("Histogram1 has zero integral, cannot normalize.")
+
+    integral2 = hist2.Integral("width")
+    if integral2 != 0:
+        hist2.Scale(1.0 / integral2)
+    else:
+        print("Histogram2 has zero integral, cannot normalize.")
+
+    print("Integral after scaling (hist1):", hist1.Integral("width"))
+    print("Integral after scaling (hist2):", hist2.Integral("width"))
+
+    hist1.SetLineColor(ROOT.kBlue)
+    hist1.SetLineWidth(2)
+    hist2.SetLineColor(ROOT.kRed)
+    hist2.SetLineWidth(2)
+
+    hist1.SetStats(0)
+    hist2.SetStats(0)
+
+    c1 = ROOT.TCanvas("c1", "Reference Point Weight", 800, 600)
+    c1.SetGrid()
+
+    hist1.Draw("HIST")
+    hist2.Draw("HIST SAME")
+
+    legend = ROOT.TLegend(0.7, 0.7, 0.9, 0.9)
+    legend.AddEntry(hist1, "Mtt 0-700", "l")
+    legend.AddEntry(hist2, "Mtt 700-900", "l")
+    legend.SetBorderSize(0)
+    legend.SetFillStyle(0)
+    legend.Draw()
+
+    hist1.GetXaxis().SetTitle("Mtt [GeV]")
+    hist1.GetYaxis().SetTitle("Normalized Events")
+    hist1.SetTitle("Reference Point Weight")
+
+    max_y = max(hist1.GetMaximum(), hist2.GetMaximum())
+    hist1.SetMaximum(max_y * 1.2)
+
+    c1.SaveAs("Mtt_overlay_normalized.png")
+
+    file1.Close()
+    file2.Close()
+
+if __name__ == "__main__":
+    overlay_histograms_normalized()

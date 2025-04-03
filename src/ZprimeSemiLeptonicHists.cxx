@@ -17,24 +17,37 @@
 #include <iostream>
 
 
+
 using namespace std;
 using namespace uhh2;
 
-
-
 ZprimeSemiLeptonicHists::ZprimeSemiLeptonicHists(uhh2::Context& ctx, const std::string& dirname):
-  
-
 Hists(ctx, dirname) {
   is_mc = ctx.get("dataset_type") == "MC";
   ishotvr = (ctx.get("is_hotvr") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
+ 
+  isUL16preVFP=false; isUL16postVFP=false; isUL17=false; isUL18 =false;
+
+  isUL16preVFP  = (ctx.get("dataset_version").find("UL16preVFP")  != std::string::npos);
+  isUL16postVFP = (ctx.get("dataset_version").find("UL16postVFP") != std::string::npos);
+  isUL17        = (ctx.get("dataset_version").find("UL17")        != std::string::npos);
+  isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
+
+  // debug = false;
+  NN = false;
+  isMuon = false; isElectron = false;
+  if(ctx.get("channel") == "muon") isMuon = true;
+  if(ctx.get("channel") == "electron") isElectron = true;
+  is_tt = ctx.get("dataset_version").find("TTTo") == 0;
+  gen_match=true;
   if(isdeepAK8){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("DeepAK8TopTags");
   }else if(ishotvr){
     h_AK8TopTags = ctx.get_handle<std::vector<TopJet>>("HOTVRTopTags");
   }
-
+  h_CHSjets_matched = ctx.get_handle<std::vector<Jet>>("CHS_matched");
+  h_CHSjets = ctx.get_handle< std::vector<Jet> >("jetsAk4CHS");
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
   h_BestZprimeCandidateCorrectMatch = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
@@ -44,7 +57,12 @@ Hists(ctx, dirname) {
 }
 
 void ZprimeSemiLeptonicHists::init(){
-
+  //CHS jets
+  CHS_pt_jet   = book<TH1F>("CHS_pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
+  CHS_pt_jet1  = book<TH1F>("CHS_pt_jet1", "p_{T}^{jet 1} [GeV]", 45, 0, 900);
+  CHS_eta_jet  = book<TH1F>("CHS_eta_jet", "#eta^{jets}", 50, -2.5, 2.5);
+  CHS_eta_jet1 = book<TH1F>("CHS_eta_jet1", "#eta^{jet 1}", 50, -2.5, 2.5);
+  dRmin_CHS_Puppi  = book<TH1F>("dRmin_CHS_Puppi", "#DeltaR_{min}(CHS, Puppi)", 60, 0, 3);
   // jets
   N_jets   = book<TH1F>("N_jets", "N_{jets}", 21, -0.5, 20.5);
   pt_jet   = book<TH1F>("pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
@@ -85,10 +103,20 @@ void ZprimeSemiLeptonicHists::init(){
   phi_mu2          = book<TH1F>("phi_mu2", "#phi^{#mu 2}", 35, 3.5, 3.5);
   reliso_mu        = book<TH1F>("reliso_mu", "#mu rel. Iso", 40, 0, 0.5);
   reliso_mu1       = book<TH1F>("reliso_mu1", "#mu 1 rel. Iso", 40, 0, 0.5);
+  reliso_mu1_matched  = book<TH1F>("reliso_mu1_match", "#mu1 rel. Iso", 40, 0, 0.5);
+  reliso_ele1_matched = book<TH1F>("reliso_ele1_match", "e rel. Iso", 40, 0, 0.5);  
+  pt_mu_lowpt      = book<TH1F>("pt_mu_lowpt", "p_{T}^{e} [GeV] p_{T}<55 GeV", 180, 0, 900);
+  pt_mu_highpt      = book<TH1F>("pt_mu_midpt", "p_{T}^{e} [GeV] p_{T}>55 GeV", 180, 0, 900);
+
   reliso_mu2       = book<TH1F>("reliso_mu2", "#mu 2 rel. Iso", 40, 0, 0.5);
   reliso_mu_rebin  = book<TH1F>("reliso_mu_rebin", "#mu rel. Iso ", 400, 0, 5);
   reliso_mu1_rebin = book<TH1F>("reliso_mu1_rebin", "#mu 1 rel. Iso ", 400, 0, 5);
   reliso_mu2_rebin = book<TH1F>("reliso_mu2_rebin", "#mu 2 rel. Iso ", 400, 0, 5);
+
+  N_mu_charge      = book<TH1F>("N_mu_charge", "N^{#mu} charge", 2, -2, 2);
+  N_lep_charge     = book<TH1F>("N_lep_charge", "lepton charge", 2, -2., 2.);
+  N_ele_charge     = book<TH1F>("N_ele_charge", "N^{e} charge", 2, -2., 2.);
+  
 
   N_ele             = book<TH1F>("N_ele", "N^{e}", 11, -0.5, 10.5);
   pt_ele            = book<TH1F>("pt_ele", "p_{T}^{e} [GeV]", 90, 0, 900);
@@ -125,21 +153,36 @@ void ZprimeSemiLeptonicHists::init(){
   ptrel_mu_jet          = book<TH1F>("ptrel_mu_jet", "p_{T}^{rel}(#mu, jet)", 50, 0, 500);
   ptrel_ele_jet         = book<TH1F>("ptrel_ele_jet", "p_{T}^{rel}(e, jet)", 50, 0, 500);
   dRmin_mu1_jet         = book<TH1F>("dRmin_mu1_jet", "#DeltaR_{min}(#mu1, jet)", 60, 0, 3);
+  dRmin_mu1_jet_matched = book<TH1F>("dRmin_mu1_jet_match", "#DeltaR_{min}(#mu1, jet)", 60, 0, 3);
+  dRmin_ele1_jet_matched = book<TH1F>("dRmin_ele1_jet_match", "#DeltaR_{min}(e, jet)", 60, 0, 3);
   dRmin_mu1_jet_scaled  = book<TH1F>("dRmin_mu1_jet_scaled", "#DeltaR_{min}(#mu1, jet) #times p_{T}^{jet 1}", 60, 0, 1000);
   dRmin_ele1_jet        = book<TH1F>("dRmin_ele1_jet", "#DeltaR_{min}(e1, jet)", 60, 0, 3);
   dRmin_ele1_jet_scaled = book<TH1F>("dRmin_ele1_jet_scaled", "#DeltaR_{min}(e1, jet) #times p_{T}^{jet 1}", 60, 0, 1000);
   ptrel_mu1_jet         = book<TH1F>("ptrel_mu1_jet", "p_{T}^{rel}(#mu1, jet)", 50, 0, 500);
   ptrel_ele1_jet        = book<TH1F>("ptrel_ele1_jet", "p_{T}^{rel}(e1, jet)", 50, 0, 500);
-
   dR_mu_nearjet  = book<TH1F>("dR_mu_nearjet", "#DeltaR(#mu, nearest jet)", 60, 0, 3);
   dR_ele_nearjet = book<TH1F>("dR_ele_nearjet", "#DeltaR(e, nearest jet)", 60, 0, 3);
   pt_mu_nearjet  = book<TH1F>("pt_mu_nearjet", "p_{T} (nearest jet to #mu)", 50, 0, 500);
   pt_ele_nearjet = book<TH1F>("pt_ele_nearjet", "p_{T} (nearest jet to e)", 50, 0, 500);
 
-  dRmin_ptrel_mu   = book<TH2F>("dRmin_ptrel_mu", "#DeltaR_{min}(#mu, jet);p_{T}^{rel}(#mu, jet);p_{T}^{rel}(#mu, jet) vs. #DeltaR_{min}(#mu, jet)", 60, 0, 3, 50, 0, 500);
-  dRmin_ptrel_mu1  = book<TH2F>("dRmin_ptrel_mu1", "#DeltaR_{min}(#mu1, jet);p_{T}^{rel}(#mu1, jet);p_{T}^{rel}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet)", 60, 0, 3, 50, 0, 500);
-  dRmin_ptrel_ele  = book<TH2F>("dRmin_ptrel_ele", "#DeltaR_{min}(e, jet);p_{T}^{rel}(e, jet);p_{T}^{rel}(e, jet) vs. #DeltaR_{min}(e, jet)", 60, 0, 3, 50, 0, 500);
-  dRmin_ptrel_ele1 = book<TH2F>("dRmin_ptrel_ele1", "#DeltaR_{min}(e1, jet);p_{T}^{rel}(e1, jet);p_{T}^{rel}(e1, jet) vs. #DeltaR_{min}(e1, jet)", 60, 0, 3, 50, 0, 500);
+  dRmin_ptrel_mu   = book<TH2F>("dRmin_ptrel_mu", "p_{T}^{rel}(#mu, jet) vs. #DeltaR_{min}(#mu, jet);#DeltaR_{min}(#mu, jet);p_{T}^{rel}(#mu, jet)", 60, 0, 3, 50, 0, 500);
+  dRmin_ptrel_mu1   = book<TH2F>("dRmin_ptrel_mu1", "p_{T}^{rel}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet);#DeltaR_{min}(#mu1, jet);p_{T}^{rel}(#mu1, jet)", 60, 0, 3, 50, 0, 500);
+  dRmin_ptrel_mu1_matched   = book<TH2F>("dRmin_ptrel_mu1_match", "p_{T}^{rel}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet);#DeltaR_{min}(#mu1, jet);p_{T}^{rel}(#mu1, jet)", 60, 0, 3, 50, 0, 500);
+
+  dRmin_pt_mu1     = book<TH2F>("dRmin_pt_mu1", "p_{T}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet); #DeltaR_{min}(#mu1, jet);p_{T}(#mu1, jet)", 60, 0, 3, 90, 0, 900);
+  dRmin_pt_mu1_matched   = book<TH2F>("dRmin_pt_mu1_match", "p_{T}(#mu1, jet) vs. #DeltaR_{min}(#mu1, jet); #DeltaR_{min}(#mu1, jet);p_{T}(#mu1, jet)", 60, 0, 3, 90, 0, 900);
+
+  ptrel_pt_mu1     = book<TH2F>("ptrel_pt_mu1", "p_{T}^{rel}(#mu1, jet) vs. p_{T}(#mu1); p_{T}^{rel}(#mu1, jet);p_{T}(#mu1)", 50, 0, 500, 90, 0, 900);
+  ptrel_pt_mu1_matched     = book<TH2F>("ptrel_pt_mu1_match", "p_{T}^{rel}(#mu1, jet) vs. p_{T}(#mu1); p_{T}^{rel}(#mu1, jet);p_{T}(#mu1)", 50, 0, 500, 90, 0, 900);
+
+  dRmin_ptrel_ele  = book<TH2F>("dRmin_ptrel_ele", "p_{T}^{rel}(e, jet) vs. #DeltaR_{min}(e, jet);DeltaR_{min}(e, jet);p_{T}^{rel}(e, jet)", 60, 0, 3, 50, 0, 500);
+  dRmin_ptrel_ele1  = book<TH2F>("dRmin_ptrel_ele1", "p_{T}^{rel}(e1, jet) vs. #DeltaR_{min}(e1, jet);DeltaR_{min}(e1, jet);p_{T}^{rel}(e1, jet)", 60, 0, 3, 50, 0, 500);
+  dRmin_ptrel_ele1_matched  = book<TH2F>("dRmin_ptrel_ele1_match", "p_{T}^{rel}(e1, jet) vs. #DeltaR_{min}(e1, jet);DeltaR_{min}(e1, jet);p_{T}^{rel}(e1, jet)", 60, 0, 3, 50, 0, 500);
+
+  dRmin_pt_ele1     = book<TH2F>("dRmin_pt_ele1", "p_{T}(e1, jet) vs. #DeltaR_{min}(e1, jet); #DeltaR_{min}(e1, jet);p_{T}(e1, jet)", 60, 0, 3, 90, 0, 900);
+  ptrel_pt_ele1     = book<TH2F>("ptrel_pt_ele1", "p_{T}^{rel}(e1, jet) vs. p_{T}(e1); p_{T}^{rel}(e1, jet);p_{T}(e1)", 50, 0, 500, 90, 0, 900);
+  dRmin_pt_ele1_matched     = book<TH2F>("dRmin_pt_ele1_match", "p_{T}(e1, jet) vs. #DeltaR_{min}(e1, jet); #DeltaR_{min}(e1, jet);p_{T}(e1, jet)", 60, 0, 3, 90, 0, 900);
+  ptrel_pt_ele1_matched     = book<TH2F>("ptrel_pt_ele1_match", "p_{T}^{rel}(e1, jet) vs. p_{T}(e1); p_{T}^{rel}(e1, jet);p_{T}(e1)", 50, 0, 500, 90, 0, 900);
 
   // HOTVR jets
   N_HOTVRjets              = book<TH1F>("N_HOTVRjets", "N_{HOTVR jets}", 6, -0.5, 5.5);
@@ -461,25 +504,62 @@ void ZprimeSemiLeptonicHists::init(){
   ditop_deltaR      = book<TH1F>("ditop_deltaR", "#DeltaR(t,#bar{t})", 100, 0, 10.0);
   
   // DeltaY
-  DeltaY_reco       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2,2);
-  DeltaY_gen        = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2,2);
-
-  //Gen plots
-  topgen_pt       = book<TH1F>("topgen_pt", "p_{T}^{top} [GeV] in gen",70, 0, 7000);
-  topgen_eta      = book<TH1F>("antitopgen_eta", "#eta^{top} in gen",60, -3.0, 3.0);
-  antitopgen_pt   = book<TH1F>("antitopgen_pt", "p_{antiT}^{top} [GeV] in gen",70, 0, 7000);
-  antitopgen_eta  = book<TH1F>("antitopgen_eta", "#eta^{antiT}",60, -3.0, 3.0);
-  leptongen_pt    = book<TH1F>("leptongen_pt", "p_{T}^{lepton} [GeV] in gen",70, 0, 7000);
-  leptongen_eta   = book<TH1F>("leptongen_eta", "#eta^{lepton} in gen",60, -3.0, 3.0);
-  muongen_pt      = book<TH1F>("muongen_pt", "p_{T}^{muon} [GeV] in gen",70, 0, 7000);
-  muongen_eta     = book<TH1F>("muongen_eta", "#eta^{muon} in gen"      ,60, -3.0, 3.0);
-  electrongen_pt  = book<TH1F>("electrongen_pt", "p_{T}^{electron} [GeV] in gen",70, 0, 7000);
-  electrongen_eta = book<TH1F>("electrongen_eta", "#eta^{electron} in gen",60, -3.0, 3.0);
-  bquarkgen_pt    = book<TH1F>("bquarkgen_pt", "p_{bquark} [GeV] in gen",70, 0, 7000);
-  bquarkgen_eta   = book<TH1F>("bquarkgen_eta", "#eta^{bquark} in gen",60, -3.0, 3.0);
+  DeltaY_reco            = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_high       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_low        = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d1         = book<TH1F>("DeltaY_reco_d1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d2         = book<TH1F>("DeltaY_reco_d2", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s1         = book<TH1F>("DeltaY_reco_s1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s2         = book<TH1F>("DeltaY_reco_s2", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
 
 
 
+  DeltaY_reco_high_match       = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_low_match        = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d1_match         = book<TH1F>("DeltaY_reco_d1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_d2_match         = book<TH1F>("DeltaY_reco_d2_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s1_match         = book<TH1F>("DeltaY_reco_s1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_s2_match         = book<TH1F>("DeltaY_reco_s2_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+   //SpinCorr
+  Sigma_phi             = book<TH1F>("Sigma_phi", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_high        = book<TH1F>("Sigma_phi_high", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_low         = book<TH1F>("Sigma_phi_low", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_1           = book<TH1F>("Sigma_phi_1", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_2           = book<TH1F>("Sigma_phi_2", "#Sigma #phi ",16,-3.2,3.2);
+
+  Sigma_phi_match       = book<TH1F>("Sigma_phi_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_high_match  = book<TH1F>("Sigma_phi_high_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_low_match   = book<TH1F>("Sigma_phi_low_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_1_match     = book<TH1F>("Sigma_phi_1_match", "#Sigma #phi ",16,-3.2,3.2);
+  Sigma_phi_2_match     = book<TH1F>("Sigma_phi_2_match", "#Sigma #phi ",16,-3.2,3.2);
+
+
+  Delta_phi             = book<TH1F>("Delta_phi", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_high        = book<TH1F>("Delta_phi_high", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_low         = book<TH1F>("Delta_phi_low", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_1           = book<TH1F>("Delta_phi_1", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_2           = book<TH1F>("Delta_phi_2", "#Delta #phi ",16,-3.2,3.2);
+
+  Delta_phi_match       = book<TH1F>("Delta_phi_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_high_match  = book<TH1F>("Delta_phi_high_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_low_match   = book<TH1F>("Delta_phi_low_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_1_match     = book<TH1F>("Delta_phi_1_match", "#Delta #phi ",16,-3.2,3.2);
+  Delta_phi_2_match     = book<TH1F>("Delta_phi_2_match", "#Delta #phi ",16,-3.2,3.2);
+
+
+  DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  // DeltaY_reco_0_500     = book<TH1F>("DeltaY_reco_0_500", "#Delta Y_{(t,#bar{t})} 0<Mtt<500",2,-2.5,2.5);
+  // DeltaY_reco_500_750   = book<TH1F>("DeltaY_reco_500_750", "#Delta Y_{(t,#bar{t})} 500<Mtt<750",2,-2.5,2.5);
+  // DeltaY_reco_750_1000  = book<TH1F>("DeltaY_reco_750_1000", "#Delta Y_{(t,#bar{t})} 750<Mtt<1000",2,-2.5,2.5);
+  // DeltaY_reco_1000_1500 = book<TH1F>("DeltaY_reco_1000_1500", "#Delta Y_{(t,#bar{t})} 1000<Mtt<1500",2,-2.5,2.5);
+  // DeltaY_reco_1500Inf   = book<TH1F>("DeltaY_reco_1500Inf", "#Delta Y_{(t,#bar{t})} Mtt>1500",2,-2.5,2.5);
+  DeltaY_reco_best_plot = book<TH1F>("DeltaY_reco_best_plot", "#Delta Y_{(t,#bar{t}) Reco best}",2,-2.5,2.5);
+  DeltaY_gen_best_plot  = book<TH1F>("DeltaY_gen_best_plot", "#Delta Y_{(t,#bar{t}) Gen Best}",2,-2.5,2.5);
+  DeltaY_notMatched     = book<TH1F>("DeltaY_notMatched", "Reco Events Nor MATCHED",1,0,2);
+  
+ 
+  
+  
   vector<float> bins_Zprime4 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200,3400,3600,3800,4000,4400,4800,5200,5600,6000,6100};
   vector<float> bins_Zprime5 = {0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3300,3600,3900,4200,4500,5000,5100};
   vector<float> bins_Zprime6 = {0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3300,3600,3900,4200,4500,5000};
@@ -540,6 +620,12 @@ void ZprimeSemiLeptonicHists::init(){
   mttbar_vs_costhetastar = book<TH2F>("mttbar_vs_costhetastar", "m_{t#bar{t}} vs cos(#theta*)", 20, -1, 1, 1000, 0, 10000);
   costhetastar_vs_mttbar = book<TH2F>("costhetastar_vs_mttbar", "cos(#theta*) vs m_{t#bar{t}}", 1000, 0, 10000, 20, -1, 1);
 
+  response_matrix = book<TH2F>("response_matrix", "#Delta Y_{(t,#bar{t})}_reco ;#Delta Y_{(t,#bar{t})}_gen",  2, -2.5, 2.5, 2, -2.5, 2.5);
+  // response_matrix->GetXaxis()->SetBinLabel(1, "Negative");
+  // response_matrix->GetXaxis()->SetBinLabel(2, "Positive");
+  // response_matrix->GetYaxis()->SetBinLabel(1, "Negative");
+  // response_matrix->GetYaxis()->SetBinLabel(2, "Positive");
+
   // Sphericity tensor
   S11 = book<TH1F>("S11", "S_{11}", 50, 0, 1);
   S12 = book<TH1F>("S12", "S_{12}", 50, 0, 1);
@@ -566,110 +652,111 @@ void ZprimeSemiLeptonicHists::init(){
   // 2D ditribution NJets/HT to extract custom btag SF
   N_Jets_vs_HT  = book<TH2F>("N_Jets_vs_HT", "N_Jets_vs_HT", 21, 0., 21., 50, 0., 7000.);
 
-  // NN Hists
-  NN_Mu_pt            = book<TH1F>("NN_Mu_pt", "NN_Mu_pt", 50, 0, 1000);
-  NN_Mu_eta           = book<TH1F>("NN_Mu_eta", "NN_Mu_eta", 50, -2.5, 2.5);
-  NN_Mu_phi           = book<TH1F>("NN_Mu_phi", "NN_Mu_phi", 35, -3.5, 3.5);
-  NN_Mu_E             = book<TH1F>("NN_Mu_E", "NN_Mu_E", 150, 0, 3000);
-  NN_Ele_pt           = book<TH1F>("NN_Ele_pt", "NN_Ele_pt", 50, 0, 1000);
-  NN_Ele_eta          = book<TH1F>("NN_Ele_eta", "NN_Ele_eta", 50, -2.5, 2.5);
-  NN_Ele_phi          = book<TH1F>("NN_Ele_phi", "NN_Ele_phi", 35, -3.5, 3.5);
-  NN_Ele_E            = book<TH1F>("NN_Ele_E", "NN_Ele_E", 150, 0, 3000);
-  NN_MET_pt           = book<TH1F>("NN_MET_pt", "NN_MET_pt", 150, 0, 1500);
-  NN_MET_phi          = book<TH1F>("NN_MET_phi", "NN_MET_phi", 35, -3.5, 3.5);
-  NN_N_Ak4            = book<TH1F>("NN_N_Ak4", "NN_N_Ak4", 20, 0, 20);
-  NN_Ak4_j1_pt        = book<TH1F>("NN_Ak4_j1_pt", "NN_Ak4_j1_pt", 150, 0, 3000);
-  NN_Ak4_j1_eta       = book<TH1F>("NN_Ak4_j1_eta", "NN_Ak4_j1_eta", 50, -2.5, 2.5);
-  NN_Ak4_j1_phi       = book<TH1F>("NN_Ak4_j1_phi", "NN_Ak4_j1_phi", 35, -3.5, 3.5);
-  NN_Ak4_j1_E         = book<TH1F>("NN_Ak4_j1_E", "NN_Ak4_j1_E", 100, 0, 5000);
-  NN_Ak4_j1_m         = book<TH1F>("NN_Ak4_j1_m", "NN_Ak4_j1_m", 50, 0, 300);
-  NN_Ak4_j1_btag      = book<TH1F>("NN_Ak4_j1_btag", "NN_Ak4_j1_btag", 50, 0, 1);
-  NN_Ak4_j2_pt        = book<TH1F>("NN_Ak4_j2_pt", "NN_Ak4_j2_pt", 150, 0, 3000);
-  NN_Ak4_j2_eta       = book<TH1F>("NN_Ak4_j2_eta", "NN_Ak4_j2_eta", 50, -2.5, 2.5);
-  NN_Ak4_j2_phi       = book<TH1F>("NN_Ak4_j2_phi", "NN_Ak4_j2_phi", 35, -3.5, 3.5);
-  NN_Ak4_j2_E         = book<TH1F>("NN_Ak4_j2_E", "NN_Ak4_j2_E", 100, 0, 5000);
-  NN_Ak4_j2_m         = book<TH1F>("NN_Ak4_j2_m", "NN_Ak4_j2_m", 50, 0, 300);
-  NN_Ak4_j2_btag      = book<TH1F>("NN_Ak4_j2_btag", "NN_Ak4_j2_btag", 50, 0, 1);
-  NN_Ak4_j3_pt        = book<TH1F>("NN_Ak4_j3_pt", "NN_Ak4_j3_pt", 150, 0, 3000);
-  NN_Ak4_j3_eta       = book<TH1F>("NN_Ak4_j3_eta", "NN_Ak4_j3_eta", 50, -2.5, 2.5);
-  NN_Ak4_j3_phi       = book<TH1F>("NN_Ak4_j3_phi", "NN_Ak4_j3_phi", 35, -3.5, 3.5);
-  NN_Ak4_j3_E         = book<TH1F>("NN_Ak4_j3_E", "NN_Ak4_j3_E", 100, 0, 5000);
-  NN_Ak4_j3_m         = book<TH1F>("NN_Ak4_j3_m", "NN_Ak4_j3_m", 50, 0, 300);
-  NN_Ak4_j3_btag      = book<TH1F>("NN_Ak4_j3_btag", "NN_Ak4_j3_btag", 50, 0, 1);
-  NN_Ak4_j4_pt        = book<TH1F>("NN_Ak4_j4_pt", "NN_Ak4_j4_pt", 150, 0, 3000);
-  NN_Ak4_j4_eta       = book<TH1F>("NN_Ak4_j4_eta", "NN_Ak4_j4_eta", 50, -2.5, 2.5);
-  NN_Ak4_j4_phi       = book<TH1F>("NN_Ak4_j4_phi", "NN_Ak4_j4_phi", 35, -3.5, 3.5);
-  NN_Ak4_j4_E         = book<TH1F>("NN_Ak4_j4_E", "NN_Ak4_j4_E", 100, 0, 5000);
-  NN_Ak4_j4_m         = book<TH1F>("NN_Ak4_j4_m", "NN_Ak4_j4_m", 50, 0, 300);
-  NN_Ak4_j4_btag      = book<TH1F>("NN_Ak4_j4_btag", "NN_Ak4_j4_btag", 50, 0, 1);
-  NN_Ak4_j5_pt        = book<TH1F>("NN_Ak4_j5_pt", "NN_Ak4_j5_pt", 150, 0, 3000);
-  NN_Ak4_j5_eta       = book<TH1F>("NN_Ak4_j5_eta", "NN_Ak4_j5_eta", 50, -2.5, 2.5);
-  NN_Ak4_j5_phi       = book<TH1F>("NN_Ak4_j5_phi", "NN_Ak4_j5_phi", 35, -3.5, 3.5);
-  NN_Ak4_j5_E         = book<TH1F>("NN_Ak4_j5_E", "NN_Ak4_j5_E", 100, 0, 5000);
-  NN_Ak4_j5_m         = book<TH1F>("NN_Ak4_j5_m", "NN_Ak4_j5_m", 50, 0, 300);
-  NN_Ak4_j5_btag      = book<TH1F>("NN_Ak4_j5_btag", "NN_Ak4_j5_btag", 50, 0, 1);
-  NN_Ak4_j6_pt        = book<TH1F>("NN_Ak4_j6_pt", "NN_Ak4_j6_pt", 150, 0, 3000);
-  NN_Ak4_j6_eta       = book<TH1F>("NN_Ak4_j6_eta", "NN_Ak4_j6_eta", 50, -2.5, 2.5);
-  NN_Ak4_j6_phi       = book<TH1F>("NN_Ak4_j6_phi", "NN_Ak4_j6_phi", 35, -3.5, 3.5);
-  NN_Ak4_j6_E         = book<TH1F>("NN_Ak4_j6_E", "NN_Ak4_j6_E", 100, 0, 5000);
-  NN_Ak4_j6_m         = book<TH1F>("NN_Ak4_j6_m", "NN_Ak4_j6_m", 50, 0, 300);
-  NN_Ak4_j6_btag      = book<TH1F>("NN_Ak4_j6_btag", "NN_Ak4_j6_btag", 50, 0, 1);
-  NN_M_tt_weighted    = book<TH1F>("NN_M_tt_weighted", "NN_M_tt_weighted", 100, 0, 14000);
-  NN_M_tt_notweighted = book<TH1F>("NN_M_tt_notweighted", "NN_M_tt_notweighted", 100, 0, 14000);
-  NN_chi2             = book<TH1F>("NN_chi2", "NN_chi2", 100, 0, 100);
-  NN_N_HOTVR          = book<TH1F>("NN_N_HOTVR", "NN_N_HOTVR", 20, 0, 20);
-  NN_HOTVR_j1_pt      = book<TH1F>("NN_HOTVR_j1_pt", "NN_HOTVR_j1_pt", 150, 0, 3000);
-  NN_HOTVR_j1_eta     = book<TH1F>("NN_HOTVR_j1_eta", "NN_HOTVR_j1_eta", 50, -2.5, 2.5);
-  NN_HOTVR_j1_phi     = book<TH1F>("NN_HOTVR_j1_phi", "NN_HOTVR_j1_phi", 35, -3.5, 3.5);
-  NN_HOTVR_j1_E       = book<TH1F>("NN_HOTVR_j1_E", "NN_HOTVR_j1_E", 100, 0, 5000);
-  NN_HOTVR_j1_mSD     = book<TH1F>("NN_HOTVR_j1_mSD", "NN_HOTVR_j1_mSD", 50, 0, 500);
-  NN_HOTVR_j1_tau21   = book<TH1F>("NN_HOTVR_j1_tau21", "NN_HOTVR_j1_tau21", 24, 0, 1.2);
-  NN_HOTVR_j1_tau32   = book<TH1F>("NN_HOTVR_j1_tau32", "NN_HOTVR_j1_tau32", 24, 0, 1.2);
-  NN_HOTVR_j2_pt      = book<TH1F>("NN_HOTVR_j2_pt", "NN_HOTVR_j2_pt", 150, 0, 3000);
-  NN_HOTVR_j2_eta     = book<TH1F>("NN_HOTVR_j2_eta", "NN_HOTVR_j2_eta", 50, -2.5, 2.5);
-  NN_HOTVR_j2_phi     = book<TH1F>("NN_HOTVR_j2_phi", "NN_HOTVR_j2_phi", 35, -3.5, 3.5);
-  NN_HOTVR_j2_E       = book<TH1F>("NN_HOTVR_j2_E", "NN_HOTVR_j2_E", 100, 0, 5000);
-  NN_HOTVR_j2_mSD     = book<TH1F>("NN_HOTVR_j2_mSD", "NN_HOTVR_j2_mSD", 50, 0, 500);
-  NN_HOTVR_j2_tau21   = book<TH1F>("NN_HOTVR_j2_tau21", "NN_HOTVR_j2_tau21", 24, 0, 1.2);
-  NN_HOTVR_j2_tau32   = book<TH1F>("NN_HOTVR_j2_tau32", "NN_HOTVR_j2_tau32", 24, 0, 1.2);
-  NN_HOTVR_j3_pt      = book<TH1F>("NN_HOTVR_j3_pt", "NN_HOTVR_j3_pt", 150, 0, 3000);
-  NN_HOTVR_j3_eta     = book<TH1F>("NN_HOTVR_j3_eta", "NN_HOTVR_j3_eta", 50, -2.5, 2.5);
-  NN_HOTVR_j3_phi     = book<TH1F>("NN_HOTVR_j3_phi", "NN_HOTVR_j3_phi", 35, -3.5, 3.5);
-  NN_HOTVR_j3_E       = book<TH1F>("NN_HOTVR_j3_E", "NN_HOTVR_j3_E", 100, 0, 5000);
-  NN_HOTVR_j3_mSD     = book<TH1F>("NN_HOTVR_j3_mSD", "NN_HOTVR_j3_mSD", 50, 0, 500);
-  NN_HOTVR_j3_tau21   = book<TH1F>("NN_HOTVR_j3_tau21", "NN_HOTVR_j3_tau21", 24, 0, 1.2);
-  NN_HOTVR_j3_tau32   = book<TH1F>("NN_HOTVR_j3_tau32", "NN_HOTVR_j3_tau32", 24, 0, 1.2);
-  NN_N_Ak8            = book<TH1F>("NN_N_Ak8", "NN_N_Ak8", 20, 0, 20);
-  NN_Ak8_j1_pt        = book<TH1F>("NN_Ak8_j1_pt", "NN_Ak8_j1_pt", 150, 0, 3000);
-  NN_Ak8_j1_eta       = book<TH1F>("NN_Ak8_j1_eta", "NN_Ak8_j1_eta", 50, -2.5, 2.5);
-  NN_Ak8_j1_phi       = book<TH1F>("NN_Ak8_j1_phi", "NN_Ak8_j1_phi", 35, -3.5, 3.5);
-  NN_Ak8_j1_E         = book<TH1F>("NN_Ak8_j1_E", "NN_Ak8_j1_E", 100, 0, 5000);
-  NN_Ak8_j1_mSD       = book<TH1F>("NN_Ak8_j1_mSD", "NN_Ak8_j1_mSD", 50, 0, 500);
-  NN_Ak8_j1_tau21     = book<TH1F>("NN_Ak8_j1_tau21", "NN_Ak8_j1_tau21", 24, 0, 1.2);
-  NN_Ak8_j1_tau32     = book<TH1F>("NN_Ak8_j1_tau32", "NN_Ak8_j1_tau32", 24, 0, 1.2);
-  NN_Ak8_j1_ttag      = book<TH1F>("NN_Ak8_j1_ttag", "NN_Ak8_j1_ttag", 50, 0, 1);
-  NN_Ak8_j2_pt        = book<TH1F>("NN_Ak8_j2_pt", "NN_Ak8_j2_pt", 150, 0, 3000);
-  NN_Ak8_j2_eta       = book<TH1F>("NN_Ak8_j2_eta", "NN_Ak8_j2_eta", 50, -2.5, 2.5);
-  NN_Ak8_j2_phi       = book<TH1F>("NN_Ak8_j2_phi", "NN_Ak8_j2_phi", 35, -3.5, 3.5);
-  NN_Ak8_j2_E         = book<TH1F>("NN_Ak8_j2_E", "NN_Ak8_j2_E", 100, 0, 5000);
-  NN_Ak8_j2_mSD       = book<TH1F>("NN_Ak8_j2_mSD", "NN_Ak8_j2_mSD", 50, 0, 500);
-  NN_Ak8_j2_tau21     = book<TH1F>("NN_Ak8_j2_tau21", "NN_Ak8_j2_tau21", 24, 0, 1.2);
-  NN_Ak8_j2_tau32     = book<TH1F>("NN_Ak8_j2_tau32", "NN_Ak8_j2_tau32", 24, 0, 1.2);
-  NN_Ak8_j2_ttag      = book<TH1F>("NN_Ak8_j2_ttag", "NN_Ak8_j2_ttag", 50, 0, 1);
-  NN_Ak8_j3_pt        = book<TH1F>("NN_Ak8_j3_pt", "NN_Ak8_j3_pt", 150, 0, 3000);
-  NN_Ak8_j3_eta       = book<TH1F>("NN_Ak8_j3_eta", "NN_Ak8_j3_eta", 50, -2.5, 2.5);
-  NN_Ak8_j3_phi       = book<TH1F>("NN_Ak8_j3_phi", "NN_Ak8_j3_phi", 35, -3.5, 3.5);
-  NN_Ak8_j3_E         = book<TH1F>("NN_Ak8_j3_E", "NN_Ak8_j3_E", 100, 0, 5000);
-  NN_Ak8_j3_mSD       = book<TH1F>("NN_Ak8_j3_mSD", "NN_Ak8_j3_mSD", 50, 0, 500);
-  NN_Ak8_j3_tau21     = book<TH1F>("NN_Ak8_j3_tau21", "NN_Ak8_j3_tau21", 24, 0, 1.2);
-  NN_Ak8_j3_tau32     = book<TH1F>("NN_Ak8_j3_tau32", "NN_Ak8_j3_tau32", 24, 0, 1.2);
-  NN_Ak8_j3_ttag      = book<TH1F>("NN_Ak8_j3_ttag", "NN_Ak8_j3_ttag", 50, 0, 1);
+  if(NN){
+    // NN Hists
+    NN_Mu_pt            = book<TH1F>("NN_Mu_pt", "NN_Mu_pt", 50, 0, 1000);
+    NN_Mu_eta           = book<TH1F>("NN_Mu_eta", "NN_Mu_eta", 50, -2.5, 2.5);
+    NN_Mu_phi           = book<TH1F>("NN_Mu_phi", "NN_Mu_phi", 35, -3.5, 3.5);
+    NN_Mu_E             = book<TH1F>("NN_Mu_E", "NN_Mu_E", 150, 0, 3000);
+    NN_Ele_pt           = book<TH1F>("NN_Ele_pt", "NN_Ele_pt", 50, 0, 1000);
+    NN_Ele_eta          = book<TH1F>("NN_Ele_eta", "NN_Ele_eta", 50, -2.5, 2.5);
+    NN_Ele_phi          = book<TH1F>("NN_Ele_phi", "NN_Ele_phi", 35, -3.5, 3.5);
+    NN_Ele_E            = book<TH1F>("NN_Ele_E", "NN_Ele_E", 150, 0, 3000);
+    NN_MET_pt           = book<TH1F>("NN_MET_pt", "NN_MET_pt", 150, 0, 1500);
+    NN_MET_phi          = book<TH1F>("NN_MET_phi", "NN_MET_phi", 35, -3.5, 3.5);
+    NN_N_Ak4            = book<TH1F>("NN_N_Ak4", "NN_N_Ak4", 20, 0, 20);
+    NN_Ak4_j1_pt        = book<TH1F>("NN_Ak4_j1_pt", "NN_Ak4_j1_pt", 150, 0, 3000);
+    NN_Ak4_j1_eta       = book<TH1F>("NN_Ak4_j1_eta", "NN_Ak4_j1_eta", 50, -2.5, 2.5);
+    NN_Ak4_j1_phi       = book<TH1F>("NN_Ak4_j1_phi", "NN_Ak4_j1_phi", 35, -3.5, 3.5);
+    NN_Ak4_j1_E         = book<TH1F>("NN_Ak4_j1_E", "NN_Ak4_j1_E", 100, 0, 5000);
+    NN_Ak4_j1_m         = book<TH1F>("NN_Ak4_j1_m", "NN_Ak4_j1_m", 50, 0, 300);
+    NN_Ak4_j1_btag      = book<TH1F>("NN_Ak4_j1_btag", "NN_Ak4_j1_btag", 50, 0, 1);
+    NN_Ak4_j2_pt        = book<TH1F>("NN_Ak4_j2_pt", "NN_Ak4_j2_pt", 150, 0, 3000);
+    NN_Ak4_j2_eta       = book<TH1F>("NN_Ak4_j2_eta", "NN_Ak4_j2_eta", 50, -2.5, 2.5);
+    NN_Ak4_j2_phi       = book<TH1F>("NN_Ak4_j2_phi", "NN_Ak4_j2_phi", 35, -3.5, 3.5);
+    NN_Ak4_j2_E         = book<TH1F>("NN_Ak4_j2_E", "NN_Ak4_j2_E", 100, 0, 5000);
+    NN_Ak4_j2_m         = book<TH1F>("NN_Ak4_j2_m", "NN_Ak4_j2_m", 50, 0, 300);
+    NN_Ak4_j2_btag      = book<TH1F>("NN_Ak4_j2_btag", "NN_Ak4_j2_btag", 50, 0, 1);
+    NN_Ak4_j3_pt        = book<TH1F>("NN_Ak4_j3_pt", "NN_Ak4_j3_pt", 150, 0, 3000);
+    NN_Ak4_j3_eta       = book<TH1F>("NN_Ak4_j3_eta", "NN_Ak4_j3_eta", 50, -2.5, 2.5);
+    NN_Ak4_j3_phi       = book<TH1F>("NN_Ak4_j3_phi", "NN_Ak4_j3_phi", 35, -3.5, 3.5);
+    NN_Ak4_j3_E         = book<TH1F>("NN_Ak4_j3_E", "NN_Ak4_j3_E", 100, 0, 5000);
+    NN_Ak4_j3_m         = book<TH1F>("NN_Ak4_j3_m", "NN_Ak4_j3_m", 50, 0, 300);
+    NN_Ak4_j3_btag      = book<TH1F>("NN_Ak4_j3_btag", "NN_Ak4_j3_btag", 50, 0, 1);
+    NN_Ak4_j4_pt        = book<TH1F>("NN_Ak4_j4_pt", "NN_Ak4_j4_pt", 150, 0, 3000);
+    NN_Ak4_j4_eta       = book<TH1F>("NN_Ak4_j4_eta", "NN_Ak4_j4_eta", 50, -2.5, 2.5);
+    NN_Ak4_j4_phi       = book<TH1F>("NN_Ak4_j4_phi", "NN_Ak4_j4_phi", 35, -3.5, 3.5);
+    NN_Ak4_j4_E         = book<TH1F>("NN_Ak4_j4_E", "NN_Ak4_j4_E", 100, 0, 5000);
+    NN_Ak4_j4_m         = book<TH1F>("NN_Ak4_j4_m", "NN_Ak4_j4_m", 50, 0, 300);
+    NN_Ak4_j4_btag      = book<TH1F>("NN_Ak4_j4_btag", "NN_Ak4_j4_btag", 50, 0, 1);
+    NN_Ak4_j5_pt        = book<TH1F>("NN_Ak4_j5_pt", "NN_Ak4_j5_pt", 150, 0, 3000);
+    NN_Ak4_j5_eta       = book<TH1F>("NN_Ak4_j5_eta", "NN_Ak4_j5_eta", 50, -2.5, 2.5);
+    NN_Ak4_j5_phi       = book<TH1F>("NN_Ak4_j5_phi", "NN_Ak4_j5_phi", 35, -3.5, 3.5);
+    NN_Ak4_j5_E         = book<TH1F>("NN_Ak4_j5_E", "NN_Ak4_j5_E", 100, 0, 5000);
+    NN_Ak4_j5_m         = book<TH1F>("NN_Ak4_j5_m", "NN_Ak4_j5_m", 50, 0, 300);
+    NN_Ak4_j5_btag      = book<TH1F>("NN_Ak4_j5_btag", "NN_Ak4_j5_btag", 50, 0, 1);
+    NN_Ak4_j6_pt        = book<TH1F>("NN_Ak4_j6_pt", "NN_Ak4_j6_pt", 150, 0, 3000);
+    NN_Ak4_j6_eta       = book<TH1F>("NN_Ak4_j6_eta", "NN_Ak4_j6_eta", 50, -2.5, 2.5);
+    NN_Ak4_j6_phi       = book<TH1F>("NN_Ak4_j6_phi", "NN_Ak4_j6_phi", 35, -3.5, 3.5);
+    NN_Ak4_j6_E         = book<TH1F>("NN_Ak4_j6_E", "NN_Ak4_j6_E", 100, 0, 5000);
+    NN_Ak4_j6_m         = book<TH1F>("NN_Ak4_j6_m", "NN_Ak4_j6_m", 50, 0, 300);
+    NN_Ak4_j6_btag      = book<TH1F>("NN_Ak4_j6_btag", "NN_Ak4_j6_btag", 50, 0, 1);
+    NN_M_tt_weighted    = book<TH1F>("NN_M_tt_weighted", "NN_M_tt_weighted", 100, 0, 14000);
+    NN_M_tt_notweighted = book<TH1F>("NN_M_tt_notweighted", "NN_M_tt_notweighted", 100, 0, 14000);
+    NN_chi2             = book<TH1F>("NN_chi2", "NN_chi2", 100, 0, 100);
+    NN_N_HOTVR          = book<TH1F>("NN_N_HOTVR", "NN_N_HOTVR", 20, 0, 20);
+    NN_HOTVR_j1_pt      = book<TH1F>("NN_HOTVR_j1_pt", "NN_HOTVR_j1_pt", 150, 0, 3000);
+    NN_HOTVR_j1_eta     = book<TH1F>("NN_HOTVR_j1_eta", "NN_HOTVR_j1_eta", 50, -2.5, 2.5);
+    NN_HOTVR_j1_phi     = book<TH1F>("NN_HOTVR_j1_phi", "NN_HOTVR_j1_phi", 35, -3.5, 3.5);
+    NN_HOTVR_j1_E       = book<TH1F>("NN_HOTVR_j1_E", "NN_HOTVR_j1_E", 100, 0, 5000);
+    NN_HOTVR_j1_mSD     = book<TH1F>("NN_HOTVR_j1_mSD", "NN_HOTVR_j1_mSD", 50, 0, 500);
+    NN_HOTVR_j1_tau21   = book<TH1F>("NN_HOTVR_j1_tau21", "NN_HOTVR_j1_tau21", 24, 0, 1.2);
+    NN_HOTVR_j1_tau32   = book<TH1F>("NN_HOTVR_j1_tau32", "NN_HOTVR_j1_tau32", 24, 0, 1.2);
+    NN_HOTVR_j2_pt      = book<TH1F>("NN_HOTVR_j2_pt", "NN_HOTVR_j2_pt", 150, 0, 3000);
+    NN_HOTVR_j2_eta     = book<TH1F>("NN_HOTVR_j2_eta", "NN_HOTVR_j2_eta", 50, -2.5, 2.5);
+    NN_HOTVR_j2_phi     = book<TH1F>("NN_HOTVR_j2_phi", "NN_HOTVR_j2_phi", 35, -3.5, 3.5);
+    NN_HOTVR_j2_E       = book<TH1F>("NN_HOTVR_j2_E", "NN_HOTVR_j2_E", 100, 0, 5000);
+    NN_HOTVR_j2_mSD     = book<TH1F>("NN_HOTVR_j2_mSD", "NN_HOTVR_j2_mSD", 50, 0, 500);
+    NN_HOTVR_j2_tau21   = book<TH1F>("NN_HOTVR_j2_tau21", "NN_HOTVR_j2_tau21", 24, 0, 1.2);
+    NN_HOTVR_j2_tau32   = book<TH1F>("NN_HOTVR_j2_tau32", "NN_HOTVR_j2_tau32", 24, 0, 1.2);
+    NN_HOTVR_j3_pt      = book<TH1F>("NN_HOTVR_j3_pt", "NN_HOTVR_j3_pt", 150, 0, 3000);
+    NN_HOTVR_j3_eta     = book<TH1F>("NN_HOTVR_j3_eta", "NN_HOTVR_j3_eta", 50, -2.5, 2.5);
+    NN_HOTVR_j3_phi     = book<TH1F>("NN_HOTVR_j3_phi", "NN_HOTVR_j3_phi", 35, -3.5, 3.5);
+    NN_HOTVR_j3_E       = book<TH1F>("NN_HOTVR_j3_E", "NN_HOTVR_j3_E", 100, 0, 5000);
+    NN_HOTVR_j3_mSD     = book<TH1F>("NN_HOTVR_j3_mSD", "NN_HOTVR_j3_mSD", 50, 0, 500);
+    NN_HOTVR_j3_tau21   = book<TH1F>("NN_HOTVR_j3_tau21", "NN_HOTVR_j3_tau21", 24, 0, 1.2);
+    NN_HOTVR_j3_tau32   = book<TH1F>("NN_HOTVR_j3_tau32", "NN_HOTVR_j3_tau32", 24, 0, 1.2);
+    NN_N_Ak8            = book<TH1F>("NN_N_Ak8", "NN_N_Ak8", 20, 0, 20);
+    NN_Ak8_j1_pt        = book<TH1F>("NN_Ak8_j1_pt", "NN_Ak8_j1_pt", 150, 0, 3000);
+    NN_Ak8_j1_eta       = book<TH1F>("NN_Ak8_j1_eta", "NN_Ak8_j1_eta", 50, -2.5, 2.5);
+    NN_Ak8_j1_phi       = book<TH1F>("NN_Ak8_j1_phi", "NN_Ak8_j1_phi", 35, -3.5, 3.5);
+    NN_Ak8_j1_E         = book<TH1F>("NN_Ak8_j1_E", "NN_Ak8_j1_E", 100, 0, 5000);
+    NN_Ak8_j1_mSD       = book<TH1F>("NN_Ak8_j1_mSD", "NN_Ak8_j1_mSD", 50, 0, 500);
+    NN_Ak8_j1_tau21     = book<TH1F>("NN_Ak8_j1_tau21", "NN_Ak8_j1_tau21", 24, 0, 1.2);
+    NN_Ak8_j1_tau32     = book<TH1F>("NN_Ak8_j1_tau32", "NN_Ak8_j1_tau32", 24, 0, 1.2);
+    NN_Ak8_j1_ttag      = book<TH1F>("NN_Ak8_j1_ttag", "NN_Ak8_j1_ttag", 50, 0, 1);
+    NN_Ak8_j2_pt        = book<TH1F>("NN_Ak8_j2_pt", "NN_Ak8_j2_pt", 150, 0, 3000);
+    NN_Ak8_j2_eta       = book<TH1F>("NN_Ak8_j2_eta", "NN_Ak8_j2_eta", 50, -2.5, 2.5);
+    NN_Ak8_j2_phi       = book<TH1F>("NN_Ak8_j2_phi", "NN_Ak8_j2_phi", 35, -3.5, 3.5);
+    NN_Ak8_j2_E         = book<TH1F>("NN_Ak8_j2_E", "NN_Ak8_j2_E", 100, 0, 5000);
+    NN_Ak8_j2_mSD       = book<TH1F>("NN_Ak8_j2_mSD", "NN_Ak8_j2_mSD", 50, 0, 500);
+    NN_Ak8_j2_tau21     = book<TH1F>("NN_Ak8_j2_tau21", "NN_Ak8_j2_tau21", 24, 0, 1.2);
+    NN_Ak8_j2_tau32     = book<TH1F>("NN_Ak8_j2_tau32", "NN_Ak8_j2_tau32", 24, 0, 1.2);
+    NN_Ak8_j2_ttag      = book<TH1F>("NN_Ak8_j2_ttag", "NN_Ak8_j2_ttag", 50, 0, 1);
+    NN_Ak8_j3_pt        = book<TH1F>("NN_Ak8_j3_pt", "NN_Ak8_j3_pt", 150, 0, 3000);
+    NN_Ak8_j3_eta       = book<TH1F>("NN_Ak8_j3_eta", "NN_Ak8_j3_eta", 50, -2.5, 2.5);
+    NN_Ak8_j3_phi       = book<TH1F>("NN_Ak8_j3_phi", "NN_Ak8_j3_phi", 35, -3.5, 3.5);
+    NN_Ak8_j3_E         = book<TH1F>("NN_Ak8_j3_E", "NN_Ak8_j3_E", 100, 0, 5000);
+    NN_Ak8_j3_mSD       = book<TH1F>("NN_Ak8_j3_mSD", "NN_Ak8_j3_mSD", 50, 0, 500);
+    NN_Ak8_j3_tau21     = book<TH1F>("NN_Ak8_j3_tau21", "NN_Ak8_j3_tau21", 24, 0, 1.2);
+    NN_Ak8_j3_tau32     = book<TH1F>("NN_Ak8_j3_tau32", "NN_Ak8_j3_tau32", 24, 0, 1.2);
+    NN_Ak8_j3_ttag      = book<TH1F>("NN_Ak8_j3_ttag", "NN_Ak8_j3_ttag", 50, 0, 1);
+    //NN
+  }
 }
 
 
 void ZprimeSemiLeptonicHists::fill(const Event & event){
-
-  bool debug = false;
 
   double weight = event.weight;
 
@@ -682,19 +769,45 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   █ ██   ██ ██         ██         ██
   █  █████  ███████    ██    ███████
   */
+  //CHS jets
+  
+  vector<Jet> CHSjets = event.get(h_CHSjets);
+  for(unsigned int i=0; i<CHSjets.size(); i++){
+    CHS_pt_jet->Fill(CHSjets.at(i).pt(),weight);
+    CHS_eta_jet->Fill(CHSjets.at(i).eta(),weight);
+    if(i==0){
+      CHS_pt_jet1->Fill(CHSjets.at(i).pt(),weight);
+      CHS_eta_jet1->Fill(CHSjets.at(i).eta(),weight);
+    }
+    // cout<<"CHS pt: "<<CHSjets.at(i).pt()<<endl;
+    // cout<<"CHS eta: "<<CHSjets.at(i).eta()<<endl;
+  }
 
 
   vector<Jet>* jets = event.jets;
   int Njets = jets->size();
   N_jets->Fill(Njets, weight);
-  if(debug) cout << "filling jets section" << endl;
+  // cout<<"chs jets size: "<<CHSjets.size()<<endl;
+  // cout<<"puppi jets size: "<<jets->size()<<endl;
+  for (unsigned int i=0; i<CHSjets.size(); i++){
+    double dRmin_CHSPuppi = 99999.;
+    for(unsigned int j=0; j<jets->size(); j++){
+      double deltar=deltaR(CHSjets.at(i),jets->at(j));
+      // cout<<deltar<<endl;
+      if(deltar < dRmin_CHSPuppi) dRmin_CHSPuppi = deltar;
+    }
+    // cout<<"dRmin is: "<<dRmin_CHSPuppi<<endl;
+    dRmin_CHS_Puppi->Fill(dRmin_CHSPuppi,weight);
+
+
+  }
 
   // for(unsigned int i=0; i<jets->size(); i++){
-  //   if(debug) cout << "Jet pt: " << jets->at(i).pt() << endl
+  //   cout << "Jet pt: " << jets->at(i).pt() << endl
   // }
-  // if(debug) cout << "Jet1 pt: " << jets->at(0).pt() << endl;
-  // if(debug) cout << "Jet2 pt: " << jets->at(0).pt() << endl;
-  // if(debug) cout << "Jet3 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet1 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet2 pt: " << jets->at(0).pt() << endl;
+  // cout << "Jet3 pt: " << jets->at(0).pt() << endl;
 
   for(unsigned int i=0; i<jets->size(); i++){
     pt_jet->Fill(jets->at(i).pt(),weight);
@@ -702,8 +815,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     phi_jet->Fill(jets->at(i).phi(),weight);
     m_jet->Fill(jets->at(i).v4().M(),weight);
     deepjetbscore_jet->Fill(jets->at(i).btag_DeepJet(), weight);
-    if(debug) cout << "jet pt" << endl;
-    
 
     if(i==0){
       pt_jet1->Fill(jets->at(i).pt(),weight);
@@ -727,7 +838,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       deepjetbscore_jet3->Fill(jets->at(i).btag_DeepJet(), weight);
     }
   }
-  if(debug) cout << "passed 1" << endl;
 
 
   int NbjetsDeepJet_loose = 0, NbjetsDeepJet_medium = 0, NbjetsDeepJet_tight = 0;
@@ -740,12 +850,10 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     if(BtagDeepJet_medium(jets->at(i),event)) NbjetsDeepJet_medium++;
     if(BtagDeepJet_tight(jets->at(i),event))  NbjetsDeepJet_tight++;
   }
-  if(debug) cout << "passed 2" << endl;
 
   N_bJetsDeepJet_loose->Fill(NbjetsDeepJet_loose,weight);
   N_bJetsDeepJet_med->Fill(NbjetsDeepJet_medium,weight);
   N_bJetsDeepJet_tight->Fill(NbjetsDeepJet_tight,weight);
-  if(debug) cout << "passed 3" << endl;
 
   /*
   █ ██   ██    █████  ██████ ██    ██   █████
@@ -759,7 +867,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     vector<TopJet>* HOTVRjets = event.topjets;
     unsigned int NHOTVRjets = HOTVRjets->size();
     N_HOTVRjets->Fill(NHOTVRjets, weight);
-    if(debug) cout << "passed 4" << endl;
 
     for(unsigned int i=0; i<NHOTVRjets; i++){
       double tau21 = HOTVRjets->at(i).tau2_groomed() / HOTVRjets->at(i).tau1_groomed();
@@ -927,7 +1034,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     N_HOTVRjets->Fill(NHOTVRjets, weight);
     N_HOTVRTaggedjets->Fill(NHOTVRTaggedjets, weight);
-    if(debug) cout << "passed 5" << endl;
 
   }//end hotvr mode
 
@@ -940,11 +1046,9 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   */
 
   if(isdeepAK8){
-    if(debug) cout << "passed 6" << endl;
     vector<TopJet>* AK8Puppijets = event.toppuppijets;
     unsigned int NAK8Puppijets = 0;
     for(unsigned int i=0; i<AK8Puppijets->size(); i++){
-      if(debug) cout << "passed in AK8" << endl;
       if(AK8Puppijets->at(i).numberOfDaughters()<2) continue;
       NAK8Puppijets++;
 
@@ -991,7 +1095,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       tau3_AK8Puppijet->Fill(AK8Puppijets->at(i).tau3(), weight);
       tau21_AK8Puppijet->Fill(tau21, weight);
       tau32_AK8Puppijet->Fill(tau32, weight);
-      if(debug) cout << "AK8fills" << endl;
 
       if(i==0){
         pt_AK8Puppijet1->Fill(AK8Puppijets->at(i).pt(), weight);
@@ -1073,7 +1176,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     int NAK8PuppiTaggedjets = 0;
     for(unsigned int i=0; i<AK8PuppiTopTags.size(); i++){
       NAK8PuppiTaggedjets++;
-      if(debug) cout << "in AK8top tag" << endl;
 
       double tau21 = AK8PuppiTopTags.at(i).tau2() / AK8PuppiTopTags.at(i).tau1();
       double tau32 = AK8PuppiTopTags.at(i).tau3() / AK8PuppiTopTags.at(i).tau2();
@@ -1172,7 +1274,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
     N_AK8Puppijets->Fill(NAK8Puppijets, weight);
     N_AK8PuppiTaggedjets->Fill(NAK8PuppiTaggedjets, weight);
-    if(debug) cout << "passed 7" << endl;
 
   }//end deepak8 mode
 
@@ -1190,20 +1291,28 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   vector<Muon>* muons = event.muons;
   int Nmuons = muons->size();
   N_mu->Fill(Nmuons, weight);
-  if(debug) cout << "passed 8" << endl;
+  // cout << "N_mu: " << Nmuons << endl;
+
   for(int i=0; i<Nmuons; i++){
 
+    N_mu_charge->Fill(muons->at(i).charge(), weight);
     pt_mu->Fill(muons->at(i).pt(),weight);
-    if(debug) cout << "passed mu pt" << endl;
     eta_mu->Fill(muons->at(i).eta(),weight);
     phi_mu->Fill(muons->at(i).phi(),weight);
     reliso_mu->Fill(muons->at(i).relIso(),weight);
     reliso_mu_rebin->Fill(muons->at(i).relIso(),weight);
     dRmin_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), weight);
-    if(debug) cout << "in for 4" << endl;
     dRmin_mu_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
     ptrel_mu_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
     dRmin_ptrel_mu->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+    
+    if (muons->at(i).pt()<55){
+        pt_mu_lowpt->Fill(muons->at(i).pt(),weight);
+        }
+    if (muons->at(i).pt()>55){
+        pt_mu_highpt->Fill(muons->at(i).pt(),weight);
+       }
+
     if(i==0){
       pt_mu1->Fill(muons->at(i).pt(),weight);
       eta_mu1->Fill(muons->at(i).eta(),weight);
@@ -1214,8 +1323,11 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       dRmin_mu1_jet_scaled->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin)*event.jets->at(0).pt(), weight);
       ptrel_mu1_jet->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
       dRmin_ptrel_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).get_tag(Muon::twodcut_pTrel), weight);
+      dRmin_pt_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_dRmin), muons->at(i).pt(), weight);
+      ptrel_pt_mu1->Fill(muons->at(i).get_tag(Muon::twodcut_pTrel),muons->at(i).pt(), weight);
+
+      
     }
-    
     else if(i==1){
       pt_mu2->Fill(muons->at(i).pt(),weight);
       eta_mu2->Fill(muons->at(i).eta(),weight);
@@ -1241,7 +1353,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_mumu->Fill((muons->at(i).v4() + muons->at(j).v4()).M() ,weight);
     }
   }
-  if(debug) cout << "passed 9" << endl;
 
   /*
   ███████ ██      ███████  ██████ ████████ ██████   ██████  ███    ██ ███████
@@ -1257,6 +1368,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   N_ele->Fill(Nelectrons, weight);
 
   for(int i=0; i<Nelectrons; i++){
+    N_ele_charge->Fill(electrons->at(i).charge(), weight);
     pt_ele->Fill(electrons->at(i).pt(),weight);
     eta_ele->Fill(electrons->at(i).eta(),weight);
     phi_ele->Fill(electrons->at(i).phi(),weight);
@@ -1266,6 +1378,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     dRmin_ele_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
     ptrel_ele_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
     dRmin_ptrel_ele->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+    
+
     if(electrons->at(i).pt()<120){
       pt_ele_lowpt->Fill(electrons->at(i).pt(),weight);
       eta_ele_lowpt->Fill(electrons->at(i).eta(),weight);
@@ -1291,6 +1405,8 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       dRmin_ele1_jet_scaled->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin)*event.jets->at(0).pt(), weight);
       ptrel_ele1_jet->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
       dRmin_ptrel_ele1->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).get_tag(Electron::twodcut_pTrel), weight);
+      // dRmin_pt_ele1->Fill(electrons->at(i).get_tag(Electron::twodcut_dRmin), electrons->at(i).pt(), weight);
+      // ptrel_pt_ele1->Fill(electrons->at(i).get_tag(Electron::twodcut_pTrel),electrons->at(i).pt(), weight);
     }
     else if(i==1){
       pt_ele2->Fill(electrons->at(i).pt(),weight);
@@ -1299,7 +1415,7 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       reliso_ele2->Fill(electrons->at(i).relIso(),weight);
       reliso_ele2_rebin->Fill(electrons->at(i).relIso(),weight);
     }
-
+   
 
     for(unsigned int k = 0; k < jets->size(); k++){
       double minDeltaR = 999;
@@ -1331,7 +1447,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
 
   int Npvs = event.pvs->size();
   NPV->Fill(Npvs, weight);
-  if(debug) cout << "passed 10" << endl;
 
   double met = event.met->pt();
   double st = 0., st_jets = 0., st_lep = 0.;
@@ -1358,153 +1473,205 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   STlep_rebin->Fill(ht_lep, weight);
   STlep_rebin2->Fill(ht_lep, weight);
   STlep_rebin3->Fill(ht_lep, weight);
-  if(debug) cout << "passed 11" << endl;
-
 
   // Zprime reco
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
-
   bool is_zprime_reconstructed_correctmatch = event.get(h_is_zprime_reconstructed_correctmatch);
   // added "is_mc" to blind data in mttbar hists
-  if(is_zprime_reconstructed_chi2 && is_mc){
-    if(debug) cout << "in general zprime chi" << endl;
+  
+  if(debug) cout << "Before dY lines:" << endl;
+
+
+  
+  // ================== DY new check gen matching for ttbar =========================================================
+  
+  if(is_zprime_reconstructed_chi2 && is_tt){
+    // cout << "inside dY lines" << endl;
+    if(debug)cout << "should not be matching " << endl;
+    const auto& genparticles = event.genparticles;
+    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+    float Mreco = BestZprimeCandidate->Zprime_v4().M();
+    // float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+    ditop_mass->Fill(Mreco, weight);
+    M_Zprime->Fill(Mreco, weight);
+    M_Zprime_rebin->Fill(Mreco, weight);
+    M_Zprime_rebin2->Fill(Mreco, weight);
+    M_Zprime_rebin3->Fill(Mreco, weight);
+
+    GenParticle top, antitop;
+    for(const GenParticle & gp : *genparticles){
+      if(gp.pdgId() == 6){
+          top = gp;
+      }
+      else if(gp.pdgId() == -6){
+          antitop = gp;
+      }
+    }
+    if(debug) cout << "after gen 1:" << endl;
+    // The Lorentz vectors represent the 4-momenta (energy, and three spatial momentum components) for the leptonic and hadronic tops from the "BestZprimeCandidate" object
+    LorentzVector lep_top = BestZprimeCandidate->top_leptonic_v4();
+    LorentzVector had_top = BestZprimeCandidate->top_hadronic_v4();
+
+    // vectors to store the deltaR values for the leptonic and hadronic tops with each gen particle
+    // this part initializes vectors to store deltaR values with a default of 99.0 and fills in the actual deltaR values by looping over the gen particles (top)
+    std::vector<std::pair<double, int>> deltaR_leptonic_values; // ((dR, index), (dR, index), ...)
+    std::vector<std::pair<double, int>> deltaR_hadronic_values;
+
+    double deltaR_min_leptonic = 99.0;
+    double deltaR_sec_min_leptonic = 99.0;
+    int best_gen_for_leptop = -1;
+    int sec_best_gen_for_leptop = -1;
+    // bool is_leptop_matched = false;
+
+    double deltaR_min_hadronic = 99.0;
+    double deltaR_sec_min_hadronic = 99.0;
+    int best_gen_for_hadtop = -1;
+    int sec_best_gen_for_hadtop = -1;
+    // bool is_hadtop_matched = false;
+
+    if(debug) cout << "before gen loop in matching" << endl;
+    
+    for(unsigned int j=0; j<genparticles->size(); ++j) {
+      if(abs(genparticles->at(j).pdgId()) == 6 ){
+        if (genparticles->at(j).index() == 2 || genparticles->at(j).index() == 3){
+          LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
+          deltaR_leptonic_values.push_back(std::make_pair(deltaR(lep_top, genparticle_p4),genparticles->at(j).index() ));
+          deltaR_hadronic_values.push_back(std::make_pair(deltaR(had_top, genparticle_p4), genparticles->at(j).index()));
+          // cout << "deltaR: " << deltaR(lep_top, genparticle_p4) << j << endl;
+        }
+      }
+    }
+
+
+
+    for (const auto& pair_lep : deltaR_leptonic_values) {
+      if (pair_lep.first > 0 && pair_lep.first < deltaR_min_leptonic) {
+        // deltaR_min_leptonic = pair_lep.first;
+        deltaR_sec_min_leptonic = deltaR_min_leptonic;
+        deltaR_min_leptonic = pair_lep.first;
+        sec_best_gen_for_leptop = best_gen_for_leptop;
+        best_gen_for_leptop = pair_lep.second;
+        // is_leptop_matched = true;
+      }
+      else if (pair_lep.first > 0 && pair_lep.first < deltaR_sec_min_leptonic && pair_lep.first != deltaR_min_leptonic && pair_lep.second != best_gen_for_leptop) {
+        deltaR_sec_min_leptonic = pair_lep.first;
+        sec_best_gen_for_leptop = pair_lep.second;
+      }
+    }
+
+
+    for (const auto& pair_had : deltaR_hadronic_values) {
+      if (pair_had.first > 0 && pair_had.first < deltaR_min_hadronic) {
+        // deltaR_min_hadronic = pair_had.first;
+        deltaR_sec_min_hadronic = deltaR_min_hadronic;
+        deltaR_min_hadronic = pair_had.first;
+        sec_best_gen_for_hadtop = best_gen_for_hadtop;
+        best_gen_for_hadtop = pair_had.second;
+        // is_hadtop_matched = true;
+      }
+      else if (pair_had.first > 0 && pair_had.first < deltaR_sec_min_hadronic && pair_had.first != deltaR_min_hadronic && pair_had.second != best_gen_for_hadtop) {
+        deltaR_sec_min_hadronic = pair_had.first;
+        sec_best_gen_for_hadtop = pair_had.second;
+      }
+    }
+
+    if(debug) cout << "after dR matching" << endl;
+
+
+
+    if (best_gen_for_hadtop == best_gen_for_leptop){
+      if(debug) cout << "same index for matched gen" << endl;
+      if (deltaR_min_leptonic <= deltaR_min_hadronic){
+        if(debug) cout << "deltaR_min_leptonic <= deltaR_min_hadronic" << endl;
+        best_gen_for_hadtop = sec_best_gen_for_hadtop;
+        deltaR_min_hadronic = deltaR_sec_min_hadronic;
+      } else {
+        if(debug) cout << "deltaR_min_hadronic <= deltaR_min_leptonic" << endl;
+        best_gen_for_leptop = sec_best_gen_for_leptop;
+        deltaR_min_leptonic = deltaR_sec_min_leptonic;
+      }
+      if(debug) cout << "same index for matched gen - done" << endl;
+    }
+    if(debug) cout << "after the same index statement" << endl;
+
+
+    GenParticle best_matched_gen_leptop;
+    GenParticle best_matched_gen_hadtop;
+    
+    if(debug) cout <<  genparticles->size() << endl;
+    if(debug) cout << static_cast<std::size_t>(best_gen_for_leptop) << endl;
+    if(debug) cout << "leptop index: " << best_gen_for_leptop << endl;
+    if(debug) cout << "hadtop index :" << best_gen_for_hadtop << endl;
+    
+    
+
+    float_t DeltaY_gen_best = 99.0;
+    float_t DeltaY_reco_best = 99.0;
+   
+
+    if(debug) cout << "now will check dR " << endl;
+    if(debug) cout << deltaR_min_leptonic << endl;
+    if(debug) cout << deltaR_min_hadronic << endl;
+    if(debug) cout << best_gen_for_leptop << endl;
+    if(debug) cout << best_gen_for_hadtop << endl;
+
+    if (deltaR_min_leptonic < 0.4 && deltaR_min_hadronic < 0.4 && best_gen_for_leptop >= 0 && best_gen_for_hadtop >= 0) {
+      if(debug) cout << "in dR loop " << endl;
+      if(static_cast<std::size_t>(best_gen_for_leptop) < genparticles->size()) {
+        if(debug) cout << "looking for lep match " << endl;
+        best_matched_gen_leptop = genparticles->at(best_gen_for_leptop);
+      }
+      if(debug) cout << "lepton match done" << endl;
+      
+      if(static_cast<std::size_t>(best_gen_for_hadtop) < genparticles->size()) {
+          best_matched_gen_hadtop = genparticles->at(best_gen_for_hadtop);
+          if(debug) cout << "hadtop match done" << endl;
+      }
+
+      if(debug) cout << "after genparticles->at(best_gen_for_leptop)" << endl;
+
+      N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
+      // cout <<"Lepton candidate charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
+      // cout << "Lepton candidate pdg ID: " << BestZprimeCandidate->lepton().pdgId() << endl;
+      // Calculates the delta y (with reco particles) values for the leptonic and hadronic tops depending on the charge of the lepton
+      if (BestZprimeCandidate->lepton().charge()>0) {
+        DeltaY_reco_best = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+
+        // DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta())))) - TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta()))));
+        DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))));
+
+      } else {
+        DeltaY_reco_best = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+
+        // DeltaY_reco_best = TMath::Abs(0.5*TMath::Log((had_top.energy() + had_top.pt()*TMath::SinH(had_top.eta()))/(had_top.energy() - had_top.pt()*TMath::SinH(had_top.eta())))) - TMath::Abs(0.5*TMath::Log((lep_top.energy() + lep_top.pt()*TMath::SinH(lep_top.eta()))/(lep_top.energy() - lep_top.pt()*TMath::SinH(lep_top.eta()))));
+        DeltaY_gen_best = TMath::Abs(0.5*TMath::Log((best_matched_gen_hadtop.energy() + best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta()))/(best_matched_gen_hadtop.energy() - best_matched_gen_hadtop.pt()*TMath::SinH(best_matched_gen_hadtop.eta())))) - TMath::Abs(0.5*TMath::Log((best_matched_gen_leptop.energy() + best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))/(best_matched_gen_leptop.energy() - best_matched_gen_leptop.pt()*TMath::SinH(best_matched_gen_leptop.eta()))));
+
+      }
+    }
+    else {
+      if(debug) cout << "not matched" << endl;
+      DeltaY_notMatched->Fill(1);
+    }
+
+    if(debug) cout << "about to fill response matrix" << endl;
+
+    response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
+    DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);
+    DeltaY_gen_best_plot->Fill(DeltaY_gen_best, weight);
+  
+  }//end of gen matching and deltay reco gen vars
+    if(debug) cout << "after filling dY hists" << endl;
+  
+  //begin spin correlation with matching and deltay for all else(all MC and data)---------------->
+  // for all MC and DATA
+if (is_zprime_reconstructed_chi2 ){
+   
+    // if (debug) cout << "shouldnt be here if ttbar : " << endl;
+   // const auto& genparticles = event.genparticles;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float chi2 = BestZprimeCandidate->discriminator("chi2_total");
-
-    
-    // vector<GenParticle>* genparticles = event.genparticles;
-   
-
-  
-    // leptonic leg of ttbar definition
-    const vector<GenParticle> & genparticles = *(event.genparticles);
-    for (unsigned int i = 0; i < genparticles.size(); ++i) {
-      const GenParticle &genp = genparticles[i];
-      if (abs(genp.pdgId()) == 6) {
-        // cout<< "abstop pt:" << genp.pt() << endl;
-        float toppt = genp.pt();
-        float topeta = genp.eta();
-        if (genp.pdgId() == 6) {
-          // cout<< "top is found" << endl;
-          // cout<< "top pt:" << genp.pt() << endl;
-          topgen_pt->Fill(toppt, weight);
-          topgen_eta->Fill(topeta, weight);
-        } else if (genp.pdgId() == -6) {
-          // cout<< "antitop is found" << endl;
-          antitopgen_pt->Fill(toppt, weight);
-          antitopgen_eta->Fill(toppt );
-        }
-
-        const GenParticle* w = nullptr;
-        const GenParticle* b = nullptr;
-
-        for (unsigned int j = 0; j < genparticles.size(); ++j) {
-            const GenParticle &gp = genparticles[j];
-            auto m1 = gp.mother(&genparticles, 1);
-            auto m2 = gp.mother(&genparticles, 2);
-            bool has_top_mother = (m1 && m1->index() == genp.index()) || (m2 && m2->index() == genp.index());
-
-            if (has_top_mother) {
-                if (abs(gp.pdgId()) == 24) { // W boson
-                    w = &gp;
-                    // cout<< "w is found" << endl;
-                } 
-                else if (abs(gp.pdgId()) == 5) { // b quark
-                    b = &gp;
-                    // cout<< "b is found" << endl;
-                }
-            }
-        }
-
-        // Check W boson decays leptonically
-        if (w) {
-          // bool isLeptonic = false;
-          // const GenParticle* lepton = nullptr;
-          // const GenParticle* neutrino = nullptr;
-          for (unsigned int k = 0; k < genparticles.size(); ++k) {
-            const GenParticle &daught = genparticles[k];
-            auto m1 = daught.mother(&genparticles, 1);
-            auto m2 = daught.mother(&genparticles, 2);
-            bool has_w_mother = (m1 && m1->index() == w->index()) || (m2 && m2->index() == w->index());
-
-            if (has_w_mother) {
-                int pdgId = abs(daught.pdgId());
-
-                if (pdgId == 11 || pdgId == 13) {
-                    // isLeptonic = true;
-                    // lepton = &daught;
-                    leptongen_pt->Fill(daught.pt());
-                    leptongen_eta->Fill(daught.eta());
-                    // cout<< "lepton pt:" << daught.pt() << endl;
-                    // cout<< "lepton is found" << endl;
-
-                    if (pdgId == 11) { // Electron
-                        electrongen_pt->Fill(daught.pt());
-                        electrongen_eta->Fill(daught.eta());
-                        // cout<< "electron is found" << endl;
-                    } else if (pdgId == 13) { // Muon
-                        muongen_pt->Fill(daught.pt());
-                        muongen_eta->Fill(daught.eta());
-                        // cout<< "muon is found" << endl;
-                    }
-                } 
-                // else if (pdgId == 12 || pdgId == 14) { // Neutrino
-                //     // isLeptonic = true;
-                //     neutrino = &daught;
-                // }
-            }
-          }
-        }
-
-        if (b) {
-          bquarkgen_pt->Fill(b->pt());
-          bquarkgen_eta->Fill(b->eta());
-        }
-      }
-    }
-    // gen histograms filling end
-
-    GenParticle topgen, antitopgen;
-    for(const GenParticle & gp : *event.genparticles){
-
-      if(gp.pdgId() == 6){
-        topgen = gp;
-      }
-      else if(gp.pdgId() == -6){
-        antitopgen = gp;
-      }
-    }
-
-    float dygen= TMath::Abs(0.5*TMath::Log((topgen.energy() + topgen.pt()*TMath::SinH(topgen.eta()))/(topgen.energy() - topgen.pt()*TMath::SinH(topgen.eta())))) - TMath::Abs(0.5*TMath::Log((antitopgen.energy() + antitopgen.pt()*TMath::SinH(antitopgen.eta()))/(antitopgen.energy() - antitopgen.pt()*TMath::SinH(antitopgen.eta()))));
-
-    float dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
-    
-    DeltaY_reco->Fill(dyreco, weight);
-    DeltaY_gen->Fill(dygen, weight);
-    
-    LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
-    LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
-
-    toplep_pt->Fill(toplep.Pt(), weight);
-    toplep_eta->Fill(toplep.Eta(), weight);
-    toplep_phi->Fill(toplep.Phi(), weight);
-    toplep_m->Fill(toplep.M(), weight);
-
-    tophad_pt->Fill(tophad.Pt(), weight);
-    tophad_eta->Fill(tophad.Eta(), weight);
-    tophad_phi->Fill(tophad.Phi(), weight);
-    tophad_m->Fill(tophad.M(), weight);
-
-    if(debug) cout << "passed general 0" << endl;
     ditop_mass->Fill(Mreco, weight);
-    if(debug) cout << "passed general 1" << endl;
-    ditop_absDeltaPhi->Fill(deltaPhi(toplep, tophad), weight);
-    if(debug) cout << "passed general 2" << endl;
-    ditop_deltaEta->Fill(toplep.Eta()-tophad.Eta(), weight);
-    ditop_absDeltaEta->Fill(abs(toplep.Eta()-tophad.Eta()), weight);
-    ditop_deltaR->Fill(deltaR(toplep,tophad), weight);
-
     M_Zprime->Fill(Mreco, weight);
     M_Zprime_rebin->Fill(Mreco, weight);
     M_Zprime_rebin2->Fill(Mreco, weight);
@@ -1519,6 +1686,340 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     chi2_Zprime->Fill(chi2, weight);
     chi2_Zprime_rebin->Fill(chi2, weight);
     chi2_Zprime_rebin2->Fill(chi2, weight);
+    // cout << "the boolean is: "<< isLeptonPositive << endl;
+    float_t dyreco = 0.0;
+    if (BestZprimeCandidate->lepton().charge()>0) {
+      dyreco = TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()); 
+    } else {
+      dyreco = TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()); 
+    }
+    N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
+    // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
+    DeltaY_reco->Fill(dyreco, weight);
+  
+  
+  //start spin correlation
+  // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2); 
+    bool is_toptag_reconstruction = BestZprimeCandidate->is_toptag_reconstruction(); // Reconstruction process id
+    vector <Jet> AK4CHSjets_matched = event.get(h_CHSjets_matched);                  // AK4Puppijets that have been matched to CHSjets
+    vector <TopJet> TopTaggedJets = event.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
+    vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
+    float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
+  // float btag_WP=0.2783;  
+  // if (isUL16preVFP) btag_WP = 0.2598;                                              // medium WP for UL16preVFP DeepJet
+  // if (isUL16postVFP) btag_WP = 0.3657;                                             // medium WP for UL16postVFP DeepJet
+  // if (isUL17) btag_WP = 0.3040;                                                    // medium WP for UL17 DeepJet
+  // if (isUL18) btag_WP = 0.2783;                                                    // medium WP for UL18 DeepJet
+   
+                                                                // see https://btv-wiki.docs.cern.ch/ScaleFactors/ for btag WPs
+                                                // medium WP for UL18 DeepJet
+
+  // Plot pt of hadronic Top jet
+    float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
+    
+    float bscore_max = -2;
+    if(!is_toptag_reconstruction){
+        // Loop over resolved hadronic jets to find their bscore via CHS jets
+      for(unsigned int i=0; i<BestZprimeCandidate->jets_hadronic().size(); i++){
+        double deltaR_min = 99;
+        // Match resolved hadronic jets to CHS jets (which have bscores)
+        for(unsigned int j=0; j<AK4CHSjets_matched.size(); j++){
+          double deltaR_CHS = deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(j));
+          if(deltaR_CHS < deltaR_min) deltaR_min = deltaR_CHS;
+          }
+        // Build bScore-vector for resolved hadronic jets whose bscore will correspond by index
+        for(unsigned int k=0; k<AK4CHSjets_matched.size(); k++){
+          if(deltaR(BestZprimeCandidate->jets_hadronic().at(i), AK4CHSjets_matched.at(k)) == deltaR_min) 
+          jets_hadronic_bscores.emplace_back(AK4CHSjets_matched.at(k).btag_DeepJet());
+          } // Using DeepJet btag score
+      }
+      // Loop over bScores-vector to extract highest bscor
+      for(unsigned int i=0; i<jets_hadronic_bscores.size(); i++){
+        float bscore = jets_hadronic_bscores.at(i);
+        if(bscore > bscore_max) bscore_max = bscore;
+      }
+      //is not top tag
+    }
+    
+    if(is_toptag_reconstruction){
+        // Loop over hadronic top's subjets to extract highest bscore
+      for(unsigned int i=0; i < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); i++){
+        float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(i).btag_DeepJet(); // Using DeepJet btag score
+        if(bscore > bscore_max) bscore_max = bscore;
+      }
+    
+    }
+  // if(bscore_max >= btag_WP){
+      // event.set(h_bscore_max, bscore_max); // Plot max bscores
+
+      //------------------------------------Define 4vectors of hadronic b-jet and lepton------------------------------------//
+      // Hadronic b-jet 4-vector
+    TLorentzVector had_top_b(0, 0, 0, 0);
+
+    // Resolved topology
+    if(!is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK4-jet with highest bscore
+      for(unsigned int i=0; i< BestZprimeCandidate->jets_hadronic().size(); i++){
+        float bscore = jets_hadronic_bscores.at(i);
+        if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->jets_hadronic().at(i).pt(), 
+                                                        BestZprimeCandidate->jets_hadronic().at(i).eta(), 
+                                                        BestZprimeCandidate->jets_hadronic().at(i).phi(), 
+                                                        BestZprimeCandidate->jets_hadronic().at(i).energy());
+      }
+    }
+    // Merged topology
+    if(is_toptag_reconstruction){ // Define hadronic b-jet as hadronic AK8-subjet with highest bscore
+      for(unsigned int j=0; j < BestZprimeCandidate->tophad_topjet_ptr()->subjets().size(); j++){
+        float bscore = BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).btag_DeepJet();
+        if(bscore == bscore_max) had_top_b.SetPtEtaPhiE(BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).pt(), 
+                                                        BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).eta(), 
+                                                        BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).phi(), 
+                                                        BestZprimeCandidate->tophad_topjet_ptr()->subjets().at(j).energy());
+      }
+    }
+
+        // Lepton 4-vector
+    TLorentzVector lep_top_lep(0, 0, 0, 0);
+    LorentzVector lep = BestZprimeCandidate->lepton().v4();
+    lep_top_lep.SetPtEtaPhiE(lep.pt(), lep.eta(), lep.phi(), lep.E());
+  //------------------------------------Define 4vectors of hadronic b-jet and lepton------------------------------------//
+
+
+  //-------------------------------- Begin boosting top quarks and their decay products --------------------------------//
+  // Define 4vectors of top quarks
+    TLorentzVector PosTop(0, 0, 0, 0);
+    TLorentzVector NegTop(0, 0, 0, 0);
+
+        // POSITIVE LEPTON CONFIGURATION => Positive charged lepton has Positive Top mother
+    if(BestZprimeCandidate->lepton().charge() > 0){
+      // Define ttbar system
+      PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                          BestZprimeCandidate->top_leptonic_v4().eta(), 
+                          BestZprimeCandidate->top_leptonic_v4().phi(), 
+                          BestZprimeCandidate->top_leptonic_v4().energy());
+      NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                          BestZprimeCandidate->top_hadronic_v4().eta(), 
+                          BestZprimeCandidate->top_hadronic_v4().phi(), 
+                          BestZprimeCandidate->top_hadronic_v4().energy());
+    }
+    else if (BestZprimeCandidate->lepton().charge() < 0){
+      PosTop.SetPtEtaPhiE(BestZprimeCandidate->top_hadronic_v4().pt(), 
+                          BestZprimeCandidate->top_hadronic_v4().eta(), 
+                          BestZprimeCandidate->top_hadronic_v4().phi(), 
+                          BestZprimeCandidate->top_hadronic_v4().energy());
+      NegTop.SetPtEtaPhiE(BestZprimeCandidate->top_leptonic_v4().pt(), 
+                          BestZprimeCandidate->top_leptonic_v4().eta(), 
+                          BestZprimeCandidate->top_leptonic_v4().phi(), 
+                          BestZprimeCandidate->top_leptonic_v4().energy());
+    }
+      
+    TLorentzVector ttbar = PosTop + NegTop;
+    TLorentzVector lep_top_lep_CoM = lep_top_lep;
+    // Boost into ttbar CoM-Frame <<<-------//
+    lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+    TLorentzVector had_top_b_CoM = had_top_b;
+    had_top_b_CoM.Boost(-ttbar.BoostVector());
+    TLorentzVector PosTop_CoM = PosTop;
+    PosTop_CoM.Boost(-ttbar.BoostVector());
+    TLorentzVector NegTop_CoM = NegTop;
+    NegTop_CoM.Boost(-ttbar.BoostVector());
+
+
+    ///old
+    // lep_top_lep.Boost(-ttbar.BoostVector());
+    // had_top_b.Boost(-ttbar.BoostVector());
+    // PosTop.Boost(-ttbar.BoostVector());
+    // NegTop.Boost(-ttbar.BoostVector());
+
+
+    // Beam unit vector in COM frame
+    TVector3 beam_axis(0,0,1);
+
+
+   // Calculating top scattering angle for PosTop only
+    double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+    double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+
+    // The sign of cos_PosTop_beam to account for Bose symmetry
+    double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+    // // The sign based on PosTop and NegTop's rapidity
+    // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+
+    // Bernreuther basis vectors
+    TVector3 kbase = PosTop_CoM.Vect().Unit();
+    TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit();
+    TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+
+    // Rotate vectors into Helicity Frame <<<-----------//
+    // Rotate about beamline
+    TLorentzVector lep_top_lep_H = lep_top_lep_CoM;
+    lep_top_lep_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector had_top_b_H = had_top_b_CoM;
+    had_top_b_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector PosTop_H = PosTop_CoM;
+    PosTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TLorentzVector NegTop_H = NegTop_CoM;
+    NegTop_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+    TVector3 kbase_H = kbase;
+    kbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TVector3 rbase_H = rbase;
+    rbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+    TVector3 nbase_H = nbase;
+    nbase_H.RotateZ(-1.*PosTop_CoM.Phi());
+
+    // Rotate about y-axis
+    TLorentzVector lep_top_lep_Hel = lep_top_lep_H;
+    lep_top_lep_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector had_top_b_Hel = had_top_b_H;
+    had_top_b_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector PosTop_Hel = PosTop_H;
+    PosTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TLorentzVector NegTop_Hel = NegTop_H;
+    NegTop_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+    TVector3 kbase_Hel = kbase_H;
+    kbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TVector3 rbase_Hel = rbase_H;
+    rbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+    TVector3 nbase_Hel = nbase_H;
+    nbase_Hel.RotateY(-1.*PosTop_CoM.Theta());
+
+    // Rotation to align with Bernreuther basis <<<---------//
+    TLorentzVector lep_top_lep_BoseSymm = lep_top_lep_Hel;
+    TLorentzVector had_top_b_BoseSymm = had_top_b_Hel;
+    TLorentzVector PosTop_BoseSymm = PosTop_Hel;
+    TLorentzVector NegTop_BoseSymm = NegTop_Hel;
+
+    TVector3 kbase_BoseSymm = kbase_Hel;
+    TVector3 rbase_BoseSymm = rbase_Hel;
+    TVector3 nbase_BoseSymm = nbase_Hel;
+
+    if(sign_cos_PosTop_beam > 0.){
+      lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+
+      kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+      nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+    }
+    else{
+      lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+      had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+      PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+      NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+
+      kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+      rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+      nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+    }
+     // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
+    TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
+    TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
+    TLorentzVector PosTop_Rest = PosTop_BoseSymm;
+    TLorentzVector NegTop_Rest = NegTop_BoseSymm;
+
+
+
+
+
+  //old code
+    if(BestZprimeCandidate->lepton().charge() > 0){
+      lep_top_lep_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector()); // lepton has Positive Top mother
+      had_top_b_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector());   // b-jet has Negative Top mother
+    }
+    else if (BestZprimeCandidate->lepton().charge() < 0){
+      lep_top_lep_Rest.Boost(-1.*NegTop_BoseSymm.BoostVector()); // lepton has Negative Top mother
+      had_top_b_Rest.Boost(-1.*PosTop_BoseSymm.BoostVector());   // b-jet has Positive Top mother
+    }
+
+        // Boost into ttbar Rest-Frame <<<--------//
+        // lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
+        // had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+
+       //-------------------------------- End boosting top quarks and their decay products --------------------------------//
+  
+      // Define angular variables as sum and difference of decay products' phi-coordinates
+      // sphi and dphi = PosTopDecayProd_phi +- NegTopDecayProd_phi
+    float dphi=0.;
+    float sphi = lep_top_lep_Rest.Phi() + had_top_b_Rest.Phi();
+    if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
+      dphi = lep_top_lep_Rest.Phi() - had_top_b_Rest.Phi();
+    }
+    if(BestZprimeCandidate->lepton().charge() < 0){
+      dphi = had_top_b_Rest.Phi() - lep_top_lep_Rest.Phi();
+    }
+    
+        // Map back into original domain if necessary
+    if(sphi > TMath::Pi()) sphi = sphi - 2*TMath::Pi();
+    if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
+    if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
+    if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
+    Sigma_phi->Fill(sphi,weight);
+    Delta_phi->Fill(dphi,weight);
+
+    // Plot dphi and sphi for high-pt ranges
+    if(pt_hadTop > pt_hadTop_thresh && dyreco >0){
+      Sigma_phi_1->Fill(sphi,weight);
+      Delta_phi_1->Fill(dphi,weight);
+    }
+    if(pt_hadTop > pt_hadTop_thresh && dyreco <0){
+      Sigma_phi_2->Fill(sphi,weight);
+      Delta_phi_2->Fill(dphi,weight);
+    }
+    if(pt_hadTop < pt_hadTop_thresh && sphi >0){
+      DeltaY_reco_s1->Fill(dyreco,weight);
+    }
+    if(pt_hadTop < pt_hadTop_thresh && sphi <0){
+      DeltaY_reco_s2->Fill(dyreco,weight);
+    }
+    if(pt_hadTop < pt_hadTop_thresh && dphi >0){
+      DeltaY_reco_d1->Fill(dyreco,weight);
+    }
+    if(pt_hadTop < pt_hadTop_thresh && dphi <0){
+      DeltaY_reco_d2->Fill(dyreco,weight);
+    }
+    if(pt_hadTop > pt_hadTop_thresh){
+      Sigma_phi_high->Fill(sphi,weight);
+      Delta_phi_high->Fill(dphi,weight);
+      DeltaY_reco_high->Fill(dyreco,weight);
+    }
+    // Plot dphi and sphi for low-pt ranges
+    if(pt_hadTop < pt_hadTop_thresh){
+      Sigma_phi_low->Fill(sphi,weight);
+      Delta_phi_low->Fill(dphi,weight);
+      DeltaY_reco_low->Fill(dyreco,weight);
+    }
+    // }
+
+}//end spin correlation 
+
+  
+  if(is_zprime_reconstructed_chi2 && is_mc){
+    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+    float Mreco = BestZprimeCandidate->Zprime_v4().M();
+    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+
+    LorentzVector toplep = BestZprimeCandidate->top_leptonic_v4();
+    LorentzVector tophad = BestZprimeCandidate->top_hadronic_v4();
+
+    toplep_pt->Fill(toplep.Pt(), weight);
+    toplep_eta->Fill(toplep.Eta(), weight);
+    toplep_phi->Fill(toplep.Phi(), weight);
+    toplep_m->Fill(toplep.M(), weight);
+
+    tophad_pt->Fill(tophad.Pt(), weight);
+    tophad_eta->Fill(tophad.Eta(), weight);
+    tophad_phi->Fill(tophad.Phi(), weight);
+    tophad_m->Fill(tophad.M(), weight);
+
+    //ditop_mass->Fill(Mreco, weight);
+    ditop_absDeltaPhi->Fill(deltaPhi(toplep, tophad), weight);
+    ditop_deltaEta->Fill(toplep.Eta()-tophad.Eta(), weight);
+    ditop_absDeltaEta->Fill(abs(toplep.Eta()-tophad.Eta()), weight);
+    ditop_deltaR->Fill(deltaR(toplep,tophad), weight);
+
 
     TOP_20_001_ditopmass_Fig19->Fill(Mreco, weight);
     TOP_20_001_ditopmass_Fig25->Fill(Mreco, weight);
@@ -1595,14 +2096,13 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_toplep_ak4->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
     }
   }
-  if(debug) cout << "passed 12" << endl;
   if(is_zprime_reconstructed_correctmatch){
-    // if(debug) cout << "Correct match is filled" << endl;
+    // cout << "Correct match is filled" << endl;
     ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateCorrectMatch);
     float Mreco = BestZprimeCandidate->Zprime_v4().M();
     float dr = BestZprimeCandidate->discriminator("correct_match");
     if(dr < 10.){
-      // if(debug) cout << "dr < 10" << endl;
+      // cout << "dr < 10" << endl;
       if(BestZprimeCandidate->is_toptag_reconstruction()){
         M_tophad_dr_ttag->Fill(BestZprimeCandidate->tophad_topjet_ptr()->softdropmass(), weight);
         M_toplep_dr_ttag->Fill(inv_mass(BestZprimeCandidate->top_leptonic_v4()), weight);
@@ -1618,7 +2118,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
       M_Zprime_dr_rebin3->Fill(Mreco, weight);
     }
   }
-  if(debug) cout << "passed 13" << endl;
 
   // Sphericity tensor
   double s11 = -1., s12 = -1., s13 = -1., s22 = -1., s23 = -1., s33 = -1., mag = -1.;
@@ -1645,7 +2144,6 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   S22->Fill(s22, weight);
   S23->Fill(s23, weight);
   S33->Fill(s33, weight);
-  if(debug) cout << "passed general 1" << endl;
 
   sum_event_weights->Fill(1., weight);
 
@@ -1659,182 +2157,173 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   ██   ████ ██   ████
   */
 
-
-  for(int i=0; i<Nmuons; i++){
-    NN_Mu_pt->Fill(muons->at(i).pt(),weight);
-    NN_Mu_eta->Fill(muons->at(i).eta(),weight);
-    NN_Mu_phi->Fill(muons->at(i).phi(),weight);
-    NN_Mu_E->Fill(muons->at(i).energy(),weight);
-  }
-  if(debug) cout << "passed 14" << endl;
-
-
-
-  for(int i=0; i<Nelectrons; i++){
-    NN_Ele_pt->Fill(electrons->at(i).pt(),weight);
-    NN_Ele_eta->Fill(electrons->at(i).eta(),weight);
-    NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
-    NN_Ele_E->Fill(electrons->at(i).energy(),weight);
-  }
-  if(debug) cout << "passed 15" << endl;
-
-  NN_MET_pt->Fill(event.met->pt(),weight);
-  NN_MET_phi->Fill(event.met->phi(),weight);
-
-  vector<Jet>* Ak4jets = event.jets;
-  int NAk4jets = Ak4jets->size();
-  NN_N_Ak4->Fill(NAk4jets,weight);
-  if(debug) cout << "passed NN 10" << endl;
-
-  for(int i=0; i<NAk4jets; i++){
-    if(debug) cout << "passed NN 1" << endl;
-    if(i==0){
-      NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j1_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j1_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j1_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+  if(debug) cout << "before NN in hists" << endl;
+  if(NN){
+    if(debug) cout << "is it going inside NN" << endl;
+    for(int i=0; i<Nmuons; i++){
+      NN_Mu_pt->Fill(muons->at(i).pt(),weight);
+      NN_Mu_eta->Fill(muons->at(i).eta(),weight);
+      NN_Mu_phi->Fill(muons->at(i).phi(),weight);
+      NN_Mu_E->Fill(muons->at(i).energy(),weight);
     }
-    if(i==1){
-      NN_Ak4_j2_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j2_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j2_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j2_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j2_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-    }
-    if(i==2){
-      NN_Ak4_j3_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j3_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j3_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j3_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j3_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-    }
-    if(i==3){
-      NN_Ak4_j4_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j4_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j4_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j4_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j4_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-    }
-    if(i==4){
-      NN_Ak4_j5_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j5_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j5_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j5_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j5_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-    }
-    if(i==5){
-      NN_Ak4_j6_pt->Fill(Ak4jets->at(i).pt(),weight);
-      NN_Ak4_j6_eta->Fill(Ak4jets->at(i).eta(),weight);
-      NN_Ak4_j6_phi->Fill(Ak4jets->at(i).phi(),weight);
-      NN_Ak4_j6_E->Fill(Ak4jets->at(i).energy(),weight);
-      NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
-      NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
-    }
-    if(debug) cout << "passed NN 2" << endl;
-  }
 
-  if(ishotvr){
-    if(debug) cout << "passed 16" << endl;
-    vector<TopJet>* HOTVRjets = event.topjets;
-    int N_HOTVRjets = HOTVRjets->size();
-    NN_N_HOTVR->Fill(N_HOTVRjets,weight);
 
-    for(int i=0; i<N_HOTVRjets; i++){
+
+    for(int i=0; i<Nelectrons; i++){
+      NN_Ele_pt->Fill(electrons->at(i).pt(),weight);
+      NN_Ele_eta->Fill(electrons->at(i).eta(),weight);
+      NN_Ele_phi->Fill(electrons->at(i).phi(),weight);
+      NN_Ele_E->Fill(electrons->at(i).energy(),weight);
+    }
+
+    NN_MET_pt->Fill(event.met->pt(),weight);
+    NN_MET_phi->Fill(event.met->phi(),weight);
+
+    vector<Jet>* Ak4jets = event.jets;
+    int NAk4jets = Ak4jets->size();
+    NN_N_Ak4->Fill(NAk4jets,weight);
+
+    for(int i=0; i<NAk4jets; i++){
       if(i==0){
-        NN_HOTVR_j1_pt->Fill(HOTVRjets->at(i).pt(),weight);
-        NN_HOTVR_j1_eta->Fill(HOTVRjets->at(i).eta(),weight);
-        NN_HOTVR_j1_phi->Fill(HOTVRjets->at(i).phi(),weight);
-        NN_HOTVR_j1_E->Fill(HOTVRjets->at(i).energy(),weight);
-        NN_HOTVR_j1_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-        NN_HOTVR_j1_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-        NN_HOTVR_j1_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        NN_Ak4_j1_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j1_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j1_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j1_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j1_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j1_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
       }
       if(i==1){
-        NN_HOTVR_j2_pt->Fill(HOTVRjets->at(i).pt(),weight);
-        NN_HOTVR_j2_eta->Fill(HOTVRjets->at(i).eta(),weight);
-        NN_HOTVR_j2_phi->Fill(HOTVRjets->at(i).phi(),weight);
-        NN_HOTVR_j2_E->Fill(HOTVRjets->at(i).energy(),weight);
-        NN_HOTVR_j2_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-        NN_HOTVR_j2_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-        NN_HOTVR_j2_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        NN_Ak4_j2_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j2_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j2_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j2_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j2_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j2_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
       }
       if(i==2){
-        NN_HOTVR_j3_pt->Fill(HOTVRjets->at(i).pt(),weight);
-        NN_HOTVR_j3_eta->Fill(HOTVRjets->at(i).eta(),weight);
-        NN_HOTVR_j3_phi->Fill(HOTVRjets->at(i).phi(),weight);
-        NN_HOTVR_j3_E->Fill(HOTVRjets->at(i).energy(),weight);
-        NN_HOTVR_j3_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
-        NN_HOTVR_j3_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
-        NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        NN_Ak4_j3_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j3_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j3_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j3_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j3_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j3_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      }
+      if(i==3){
+        NN_Ak4_j4_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j4_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j4_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j4_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j4_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j4_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      }
+      if(i==4){
+        NN_Ak4_j5_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j5_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j5_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j5_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j5_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j5_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
+      }
+      if(i==5){
+        NN_Ak4_j6_pt->Fill(Ak4jets->at(i).pt(),weight);
+        NN_Ak4_j6_eta->Fill(Ak4jets->at(i).eta(),weight);
+        NN_Ak4_j6_phi->Fill(Ak4jets->at(i).phi(),weight);
+        NN_Ak4_j6_E->Fill(Ak4jets->at(i).energy(),weight);
+        NN_Ak4_j6_m->Fill(Ak4jets->at(i).v4().M(),weight);
+        NN_Ak4_j6_btag->Fill(Ak4jets->at(i).btag_DeepJet(),weight);
       }
     }
-    if(debug) cout << "passed 17" << endl;
-  } // end hotvr mode
 
-  if(isdeepAK8){
-    vector<TopJet>* Ak8jets = event.toppuppijets;
-    int NAk8jets = Ak8jets->size();
-    NN_N_Ak8->Fill(NAk8jets,weight);
-    if(debug) cout << "passed 18" << endl;
+    if(ishotvr){
+      vector<TopJet>* HOTVRjets = event.topjets;
+      int N_HOTVRjets = HOTVRjets->size();
+      NN_N_HOTVR->Fill(N_HOTVRjets,weight);
 
-    for(int i=0; i<NAk8jets; i++){
-      if(debug) cout << "passed deepAk8 1" << endl;
-      if(i==0){
-        NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
-        NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
-        NN_Ak8_j1_phi->Fill(Ak8jets->at(i).phi(),weight);
-        NN_Ak8_j1_E->Fill(Ak8jets->at(i).energy(),weight);
-        NN_Ak8_j1_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-        NN_Ak8_j1_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-        NN_Ak8_j1_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j1_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+      for(int i=0; i<N_HOTVRjets; i++){
+        if(i==0){
+          NN_HOTVR_j1_pt->Fill(HOTVRjets->at(i).pt(),weight);
+          NN_HOTVR_j1_eta->Fill(HOTVRjets->at(i).eta(),weight);
+          NN_HOTVR_j1_phi->Fill(HOTVRjets->at(i).phi(),weight);
+          NN_HOTVR_j1_E->Fill(HOTVRjets->at(i).energy(),weight);
+          NN_HOTVR_j1_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+          NN_HOTVR_j1_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+          NN_HOTVR_j1_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        }
+        if(i==1){
+          NN_HOTVR_j2_pt->Fill(HOTVRjets->at(i).pt(),weight);
+          NN_HOTVR_j2_eta->Fill(HOTVRjets->at(i).eta(),weight);
+          NN_HOTVR_j2_phi->Fill(HOTVRjets->at(i).phi(),weight);
+          NN_HOTVR_j2_E->Fill(HOTVRjets->at(i).energy(),weight);
+          NN_HOTVR_j2_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+          NN_HOTVR_j2_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+          NN_HOTVR_j2_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        }
+        if(i==2){
+          NN_HOTVR_j3_pt->Fill(HOTVRjets->at(i).pt(),weight);
+          NN_HOTVR_j3_eta->Fill(HOTVRjets->at(i).eta(),weight);
+          NN_HOTVR_j3_phi->Fill(HOTVRjets->at(i).phi(),weight);
+          NN_HOTVR_j3_E->Fill(HOTVRjets->at(i).energy(),weight);
+          NN_HOTVR_j3_mSD->Fill(HOTVRjets->at(i).v4().M(),weight);
+          NN_HOTVR_j3_tau21->Fill(HOTVRjets->at(i).tau2_groomed()/HOTVRjets->at(i).tau1_groomed(),weight);
+          NN_HOTVR_j3_tau32->Fill(HOTVRjets->at(i).tau3_groomed()/HOTVRjets->at(i).tau2_groomed(),weight);
+        }
       }
-      if(i==1){
-        NN_Ak8_j2_pt->Fill(Ak8jets->at(i).pt(),weight);
-        NN_Ak8_j2_eta->Fill(Ak8jets->at(i).eta(),weight);
-        NN_Ak8_j2_phi->Fill(Ak8jets->at(i).phi(),weight);
-        NN_Ak8_j2_E->Fill(Ak8jets->at(i).energy(),weight);
-        NN_Ak8_j2_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-        NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-        NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
-        if(debug) cout << "passed deepAk8 2" << endl;
+    } // end hotvr mode
+
+    if(isdeepAK8){
+      vector<TopJet>* Ak8jets = event.toppuppijets;
+      int NAk8jets = Ak8jets->size();
+      NN_N_Ak8->Fill(NAk8jets,weight);
+
+      for(int i=0; i<NAk8jets; i++){
+        if(i==0){
+          NN_Ak8_j1_pt->Fill(Ak8jets->at(i).pt(),weight);
+          NN_Ak8_j1_eta->Fill(Ak8jets->at(i).eta(),weight);
+          NN_Ak8_j1_phi->Fill(Ak8jets->at(i).phi(),weight);
+          NN_Ak8_j1_E->Fill(Ak8jets->at(i).energy(),weight);
+          NN_Ak8_j1_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+          NN_Ak8_j1_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+          NN_Ak8_j1_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+          NN_Ak8_j1_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        }
+        if(i==1){
+          NN_Ak8_j2_pt->Fill(Ak8jets->at(i).pt(),weight);
+          NN_Ak8_j2_eta->Fill(Ak8jets->at(i).eta(),weight);
+          NN_Ak8_j2_phi->Fill(Ak8jets->at(i).phi(),weight);
+          NN_Ak8_j2_E->Fill(Ak8jets->at(i).energy(),weight);
+          NN_Ak8_j2_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+          NN_Ak8_j2_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+          NN_Ak8_j2_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+          NN_Ak8_j2_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        }
+        if(i==2){
+          NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
+          NN_Ak8_j3_eta->Fill(Ak8jets->at(i).eta(),weight);
+          NN_Ak8_j3_phi->Fill(Ak8jets->at(i).phi(),weight);
+          NN_Ak8_j3_E->Fill(Ak8jets->at(i).energy(),weight);
+          NN_Ak8_j3_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
+          NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
+          NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
+          NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
+        }
       }
-      if(i==2){
-        NN_Ak8_j3_pt->Fill(Ak8jets->at(i).pt(),weight);
-        NN_Ak8_j3_eta->Fill(Ak8jets->at(i).eta(),weight);
-        NN_Ak8_j3_phi->Fill(Ak8jets->at(i).phi(),weight);
-        NN_Ak8_j3_E->Fill(Ak8jets->at(i).energy(),weight);
-        NN_Ak8_j3_mSD->Fill(Ak8jets->at(i).softdropmass(),weight);
-        NN_Ak8_j3_tau21->Fill(Ak8jets->at(i).tau2()/Ak8jets->at(i).tau1(),weight);
-        NN_Ak8_j3_tau32->Fill(Ak8jets->at(i).tau3()/Ak8jets->at(i).tau2(),weight);
-        NN_Ak8_j3_ttag->Fill(Ak8jets->at(i).btag_MassDecorrelatedDeepBoosted_TvsQCD(),weight);
-        if(debug) cout << "passed deepAk8 3" << endl;
-      }
-      if(debug) cout << "passed deepAk8 final" << endl;
+    } // end deepAK8 mode
+  
+
+    if(is_zprime_reconstructed_chi2){
+      ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
+      float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
+      float chi2 = BestZprimeCandidate->discriminator("chi2_total");
+      if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
+      if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
+      NN_chi2->Fill(chi2,weight);
     }
-    if(debug) cout << "passed 19" << endl;
-  } // end deepAK8 mode
-  if(debug) cout << "passed 20" << endl;
-  if(is_zprime_reconstructed_chi2){
-    if(debug) cout << "passed 21" << endl;
-
-    ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
-    float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-    float chi2 = BestZprimeCandidate->discriminator("chi2_total");
-    if(is_mc) NN_M_tt_weighted->Fill(Mass_tt,weight);
-    if(is_mc) NN_M_tt_notweighted->Fill(Mass_tt);
-    NN_chi2->Fill(chi2,weight);
-    if(debug) cout << "passed 22" << endl;
+  //NN
   }
+  if(debug) cout << "after NN in hists" << endl;
+ 
+  
 
-if(debug) cout << "passed 23" << endl;
 } //Method
 
 

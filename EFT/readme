@@ -1,0 +1,33 @@
+1) locate the EFT weights in the samples. -> check_weights.py
+run check_weights.py to find the branches that contain the weights. 
+
+2) Once I identify where the weights are stored, I can modify the weight collection code. 
+run collect_EFT_reweight.py to collect the weights into a single branch. 
+
+3) run reweight_events.py to reweight the events. 
+
+
+---
+
+1)Script 1 (calc_structure_constants.py):
+
+- Reads your ROOT file and TTree (named "AnalysisTree").
+- Extracts the relevant EFT weights from indices 201..354.
+- Performs the least-squares fit to obtain the “structure constants” for each event.
+- Saves them to a NumPy file (.npy).
+
+python collect_EFT_reweight.py myFile.root structure_constants.npy
+
+2)Script 2 (plot_shape_DeltaY.py):
+
+- Loads the saved structure constants.
+- Gets the DeltaY_reco histogram from the ROOT file.
+- Computes event weights for SM and for a single Wilson coefficient set to 10 (others 0).
+- Fills two histograms and makes a ratio plot (EFT/SM):
+    - original DeltaY_reco histogram
+    - reweighted DeltaY_reco histogram
+    - ratio of the two histograms
+
+python plot_deltaY_shape.py structure_constants.npy myFile.root
+
+/data/dust/group/cms/zprime-uhh/Analysis_EFT_UL17/muon/workdir_Analysis_EFT_UL17_semilepton_muon_0_700/uhh2.AnalysisModuleRunner.MC.MC_EFT_Mttbar_0-700_UL17_38.root

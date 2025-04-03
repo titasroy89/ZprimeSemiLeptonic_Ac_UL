@@ -17,7 +17,7 @@ vector<TString> v_years = {
 
 // channels
 vector<TString> v_channels = {
-  "electron",
+//  "electron",
   "muon"
 };
 
@@ -209,6 +209,8 @@ void prepare_combine_input(){
           }
         }
         else{
+          cout << "input file: " <<presel_file<< endl;
+          
           // get hists for normalization from presel files
           TFile *presel_file = TFile::Open(input_base_dir + "/Presel_" + year + "/" + file_prefix + sample + ".root");
           TH1F *nominal = (TH1F*) presel_file->Get("Input_General/sum_event_weights");
@@ -219,14 +221,14 @@ void prepare_combine_input(){
           TH1F *downnone = (TH1F*) presel_file->Get("Input_General/sum_event_weights_mcscale_downnone");
           TH1F *downdown = (TH1F*) presel_file->Get("Input_General/sum_event_weights_mcscale_downdown");
           // presel_file->Close();
-
+          
           double norm_scale_upup = upup->GetBinContent(1) / nominal->GetBinContent(1);
           double norm_scale_upnone = upnone->GetBinContent(1) / nominal->GetBinContent(1);
           double norm_scale_noneup = noneup->GetBinContent(1) / nominal->GetBinContent(1);
           double norm_scale_nonedown = nonedown->GetBinContent(1) / nominal->GetBinContent(1);
           double norm_scale_downnone = downnone->GetBinContent(1) / nominal->GetBinContent(1);
           double norm_scale_downdown = downdown->GetBinContent(1) / nominal->GetBinContent(1);
-
+          cout << v_murmuf_upup <<endl;
           for(unsigned int i=0; i<v_murmuf_upup.size(); ++i){ // hist loop
             vector<TH1F*> v_murmuf_variations;
             v_murmuf_upup.at(i)->Scale(1. / norm_scale_upup);

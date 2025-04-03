@@ -1,0 +1,8 @@
+universe = vanilla
+executable = /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFT/structure_const/all_files/condor/results/MC_EFT_Mttbar_0-700_UL17_3/run_job.sh
+output = /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFT/structure_const/all_files/condor/results/MC_EFT_Mttbar_0-700_UL17_3/condor.out
+error = /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFT/structure_const/all_files/condor/results/MC_EFT_Mttbar_0-700_UL17_3/condor.err
+log = /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/EFT/structure_const/all_files/condor/results/MC_EFT_Mttbar_0-700_UL17_3/condor.log
+request_memory = 4000
+request_cpus = 1
+queue

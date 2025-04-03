@@ -89,6 +89,10 @@ class NiceStackWithRatio():
         # inhist_name = '',
         x_axis_title = '',
         x_axis_unit = None,
+        x_axis_min = None,
+        x_axis_max = None,
+        y_axis_min = None,
+        y_axis_max = None,
         prepostfit = 'prefitRaw',
         processes = [],
         signals = [],
@@ -100,12 +104,16 @@ class NiceStackWithRatio():
         data_name = 'data_obs',
         totalprocs_name = 'TotalProcs',
         text_prelim = 'Work in Progress',
+        text_simulation = None,
         text_top_left = None,
         text_top_right = None,
         nostack = False,
         logy = False,
         blind_data = False,
-        debug = False
+        show_ratio = True,
+        ratio_label = 'Data / pred.',
+        debug = False,
+        rebin_factor = 1,
     ):
         '''
         prepostfit options: 'prefitRaw', 'prefitCombine', 'postfitCombine'
@@ -122,8 +130,12 @@ class NiceStackWithRatio():
         self.canvas_margin_r = 0.05
         self.canvas_margin_t = 0.08
         self.canvas_margin_b = 0.12
-        self.border_y = 0.28 # defines where to split main pad and ratio pad
-        self.border_width = 0.03 # border width in percent of canvas height
+        if show_ratio:
+            self.border_y = 0.28 # defines where to split main pad and ratio pad
+            self.border_width = 0.03 # border width in percent of canvas height
+        else:
+            self.border_y = 0.00
+            self.border_width = 0.0
         self.tick_length = 0.015 # fraction of canvas width/height
         # self.maximum_main = -np.inf
         self.syst_names = syst_names # list of strings
@@ -140,8 +152,15 @@ class NiceStackWithRatio():
         self.is_multiplicity_plot = 'number of ' in self.x_axis_title.lower() or ' multiplicity' in self.x_axis_title.lower()
         self.text_size = 0.035
         self.text_prelim = text_prelim
+        self.text_simulation = text_simulation
         self.text_top_left = text_top_left
         self.text_top_right = text_top_right
+
+        self.y_axis_min = y_axis_min
+        self.y_axis_max = y_axis_max
+
+        self.x_axis_min = x_axis_min
+        self.x_axis_max = x_axis_max
 
         self.draw_ratio_mc_stat = (self.prepostfit == 'prefitRaw')
         self.separate_stack_by_lines = False
@@ -166,33 +185,46 @@ class NiceStackWithRatio():
         self.totalprocs_tcolor = root.kBlack
 
         self.binning = None
+        self.rebin_factor = rebin_factor
 
         self.logy = logy
         self.blind_data = blind_data
+        self.show_ratio = show_ratio
+        self.ratio_label = ratio_label
 
     def setup_canvas(self):
         self.canvas = root.TCanvas('canvas', 'canvas title', self.canvas_height, self.canvas_width)
         self.canvas.cd()
         self.pad_main = root.TPad('pad_main', 'main pad title', 0, self.border_y, 1, 1)
         self.pad_main.SetTopMargin(self.canvas_margin_t / (1. - self.border_y))
-        self.pad_main.SetBottomMargin(0.5 * self.border_width / (1. - self.border_y))
+        if self.show_ratio:
+            self.pad_main.SetBottomMargin(0.5 * self.border_width / (1. - self.border_y))
+        else:
+            self.pad_main.SetBottomMargin(self.canvas_margin_b)
         if self.debug: self.pad_main.SetFrameFillColor(root.kGreen)
         self.pad_main.Draw()
         if self.logy: self.pad_main.SetLogy()
         self.canvas.cd()
-        self.pad_ratio = root.TPad('pad_ratio', 'ratio pad title', 0, 0, 1, self.border_y)
-        self.pad_ratio.SetTopMargin(0.5 * self.border_width / self.border_y)
-        self.pad_ratio.SetBottomMargin(self.canvas_margin_b / self.border_y)
-        if self.debug: self.pad_ratio.SetFrameFillColor(root.kOrange)
-        self.pad_ratio.Draw()
-        for pad in [self.pad_main, self.pad_ratio]:
-            pad.SetLeftMargin(self.canvas_margin_l)
-            pad.SetRightMargin(self.canvas_margin_r)
-            pad.SetTickx(1)
-            pad.SetTicky(1)
+        self.pad_main.SetLeftMargin(self.canvas_margin_l)
+        self.pad_main.SetRightMargin(self.canvas_margin_r)
+        self.pad_main.SetTickx(1)
+        self.pad_main.SetTicky(1)
+
+
+        if self.show_ratio:
+            self.pad_ratio = root.TPad('pad_ratio', 'ratio pad title', 0, 0, 1, self.border_y)
+            self.pad_ratio.SetTopMargin(0.5 * self.border_width / self.border_y)
+            self.pad_ratio.SetBottomMargin(self.canvas_margin_b / self.border_y)
+            if self.debug: self.pad_ratio.SetFrameFillColor(root.kOrange)
+            self.pad_ratio.Draw()
+            self.pad_ratio.SetLeftMargin(self.canvas_margin_l)
+            self.pad_ratio.SetRightMargin(self.canvas_margin_r)
+            self.pad_ratio.SetTickx(1)
+            self.pad_ratio.SetTicky(1)
 
     def preprocess_hist(self, hist, disable_bin_width_division=False, th1_for_bin_widths=None):
         if isinstance(hist, root.TH1):
+            # hist.Rebin(self.rebin_factor)
             n_bins = hist.GetNbinsX()
             if self.include_overflow:
                 hist.SetBinContent(n_bins, hist.GetBinContent(n_bins) + hist.GetBinContent(n_bins + 1))
@@ -295,6 +327,8 @@ class NiceStackWithRatio():
 
     def create_data(self):
         self.data_hist = self.infile.Get(os.path.join(self.infile_directory, self.data_name))
+        print(self.infile_directory)
+        print(self.data_name)
         self.data_hist.SetLineWidth(1)
         self.data_hist.SetLineColor(root.kBlack)
         self.data_hist.SetMarkerStyle(8)
@@ -315,7 +349,9 @@ class NiceStackWithRatio():
             nominal = hist_nominal.GetBinContent(i_bin)
             err2 += (nominal * process.xsec_uncert)**2
             for syst in self.syst_names:
+                # print(syst)
                 hist_syst_down = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Down'))
+                # print(hist_syst_down)
                 hist_syst_up = self.infile.Get(os.path.join(self.infile_directory, process.name+'_'+syst+'Up'))
                 err_down = hist_syst_down.GetBinContent(i_bin) - nominal
                 err_up = hist_syst_up.GetBinContent(i_bin) - nominal
@@ -400,20 +436,18 @@ class NiceStackWithRatio():
     def cosmetics_main(self):
         # Segmentation violation if stack is not drawn before calling the following cosmetics settings
         self.pad_main.cd()
-        # self.pad_main.Update()
-        # root.gPad.Update()
+        self.pad_main.Update()
+        root.gPad.Update()
 
         # last = self.stack.GetStack().Last()
         last = self.totalprocs
         hist = self.stack_hist
         hist.SetTitle('')
 
-
         maximum_stack = last.GetBinContent(last.GetMaximumBin())
         minimum_stack = last.GetBinContent(last.GetMinimumBin())
         maximum = maximum_stack
         minimum = minimum_stack
-
 
         if not self.blind_data:
             maximum_data = max(self.data.GetY())
@@ -427,13 +461,23 @@ class NiceStackWithRatio():
         if self.logy:
             new_minimum = 1 # could also be one order of magnitude or so below the minimum bin value of the process that is lowest in the stack
             new_minimum = max(new_minimum, minimum * 0.1) # how it should be, but y axis range is somehow not correctly set to this value
-            print('new_minimum:', new_minimum)
+            # print('new_minimum:', new_minimum)
             new_maximum = math.pow(10, 2.5 * (math.log(maximum, 10) - math.log(new_minimum, 10))) # how it should be, but y axis range is somehow not correctly set to this value
-            print('new_maximum:', new_maximum)
+            # print('new_maximum:', new_maximum)
         else:
             new_minimum = 0.
             new_maximum = 2.0 * maximum
-        last.SetMaximum(new_maximum) # this updates the axis maximum
+
+        if not self.y_axis_min == None: new_minimum = self.y_axis_min
+        if not self.y_axis_max == None: new_maximum = self.y_axis_max
+
+        # print('new_minimum:', new_minimum)
+        # print('new_maximum:', new_maximum)
+
+        # last.SetMaximum(new_maximum) # this updates the axis maximum
+        # hist.SetMaximum(new_maximum)
+        # last.SetMinimum(new_minimum)
+        # hist.SetMinimum(new_minimum)
         hist.SetMaximum(new_maximum)
         last.SetMinimum(new_minimum)
         hist.SetMinimum(new_minimum)
@@ -485,13 +529,22 @@ class NiceStackWithRatio():
         elif self.divide_by_bin_width:
             y_axis_title = self.counted_objects+' / '+(self.x_axis_unit if self.x_axis_unit else 'unity')
         else:
-            y_axis_title = self.counted_objects+' / bin'
+            y_axis_title = self.counted_objects#+' / bin'
         hist.GetYaxis().SetTitle(y_axis_title)
         hist.GetYaxis().SetTitleSize(self.text_size / (1. - self.border_y))
         hist.GetYaxis().SetLabelSize(self.text_size / (1. - self.border_y))
         hist.GetYaxis().SetLabelOffset(0.01)
-        hist.GetXaxis().SetLabelOffset(999) # hack: let x axis title/labels vanish under pad_ratio
-        hist.GetXaxis().SetTitle('')
+        if self.show_ratio:
+            hist.GetXaxis().SetLabelOffset(999) # hack: let x axis title/labels vanish under pad_ratio
+            hist.GetXaxis().SetTitle('')
+        else:
+            hist.GetYaxis().SetTitleOffset(1.9)
+            hist.GetXaxis().SetTitle(self.x_axis_title)
+            hist.GetXaxis().SetTitleSize(self.text_size)
+            hist.GetXaxis().SetTitleOffset(1.4)
+            hist.GetXaxis().SetLabelSize(self.text_size)
+            hist.GetXaxis().SetLabelOffset(0.01)
+            hist.GetXaxis().SetNdivisions(self.stack_hist.GetXaxis().GetNdivisions())
         if self.is_multiplicity_plot:
             hist.GetXaxis().SetNdivisions(hist.GetNbinsX())
 
@@ -502,6 +555,8 @@ class NiceStackWithRatio():
         tickScaleY = (self.pad_main.GetUymax() - self.pad_main.GetUymin()) / (self.pad_main.GetY2() - self.pad_main.GetY1()) * (self.pad_main.GetWw() * self.pad_main.GetAbsWNDC())
         self.stack_hist.GetXaxis().SetTickLength(self.canvas.GetWh() * self.tick_length / tickScaleX)
         self.stack_hist.GetYaxis().SetTickLength(self.canvas.GetWw() * self.tick_length / tickScaleY)
+
+        if not (self.x_axis_min == None and self.x_axis_max == None): self.stack_hist.GetXaxis().SetRangeUser(self.x_axis_min,self.x_axis_max)
 
         root.gPad.Update()
         root.gPad.RedrawAxis()
@@ -529,8 +584,8 @@ class NiceStackWithRatio():
             else:
                 self.ratio_mc_stat.SetBinError(i_bin, last.GetBinError(i_bin) / last.GetBinContent(i_bin))
         self.ratio_mc_stat.SetFillColor(root.kGray)
-        self.ratio_mc_stat.SetFillStyle(1001)
-        self.ratio_mc_stat.SetTitle('MC stat. unc.')
+        self.ratio_mc_stat.SetFillStyle(3254) # 1001
+        # self.ratio_mc_stat.SetTitle('MC stat. unc.')
         self.ratio_mc_stat.SetLineWidth(0)
         self.ratio_mc_stat.SetMarkerStyle(0)
         return self.ratio_mc_stat
@@ -598,8 +653,8 @@ class NiceStackWithRatio():
         # self.ratio_null_hist.SetMinimum(0.7)
         # self.ratio_null_hist.SetMaximum(1.3)
         # self.ratio_null_hist.GetYaxis().SetNdivisions(403)
-        self.ratio_null_hist.SetMinimum(0.3)
-        self.ratio_null_hist.SetMaximum(1.7)
+        self.ratio_null_hist.SetMinimum(0.7)
+        self.ratio_null_hist.SetMaximum(1.3)
         self.ratio_null_hist.GetYaxis().SetNdivisions(503)
 
         # Fix inconsistent tick lengths:
@@ -610,7 +665,12 @@ class NiceStackWithRatio():
         self.ratio_null_hist.GetXaxis().SetTickLength(self.canvas.GetWh() * self.tick_length / tickScaleX)
         self.ratio_null_hist.GetYaxis().SetTickLength(self.canvas.GetWw() * self.tick_length / tickScaleY)
 
+        if not (self.x_axis_min == None and self.x_axis_max == None):
+            self.ratio_null_hist.GetXaxis().SetRangeUser(self.x_axis_min, self.x_axis_max)
+
         self.ratio_line = root.TLine(self.ratio_null_hist.GetXaxis().GetXmin(), 1., self.ratio_null_hist.GetXaxis().GetXmax(), 1.)
+        if not (self.x_axis_min == None and self.x_axis_max == None):
+            self.ratio_line = root.TLine(self.x_axis_min, 1., self.x_axis_max, 1.)
         self.ratio_line.SetLineStyle(2)
         self.ratio_line.Draw()
 
@@ -681,6 +741,14 @@ class NiceStackWithRatio():
         self.tlatex_cms.SetNDC()
         self.tlatex_cms.Draw()
 
+        if self.text_simulation:
+            self.tlatex_simulation = root.TLatex(self.coord.graph_to_pad_x(0.19), self.coord.graph_to_pad_y(0.938), self.text_simulation)
+            self.tlatex_simulation.SetTextAlign(13) # left top
+            self.tlatex_simulation.SetTextFont(42)
+            self.tlatex_simulation.SetTextSize(self.text_size)
+            self.tlatex_simulation.SetNDC()
+            self.tlatex_simulation.Draw()
+
         self.tlatex_prelim = root.TLatex(self.coord.graph_to_pad_x(0.05), self.coord.graph_to_pad_y(0.89), self.text_prelim)
         self.tlatex_prelim.SetTextAlign(13) # left top
         self.tlatex_prelim.SetTextFont(52)
@@ -688,7 +756,7 @@ class NiceStackWithRatio():
         self.tlatex_prelim.SetNDC()
         self.tlatex_prelim.Draw()
 
-        if self.draw_ratio_mc_stat:
+        if self.show_ratio and self.draw_ratio_mc_stat:
             # draw a "legend" for MC stat. uncertainty band in ratio plot
             self.tlatex_mcstat = root.TLatex(1. - self.canvas_margin_r + 0.02, 0.75 * self.border_y, self.ratio_mc_stat.GetTitle())
             self.tlatex_mcstat.SetTextAlign(22) # center center
@@ -701,7 +769,7 @@ class NiceStackWithRatio():
             self.tbox_mcstat = root.TBox(1. - self.canvas_margin_r + 0.012, 0.45 * self.border_y, 1. - self.canvas_margin_r + 0.030, 0.53 * self.border_y)
             self.tbox_mcstat.SetFillColor(self.ratio_mc_stat.GetFillColor())
             self.tbox_mcstat.SetLineWidth(self.ratio_mc_stat.GetLineWidth())
-            self.tbox_mcstat.Draw()
+            # self.tbox_mcstat.Draw()
 
     def plot(self):
         # if not self.canvas: self.setup_canvas()
@@ -723,20 +791,21 @@ class NiceStackWithRatio():
 
         # self.create_data().Draw('same e x0') # if self.data would be a TH1
         if not self.blind_data: self.create_data().Draw('pz0')
-        self.pad_ratio.cd()
-        self.create_ratio_null_hist().Draw()
-        if self.draw_ratio_mc_stat:
-            self.create_ratio_mc_stat().Draw('same e2')
-        self.create_ratio_unc().Draw('same 2')
-
-        self.create_ratio_signal()
-        for signal_ratio in self.signal_ratiohists:
-            signal_ratio.Draw('same hist')
+        if self.show_ratio:
+            self.pad_ratio.cd()
+            self.create_ratio_null_hist().Draw()
+            if self.draw_ratio_mc_stat:
+                self.create_ratio_mc_stat().Draw('same e2')
+            self.create_ratio_unc().Draw('same 2')
+            # comment in when wanted:
+            self.create_ratio_signal()
+            for signal_ratio in self.signal_ratiohists:
+                signal_ratio.Draw('same hist')
 
         # self.create_ratio_data().Draw('same e x0') # if ratio data would be a TH1
         if not self.blind_data: self.create_ratio_data().Draw('pz0')
         self.cosmetics_main()
-        self.cosmetics_ratio()
+        if self.show_ratio: self.cosmetics_ratio()
         self.draw_texts()
 
     def save_plot(self, filename, directory=None):

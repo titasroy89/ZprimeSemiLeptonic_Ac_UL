@@ -121,7 +121,7 @@ namespace uhh2 {
   class HTGenJetCut : public Selection  {
 
   public:
-      explicit HTGenJetCut(float, float min_htgen=infinity);
+      explicit HTGenJetCut(float, float max_htgen=infinity);
       virtual bool passes(const Event&) override;
 
   private:
@@ -397,6 +397,18 @@ namespace uhh2 {
 
   private:
     std::string weight_sign_;
+  };
+
+  ///
+
+  class DeltaEtaSelection: public Selection {
+
+  public:
+    explicit DeltaEtaSelection(); // uhh2::Context&
+    virtual bool passes(const Event&) override;
+
+  private:
+    float max_eta = 3.;
   };
 
 }
