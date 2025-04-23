@@ -298,7 +298,7 @@ public:
 protected:
 
   bool debug;
-  bool isEFT;
+  // bool isEFT;
   
   // Cleaners
   std::unique_ptr<MuonCleaner>     muon_cleaner_low, muon_cleaner_high;
@@ -459,7 +459,7 @@ protected:
   int runnr_oldtriggers = 299368;
 
   bool isUL16preVFP, isUL16postVFP, isUL17, isUL18;
-  bool isMuon, isElectron;
+  bool isMuon, isElectron, isEFT;
   bool isPhoton;
   TString year;
 
@@ -578,8 +578,8 @@ void ZprimeAnalysisModule_applyNN::fill_histograms(uhh2::Event& event, string ta
 */
 
 ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
-  //  debug = true;
-  debug = false;
+   debug = true;
+  // debug = false;
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
   }
@@ -636,8 +636,9 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   string trigger_mu_A, trigger_mu_B, trigger_mu_C, trigger_mu_D, trigger_mu_E, trigger_mu_F;
   string trigger_A, trigger_B;
   string trigger_ph_A;
-  isMuon = false; isElectron = false;
+  isMuon = false; isElectron = false, isEFT=false;
   if(ctx.get("channel") == "muon") isMuon = true;
+  if(ctx.get("sample") == "eft") isEFT = true;
   if(ctx.get("channel") == "electron") isElectron = true;
 
   if(isMuon){//semileptonic muon channel
@@ -969,7 +970,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // lumihists_Chi2.reset(new LuminosityHists(ctx, "Lumi_Chi2"));
   
   // *** CHANGED ***
-  bool isEFT = false; // default false
+  // bool isEFT = false; // default false
 
  if(isMC){
     TString sample_name = "";
@@ -995,12 +996,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
     }  
 
     // *** CHANGED ***: set isEFT if sample_name == "TTbar_EFT"
-    if(sample_name == "TTbar_EFT") {
-      isEFT = true;
-    } else {
-      isEFT = false;
-    }
-
+    // if(sample_name == "TTbar_EFT") {
+    //   isEFT = true;
+    // } else {
+    //   isEFT = false;
+    // }
+    if (debug)cout << "is it EFT? " << isEFT << endl;
   
     // 2D b-tag SF reading with the new logic (EFT or others):
     if(isMuon){
@@ -1117,7 +1118,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // Structure Constants Calculator for EFT
   // This calculates structure constants for each event using EFT weights
   // with the correct mapping from configurations to weight indices
-  structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
+  if(isEFT){
+    structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
+  }
+  else{
+    structure_constants_calculator.reset(nullptr);
+  }
+  // structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
   h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
 }
 
@@ -1767,7 +1774,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       fill_histograms(event,"DNN_output2_chi2");
     }
   }//out2
-  if(debug) cout << "done" << endl;
+  if(debug) cout << "done with DNNs" << endl;
   // if(debug) cout << "done" << endl;
 
   // Calculate structure constants for EFT weights
@@ -1775,16 +1782,21 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // and calculates structure constants that can be used to compute weights for any WC values
 
   // calculates the structure constants for each event.
-  structure_constants_calculator->process(event);
-
+  if(debug) cout << "before structure constants" << endl;
+  if(debug) cout << "isEFT: " << isEFT << endl;
+  if(isEFT){
+    if(debug) cout<<" should not be in here if not EFT" << endl;
+    structure_constants_calculator->process(event);
+  }
   // Shows the number of structure constants stored in the event
   // Displays the first few structure constants
   // Shows the constant term (SM point) and a few linear terms
   // Prints for the first 5 EFT events
   
   // Debug output for structure constants (only for first few events)
-  if (debug) {static int event_counter = 0;
-    if (isEFT && event_counter < 5) {
+  if (debug && isEFT) {static int event_counter = 0;
+    cout << "about to check structure constants debug " << endl;
+    if (event_counter < 5) {
       // Get the structure constants from the event
       if (event.is_valid(h_structure_constants)) {
         std::vector<float> structure_constants = event.get(h_structure_constants);
@@ -1808,7 +1820,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       }
     }
   }
-
+  if(debug) cout << "moving on to next event" << endl;
   return true;
 }
 
