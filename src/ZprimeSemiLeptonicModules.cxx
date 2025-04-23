@@ -1504,26 +1504,26 @@ bool Variables_NN::process(uhh2::Event& evt){
   TVector3 rbase_BoseSymm = rbase_Hel;
   TVector3 nbase_BoseSymm = nbase_Hel;
 
-  if(sign_cos_PosTop_beam > 0.){
-    lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-    had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-    PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-    NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  // if(sign_cos_PosTop_beam > 0.){
+  //   lep_top_lep_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  //   had_top_b_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  //   PosTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  //   NegTop_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
 
-    kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-    rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-    nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
-  }
-  else{
-    lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
-    had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
-    PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
-    NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   kbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  //   rbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  //   nbase_BoseSymm.RotateZ(-1.*TMath::Pi()/2.);
+  // }
+  // else{
+  //   lep_top_lep_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   had_top_b_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   PosTop_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   NegTop_BoseSymm.RotateZ(TMath::Pi()/2.);
 
-    kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
-    rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
-    nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
-  }
+  //   kbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   rbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  //   nbase_BoseSymm.RotateZ(TMath::Pi()/2.);
+  // }
    // Boosting into ttbar rest-frame <<<-------------------------------------------------------//
   TLorentzVector lep_top_lep_Rest = lep_top_lep_BoseSymm;
   TLorentzVector had_top_b_Rest = had_top_b_BoseSymm;
