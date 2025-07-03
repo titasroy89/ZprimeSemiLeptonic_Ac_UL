@@ -123,9 +123,9 @@ protected:
 
   // NN variables handles
   unique_ptr<Variables_NN> Variables_module;
-  // unique_ptr<Variables_EFT_SR> VariablesEFTSR_module;
-  // unique_ptr<Variables_EFT_CR1> VariablesEFTCR1_module;
-  // unique_ptr<Variables_EFT_CR2> VariablesEFTCR2_module;
+  unique_ptr<Variables_EFT_SR> VariablesEFTSR_module;
+  unique_ptr<Variables_EFT_CR1> VariablesEFTCR1_module;
+  unique_ptr<Variables_EFT_CR2> VariablesEFTCR2_module;
   // systematics handles
   // unique_ptr<ZprimeSemiLeptonicSystematicsModule> SystematicsModule;
 
@@ -151,7 +151,7 @@ protected:
   std::unique_ptr<Hists> h_CHSMatchHists_afterBTag;
 
   // Configuration
-  bool isMC, ishotvr, isdeepAK8;
+  bool isMC, ishotvr, isdeepAK8, isEFT;
   string Sys_PU, Prefiring_direction, Sys_TopPt_a, Sys_TopPt_b;
   TString sample;
   int runnr_oldtriggers = 299368;
@@ -191,7 +191,7 @@ void ZprimeAnalysisModule::fill_histograms(uhh2::Event& event, string tag){
 
 ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
 
-  debug = false; // false/true
+  debug =false; // false/true
 
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
@@ -200,6 +200,7 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   // Configuration
   isMC = (ctx.get("dataset_type") == "MC");
   ishotvr = (ctx.get("is_hotvr") == "true");
+  isEFT = (ctx.get("is_EFT") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
   TString mode = "hotvr";
   if(isdeepAK8) mode = "deepAK8";
@@ -418,10 +419,11 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   HEM_selection.reset(new HEMSelection(ctx)); // HEM issue in 2018, veto on leptons and jets
 
   Variables_module.reset(new Variables_NN(ctx, mode)); // variables for NN
-  // VariablesEFTSR_module.reset(new Variables_EFT_SR(ctx, mode)); // variables for NN
-  // VariablesEFTCR1_module.reset(new Variables_EFT_CR1(ctx, mode)); // variables for NN
-  // VariablesEFTCR2_module.reset(new Variables_EFT_CR2(ctx, mode)); // variables for NN
+  VariablesEFTSR_module.reset(new Variables_EFT_SR(ctx, mode)); // variables for NN
+  VariablesEFTCR1_module.reset(new Variables_EFT_CR1(ctx, mode)); // variables for NN
+  VariablesEFTCR2_module.reset(new Variables_EFT_CR2(ctx, mode)); // variables for NN
   // if(!isEleTriggerMeasurement) SystematicsModule.reset(new ZprimeSemiLeptonicSystematicsModule(ctx));
+
 
 
   // Split interference signal samples by sign
@@ -534,6 +536,26 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
       } 
       else{
         ratio_hist_ele = (TH2F*)f_btag2Dsf->Get("N_Jets_vs_HT_" + sample_name);
+    if( (ctx.get("dataset_version").find("TTToHadronic") != std::string::npos) ||(ctx.get("dataset_version").find("TTToSemiLeptonic") != std::string::npos) || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos) ) sample_name = "TTbar";
+    if( (ctx.get("dataset_version").find("WW") != std::string::npos) || (ctx.get("dataset_version").find("ZZ") != std::string::npos) || (ctx.get("dataset_version").find("WZ") != std::string::npos) ) sample_name = "Diboson";
+    if ((ctx.get("dataset_version").find("EFT_Mttbar") != std::string::npos)) sample_name = "EFT";
+    if(isMuon){
+      TFile* f_btag2Dsf_muon = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_muon_"+year+".root");
+      if(isEFT){
+        ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_TTbar");
+      }
+      else{
+        ratio_hist_muon = (TH2F*)f_btag2Dsf_muon->Get("N_Jets_vs_HT_" + sample_name);
+      } 
+      ratio_hist_muon->SetDirectory(0);
+    }
+    else if(!isMuon){
+      TFile* f_btag2Dsf_ele = new TFile("/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/macros/src/files_BTagSF/customBtagSF_electron_"+year+".root");
+      if(isEFT){
+        ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_TTbar");
+      }
+      else{
+        ratio_hist_ele = (TH2F*)f_btag2Dsf_ele->Get("N_Jets_vs_HT_" + sample_name);
       }
       ratio_hist_ele->SetDirectory(0);
     }
@@ -1099,13 +1121,32 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   }
 
   // select ttbar candidate with smallest chi2, fill Mtt hists
+  // if(!isEFT){
+    // if(debug) cout << "shouldnt be here if EFT" <<endl;
+  // // matching to gen-level ttbar - to extract chi2 parameters
+  // CorrectMatchDiscriminatorZprime->process(event);
+  // if(debug) cout << "Did correct match" << endl;
+  // fill_histograms(event, "CorrectMatchDiscriminator");
+  // if(debug) cout << "CorrectMatchDiscriminatorZprime: ok" << endl;
+
+  // // select ttbar candidate with smallest chi2, fill Mtt hists
   Chi2DiscriminatorZprime->process(event);
   fill_histograms(event, "Chi2Discriminator");
   if(debug) cout << "Chi2DiscriminatorZprime: ok" << endl;
-
+  // }
   // Variables for NN
+  if(debug) cout << "about to check jets" <<endl;
   sort_by_pt<Jet>(*event.jets);
+  if(debug) cout << "sorted jets" <<endl;
   Variables_module->process(event);
+  if(debug) cout << "done NN" <<endl;
+  VariablesEFTSR_module->process(event);
+  if(debug) cout << "done EFT SR" <<endl;
+
+  VariablesEFTCR1_module->process(event);
+  if(debug) cout << "done CR1" <<endl;
+  VariablesEFTCR2_module->process(event);
+  if(debug) cout << "done CR2" <<endl;
   fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "NNInputsBeforeReweight: ok" << endl;
 

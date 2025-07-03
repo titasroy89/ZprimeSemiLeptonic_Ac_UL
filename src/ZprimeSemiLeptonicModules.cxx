@@ -2062,7 +2062,6 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
   // vector <TopJet> TopTaggedJets = evt.get(h_AK8TopTags);                     // AK8Puppi jets TopTagged by DeepAK8TopTagger
   vector <float> jets_hadronic_bscores;                                            // bScores vector for resolved hadronic jets
   float pt_hadTop_thresh = 150;                                                    // Define cut-variable as pt of hadTop for low/high regions                                                   // medium WP for UL18 DeepJet
-  
   // EFT Ac and spin correlation variables:
   // Plot pt of hadronic Top jet
   float pt_hadTop = BestZprimeCandidate->top_hadronic_v4().pt();
@@ -2333,7 +2332,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
     }
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_1_CR1_1500_Inf,sphi_CR1);
-    }    
+    }
   }
   if(pt_hadTop > pt_hadTop_thresh && dy_reco_CR1 <0){
     evt.set(h_Sigma_phi_2_CR1,sphi_CR1);
@@ -2351,7 +2350,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
     }
     if(Mass_tt>=1500){
       evt.set(h_Sigma_phi_2_CR1_1500_Inf,sphi_CR1);
-    }  
+    }
   }
 
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 >0){
@@ -2370,7 +2369,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
     }
     if(Mass_tt>=1500){
       evt.set(h_dyreco_1_CR1_1500_Inf,dy_reco_CR1);
-    }  
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh && dphi_CR1 <0){
     evt.set(h_dyreco_2_CR1,dy_reco_CR1);
@@ -2388,7 +2387,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
     }
     if(Mass_tt>=1500){
       evt.set(h_dyreco_2_CR1_1500_Inf,dy_reco_CR1);
-    }  
+    }
   }
   if(pt_hadTop < pt_hadTop_thresh){
     evt.set(h_Delta_phi_1_CR1,dphi_CR1);
@@ -2402,7 +2401,7 @@ bool Variables_EFT_CR1::process(uhh2::Event& evt){
 }
 
 
-////CR2//////
+// // ////CR2//////
 
 
 Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mode){
@@ -2417,7 +2416,7 @@ Variables_EFT_CR2::Variables_EFT_CR2(uhh2::Context& ctx, TString mode): mode_(mo
 
   h_Delta_phi_1_CR2 = ctx.declare_event_output<float>("Delta_phi_1_CR2");
   h_Delta_phi_2_CR2 = ctx.declare_event_output<float>("Delta_phi_2_CR2");
-
+  
   h_dyreco_1_CR2 = ctx.declare_event_output<float>("dyreco_1_CR2");
   h_dyreco_1_CR2_0_500 = ctx.declare_event_output<float>("dyreco_1_CR2_0_500");
   h_dyreco_1_CR2_500_750 = ctx.declare_event_output<float>("dyreco_1_CR2_500_750");

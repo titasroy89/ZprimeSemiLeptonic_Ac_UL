@@ -252,8 +252,8 @@ void NeuralNetworkModule::CreateInputs(Event & event){
   //Muon
   ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //Electron
-  // ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
-  
+  // ifstream normfile ("/data/dust//user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+//  cout<<"read txt"<<endl;
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
     for(int i = 0; i < 59; ++i)
@@ -1110,22 +1110,15 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
-  
-  //electron
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  // if(isMuon){
+  //   // cout <<"get muon models" << endl;
+  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust//user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust//user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  // }//electron
+  // else{
+    // cout <<"get electron models" << endl;
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust//user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust//user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  // }
 
-  // Structure Constants Calculator for EFT
-  // This calculates structure constants for each event using EFT weights
-  // with the correct mapping from configurations to weight indices
-  if(isEFT){
-    structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
-  }
-  else{
-    structure_constants_calculator.reset(nullptr);
-  }
-  // structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
-  h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
 }
 
 /*
@@ -1145,7 +1138,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_is_zprime_reconstructed_correctmatch, false);
   event.set(h_chi2,-100);
   event.set(h_weight,-100);
-  
   //EFT vars SR
   event.set(h_Sigma_phi_SR,-10);
   event.set(h_Delta_phi_SR,-10);
@@ -1236,9 +1228,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_dyreco_2_CR2_1000_1500,-10);
   event.set(h_dyreco_2_CR2_1500_Inf,-10);
   event.set(h_dyreco_CR2,-10);  
-  
-  //////////////end EFT vars ///////////
 
+  //////////////end EFT vars ///////////
+  
   event.set(h_NNoutput0, 0);
   event.set(h_NNoutput1, 0);
   event.set(h_NNoutput2, 0);
@@ -1774,53 +1766,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       fill_histograms(event,"DNN_output2_chi2");
     }
   }//out2
-  if(debug) cout << "done with DNNs" << endl;
-  // if(debug) cout << "done" << endl;
-
-  // Calculate structure constants for EFT weights
-  // This accesses EFT weights starting at index 202 in event.genInfo->systweights()
-  // and calculates structure constants that can be used to compute weights for any WC values
-
-  // calculates the structure constants for each event.
-  if(debug) cout << "before structure constants" << endl;
-  if(debug) cout << "isEFT: " << isEFT << endl;
-  if(isEFT){
-    if(debug) cout<<" should not be in here if not EFT" << endl;
-    structure_constants_calculator->process(event);
-  }
-  // Shows the number of structure constants stored in the event
-  // Displays the first few structure constants
-  // Shows the constant term (SM point) and a few linear terms
-  // Prints for the first 5 EFT events
-  
-  // Debug output for structure constants (only for first few events)
-  if (debug && isEFT) {static int event_counter = 0;
-    cout << "about to check structure constants debug " << endl;
-    if (event_counter < 5) {
-      // Get the structure constants from the event
-      if (event.is_valid(h_structure_constants)) {
-        std::vector<float> structure_constants = event.get(h_structure_constants);
-        
-        std::cout << "===== Structure Constants Debug (Event " << event_counter << ") =====" << std::endl;
-        std::cout << "Number of structure constants: " << structure_constants.size() << std::endl;
-        
-        if (!structure_constants.empty()) {
-          // Print first few constants
-          std::cout << "First few constants: ";
-          for (size_t i = 0; i < std::min(size_t(10), structure_constants.size()); ++i) {
-            std::cout << structure_constants[i] << " ";
-          }
-          std::cout << std::endl;
-        }
-        
-        // Increment counter after printing
-        event_counter++;
-      } else {
-        std::cout << "Structure constants not found in event!" << std::endl;
-      }
-    }
-  }
-  if(debug) cout << "moving on to next event" << endl;
+  if(debug) cout << "done" << endl;
   return true;
 }
 
