@@ -578,8 +578,8 @@ void ZprimeAnalysisModule_applyNN::fill_histograms(uhh2::Event& event, string ta
 */
 
 ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
-   debug = true;
-  // debug = false;
+  //  debug = true;
+  debug = false;
   for(auto & kv : ctx.get_all()){
     cout << " " << kv.first << " = " << kv.second << endl;
   }

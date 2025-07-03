@@ -1,12 +1,16 @@
 # Example:
 #     python compare_powheg_eft_sm.py --powheg-dir /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL17/muon/nominal_ttbar/ --eft-dir /data/dust/group/cms/zprime-uhh/Analysis_EFT_UL17/muon/workdir_Analysis_EFT_UL17_muon_semilepton_deltayreco_deltaPhi_sigmaPhi_ttree/ --output-dir powheg_eft_comparison
 
+# powheg: /data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL17/muon/workdir_AnalysisDNN_2017_muon_ttbar
+# eft: /data/dust/group/cms/zprime-uhh/AnalysisDNN_EFT_UL17/muon/workdir_AnalysisDNN_UL17_EFT_muon_semilepton/
+
 import argparse
 import glob
 import os
 import ROOT
 import numpy as np
 import sys
+import time
 
 ROOT.gROOT.SetBatch(True)
 ROOT.gStyle.SetOptStat(0)
@@ -21,18 +25,24 @@ def parse_arguments():
     parser.add_argument("--delta-phi-only", action="store_true", help="Only process Delta Phi")
     parser.add_argument("--sigma-phi-only", action="store_true", help="Only process Sigma Phi")
     parser.add_argument("--max-events", type=int, default=-1, help="Maximum number of events to process per file (-1 for all)")
+    parser.add_argument("--max-files", type=int, default=-1, help="Maximum number of files to process from each directory (-1 for all)")
+    parser.add_argument("--print-frequency", type=int, default=10000, help="How often to print progress (events)")
     return parser.parse_args()
 
-def find_files(directory, pattern="*.root"):
-    # all files matching pattern in directory.
-    return glob.glob(os.path.join(directory, pattern))
+def find_files(directory, pattern="*.root", max_files=-1):
+    # all files matching pattern in directory, with option to limit
+    files = glob.glob(os.path.join(directory, pattern))
+    if max_files > 0 and len(files) > max_files:
+        print("Limiting to {max_files} files out of {len(files)} available".format(max_files=max_files, len=len(files)))
+        return files[:max_files]
+    return files
 
 def make_directory(directory):
     # Create directory if it doesn't exist.
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-def create_comparison_plot(h_powheg, h_eft_sm, variable_name, output_dir, title="Powheg SM vs EFT SM"):
+def create_comparison_plot(h_powheg, h_eft_sm, variable_name, output_dir, title="Powheg SM vs EFT SM", custom_range=None):
     # Create normalized histograms
     h_powheg_norm = h_powheg.Clone("{0}_norm".format(h_powheg.GetName()))
     h_eft_sm_norm = h_eft_sm.Clone("{0}_norm".format(h_eft_sm.GetName()))
@@ -91,9 +101,14 @@ def create_comparison_plot(h_powheg, h_eft_sm, variable_name, output_dir, title=
     h_eft_sm_norm.SetMarkerSize(0.8)
     h_eft_sm_norm.SetMarkerColor(ROOT.kRed)
     
-    # Find the maximum y value to set the range
-    max_val = max(h_powheg_norm.GetMaximum(), h_eft_sm_norm.GetMaximum())
-    h_powheg_norm.GetYaxis().SetRangeUser(0, max_val * 1.2)
+    # Set custom or automatic y-axis range for main plot
+    if custom_range:
+        min_y, max_y = custom_range
+        h_powheg_norm.GetYaxis().SetRangeUser(min_y, max_y)
+    else:
+        # Find the maximum y value to set the range
+        max_val = max(h_powheg_norm.GetMaximum(), h_eft_sm_norm.GetMaximum())
+        h_powheg_norm.GetYaxis().SetRangeUser(0, max_val * 1.2)
     
     # Draw normalized distributions
     h_powheg_norm.Draw("HIST")
@@ -131,7 +146,7 @@ def create_comparison_plot(h_powheg, h_eft_sm, variable_name, output_dir, title=
     h_ratio.GetYaxis().SetTitleOffset(0.6)  # Slightly increased from 0.5
     h_ratio.GetYaxis().SetNdivisions(505)   # Fewer divisions
     
-    # Set reasonable y-axis range for ratio
+    # Set reasonable y-axis range for ratio - exactly as in original
     min_ratio = h_ratio.GetMinimum(0.1)  # Ignore zeros
     max_ratio = h_ratio.GetMaximum()
     padding = 0.3 * (max_ratio - min_ratio)  # Increased padding from 0.2 to 0.3
@@ -175,313 +190,230 @@ def create_comparison_plot(h_powheg, h_eft_sm, variable_name, output_dir, title=
     # Save plots
     c_combined.SaveAs(os.path.join(plots_dir, "{0}_Powheg_vs_EFT_SM_combined.pdf".format(variable_name)))
     
-    # Save histograms to ROOT file
-    root_dir = os.path.join(output_dir, "root_files")
-    make_directory(root_dir)
-    output_root = ROOT.TFile(os.path.join(root_dir, "{0}_comparison.root".format(variable_name)), "RECREATE")
-    h_powheg.Write("h_powheg")
-    h_eft_sm.Write("h_eft_sm")
-    h_powheg_norm.Write("h_powheg_norm")
-    h_eft_sm_norm.Write("h_eft_sm_norm")
-    h_ratio.Write("h_ratio")
-    output_root.Close()
+    # No longer saving ROOT files
     
     # Clean up
     c_combined.Close()
 
-def process_deltaY(powheg_files, eft_files, output_dir, max_events=-1):
-    # deltaY from ttree of Powheg and EFT SM samples
-    print("Processing deltaY variable...")
+def process_tree_with_branch(root_file, branch_name, histogram, weight_branch=None, max_events=-1, print_freq=10000):
+    """Process a ROOT file, extract a branch of interest, and fill a histogram.
+    
+    Args:
+        root_file (str): Path to ROOT file.
+        branch_name (str): Name of branch to extract.
+        histogram (TH1F): Histogram to fill with branch values.
+        weight_branch (str, optional): Name of branch to use for weights. If None, weight is 1.0.
+                                       If "SM", use SM weights from genInfo.
+        max_events (int, optional): Maximum number of events to process. If -1, process all events.
+        print_freq (int, optional): Frequency for printing progress updates.
+    """
+    # Open the ROOT file
+    try:
+        f = ROOT.TFile.Open(root_file, "READ")
+        if not f or f.IsZombie() or not f.GetListOfKeys().Contains("AnalysisTree"):
+            print("Error: Could not open file {0} or AnalysisTree not found".format(root_file))
+            return
+        
+        tree = f.Get("AnalysisTree")
+        n_entries = tree.GetEntries()
+        print("  File contains {0} entries".format(n_entries))
+        
+        # Set up TTreeReader and TTreeReaderValue for the branch
+        reader = ROOT.TTreeReader("AnalysisTree", f)
+        
+        # Use direct branch access instead of TTreeReaderValue which is causing issues
+        reader.SetEntry(0)
+        
+        # Process entries directly using TTree
+        tree.SetBranchStatus("*", 0)  # Disable all branches
+        tree.SetBranchStatus(branch_name, 1)  # Enable the branch we need
+        
+        if weight_branch and weight_branch != "SM":
+            tree.SetBranchStatus(weight_branch, 1)  # Enable weight branch if needed
+            
+        if weight_branch == "SM":
+            tree.SetBranchStatus("genInfo*", 1)  # Enable genInfo for SM weights
+        
+        # Determine the actual number of entries to process
+        actual_max = n_entries if max_events < 0 else min(max_events, n_entries)
+        
+        # Check what structure genInfo has
+        if weight_branch == "SM" and tree.GetEntry(0) > 0:
+            has_systweights = False
+            try:
+                if hasattr(tree, "genInfo"):
+                    # Check for different possible structures
+                    if hasattr(tree.genInfo, "systweights"):
+                        print("  Using genInfo.systweights() for SM weights")
+                        has_systweights = True
+                    elif hasattr(tree.genInfo, "weights"):
+                        print("  Using genInfo.weights() for SM weights")
+                        has_systweights = True
+                    else:
+                        print("  WARNING: genInfo found but doesn't have systweights or weights method")
+            except Exception as e:
+                print("  WARNING: Error checking genInfo structure: {e}".format(e))
+        
+        # Process entries
+        processed = 0
+        for entry in range(actual_max):
+            tree.GetEntry(entry)
+            
+            # Get branch value
+            branch_val = getattr(tree, branch_name)
+            
+            # Get weight
+            weight = 1.0
+            if weight_branch and weight_branch != "SM":
+                weight = getattr(tree, weight_branch)
+            elif weight_branch == "SM" and hasattr(tree, "genInfo"):
+                try:
+                    genInfo = getattr(tree, "genInfo")
+                    # Try different ways to access weights depending on structure
+                    if hasattr(genInfo, "systweights") and callable(getattr(genInfo, "systweights")):
+                        weights = genInfo.systweights()
+                        if len(weights) > 0:
+                            weight = weights[0]  # Use first weight
+                    elif hasattr(genInfo, "weights") and callable(getattr(genInfo, "weights")):
+                        weights = genInfo.weights()
+                        if len(weights) > 0:
+                            weight = weights[0]  # Use first weight
+                    # If we find LHEWeights, try to use that
+                    elif hasattr(tree, "LHEWeights") and hasattr(tree.LHEWeights, "size"):
+                        if tree.LHEWeights.size() > 0:
+                            weight = tree.LHEWeights[0]
+                except Exception as e:
+                    if entry == 0:
+                        print("  WARNING: Error extracting weight from genInfo: {e}".format(e))
+                        print("  Using weight=1.0 for all events".format(e))
+            
+            # Fill the histogram with the value and weight
+            histogram.Fill(branch_val, weight)
+            
+            # Increment counter
+            processed += 1
+            
+            # Print progress
+            if processed % print_freq == 0:
+                print("    Processed {0}/{1} entries ({2:.2f}%)".format(
+                    processed, actual_max, float(processed) / actual_max * 100))
+        
+        print("  Processed {0} entries, filled {1} in histogram".format(processed, histogram.GetEntries()))
+        
+    finally:
+        # Clean up
+        if 'f' in locals() and f:
+            f.Close()
+
+def process_sigmaPhi1SR(powheg_files, eft_files, output_dir, max_events=-1, print_freq=10000):
+    # Process Sigma_phi_1_SR variable from Powheg and EFT SM samples.
+    print("Processing Sigma_phi_1_SR variable...")
+    
+    # Create histograms with full angular range -pi to pi
+    h_sigmaPhi1SR_powheg = ROOT.TH1F("h_sigmaPhi1SR_powheg", "Powheg SM #Sigma#phi_{1} SR;#Sigma#phi_{1} SR;Events", 16, -3.2, 3.2)
+    h_sigmaPhi1SR_eft_sm = ROOT.TH1F("h_sigmaPhi1SR_eft_sm", "EFT SM #Sigma#phi_{1} SR;#Sigma#phi_{1} SR;Events", 16, -3.2, 3.2)
+    
+    # Fill histogram from Powheg samples
+    for i, root_file in enumerate(powheg_files):
+        print("  Processing Powheg file {i}/{total}: {filename}".format(
+            i=i+1, total=len(powheg_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "Sigma_phi_1_SR", h_sigmaPhi1SR_powheg, 
+                                 weight_branch=None, max_events=max_events, print_freq=print_freq)
+    
+    # Fill histogram from EFT SM samples
+    for i, root_file in enumerate(eft_files):
+        print("  Processing EFT file {i}/{total}: {filename}".format(
+            i=i+1, total=len(eft_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "Sigma_phi_1_SR", h_sigmaPhi1SR_eft_sm, 
+                                 weight_branch="SM", max_events=max_events, print_freq=print_freq)
+    
+    # Create comparison plots
+    create_comparison_plot(h_sigmaPhi1SR_powheg, h_sigmaPhi1SR_eft_sm, "sigmaPhi1SR", output_dir)
+
+def process_sigmaPhi2SR(powheg_files, eft_files, output_dir, max_events=-1, print_freq=10000):
+    # Process Sigma_phi_2_SR variable from Powheg and EFT SM samples.
+    print("Processing Sigma_phi_2_SR variable...")
+    
+    # Create histograms with full angular range -pi to pi
+    h_sigmaPhi2SR_powheg = ROOT.TH1F("h_sigmaPhi2SR_powheg", "Powheg SM #Sigma#phi_{2} SR;#Sigma#phi_{2} SR;Events", 16, -3.2, 3.2)
+    h_sigmaPhi2SR_eft_sm = ROOT.TH1F("h_sigmaPhi2SR_eft_sm", "EFT SM #Sigma#phi_{2} SR;#Sigma#phi_{2} SR;Events", 16, -3.2, 3.2)
+    
+    # Fill histogram from Powheg samples
+    for i, root_file in enumerate(powheg_files):
+        print("  Processing Powheg file {i}/{total}: {filename}".format(
+            i=i+1, total=len(powheg_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "Sigma_phi_2_SR", h_sigmaPhi2SR_powheg, 
+                                 weight_branch=None, max_events=max_events, print_freq=print_freq)
+    
+    # Fill histogram from EFT SM samples
+    for i, root_file in enumerate(eft_files):
+        print("  Processing EFT file {i}/{total}: {filename}".format(
+            i=i+1, total=len(eft_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "Sigma_phi_2_SR", h_sigmaPhi2SR_eft_sm, 
+                                 weight_branch="SM", max_events=max_events, print_freq=print_freq)
+    
+    # Create comparison plots
+    create_comparison_plot(h_sigmaPhi2SR_powheg, h_sigmaPhi2SR_eft_sm, "sigmaPhi2SR", output_dir)
+
+def process_deltaY1SR(powheg_files, eft_files, output_dir, max_events=-1, print_freq=10000):
+    # Process dyreco_1_SR variable from Powheg and EFT SM samples.
+    print("Processing dyreco_1_SR variable...")
     
     # Create histograms with just 2 bins - one for negative and one for positive values
-    h_deltaY_powheg = ROOT.TH1F("h_deltaY_powheg", "Powheg SM #DeltaY_{reco};#DeltaY_{reco};Events", 2, -3, 3)
-    h_deltaY_eft_sm = ROOT.TH1F("h_deltaY_eft_sm", "EFT SM #DeltaY_{reco};#DeltaY_{reco};Events", 2, -3, 3)
-    
-    # Fill histogram from Powheg samples (using dyreco as branch name)
-    for i, root_file in enumerate(powheg_files):
-        print("  Processing Powheg file {0}/{1}: {2}".format(i+1, len(powheg_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if dyreco branch exists for Powheg samples
-        if not tree.GetBranch("dyreco"):
-            print("Branch 'dyreco' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # Fill histogram
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            h_deltaY_powheg.Fill(tree.dyreco)
-        
-        f.Close()
-    
-    # Fill histogram from EFT SM samples (using DeltaY_reco as branch name)
-    for i, root_file in enumerate(eft_files):
-        print("  Processing EFT file {0}/{1}: {2}".format(i+1, len(eft_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if DeltaY_reco branch exists for EFT samples
-        if not tree.GetBranch("DeltaY_reco"):
-            print("Branch 'DeltaY_reco' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # For EFT samples, we need to use the SM weight (genInfo.systweights()[202])
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            # Only fill if SM weight is available
-            if hasattr(tree, 'genInfo') and tree.genInfo.systweights().size() > 202:
-                sm_weight = tree.genInfo.systweights()[202]
-                h_deltaY_eft_sm.Fill(tree.DeltaY_reco, sm_weight)
-            # Skip events without valid weight
-        
-        f.Close()
-    
-    # Create comparison plots
-    create_comparison_plot(h_deltaY_powheg, h_deltaY_eft_sm, "deltaY", output_dir)
-
-def process_deltaPhi(powheg_files, eft_files, output_dir, max_events=-1):
-    # deltaPhi from ttree of Powheg and EFT SM samples
-    print("Processing deltaPhi variable...")
-    
-    # Create histograms
-    h_deltaPhi_powheg = ROOT.TH1F("h_deltaPhi_powheg", "Powheg SM #Delta#phi_{reco};#Delta#phi_{reco};Events", 16, 0, 3.2)
-    h_deltaPhi_eft_sm = ROOT.TH1F("h_deltaPhi_eft_sm", "EFT SM #Delta#phi_{reco};#Delta#phi_{reco};Events", 16, 0, 3.2)
+    h_deltaY1SR_powheg = ROOT.TH1F("h_deltaY1SR_powheg", "Powheg SM #DeltaY_{1} SR;#DeltaY_{1} SR;Events", 2, -3, 3)
+    h_deltaY1SR_eft_sm = ROOT.TH1F("h_deltaY1SR_eft_sm", "EFT SM #DeltaY_{1} SR;#DeltaY_{1} SR;Events", 2, -3, 3)
     
     # Fill histogram from Powheg samples
     for i, root_file in enumerate(powheg_files):
-        print("  Processing Powheg file {0}/{1}: {2}".format(i+1, len(powheg_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if Delta_phi branch exists (as used in original scripts)
-        has_delta_phi = tree.GetBranch("Delta_phi") is not None
-        has_deltaphi_reco = tree.GetBranch("DeltaPhi_reco") is not None
-        
-        if not has_delta_phi and not has_deltaphi_reco:
-            print("Neither 'Delta_phi' nor 'DeltaPhi_reco' branch found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # Fill histogram based on which branch is available
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            if has_delta_phi:
-                h_deltaPhi_powheg.Fill(tree.Delta_phi)
-            else:
-                h_deltaPhi_powheg.Fill(tree.DeltaPhi_reco)
-        
-        f.Close()
+        print("  Processing Powheg file {i}/{total}: {filename}".format(
+            i=i+1, total=len(powheg_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "dyreco_1_SR", h_deltaY1SR_powheg, 
+                                 weight_branch=None, max_events=max_events, print_freq=print_freq)
     
     # Fill histogram from EFT SM samples
     for i, root_file in enumerate(eft_files):
-        print("  Processing EFT file {0}/{1}: {2}".format(i+1, len(eft_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if Delta_phi branch exists (as used in original scripts)
-        has_delta_phi = tree.GetBranch("Delta_phi") is not None
-        has_deltaphi_reco = tree.GetBranch("DeltaPhi_reco") is not None
-        
-        if not has_delta_phi and not has_deltaphi_reco:
-            print("Neither 'Delta_phi' nor 'DeltaPhi_reco' branch found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # For EFT samples, we need to use the SM weight (genInfo.systweights()[202])
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            # Only fill if SM weight is available
-            if hasattr(tree, 'genInfo') and tree.genInfo.systweights().size() > 202:
-                sm_weight = tree.genInfo.systweights()[202]
-                # Fill based on available branch
-                if has_delta_phi:
-                    h_deltaPhi_eft_sm.Fill(tree.Delta_phi, sm_weight)
-                else:
-                    h_deltaPhi_eft_sm.Fill(tree.DeltaPhi_reco, sm_weight)
-            # Skip events without valid weight
-        
-        f.Close()
+        print("  Processing EFT file {i}/{total}: {filename}".format(
+            i=i+1, total=len(eft_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "dyreco_1_SR", h_deltaY1SR_eft_sm, 
+                                 weight_branch="SM", max_events=max_events, print_freq=print_freq)
     
-    # Create comparison plots
-    create_comparison_plot(h_deltaPhi_powheg, h_deltaPhi_eft_sm, "deltaPhi", output_dir)
+    # Create comparison plots with custom y-axis range from 0.4 to 0.6 for the main plot only
+    create_comparison_plot(h_deltaY1SR_powheg, h_deltaY1SR_eft_sm, "deltaY1SR", output_dir, custom_range=(0.4, 0.6))
 
-def process_sigmaPhi(powheg_files, eft_files, output_dir, max_events=-1):
-    # Process sigmaPhi variable from Powheg and EFT SM samples.
-    print("Processing sigmaPhi variable...")
+def process_deltaY2SR(powheg_files, eft_files, output_dir, max_events=-1, print_freq=10000):
+    # Process dyreco_2_SR variable from Powheg and EFT SM samples.
+    print("Processing dyreco_2_SR variable...")
     
-    # Create histograms with updated axis title using capital Sigma
-    h_sigmaPhi_powheg = ROOT.TH1F("h_sigmaPhi_powheg", "Powheg SM #Sigma#phi_{reco};#Sigma#phi_{reco};Events", 10, 0, 1.0)
-    h_sigmaPhi_eft_sm = ROOT.TH1F("h_sigmaPhi_eft_sm", "EFT SM #Sigma#phi_{reco};#Sigma#phi_{reco};Events", 10, 0, 1.0)
+    # Create histograms with just 2 bins - one for negative and one for positive values
+    h_deltaY2SR_powheg = ROOT.TH1F("h_deltaY2SR_powheg", "Powheg SM #DeltaY_{2} SR;#DeltaY_{2} SR;Events", 2, -3, 3)
+    h_deltaY2SR_eft_sm = ROOT.TH1F("h_deltaY2SR_eft_sm", "EFT SM #DeltaY_{2} SR;#DeltaY_{2} SR;Events", 2, -3, 3)
     
     # Fill histogram from Powheg samples
     for i, root_file in enumerate(powheg_files):
-        print("  Processing Powheg file {0}/{1}: {2}".format(i+1, len(powheg_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if Sigma_phi branch exists (as used in original scripts)
-        has_sigma_phi = tree.GetBranch("Sigma_phi") is not None
-        has_sigmaphi_reco = tree.GetBranch("SigmaPhi_reco") is not None
-        
-        if not has_sigma_phi and not has_sigmaphi_reco:
-            print("Neither 'Sigma_phi' nor 'SigmaPhi_reco' branch found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # Fill histogram based on which branch is available
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            if has_sigma_phi:
-                h_sigmaPhi_powheg.Fill(tree.Sigma_phi)
-            else:
-                h_sigmaPhi_powheg.Fill(tree.SigmaPhi_reco)
-        
-        f.Close()
+        print("  Processing Powheg file {i}/{total}: {filename}".format(
+            i=i+1, total=len(powheg_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "dyreco_2_SR", h_deltaY2SR_powheg, 
+                                 weight_branch=None, max_events=max_events, print_freq=print_freq)
     
     # Fill histogram from EFT SM samples
     for i, root_file in enumerate(eft_files):
-        print("  Processing EFT file {0}/{1}: {2}".format(i+1, len(eft_files), os.path.basename(root_file)))
-        
-        f = ROOT.TFile(root_file, "READ")
-        if not f or f.IsZombie():
-            print("Error opening file: {0}".format(root_file))
-            continue
-        
-        tree = f.Get("AnalysisTree")
-        if not tree:
-            print("Tree 'AnalysisTree' not found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Check if Sigma_phi branch exists (as used in original scripts)
-        has_sigma_phi = tree.GetBranch("Sigma_phi") is not None
-        has_sigmaphi_reco = tree.GetBranch("SigmaPhi_reco") is not None
-        
-        if not has_sigma_phi and not has_sigmaphi_reco:
-            print("Neither 'Sigma_phi' nor 'SigmaPhi_reco' branch found in {0}".format(root_file))
-            f.Close()
-            continue
-        
-        # Get number of entries to process
-        entries = tree.GetEntries()
-        n_to_process = entries if max_events < 0 else min(entries, max_events)
-        print("    Processing {0} events out of {1}".format(n_to_process, entries))
-        
-        # For EFT samples, we need to use the SM weight (genInfo.systweights()[202])
-        for i in range(n_to_process):
-            if i > 0 and i % 10000 == 0:
-                print("    ... processed {0}/{1} events".format(i, n_to_process))
-            
-            tree.GetEntry(i)
-            # Only fill if SM weight is available
-            if hasattr(tree, 'genInfo') and tree.genInfo.systweights().size() > 202:
-                sm_weight = tree.genInfo.systweights()[202]
-                # Fill based on available branch
-                if has_sigma_phi:
-                    h_sigmaPhi_eft_sm.Fill(tree.Sigma_phi, sm_weight)
-                else:
-                    h_sigmaPhi_eft_sm.Fill(tree.SigmaPhi_reco, sm_weight)
-            # Skip events without valid weight
-        
-        f.Close()
+        print("  Processing EFT file {i}/{total}: {filename}".format(
+            i=i+1, total=len(eft_files), filename=os.path.basename(root_file)))
+        process_tree_with_branch(root_file, "dyreco_2_SR", h_deltaY2SR_eft_sm, 
+                                 weight_branch="SM", max_events=max_events, print_freq=print_freq)
     
-    # Create comparison plots
-    create_comparison_plot(h_sigmaPhi_powheg, h_sigmaPhi_eft_sm, "sigmaPhi", output_dir)
+    # Create comparison plots with custom y-axis range from 0.4 to 0.6 for the main plot only
+    create_comparison_plot(h_deltaY2SR_powheg, h_deltaY2SR_eft_sm, "deltaY2SR", output_dir, custom_range=(0.4, 0.6))
 
 def main():
     args = parse_arguments()
     
+    # Add timing
+    start_time_total = time.time()
+    
     # Find input files
-    powheg_files = find_files(args.powheg_dir)
-    eft_files = find_files(args.eft_dir)
+    powheg_files = find_files(args.powheg_dir, max_files=args.max_files)
+    eft_files = find_files(args.eft_dir, max_files=args.max_files)
     
     if not powheg_files:
         print("No ROOT files found in Powheg directory: {0}".format(args.powheg_dir))
@@ -497,16 +429,28 @@ def main():
     make_directory(args.output_dir)
     
     # Process variables based on command line flags
-    if (not args.delta_phi_only and not args.sigma_phi_only) or args.delta_y_only:
-        process_deltaY(powheg_files, eft_files, args.output_dir, args.max_events)
+    # if (not args.delta_phi_only and not args.sigma_phi_only) or args.delta_y_only:
+    #     process_deltaY(powheg_files, eft_files, args.output_dir, args.max_events)
     
+    # Commented out deltaPhi processing
     # if (not args.delta_y_only and not args.sigma_phi_only) or args.delta_phi_only:
     #     process_deltaPhi(powheg_files, eft_files, args.output_dir, args.max_events)
     
-    if (not args.delta_y_only and not args.sigma_phi_only) or args.sigma_phi_only:
-        process_sigmaPhi(powheg_files, eft_files, args.output_dir, args.max_events)
+    # Commented out sigmaPhi
+    # if (not args.delta_y_only and not args.delta_phi_only) or args.sigma_phi_only:
+    #     process_sigmaPhi(powheg_files, eft_files, args.output_dir, args.max_events)
     
-    print("All comparison plots saved to {0}".format(args.output_dir))
+    # Process new variables
+    # process_sigmaPhi1SR(powheg_files, eft_files, args.output_dir, args.max_events, args.print_frequency)
+    # process_sigmaPhi2SR(powheg_files, eft_files, args.output_dir, args.max_events, args.print_frequency)
+    process_deltaY1SR(powheg_files, eft_files, args.output_dir, args.max_events, args.print_frequency)
+    process_deltaY2SR(powheg_files, eft_files, args.output_dir, args.max_events, args.print_frequency)
+    
+    # Report total time
+    elapsed_total = time.time() - start_time_total
+    print("All comparison plots saved to {output_dir}".format(output_dir=args.output_dir))
+    print("Total execution time: {elapsed:.1f} seconds ({minutes:.1f} minutes)".format(
+        elapsed=elapsed_total, minutes=elapsed_total/60))
 
 if __name__ == "__main__":
     main() 

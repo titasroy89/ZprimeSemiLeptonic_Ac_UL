@@ -21,7 +21,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="10" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Analysis_EFT_UL17_muon_semilepton_deltayreco_deltaPhi_sigmaPhi_ttree"/>
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Analysis_EFT_UL17_muon_semilepton_deltayreco_deltaPhi_sigmaPhi_ttree_new"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
