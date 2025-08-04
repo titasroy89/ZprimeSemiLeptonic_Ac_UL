@@ -331,13 +331,13 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
   BTag::wp btag_wp = BTag::WP_MEDIUM;
   JetId id_btag = BTag(btag_algo, btag_wp);
 
-  // double a_toppt = 0.0615; // par a TopPt Reweighting
-  // double b_toppt = -0.0005; // par b TopPt Reweighting
+  double a_toppt = 0.0615; // par a TopPt Reweighting
+  double b_toppt = -0.0005; // par b TopPt Reweighting
 
   // Modules
   LumiWeight_module.reset(new MCLumiWeight(ctx));
   PUWeight_module.reset(new MCPileupReweight(ctx, Sys_PU));
-  //TopPtReweight_module.reset(new TopPtReweighting(ctx, a_toppt, b_toppt, Sys_TopPt_a, Sys_TopPt_b, ""));
+  TopPtReweight_module.reset(new TopPtReweighting(ctx, a_toppt, b_toppt, Sys_TopPt_a, Sys_TopPt_b, ""));
   MCScale_module.reset(new MCScaleVariation(ctx));
   hadronic_top.reset(new HadronicTop(ctx));
 
@@ -616,7 +616,7 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   lumihists_Weights_Lumi->fill(event);
 
   // top pt reweighting
-  //TopPtReweight_module->process(event);
+  TopPtReweight_module->process(event);
   //if(debug) cout << "TopPtReweight: ok" << endl;
   //fill_histograms(event, "Weights_TopPt");
   //lumihists_Weights_TopPt->fill(event);
