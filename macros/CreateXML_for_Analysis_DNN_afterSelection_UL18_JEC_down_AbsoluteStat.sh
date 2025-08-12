@@ -3,10 +3,10 @@
 #where UHH2 code installed
 pathGL_code=/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/
 #where (NOT MERGED) trees after preselection stored
-path_data=/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_JEC/UL18/electron/workdir_Analysis_UL18_electron_JEC_down_AbsoluteStat/uhh2.AnalysisModuleRunner.
+path_data=/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_JEC/UL18/muon/workdir_Analysis_UL18_muon_JEC_down_AbsoluteStat/uhh2.AnalysisModuleRunner.
 
-mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_forAnalysisDNN_electron_JEC_down_AbsoluteStat
-cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_forAnalysisDNN_electron_JEC_down_AbsoluteStat
+mkdir $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_down_AbsoluteStat
+cd $pathGL_code/ZprimeSemiLeptonic/data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_down_AbsoluteStat
 
 # MC
 for sample_name in TTToSemiLeptonic_UL18 TTToHadronic_UL18 TTTo2L2Nu_UL18

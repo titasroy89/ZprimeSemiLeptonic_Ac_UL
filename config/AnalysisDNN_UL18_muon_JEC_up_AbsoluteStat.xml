@@ -13,10 +13,12 @@
 <!ENTITY IS_ELE_TRIGGER "false">
 <!ENTITY CHANNEL "muon">
 <!ENTITY OUTPUTdir           "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_JEC/UL18/&CHANNEL;/">
+<!ENTITY SAMPLE "none">
 
-<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_TimePtEta/MC_TTToSemiLeptonic_UL18.xml">
-<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_TimePtEta/MC_TTToHadronic_UL18.xml">
-<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_TimePtEta/MC_TTTo2L2Nu_UL18.xml">
+
+<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_AbsoluteStat/MC_TTToSemiLeptonic_UL18.xml">
+<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_AbsoluteStat/MC_TTToHadronic_UL18.xml">
+<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL18_forAnalysisDNN_muon_JEC_up_AbsoluteStat/MC_TTTo2L2Nu_UL18.xml">
 ]>
 
 <!--
@@ -94,6 +96,7 @@
 				<Item Name="Systematic_TopPt_a" Value="nominal"/>
 				<Item Name="Systematic_TopPt_b" Value="nominal"/>
 				<Item Name="channel" Value="&CHANNEL;"/>
+				<Item Name="sample" Value="&SAMPLE;"/>
 
 				<Item Name="AnalysisModule" Value="ZprimeAnalysisModule_applyNN"/>
 			</UserConfig>

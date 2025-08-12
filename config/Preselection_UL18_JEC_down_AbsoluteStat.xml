@@ -40,7 +40,7 @@
 		<InputData Lumi="118155756.09035574" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL18" Cacheable="&b_Cacheable;">
 			&TTTo2L2Nu_UL18;
 			<InputTree Name="AnalysisTree" />
-			<OutputTree Name="AnalysisTree" />
+			<OutputTree Name="AnalysisTree" /> 
 		</InputData>
 
 		<UserConfig>
