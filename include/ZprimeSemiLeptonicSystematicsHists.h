@@ -107,6 +107,12 @@ protected:
   uhh2::Event::Handle<float> h_tmistag;
   uhh2::Event::Handle<float> h_tmistag_up;
   uhh2::Event::Handle<float> h_tmistag_down;
+  uhh2::Event::Handle<float> h_toppt_a_up;
+  uhh2::Event::Handle<float> h_toppt_a_down;
+  uhh2::Event::Handle<float> h_toppt_b_up;
+  uhh2::Event::Handle<float> h_toppt_b_down;
+
+  
 
   TH1F *DeltaY;
   TH1F *DeltaY_mu_reco_up;
@@ -165,6 +171,10 @@ protected:
   TH1F *DeltaY_ttag_uncorr_down;
   TH1F *DeltaY_tmistag_up;
   TH1F *DeltaY_tmistag_down;
+  TH1F *DeltaY_toppt_a_up;
+  TH1F *DeltaY_toppt_a_down;
+  TH1F *DeltaY_toppt_b_up;
+  TH1F *DeltaY_toppt_b_down;
 
 
   TH1F *DeltaY_reco_d1_mu_reco_up;
@@ -223,6 +233,10 @@ protected:
   TH1F *DeltaY_reco_d1_ttag_uncorr_down;
   TH1F *DeltaY_reco_d1_tmistag_up;
   TH1F *DeltaY_reco_d1_tmistag_down;
+  TH1F *DeltaY_reco_d1_toppt_a_up;
+  TH1F *DeltaY_reco_d1_toppt_a_down;
+  TH1F *DeltaY_reco_d1_toppt_b_up;
+  TH1F *DeltaY_reco_d1_toppt_b_down;
 
 
   TH1F *DeltaY_reco_d2_mu_reco_up;
@@ -281,6 +295,10 @@ protected:
   TH1F *DeltaY_reco_d2_ttag_uncorr_down;
   TH1F *DeltaY_reco_d2_tmistag_up;
   TH1F *DeltaY_reco_d2_tmistag_down;
+  TH1F *DeltaY_reco_d2_toppt_a_up;
+  TH1F *DeltaY_reco_d2_toppt_a_down;
+  TH1F *DeltaY_reco_d2_toppt_b_up;
+  TH1F *DeltaY_reco_d2_toppt_b_down;
 
 
   TH1F *Sigma_phi_1_mu_reco_up;
@@ -339,6 +357,10 @@ protected:
   TH1F *Sigma_phi_1_ttag_uncorr_down;
   TH1F *Sigma_phi_1_tmistag_up;
   TH1F *Sigma_phi_1_tmistag_down;
+  TH1F *Sigma_phi_1_toppt_a_up;
+  TH1F *Sigma_phi_1_toppt_a_down;
+  TH1F *Sigma_phi_1_toppt_b_up;
+  TH1F *Sigma_phi_1_toppt_b_down;
 
 
   TH1F *Sigma_phi_2_mu_reco_up;
@@ -397,6 +419,10 @@ protected:
   TH1F *Sigma_phi_2_ttag_uncorr_down;
   TH1F *Sigma_phi_2_tmistag_up;
   TH1F *Sigma_phi_2_tmistag_down;
+  TH1F *Sigma_phi_2_toppt_a_up;
+  TH1F *Sigma_phi_2_toppt_a_down;
+  TH1F *Sigma_phi_2_toppt_b_up;
+  TH1F *Sigma_phi_2_toppt_b_down;
 
 
   TH2F *DeltaY_tt;
@@ -456,6 +482,10 @@ protected:
   TH2F *DeltaY_ttag_uncorr_down_tt;
   TH2F *DeltaY_tmistag_up_tt;
   TH2F *DeltaY_tmistag_down_tt;
+  TH2F *DeltaY_toppt_a_up_tt;
+  TH2F *DeltaY_toppt_a_down_tt;
+  TH2F *DeltaY_toppt_b_up_tt;
+  TH2F *DeltaY_toppt_b_down_tt;
 
 
   uhh2::Event::Handle< std::vector<TopJet> > h_AK8TopTags;

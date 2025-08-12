@@ -364,28 +364,28 @@ protected:
   Event::Handle<float> h_weight;
   Event::Handle<float> h_eventweight_SR;
   Event::Handle<float> h_dyreco_SR, h_dyreco_1_SR, h_dyreco_2_SR;  
-  Event::Handle<float> h_dyreco_1_SR_0_500, h_dyreco_1_SR_500_750, h_dyreco_1_SR_750_1000, h_dyreco_1_SR_1000_1500, h_dyreco_1_SR_1500_Inf, h_dyreco_1_SR_0_700, h_dyreco_1_SR_700_900, h_dyreco_1_SR_900_Inf;
-  Event::Handle<float> h_dyreco_2_SR_0_500, h_dyreco_2_SR_500_750, h_dyreco_2_SR_750_1000, h_dyreco_2_SR_1000_1500, h_dyreco_2_SR_1500_Inf, h_dyreco_2_SR_0_700, h_dyreco_2_SR_700_900, h_dyreco_2_SR_900_Inf;
+  Event::Handle<float> h_dyreco_1_SR_0_500, h_dyreco_1_SR_0_350, h_dyreco_1_SR_350_500, h_dyreco_1_SR_500_750, h_dyreco_1_SR_750_1000, h_dyreco_1_SR_1000_1500, h_dyreco_1_SR_1500_Inf, h_dyreco_1_SR_0_700, h_dyreco_1_SR_700_900, h_dyreco_1_SR_900_Inf;
+  Event::Handle<float> h_dyreco_2_SR_0_500, h_dyreco_2_SR_0_350, h_dyreco_2_SR_350_500, h_dyreco_2_SR_500_750, h_dyreco_2_SR_750_1000, h_dyreco_2_SR_1000_1500, h_dyreco_2_SR_1500_Inf, h_dyreco_2_SR_0_700, h_dyreco_2_SR_700_900, h_dyreco_2_SR_900_Inf;
   Event::Handle<float> h_Sigma_phi_1_SR, h_Sigma_phi_2_SR, h_Sigma_phi_SR; 
-  Event::Handle<float> h_Sigma_phi_1_SR_0_500, h_Sigma_phi_1_SR_500_750, h_Sigma_phi_1_SR_750_1000, h_Sigma_phi_1_SR_1000_1500, h_Sigma_phi_1_SR_1500_Inf, h_Sigma_phi_1_SR_0_700, h_Sigma_phi_1_SR_700_900, h_Sigma_phi_1_SR_900_Inf;
+  Event::Handle<float> h_Sigma_phi_1_SR_0_500, h_Sigma_phi_1_SR_0_350, h_Sigma_phi_1_SR_350_500, h_Sigma_phi_1_SR_500_750, h_Sigma_phi_1_SR_750_1000, h_Sigma_phi_1_SR_1000_1500, h_Sigma_phi_1_SR_1500_Inf, h_Sigma_phi_1_SR_0_700, h_Sigma_phi_1_SR_700_900, h_Sigma_phi_1_SR_900_Inf;
   Event::Handle<float> h_Delta_phi_1_SR, h_Delta_phi_2_SR, h_Delta_phi_SR; 
-  Event::Handle<float> h_Sigma_phi_2_SR_0_500, h_Sigma_phi_2_SR_500_750, h_Sigma_phi_2_SR_750_1000, h_Sigma_phi_2_SR_1000_1500, h_Sigma_phi_2_SR_1500_Inf,h_Sigma_phi_2_SR_0_700, h_Sigma_phi_2_SR_700_900, h_Sigma_phi_2_SR_900_Inf;
+  Event::Handle<float> h_Sigma_phi_2_SR_0_500, h_Sigma_phi_2_SR_0_350, h_Sigma_phi_2_SR_350_500, h_Sigma_phi_2_SR_500_750, h_Sigma_phi_2_SR_750_1000, h_Sigma_phi_2_SR_1000_1500, h_Sigma_phi_2_SR_1500_Inf,h_Sigma_phi_2_SR_0_700, h_Sigma_phi_2_SR_700_900, h_Sigma_phi_2_SR_900_Inf;
   Event::Handle<float> h_eventweight_CR1;
   Event::Handle<float> h_dyreco_CR1, h_dyreco_1_CR1, h_dyreco_2_CR1;  
-  Event::Handle<float> h_dyreco_1_CR1_0_500, h_dyreco_1_CR1_500_750, h_dyreco_1_CR1_750_1000, h_dyreco_1_CR1_1000_1500, h_dyreco_1_CR1_1500_Inf, h_dyreco_1_CR1_0_700, h_dyreco_1_CR1_700_900, h_dyreco_1_CR1_900_Inf;
-  Event::Handle<float> h_dyreco_2_CR1_0_500, h_dyreco_2_CR1_500_750, h_dyreco_2_CR1_750_1000, h_dyreco_2_CR1_1000_1500, h_dyreco_2_CR1_1500_Inf, h_dyreco_2_CR1_0_700, h_dyreco_2_CR1_700_900, h_dyreco_2_CR1_900_Inf;
+  Event::Handle<float> h_dyreco_1_CR1_0_500, h_dyreco_1_CR1_0_350, h_dyreco_1_CR1_350_500, h_dyreco_1_CR1_500_750, h_dyreco_1_CR1_750_1000, h_dyreco_1_CR1_1000_1500, h_dyreco_1_CR1_1500_Inf, h_dyreco_1_CR1_0_700, h_dyreco_1_CR1_700_900, h_dyreco_1_CR1_900_Inf;
+  Event::Handle<float> h_dyreco_2_CR1_0_500, h_dyreco_2_CR1_0_350, h_dyreco_2_CR1_350_500, h_dyreco_2_CR1_500_750, h_dyreco_2_CR1_750_1000, h_dyreco_2_CR1_1000_1500, h_dyreco_2_CR1_1500_Inf, h_dyreco_2_CR1_0_700, h_dyreco_2_CR1_700_900, h_dyreco_2_CR1_900_Inf;
   Event::Handle<float> h_Sigma_phi_1_CR1, h_Sigma_phi_2_CR1, h_Sigma_phi_CR1; 
-  Event::Handle<float> h_Sigma_phi_1_CR1_0_500, h_Sigma_phi_1_CR1_500_750, h_Sigma_phi_1_CR1_750_1000, h_Sigma_phi_1_CR1_1000_1500, h_Sigma_phi_1_CR1_1500_Inf,h_Sigma_phi_1_CR1_0_700, h_Sigma_phi_1_CR1_700_900, h_Sigma_phi_1_CR1_900_Inf;
+  Event::Handle<float> h_Sigma_phi_1_CR1_0_500, h_Sigma_phi_1_CR1_0_350, h_Sigma_phi_1_CR1_350_500, h_Sigma_phi_1_CR1_500_750, h_Sigma_phi_1_CR1_750_1000, h_Sigma_phi_1_CR1_1000_1500, h_Sigma_phi_1_CR1_1500_Inf,h_Sigma_phi_1_CR1_0_700, h_Sigma_phi_1_CR1_700_900, h_Sigma_phi_1_CR1_900_Inf;
   Event::Handle<float> h_Delta_phi_1_CR1, h_Delta_phi_2_CR1, h_Delta_phi_CR1; 
-  Event::Handle<float> h_Sigma_phi_2_CR1_0_500, h_Sigma_phi_2_CR1_500_750, h_Sigma_phi_2_CR1_750_1000, h_Sigma_phi_2_CR1_1000_1500, h_Sigma_phi_2_CR1_1500_Inf, h_Sigma_phi_2_CR1_0_700, h_Sigma_phi_2_CR1_700_900, h_Sigma_phi_2_CR1_900_Inf;
+  Event::Handle<float> h_Sigma_phi_2_CR1_0_500, h_Sigma_phi_2_CR1_0_350, h_Sigma_phi_2_CR1_350_500, h_Sigma_phi_2_CR1_500_750, h_Sigma_phi_2_CR1_750_1000, h_Sigma_phi_2_CR1_1000_1500, h_Sigma_phi_2_CR1_1500_Inf, h_Sigma_phi_2_CR1_0_700, h_Sigma_phi_2_CR1_700_900, h_Sigma_phi_2_CR1_900_Inf;
   Event::Handle<float> h_eventweight_CR2;
   Event::Handle<float> h_dyreco_CR2, h_dyreco_1_CR2, h_dyreco_2_CR2;  
-  Event::Handle<float> h_dyreco_1_CR2_0_500, h_dyreco_1_CR2_500_750, h_dyreco_1_CR2_750_1000, h_dyreco_1_CR2_1000_1500, h_dyreco_1_CR2_1500_Inf, h_dyreco_1_CR2_0_700, h_dyreco_1_CR2_700_900, h_dyreco_1_CR2_900_Inf;
-  Event::Handle<float> h_dyreco_2_CR2_0_500, h_dyreco_2_CR2_500_750, h_dyreco_2_CR2_750_1000, h_dyreco_2_CR2_1000_1500, h_dyreco_2_CR2_1500_Inf, h_dyreco_2_CR2_0_700, h_dyreco_2_CR2_700_900, h_dyreco_2_CR2_900_Inf;
+  Event::Handle<float> h_dyreco_1_CR2_0_500,h_dyreco_1_CR2_0_350, h_dyreco_1_CR2_350_500, h_dyreco_1_CR2_500_750, h_dyreco_1_CR2_750_1000, h_dyreco_1_CR2_1000_1500, h_dyreco_1_CR2_1500_Inf, h_dyreco_1_CR2_0_700, h_dyreco_1_CR2_700_900, h_dyreco_1_CR2_900_Inf;
+  Event::Handle<float> h_dyreco_2_CR2_0_500, h_dyreco_2_CR2_0_350, h_dyreco_2_CR2_350_500, h_dyreco_2_CR2_500_750, h_dyreco_2_CR2_750_1000, h_dyreco_2_CR2_1000_1500, h_dyreco_2_CR2_1500_Inf, h_dyreco_2_CR2_0_700, h_dyreco_2_CR2_700_900, h_dyreco_2_CR2_900_Inf;
   Event::Handle<float> h_Sigma_phi_1_CR2, h_Sigma_phi_2_CR2, h_Sigma_phi_CR2; 
-  Event::Handle<float> h_Sigma_phi_1_CR2_0_500, h_Sigma_phi_1_CR2_500_750, h_Sigma_phi_1_CR2_750_1000, h_Sigma_phi_1_CR2_1000_1500, h_Sigma_phi_1_CR2_1500_Inf,h_Sigma_phi_1_CR2_0_700, h_Sigma_phi_1_CR2_700_900, h_Sigma_phi_1_CR2_900_Inf;
+  Event::Handle<float> h_Sigma_phi_1_CR2_0_500, h_Sigma_phi_1_CR2_0_350, h_Sigma_phi_1_CR2_350_500, h_Sigma_phi_1_CR2_500_750, h_Sigma_phi_1_CR2_750_1000, h_Sigma_phi_1_CR2_1000_1500, h_Sigma_phi_1_CR2_1500_Inf,h_Sigma_phi_1_CR2_0_700, h_Sigma_phi_1_CR2_700_900, h_Sigma_phi_1_CR2_900_Inf;
   Event::Handle<float> h_Delta_phi_1_CR2, h_Delta_phi_2_CR2, h_Delta_phi_CR2; 
-  Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf, h_Sigma_phi_2_CR2_0_700, h_Sigma_phi_2_CR2_700_900, h_Sigma_phi_2_CR2_900_Inf;
+  Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_0_350, h_Sigma_phi_2_CR2_350_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf, h_Sigma_phi_2_CR2_0_700, h_Sigma_phi_2_CR2_700_900, h_Sigma_phi_2_CR2_900_Inf;
 
 
   
@@ -404,6 +404,8 @@ protected:
   // ================ SR ==================================================================================================================================================================================================================
   //muon and ele systematics
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_350_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_350_500_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_SR;
@@ -413,6 +415,8 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_900Inf_SR;
 
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_350_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_350_500_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_SR;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_SR;
@@ -426,6 +430,8 @@ protected:
   // ================ CR1 ==================================================================================================================================================================================================================
   //muon and ele systematics
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_350_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_350_500_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_CR1;
@@ -435,6 +441,8 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_900Inf_CR1;
 
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_350_CR1;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_350_500_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_CR1;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_CR1;
@@ -448,6 +456,8 @@ protected:
   // ================ CR2 ==================================================================================================================================================================================================================
   //muon and electron systematics
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_500_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_0_350_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_350_500_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_500_750_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_750_1000_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_1000_1500_CR2;
@@ -457,6 +467,8 @@ protected:
   std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_900Inf_CR2;
 
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_500_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_0_350_CR2;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_350_500_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_500_750_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_750_1000_CR2;
   std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_1000_1500_CR2;
@@ -799,6 +811,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   h_dyreco_1_SR = ctx.declare_event_output<float>("dyreco_1_SR");
   h_dyreco_1_SR_0_500 = ctx.declare_event_output<float>("dyreco_1_SR_0_500");
+  h_dyreco_1_SR_0_350 = ctx.declare_event_output<float>("dyreco_1_SR_0_350");
+  h_dyreco_1_SR_350_500 = ctx.declare_event_output<float>("dyreco_1_SR_350_500");
   h_dyreco_1_SR_500_750 = ctx.declare_event_output<float>("dyreco_1_SR_500_750");
   h_dyreco_1_SR_750_1000 = ctx.declare_event_output<float>("dyreco_1_SR_750_1000");
   h_dyreco_1_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_1_SR_1000_1500");
@@ -809,6 +823,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_dyreco_2_SR = ctx.declare_event_output<float>("dyreco_2_SR");
   h_dyreco_2_SR_0_500 = ctx.declare_event_output<float>("dyreco_2_SR_0_500");
+  h_dyreco_2_SR_0_350 = ctx.declare_event_output<float>("dyreco_2_SR_0_350");
+  h_dyreco_2_SR_350_500 = ctx.declare_event_output<float>("dyreco_2_SR_350_500");
   h_dyreco_2_SR_500_750 = ctx.declare_event_output<float>("dyreco_2_SR_500_750");
   h_dyreco_2_SR_750_1000 = ctx.declare_event_output<float>("dyreco_2_SR_750_1000");
   h_dyreco_2_SR_1000_1500 = ctx.declare_event_output<float>("dyreco_2_SR_1000_1500");
@@ -819,6 +835,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_1_SR=ctx.declare_event_output<float>("Sigma_phi_1_SR");
   h_Sigma_phi_1_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_1_SR_0_500");
+  h_Sigma_phi_1_SR_0_350=ctx.declare_event_output<float>("Sigma_phi_1_SR_0_350");
+  h_Sigma_phi_1_SR_350_500=ctx.declare_event_output<float>("Sigma_phi_1_SR_350_500");
   h_Sigma_phi_1_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_1_SR_500_750");
   h_Sigma_phi_1_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_SR_750_1000");
   h_Sigma_phi_1_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_SR_1000_1500");
@@ -829,6 +847,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_2_SR=ctx.declare_event_output<float>("Sigma_phi_2_SR");
   h_Sigma_phi_2_SR_0_500=ctx.declare_event_output<float>("Sigma_phi_2_SR_0_500");
+  h_Sigma_phi_2_SR_0_350=ctx.declare_event_output<float>("Sigma_phi_2_SR_0_350");
+  h_Sigma_phi_2_SR_350_500=ctx.declare_event_output<float>("Sigma_phi_2_SR_350_500");
   h_Sigma_phi_2_SR_500_750=ctx.declare_event_output<float>("Sigma_phi_2_SR_500_750");
   h_Sigma_phi_2_SR_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_SR_750_1000");
   h_Sigma_phi_2_SR_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_SR_1000_1500");
@@ -851,6 +871,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   h_dyreco_1_CR1 = ctx.declare_event_output<float>("dyreco_1_CR1");
   h_dyreco_1_CR1_0_500 = ctx.declare_event_output<float>("dyreco_1_CR1_0_500");
+  h_dyreco_1_CR1_0_350 = ctx.declare_event_output<float>("dyreco_1_CR1_0_350");
+  h_dyreco_1_CR1_350_500 = ctx.declare_event_output<float>("dyreco_1_CR1_350_500");
   h_dyreco_1_CR1_500_750 = ctx.declare_event_output<float>("dyreco_1_CR1_500_750");
   h_dyreco_1_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR1_750_1000");
   h_dyreco_1_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR1_1000_1500");
@@ -861,6 +883,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_dyreco_2_CR1 = ctx.declare_event_output<float>("dyreco_2_CR1");
   h_dyreco_2_CR1_0_500 = ctx.declare_event_output<float>("dyreco_2_CR1_0_500");
+  h_dyreco_2_CR1_0_350 = ctx.declare_event_output<float>("dyreco_2_CR1_0_350");
+  h_dyreco_2_CR1_350_500 = ctx.declare_event_output<float>("dyreco_2_CR1_350_500");
   h_dyreco_2_CR1_500_750 = ctx.declare_event_output<float>("dyreco_2_CR1_500_750");
   h_dyreco_2_CR1_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR1_750_1000");
   h_dyreco_2_CR1_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR1_1000_1500");
@@ -871,6 +895,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_1_CR1=ctx.declare_event_output<float>("Sigma_phi_1_CR1");
   h_Sigma_phi_1_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_0_500");
+  h_Sigma_phi_1_CR1_0_350=ctx.declare_event_output<float>("Sigma_phi_1_CR1_0_350");
+  h_Sigma_phi_1_CR1_350_500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_350_500");
   h_Sigma_phi_1_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR1_500_750");
   h_Sigma_phi_1_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR1_750_1000");
   h_Sigma_phi_1_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR1_1000_1500");
@@ -881,6 +907,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_2_CR1=ctx.declare_event_output<float>("Sigma_phi_2_CR1");
   h_Sigma_phi_2_CR1_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_0_500");
+  h_Sigma_phi_2_CR1_0_350=ctx.declare_event_output<float>("Sigma_phi_2_CR1_0_350");
+  h_Sigma_phi_2_CR1_350_500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_350_500");
   h_Sigma_phi_2_CR1_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR1_500_750");
   h_Sigma_phi_2_CR1_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR1_750_1000");
   h_Sigma_phi_2_CR1_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR1_1000_1500");
@@ -903,6 +931,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   h_dyreco_1_CR2 = ctx.declare_event_output<float>("dyreco_1_CR2");
   h_dyreco_1_CR2_0_500 = ctx.declare_event_output<float>("dyreco_1_CR2_0_500");
+  h_dyreco_1_CR2_0_350 = ctx.declare_event_output<float>("dyreco_1_CR2_0_350");
+  h_dyreco_1_CR2_350_500 = ctx.declare_event_output<float>("dyreco_1_CR2_350_500");
   h_dyreco_1_CR2_500_750 = ctx.declare_event_output<float>("dyreco_1_CR2_500_750");
   h_dyreco_1_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_1_CR2_750_1000");
   h_dyreco_1_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_1_CR2_1000_1500");
@@ -916,6 +946,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_dyreco_2_CR2 = ctx.declare_event_output<float>("dyreco_2_CR2");
   h_dyreco_2_CR2_0_500 = ctx.declare_event_output<float>("dyreco_2_CR2_0_500");
+  h_dyreco_2_CR2_0_350 = ctx.declare_event_output<float>("dyreco_2_CR2_0_350");
+  h_dyreco_2_CR2_350_500 = ctx.declare_event_output<float>("dyreco_2_CR2_350_500");
   h_dyreco_2_CR2_500_750 = ctx.declare_event_output<float>("dyreco_2_CR2_500_750");
   h_dyreco_2_CR2_750_1000 = ctx.declare_event_output<float>("dyreco_2_CR2_750_1000");
   h_dyreco_2_CR2_1000_1500 = ctx.declare_event_output<float>("dyreco_2_CR2_1000_1500");
@@ -927,6 +959,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_1_CR2=ctx.declare_event_output<float>("Sigma_phi_1_CR2");
   h_Sigma_phi_1_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_0_500");
+  h_Sigma_phi_1_CR2_0_350=ctx.declare_event_output<float>("Sigma_phi_1_CR2_0_350");
+  h_Sigma_phi_1_CR2_350_500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_350_500");
   h_Sigma_phi_1_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_1_CR2_500_750");
   h_Sigma_phi_1_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_1_CR2_750_1000");
   h_Sigma_phi_1_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_1_CR2_1000_1500");
@@ -937,6 +971,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_Sigma_phi_2_CR2=ctx.declare_event_output<float>("Sigma_phi_2_CR2");
   h_Sigma_phi_2_CR2_0_500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_0_500");
+  h_Sigma_phi_2_CR2_0_350=ctx.declare_event_output<float>("Sigma_phi_2_CR2_0_350");
+  h_Sigma_phi_2_CR2_350_500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_350_500");
   h_Sigma_phi_2_CR2_500_750=ctx.declare_event_output<float>("Sigma_phi_2_CR2_500_750");
   h_Sigma_phi_2_CR2_750_1000=ctx.declare_event_output<float>("Sigma_phi_2_CR2_750_1000");
   h_Sigma_phi_2_CR2_1000_1500=ctx.declare_event_output<float>("Sigma_phi_2_CR2_1000_1500");
@@ -956,6 +992,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // ================ SR ==================================================================================================================================================================================================================
   
   h_DeltaY_reco_SystVariations_0_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_SR"));
+  h_DeltaY_reco_SystVariations_0_350_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_350_SR"));
+  h_DeltaY_reco_SystVariations_350_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_350_500_SR"));
   h_DeltaY_reco_SystVariations_500_750_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_SR"));
   h_DeltaY_reco_SystVariations_750_1000_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_SR"));
   h_DeltaY_reco_SystVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_SR"));
@@ -967,6 +1005,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
 
   h_DeltaY_reco_PDFVariations_0_500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_SR"));
+  h_DeltaY_reco_PDFVariations_0_350_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_350_SR"));
+  h_DeltaY_reco_PDFVariations_350_500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_350_500_SR"));
   h_DeltaY_reco_PDFVariations_500_750_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_SR"));
   h_DeltaY_reco_PDFVariations_750_1000_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_SR"));
   h_DeltaY_reco_PDFVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_SR"));
@@ -980,6 +1020,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // ================ CR1 ==================================================================================================================================================================================================================
   
   h_DeltaY_reco_SystVariations_0_500_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_CR1"));
+  h_DeltaY_reco_SystVariations_0_350_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_350_CR1"));
+  h_DeltaY_reco_SystVariations_350_500_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_350_500_CR1"));
   h_DeltaY_reco_SystVariations_500_750_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_CR1"));
   h_DeltaY_reco_SystVariations_750_1000_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_CR1"));
   h_DeltaY_reco_SystVariations_1000_1500_CR1.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_CR1"));
@@ -990,6 +1032,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   
   
   h_DeltaY_reco_PDFVariations_0_500_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_CR1"));
+  h_DeltaY_reco_PDFVariations_0_350_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_350_CR1"));
+  h_DeltaY_reco_PDFVariations_350_500_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_350_500_CR1"));
   h_DeltaY_reco_PDFVariations_500_750_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_CR1"));
   h_DeltaY_reco_PDFVariations_750_1000_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_CR1"));
   h_DeltaY_reco_PDFVariations_1000_1500_CR1.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_CR1"));
@@ -1006,6 +1050,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
 
   h_DeltaY_reco_SystVariations_0_500_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_CR2"));
+  h_DeltaY_reco_SystVariations_0_350_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_350_CR2"));
+  h_DeltaY_reco_SystVariations_350_500_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_350_500_CR2"));
   h_DeltaY_reco_SystVariations_500_750_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_CR2"));
   h_DeltaY_reco_SystVariations_750_1000_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_CR2"));
   h_DeltaY_reco_SystVariations_1000_1500_CR2.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_CR2"));
@@ -1016,6 +1062,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
 
   h_DeltaY_reco_PDFVariations_0_500_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_CR2"));
+  h_DeltaY_reco_PDFVariations_0_350_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_350_CR2"));
+  h_DeltaY_reco_PDFVariations_350_500_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_350_500_CR2"));
   h_DeltaY_reco_PDFVariations_500_750_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_CR2"));
   h_DeltaY_reco_PDFVariations_750_1000_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_CR2"));
   h_DeltaY_reco_PDFVariations_1000_1500_CR2.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_CR2"));
@@ -1035,9 +1083,9 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   "RecoEle_SF", "MuonReco_SF", "TriggerMuon_SF", "BeforeBtagSF", "AfterBtagSF", "AfterCustomBtagSF", "TriggerEle_SF", "NNInputsBeforeReweight", "TopTagVeto", "DeltaEtaCut",
   "AfterChi2", "AfterBaseline", "Chi2_passes","Chi2_withTopTag", "Chi2_noTopTag","Chi2_inverse",
   "DNN_output0_nochi2","DNN_output0","DNN_output1","DNN_output2","DNN_output1_chi2","DNN_output2_chi2","DNN_output0_TopTag", "DNN_output0_NoTopTag",
-  "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_500_SR", "DeltaY_reco_0_700_SR", "DeltaY_reco_700_900_SR", "DeltaY_reco_900Inf_SR",
-  "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1", "DeltaY_reco_0_500_CR1","DeltaY_reco_0_700_CR1", "DeltaY_reco_700_900_CR1", "DeltaY_reco_900Inf_CR1", 
-  "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_500_CR2", "DeltaY_reco_0_700_CR2", "DeltaY_reco_700_900_CR2", "DeltaY_reco_900Inf_CR2",
+  "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_350_SR", "DeltaY_reco_350_500_SR","DeltaY_reco_0_500_SR", "DeltaY_reco_0_700_SR", "DeltaY_reco_700_900_SR", "DeltaY_reco_900Inf_SR",
+  "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1","DeltaY_reco_0_350_CR1", "DeltaY_reco_350_500_CR1", "DeltaY_reco_0_500_CR1","DeltaY_reco_0_700_CR1", "DeltaY_reco_700_900_CR1", "DeltaY_reco_900Inf_CR1", 
+  "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_350_CR2", "DeltaY_reco_350_500_CR2","DeltaY_reco_0_500_CR2", "DeltaY_reco_0_700_CR2", "DeltaY_reco_700_900_CR2", "DeltaY_reco_900Inf_CR2",
 };
 
 
@@ -1239,6 +1287,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Delta_phi_1_SR,-10);
   event.set(h_Delta_phi_2_SR,-10);
   event.set(h_Sigma_phi_1_SR_0_500,-10);
+  event.set(h_Sigma_phi_1_SR_0_350,-10);
+  event.set(h_Sigma_phi_1_SR_350_500,-10);
   event.set(h_Sigma_phi_1_SR_500_750,-10);
   event.set(h_Sigma_phi_1_SR_750_1000,-10);
   event.set(h_Sigma_phi_1_SR_1000_1500,-10);
@@ -1247,6 +1297,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_1_SR_700_900,-10);
   event.set(h_Sigma_phi_1_SR_900_Inf,-10);
   event.set(h_Sigma_phi_2_SR_0_500,-10);
+  event.set(h_Sigma_phi_2_SR_0_350,-10);
+  event.set(h_Sigma_phi_2_SR_350_500,-10);
+  event.set(h_Sigma_phi_2_SR_500_750,-10);
   event.set(h_Sigma_phi_2_SR_500_750,-10);
   event.set(h_Sigma_phi_2_SR_750_1000,-10);
   event.set(h_Sigma_phi_2_SR_1000_1500,-10);
@@ -1255,6 +1308,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_2_SR_700_900,-10);
   event.set(h_Sigma_phi_2_SR_900_Inf,-10);
   event.set(h_dyreco_1_SR_0_500,-10);
+  event.set(h_dyreco_1_SR_0_350,-10);
+  event.set(h_dyreco_1_SR_350_500,-10);
   event.set(h_dyreco_1_SR_500_750,-10);
   event.set(h_dyreco_1_SR_750_1000,-10);
   event.set(h_dyreco_1_SR_1000_1500,-10);
@@ -1263,6 +1318,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_dyreco_1_SR_700_900,-10);
   event.set(h_dyreco_1_SR_900_Inf,-10);
   event.set(h_dyreco_2_SR_0_500,-10);
+  event.set(h_dyreco_2_SR_0_350,-10);
+  event.set(h_dyreco_2_SR_350_500,-10);
   event.set(h_dyreco_2_SR_500_750,-10);
   event.set(h_dyreco_2_SR_750_1000,-10);
   event.set(h_dyreco_2_SR_1000_1500,-10);
@@ -1283,21 +1340,29 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Delta_phi_1_CR1,-10);
   event.set(h_Delta_phi_2_CR1,-10);
   event.set(h_Sigma_phi_1_CR1_0_500,-10);
+  event.set(h_Sigma_phi_1_CR1_0_350,-10);
+  event.set(h_Sigma_phi_1_CR1_350_500,-10);
   event.set(h_Sigma_phi_1_CR1_500_750,-10);
   event.set(h_Sigma_phi_1_CR1_750_1000,-10);
   event.set(h_Sigma_phi_1_CR1_1000_1500,-10);
   event.set(h_Sigma_phi_1_CR1_1500_Inf,-10);
   event.set(h_Sigma_phi_2_CR1_0_500,-10);
+  event.set(h_Sigma_phi_2_CR1_0_350,-10);
+  event.set(h_Sigma_phi_2_CR1_350_500,-10);
   event.set(h_Sigma_phi_2_CR1_500_750,-10);
   event.set(h_Sigma_phi_2_CR1_750_1000,-10);
   event.set(h_Sigma_phi_2_CR1_1000_1500,-10);
   event.set(h_Sigma_phi_2_CR1_1500_Inf,-10);
   event.set(h_dyreco_1_CR1_0_500,-10);
+  event.set(h_dyreco_1_CR1_0_350,-10);
+  event.set(h_dyreco_1_CR1_350_500,-10);
   event.set(h_dyreco_1_CR1_500_750,-10);
   event.set(h_dyreco_1_CR1_750_1000,-10);
   event.set(h_dyreco_1_CR1_1000_1500,-10);
   event.set(h_dyreco_1_CR1_1500_Inf,-10);
   event.set(h_dyreco_2_CR1_0_500,-10);
+  event.set(h_dyreco_2_CR1_0_350,-10);
+  event.set(h_dyreco_2_CR1_350_500,-10);
   event.set(h_dyreco_2_CR1_500_750,-10);
   event.set(h_dyreco_2_CR1_750_1000,-10);
   event.set(h_dyreco_2_CR1_1000_1500,-10);
@@ -1341,6 +1406,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Delta_phi_2_CR2,-10);
   if(debug) cout << " set delta phi 2 " << endl;
   event.set(h_Sigma_phi_1_CR2_0_500,-10);
+  event.set(h_Sigma_phi_1_CR2_0_350,-10);
+  event.set(h_Sigma_phi_1_CR2_350_500,-10);
   if(debug) cout << " set Sigma_phi_1_CR2_0_500 " << endl;
   event.set(h_Sigma_phi_1_CR2_500_750,-10);
   if(debug) cout << " set Sigma_phi_1_CR2_500_750 " << endl;
@@ -1351,6 +1418,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_1_CR2_1500_Inf,-10);
   if(debug) cout << " set Sigma_phi_1_CR2_1500_Inf " << endl;
   event.set(h_Sigma_phi_2_CR2_0_500,-10);
+  event.set(h_Sigma_phi_2_CR2_0_350,-10);
+  event.set(h_Sigma_phi_2_CR2_350_500,-10);
   if(debug) cout << " set Sigma_phi_2_CR2_0_500 " << endl;
   event.set(h_Sigma_phi_2_CR2_500_750,-10);
   if(debug) cout << " set Sigma_phi_2_CR2_500_750 " << endl;
@@ -1359,12 +1428,16 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_2_CR2_1000_1500,-10);
   event.set(h_Sigma_phi_2_CR2_1500_Inf,-10);
   event.set(h_dyreco_1_CR2_0_500,-10);
+  event.set(h_dyreco_1_CR2_0_350,-10);
+  event.set(h_dyreco_1_CR2_350_500,-10);
   event.set(h_dyreco_1_CR2_500_750,-10);
   event.set(h_dyreco_1_CR2_750_1000,-10);
   event.set(h_dyreco_1_CR2_1000_1500,-10);
   event.set(h_dyreco_1_CR2_1500_Inf,-10);
   if(debug) cout << " set dyreco 1 CR2 " << endl;
   event.set(h_dyreco_2_CR2_0_500,-10);
+  event.set(h_dyreco_2_CR2_0_350,-10);
+  event.set(h_dyreco_2_CR2_350_500,-10);
   event.set(h_dyreco_2_CR2_500_750,-10);
   event.set(h_dyreco_2_CR2_750_1000,-10);
   event.set(h_dyreco_2_CR2_1000_1500,-10);
@@ -1819,6 +1892,18 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
         if(debug) cout << "signal all syst vars" << endl;
       }
+      if(Mass_tt>=0 && Mass_tt < 350){
+        if(debug) cout << "signal DNN output0 chi2 0_350" << endl;
+        fill_histograms(event, "DeltaY_reco_0_350_SR");
+        h_DeltaY_reco_SystVariations_0_350_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_0_350_SR->fill(event);
+      }
+      if(Mass_tt>=350 && Mass_tt < 500){
+        if(debug) cout << "signal DNN output0 chi2 350_500" << endl;
+        fill_histograms(event, "DeltaY_reco_350_500_SR");
+        h_DeltaY_reco_SystVariations_350_500_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_350_500_SR->fill(event);
+      }
       if (Mass_tt>=0 && Mass_tt < 700){
         if(debug) cout << "signal DNN output0 chi2 0_700" << endl;
         fill_histograms(event, "DeltaY_reco_0_700_SR");
@@ -1883,6 +1968,16 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       h_DeltaY_reco_SystVariations_0_500_CR1->fill(event);
       h_DeltaY_reco_PDFVariations_0_500_CR1->fill(event);  
     }
+    if (Mass_tt>=0 && Mass_tt < 350){
+      fill_histograms(event, "DeltaY_reco_0_350_CR1");
+      h_DeltaY_reco_SystVariations_0_350_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_0_350_CR1->fill(event);
+    }
+    if(Mass_tt>=350 && Mass_tt < 500){
+      fill_histograms(event, "DeltaY_reco_350_500_CR1");
+      h_DeltaY_reco_SystVariations_350_500_CR1->fill(event);
+      h_DeltaY_reco_PDFVariations_350_500_CR1->fill(event);
+    }
     if (Mass_tt>=0 && Mass_tt < 700){
       fill_histograms(event, "DeltaY_reco_0_700_CR1");
       h_DeltaY_reco_SystVariations_0_700_CR1->fill(event);
@@ -1933,6 +2028,16 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       fill_histograms(event, "DeltaY_reco_0_500_CR2");
       h_DeltaY_reco_SystVariations_0_500_CR2->fill(event);
       h_DeltaY_reco_PDFVariations_0_500_CR2->fill(event);
+    }
+    if (Mass_tt>=0 && Mass_tt < 350){
+      fill_histograms(event, "DeltaY_reco_0_350_CR2");
+      h_DeltaY_reco_SystVariations_0_350_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_0_350_CR2->fill(event);
+    }
+    if(Mass_tt>=350 && Mass_tt < 500){
+      fill_histograms(event, "DeltaY_reco_350_500_CR2");
+      h_DeltaY_reco_SystVariations_350_500_CR2->fill(event);
+      h_DeltaY_reco_PDFVariations_350_500_CR2->fill(event);
     }
     if (Mass_tt>=0 && Mass_tt < 700){
       fill_histograms(event, "DeltaY_reco_0_700_CR2");
