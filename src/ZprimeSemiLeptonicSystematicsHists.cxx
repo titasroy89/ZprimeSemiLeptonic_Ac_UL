@@ -120,9 +120,10 @@ Hists(ctx, dirname) {
   h_tmistag            = ctx.get_handle<float>("weight_topmistagsf");
   h_tmistag_up         = ctx.get_handle<float>("weight_topmistagsf_up");
   h_tmistag_down       = ctx.get_handle<float>("weight_topmistagsf_down");
-  // h_toppt              = ctx.get_handle<float>("weight_toppt");
-  // h_toppt_up           = ctx.get_handle<float>("weight_toppt_up");
-  // h_toppt_down         = ctx.get_handle<float>("weight_toppt_down");
+  h_toppt_a_up         = ctx.get_handle<float>("weight_toppt_a_up");
+  h_toppt_a_down       = ctx.get_handle<float>("weight_toppt_a_down");
+  h_toppt_b_up         = ctx.get_handle<float>("weight_toppt_b_up");
+  h_toppt_b_down       = ctx.get_handle<float>("weight_toppt_b_down");
 
 
   h_BestZprimeCandidateChi2 = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestChi2");
@@ -196,6 +197,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_ttag_uncorr_down   = book<TH1F>("DeltaY_ttag_uncorr_down", "#DeltaY_{t#bar{t}} ttag_counrr_down",      2, -2.5, 2.5);
   DeltaY_tmistag_up         = book<TH1F>("DeltaY_tmistag_up", "#DeltaY_{t#bar{t}} [GeV] tmistag_up",            2, -2.5, 2.5);
   DeltaY_tmistag_down       = book<TH1F>("DeltaY_tmistag_down", "#DeltaY_{t#bar{t}} [GeV] tmistag_down",        2, -2.5, 2.5);
+  DeltaY_toppt_a_up         = book<TH1F>("DeltaY_toppt_a_up", "#DeltaY_{t#bar{t}} [GeV] toppt_a_up",                2, -2.5, 2.5);
+  DeltaY_toppt_a_down       = book<TH1F>("DeltaY_toppt_a_down", "#DeltaY_{t#bar{t}} [GeV] toppt_a_down",            2, -2.5, 2.5);
+  DeltaY_toppt_b_up         = book<TH1F>("DeltaY_toppt_b_up", "#DeltaY_{t#bar{t}} [GeV] toppt_b_up",                2, -2.5, 2.5);
+  DeltaY_toppt_b_down       = book<TH1F>("DeltaY_toppt_b_down", "#DeltaY_{t#bar{t}} [GeV] toppt_b_down",            2, -2.5, 2.5);
   // DeltaY_toppt_up           = book<TH1F>("DeltaY_toppt_up", "#DeltaY_{t#bar{t}} [GeV] toppt_up",                2, -2.5, 2.5);
   // DeltaY_toppt_down         = book<TH1F>("DeltaY_toppt_down", "#DeltaY_{t#bar{t}} [GeV] toppt_down",            2, -2, 2); 
 
@@ -257,7 +262,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_reco_d1_ttag_uncorr_down   = book<TH1F>("DeltaY_reco_d1_ttag_uncorr_down", "#DeltaY_reco_d1_{t#bar{t}} ttag_counrr_down",      2, -2.5, 2.5);
   DeltaY_reco_d1_tmistag_up         = book<TH1F>("DeltaY_reco_d1_tmistag_up", "#DeltaY_reco_d1_{t#bar{t}} [GeV] tmistag_up",            2, -2.5, 2.5);
   DeltaY_reco_d1_tmistag_down       = book<TH1F>("DeltaY_reco_d1_tmistag_down", "#DeltaY_reco_d1_{t#bar{t}} [GeV] tmistag_down",        2, -2.5, 2.5);
-
+  DeltaY_reco_d1_toppt_a_up         = book<TH1F>("DeltaY_reco_d1_toppt_a_up", "#DeltaY_reco_d1_{t#bar{t}} [GeV] toppt_a_up",                2, -2.5, 2.5);
+  DeltaY_reco_d1_toppt_a_down       = book<TH1F>("DeltaY_reco_d1_toppt_a_down", "#DeltaY_reco_d1_{t#bar{t}} [GeV] toppt_a_down",            2, -2.5, 2.5);
+  DeltaY_reco_d1_toppt_b_up         = book<TH1F>("DeltaY_reco_d1_toppt_b_up", "#DeltaY_reco_d1_{t#bar{t}} [GeV] toppt_b_up",                2, -2.5, 2.5);
+  DeltaY_reco_d1_toppt_b_down       = book<TH1F>("DeltaY_reco_d1_toppt_b_down", "#DeltaY_reco_d1_{t#bar{t}} [GeV] toppt_b_down",            2, -2.5, 2.5);
 
   // DeltaY_reco_d2                    = book<TH1F>("DeltaY_reco_d2",   "#DeltaY_reco_d2_{t#bar{t}} ",                                     2, -2.5, 2.5);
   DeltaY_reco_d2_mu_reco_up         = book<TH1F>("DeltaY_reco_d2_mu_reco_up",   "#DeltaY_reco_d2_{t#bar{t}} mu_reco_up",                2, -2.5, 2.5);
@@ -316,7 +324,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_reco_d2_ttag_uncorr_down   = book<TH1F>("DeltaY_reco_d2_ttag_uncorr_down", "#DeltaY_reco_d2_{t#bar{t}} ttag_counrr_down",      2, -2.5, 2.5);
   DeltaY_reco_d2_tmistag_up         = book<TH1F>("DeltaY_reco_d2_tmistag_up", "#DeltaY_reco_d2_{t#bar{t}} [GeV] tmistag_up",            2, -2.5, 2.5);
   DeltaY_reco_d2_tmistag_down       = book<TH1F>("DeltaY_reco_d2_tmistag_down", "#DeltaY_reco_d2DeltaY_{t#bar{t}} [GeV] tmistag_down",        2, -2.5, 2.5);
-
+  DeltaY_reco_d2_toppt_a_up         = book<TH1F>("DeltaY_reco_d2_toppt_a_up", "#DeltaY_reco_d2_{t#bar{t}} [GeV] toppt_a_up",                2, -2.5, 2.5);
+  DeltaY_reco_d2_toppt_a_down       = book<TH1F>("DeltaY_reco_d2_toppt_a_down", "#DeltaY_reco_d2_{t#bar{t}} [GeV] toppt_a_down",            2, -2.5, 2.5);
+  DeltaY_reco_d2_toppt_b_up         = book<TH1F>("DeltaY_reco_d2_toppt_b_up", "#DeltaY_reco_d2_{t#bar{t}} [GeV] toppt_b_up",                2, -2.5, 2.5);
+  DeltaY_reco_d2_toppt_b_down       = book<TH1F>("DeltaY_reco_d2_toppt_b_down", "#DeltaY_reco_d2_{t#bar{t}} [GeV] toppt_b_down",            2, -2.5, 2.5);
 
 
   // Sigma_phi_1                    = book<TH1F>("Sigma_phi_1",   "#Sigma_phi_1_{t#bar{t}} ",                                     16, -3.2, 3.2);
@@ -376,7 +387,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   Sigma_phi_1_ttag_uncorr_down   = book<TH1F>("Sigma_phi_1_ttag_uncorr_down", "#Sigma_phi_1_{t#bar{t}} ttag_counrr_down",      16,-3.2,3.2);
   Sigma_phi_1_tmistag_up         = book<TH1F>("Sigma_phi_1_tmistag_up", "#Sigma_phi_1_{t#bar{t}} [GeV] tmistag_up",            16,-3.2,3.2);
   Sigma_phi_1_tmistag_down       = book<TH1F>("Sigma_phi_1_tmistag_down", "#Sigma_phi_1_{t#bar{t}} [GeV] tmistag_down",        16,-3.2,3.2);
-
+  Sigma_phi_1_toppt_a_up         = book<TH1F>("Sigma_phi_1_toppt_a_up", "#Sigma_phi_1_{t#bar{t}} [GeV] toppt_a_up",                16,-3.2,3.2);
+  Sigma_phi_1_toppt_a_down       = book<TH1F>("Sigma_phi_1_toppt_a_down", "#Sigma_phi_1_{t#bar{t}} [GeV] toppt_a_down",            16,-3.2,3.2);
+  Sigma_phi_1_toppt_b_up         = book<TH1F>("Sigma_phi_1_toppt_b_up", "#Sigma_phi_1_{t#bar{t}} [GeV] toppt_b_up",                16,-3.2,3.2);
+  Sigma_phi_1_toppt_b_down       = book<TH1F>("Sigma_phi_1_toppt_b_down", "#Sigma_phi_1_{t#bar{t}} [GeV] toppt_b_down",            16,-3.2,3.2);
   // Sigma_phi_2                    = book<TH1F>("Sigma_phi_2",   "#Sigma_phi_2_{t#bar{t}} ",                                      16, -3.2, 3.2);
   Sigma_phi_2_mu_reco_up         = book<TH1F>("Sigma_phi_2_mu_reco_up",   "# Sigma_phi_2_{t#bar{t}} mu_reco_up",                16, -3.2, 3.2);
   Sigma_phi_2_mu_reco_down       = book<TH1F>("Sigma_phi_2_mu_reco_down", "# Sigma_phi_2_{t#bar{t}} mu_reco_down",              16,-3.2,3.2);
@@ -434,7 +448,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   Sigma_phi_2_ttag_uncorr_down   = book<TH1F>("Sigma_phi_2_ttag_uncorr_down", "#Sigma_phi_2_{t#bar{t}} ttag_counrr_down",      16,-3.2,3.2);
   Sigma_phi_2_tmistag_up         = book<TH1F>("Sigma_phi_2_tmistag_up", "#Sigma_phi_2_{t#bar{t}} [GeV] tmistag_up",            16,-3.2,3.2);
   Sigma_phi_2_tmistag_down       = book<TH1F>("Sigma_phi_2_tmistag_down", "#Sigma_phi_2_{t#bar{t}} [GeV] tmistag_down",        16,-3.2,3.2);
-
+  Sigma_phi_2_toppt_a_up         = book<TH1F>("Sigma_phi_2_toppt_a_up", "#Sigma_phi_2_{t#bar{t}} [GeV] toppt_a_up",                16,-3.2,3.2);
+  Sigma_phi_2_toppt_a_down       = book<TH1F>("Sigma_phi_2_toppt_a_down", "#Sigma_phi_2_{t#bar{t}} [GeV] toppt_a_down",            16,-3.2,3.2);
+  Sigma_phi_2_toppt_b_up         = book<TH1F>("Sigma_phi_2_toppt_b_up", "#Sigma_phi_2_{t#bar{t}} [GeV] toppt_b_up",                16,-3.2,3.2);
+  Sigma_phi_2_toppt_b_down       = book<TH1F>("Sigma_phi_2_toppt_b_down", "#Sigma_phi_2_{t#bar{t}} [GeV] toppt_b_down",            16,-3.2,3.2);
 
 
 
@@ -510,9 +527,10 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_ttag_uncorr_down_tt   = book<TH2F>("DeltaY_ttag_uncorr_down_tt", "#DeltaY_{t#bar{t}} ttag_counrr_down",      2, -2.5, 2.5, 2, -2.5, 2.5);
   DeltaY_tmistag_up_tt         = book<TH2F>("DeltaY_tmistag_up_tt", "#DeltaY_{t#bar{t}} [GeV] tmistag_up",            2, -2.5, 2.5, 2, -2.5, 2.5);
   DeltaY_tmistag_down_tt       = book<TH2F>("DeltaY_tmistag_down_tt", "#DeltaY_{t#bar{t}} [GeV] tmistag_down",        2, -2.5, 2.5, 2, -2.5, 2.5);
-  // DeltaY_toppt_up           = book<TH1F>("DeltaY_toppt_up", "#DeltaY_{t#bar{t}} [GeV] toppt_up",                2, -2.5, 2.5, 2, -2.5, 2.5);
-  // DeltaY_toppt_down         = book<TH1F>("DeltaY_toppt_down", "#DeltaY_{t#bar{t}} [GeV] toppt_down",            2, -2.5, 2.5, 2, -2.5, 2.5); 
-
+  DeltaY_toppt_a_up_tt         = book<TH2F>("DeltaY_toppt_a_up_tt", "#DeltaY_{t#bar{t}} [GeV] toppt_a_up",                2, -2.5, 2.5, 2, -2.5, 2.5);
+  DeltaY_toppt_a_down_tt       = book<TH2F>("DeltaY_toppt_a_down_tt", "#DeltaY_{t#bar{t}} [GeV] toppt_a_down",            2, -2.5, 2.5, 2, -2.5, 2.5);
+  DeltaY_toppt_b_up_tt         = book<TH2F>("DeltaY_toppt_b_up_tt", "#DeltaY_{t#bar{t}} [GeV] toppt_b_up",                2, -2.5, 2.5, 2, -2.5, 2.5);
+  DeltaY_toppt_b_down_tt       = book<TH2F>("DeltaY_toppt_b_down_tt", "#DeltaY_{t#bar{t}} [GeV] toppt_b_down",            2, -2.5, 2.5, 2, -2.5, 2.5);
 }
 
 
@@ -599,6 +617,10 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   float tmistag_nominal    = event.get(h_tmistag);
   float tmistag_up         = event.get(h_tmistag_up);
   float tmistag_down       = event.get(h_tmistag_down);
+  float toppt_a_up         = event.get(h_toppt_a_up);
+  float toppt_a_down       = event.get(h_toppt_a_down);
+  float toppt_b_up         = event.get(h_toppt_b_up);
+  float toppt_b_down       = event.get(h_toppt_b_down);
 
   // only up/down variations
   vector<string> names       = {"ele_reco", "ele_id", "ele_trigger", "mu_reco", "mu_iso_stat","mu_iso_syst", "mu_id_stat","mu_id_syst","mu_trigger_stat","mu_trigger_syst", "pu", "prefiring"};
@@ -660,14 +682,17 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   vector<TH1F*> hists_tmistag_dy_d2 = {DeltaY_reco_d2_tmistag_up, DeltaY_reco_d2_tmistag_down}; 
   vector<TH1F*> hists_tmistag_sigma_1 = {Sigma_phi_1_tmistag_up, Sigma_phi_1_tmistag_down};
   vector<TH1F*> hists_tmistag_sigma_2 = {Sigma_phi_2_tmistag_up, Sigma_phi_2_tmistag_down};
-
-  
-  
   vector<TH2F*> hists_tmistag_tt = {DeltaY_tmistag_up_tt, DeltaY_tmistag_down_tt};
 
-  // toppt variations need special treatment
-  // vector<float> syst_toppt  = {toppt_up, toppt_down};
-  // vector<TH1F*> hists_toppt = {DeltaY_toppt_up, DeltaY_toppt_down};
+  //Top pt reweighting
+  vector<float> syst_toppt = {toppt_a_up, toppt_a_down, toppt_b_up, toppt_b_down};
+  vector<TH1F*> hists_toppt = {DeltaY_toppt_a_up, DeltaY_toppt_a_down, DeltaY_toppt_b_up, DeltaY_toppt_b_down};
+  vector<TH1F*> hists_toppt_dy_d1 = {DeltaY_reco_d1_toppt_a_up, DeltaY_reco_d1_toppt_a_down, DeltaY_reco_d1_toppt_b_up, DeltaY_reco_d1_toppt_b_down};
+  vector<TH1F*> hists_toppt_dy_d2 = {DeltaY_reco_d2_toppt_a_up, DeltaY_reco_d2_toppt_a_down, DeltaY_reco_d2_toppt_b_up, DeltaY_reco_d2_toppt_b_down};
+  vector<TH1F*> hists_toppt_sigma_1 = {Sigma_phi_1_toppt_a_up, Sigma_phi_1_toppt_a_down, Sigma_phi_1_toppt_b_up, Sigma_phi_1_toppt_b_down};
+  vector<TH1F*> hists_toppt_sigma_2 = {Sigma_phi_2_toppt_a_up, Sigma_phi_2_toppt_a_down, Sigma_phi_2_toppt_b_up, Sigma_phi_2_toppt_b_down};
+  vector<TH2F*> hists_toppt_tt = {DeltaY_toppt_a_up_tt, DeltaY_toppt_a_down_tt, DeltaY_toppt_b_up_tt, DeltaY_toppt_b_down_tt};
+  
   
   // parton shower variations (ISR, FSR) need special treatment
   vector<float> syst_ps = {isr_up, isr_down, fsr_up, fsr_down};
@@ -1030,48 +1055,72 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
       
       TLorentzVector ttbar = PosTop + NegTop;
+      TLorentzVector lep_top_lep_CoM = lep_top_lep;
       // Boost into ttbar CoM-Frame <<<-------//
-      lep_top_lep.Boost(-ttbar.BoostVector());
-      had_top_b.Boost(-ttbar.BoostVector());
-      PosTop.Boost(-ttbar.BoostVector());
-      NegTop.Boost(-ttbar.BoostVector());
-
-      // Rotate vectors into Helicity Frame <<<------//
-      // Rotate about beamline
-      lep_top_lep.RotateZ(-1.*PosTop.Phi());
-      had_top_b.RotateZ(-1.*PosTop.Phi());
-      PosTop.RotateZ(-1.*PosTop.Phi());
-      NegTop.RotateZ(-1.*PosTop.Phi());
-      // Rotate about y-axis
-      lep_top_lep.RotateY(-1.*PosTop.Theta());
-      had_top_b.RotateY(-1.*PosTop.Theta());
-      PosTop.RotateY(-1.*PosTop.Theta());
-      NegTop.RotateY(-1.*PosTop.Theta());
-
-      // Boost into ttbar Rest-Frame <<<--------//
-      if(BestZprimeCandidate->lepton().charge() > 0){
-        lep_top_lep.Boost(-PosTop.BoostVector()); // Positive charged lepton has Positive Top mother
-        had_top_b.Boost(-NegTop.BoostVector());   // Positive charged lepton means b-jet has Negative Top mother
+      // Boost hadronic top and its decay products into ttbar CoM-Frame      
+      lep_top_lep_CoM.Boost(-1.*ttbar.BoostVector());
+      TLorentzVector had_top_b_CoM = had_top_b;
+      had_top_b_CoM.Boost(-ttbar.BoostVector());
+      TLorentzVector PosTop_CoM = PosTop;
+      PosTop_CoM.Boost(-ttbar.BoostVector());
+      TLorentzVector NegTop_CoM = NegTop;
+      NegTop_CoM.Boost(-ttbar.BoostVector());
+      // Beam unit vector in COM frame Step 2
+      TVector3 beam_axis(0,0,1);
+      // Calculating top scattering angle for PosTop only
+      double cos_PosTop_beam = PosTop_CoM.Vect().Unit().Dot(beam_axis);
+      double sin_PosTop_beam = sqrt(1 - cos_PosTop_beam*cos_PosTop_beam);
+    
+      // The sign of cos_PosTop_beam to account for Bose symmetry
+      double sign_cos_PosTop_beam = (cos_PosTop_beam > 0.) ? 1. : -1.;
+      // // The sign based on PosTop and NegTop's rapidity
+      // double sign_rapidity = (PosTop.Rapidity() >= NegTop.Rapidity()) ? 1. : -1.;
+    
+      // Bernreuther basis vectors
+      TVector3 kbase = PosTop_CoM.Vect().Unit();
+      TVector3 rbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*(beam_axis - cos_PosTop_beam * kbase) ).Unit(); /// check with Lin about numerator
+      TVector3 nbase = ( (sign_cos_PosTop_beam/sin_PosTop_beam)*beam_axis.Cross(kbase) ).Unit();
+    
       
+      TLorentzVector lep_top_lep_Rest = lep_top_lep_CoM;
+      TLorentzVector had_top_b_Rest = had_top_b_CoM;
+      TLorentzVector PosTop_Rest = PosTop_CoM;
+      TLorentzVector NegTop_Rest = NegTop_CoM;
+      
+      if(BestZprimeCandidate->lepton().charge() > 0){
+        lep_top_lep_Rest.Boost(-1.*PosTop_CoM.BoostVector()); // lepton has Positive Top mother
+        had_top_b_Rest.Boost(-1.*NegTop_CoM.BoostVector());   // b-jet has Negative Top mother
       }
       else if (BestZprimeCandidate->lepton().charge() < 0){
-        lep_top_lep.Boost(-NegTop.BoostVector()); // Negative charged lepton has Negative Top mother
-        had_top_b.Boost(-PosTop.BoostVector());   // Negative charged lepton means b-jet has Positive Top mother
+        lep_top_lep_Rest.Boost(-1.*NegTop_CoM.BoostVector()); // lepton has Negative Top mother
+        had_top_b_Rest.Boost(-1.*PosTop_CoM.BoostVector());   // b-jet has Positive Top mother
       }
-
-          //-------------------------------- End boosting top quarks and their decay products --------------------------------//
+      //Step 4, calculating the angular variables in the ttbar rest frame
+      float bquark_phi = TMath::ATan2(had_top_b_Rest.Vect().Dot(nbase), had_top_b_Rest.Vect().Dot(rbase));
+      float lep_phi = TMath::ATan2(lep_top_lep_Rest.Vect().Dot(nbase), lep_top_lep_Rest.Vect().Dot(rbase));
+    
+      float dphi= 0.;
       
-          // Define angular variables as sum and difference of decay products' phi-coordinates
-          // sphi and dphi = PosTopDecayProd_phi +- NegTopDecayProd_phi
-      float dphi=0.;
-      float sphi = lep_top_lep.Phi() + had_top_b.Phi();
+      float sphi = lep_phi + bquark_phi;
+      if(sphi > TMath::Pi()) {
+        sphi = sphi - 2.*TMath::Pi();
+      }
+      if(sphi < -1.*TMath::Pi()) {
+        sphi = sphi + 2.*TMath::Pi();
+      }
       if(BestZprimeCandidate->lepton().charge() > 0){ // lepton is Positive Top's Decay Product
-        dphi = lep_top_lep.Phi() - had_top_b.Phi();
+        dphi = lep_phi - bquark_phi;
       }
-      if(BestZprimeCandidate->lepton().charge() < 0)
-      {
-        dphi = had_top_b.Phi() - lep_top_lep.Phi();
+      if(BestZprimeCandidate->lepton().charge() < 0){
+        dphi = bquark_phi - lep_phi;
       }
+      if(dphi > TMath::Pi()) {
+        dphi = dphi - 2.*TMath::Pi();
+      }
+      if(dphi < -1.*TMath::Pi()) {
+        dphi = dphi + 2.*TMath::Pi();
+      }
+  
       if (debug)cout <<" about to fill syst histograms" <<endl;
       if (debug)cout <<" how many sys: "<< names.size() <<endl;
       if (debug)cout <<" nominal up size: "<< hists_up.size() <<endl;
@@ -1088,10 +1137,6 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
 
         // Map back into original domain if necessary
-      if(sphi > TMath::Pi()) sphi = sphi - 2*TMath::Pi();
-      if(sphi < -TMath::Pi()) sphi = sphi + 2*TMath::Pi();
-      if(dphi > TMath::Pi()) dphi = dphi - 2*TMath::Pi();
-      if(dphi < -TMath::Pi()) dphi = dphi + 2*TMath::Pi();
       bool isLeptonPositive = false;
       if (debug)cout << "ttbar all sys calc deltay " <<endl;
       if(isMuon){
