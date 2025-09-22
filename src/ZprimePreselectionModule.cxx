@@ -50,7 +50,18 @@ public:
 
 protected:
   bool debug;
-  // edm::EDGetTokenT<LHEEventProduct> src_;
+  
+  // mttbar mass bin edges
+  const std::vector<double> mttbar_bin_edges = {0., 350., 500., 750., 1000., 1500., 20000.};
+  // Bins: [0-350), [350-500), [500-750), [750-1000), [1000-1500), [1500-20000)
+  
+  // Helper function to find mttbar bin
+  inline int find_mtt_bin(double mtt) {
+    for (size_t i = 0; i+1 < mttbar_bin_edges.size(); ++i) {
+      if (mtt >= mttbar_bin_edges[i] && mtt < mttbar_bin_edges[i+1]) return static_cast<int>(i);
+    }
+    return -1;
+  }
 
   // Corrections
   std::unique_ptr<CommonModules> common;
@@ -80,6 +91,10 @@ protected:
 
   // additional branch with AK4 CHS jets -> for b-tagging
   Event::Handle<vector<Jet>> h_CHSjets;
+  
+  // TTbarGen handle for mttbar calculation
+  Event::Handle<TTbarGen> h_ttbargen;
+  std::unique_ptr<TTbarGenProducer> ttgenprod;
 
 };
 
@@ -95,8 +110,6 @@ void ZprimePreselectionModule::fill_histograms(uhh2::Event& event, string tag){
   HFolder(mytag)->fill(event);
 }
 
-
-
 ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
   debug = false; // true/false
@@ -111,14 +124,12 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   isHOTVR = ctx.get("is_HOTVR") == "true";
   Sys_PU  = ctx.get("Sys_PU");
 
-
   isUL16preVFP  = (ctx.get("dataset_version").find("UL16preVFP")  != std::string::npos);
   isUL16postVFP = (ctx.get("dataset_version").find("UL16postVFP") != std::string::npos);
   isUL17        = (ctx.get("dataset_version").find("UL17")        != std::string::npos);
   isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
   
   // lepton IDs
-  // ElectronId eleID_veto = ElectronID_Fall17_tight_noIso;
   ElectronId eleID_veto = ElectronTagID(Electron::mvaEleID_Fall17_noIso_V2_wp90);
   MuonId     muID_veto  = MuonID(Muon::CutBasedIdTight);
 
@@ -128,18 +139,14 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   double jet2_pt(30.);
   double MET(20.);
 
-
   // GEN Flavor selection [W+jets flavor-splitting]
   if(ctx.get("dataset_version").find("WJets") != std::string::npos){
-
     if     (ctx.get("dataset_version").find("_B") != std::string::npos) genflavor_sel.reset(new GenFlavorSelection("b"));
     else if(ctx.get("dataset_version").find("_C") != std::string::npos) genflavor_sel.reset(new GenFlavorSelection("c"));
     else if(ctx.get("dataset_version").find("_L") != std::string::npos) genflavor_sel.reset(new GenFlavorSelection("l"));
-
     else genflavor_sel.reset(new uhh2::AndSelection(ctx));
   }
   else genflavor_sel.reset(new uhh2::AndSelection(ctx));
-
 
   // Cleaning: Mu, Ele, Jets
   const MuonId muonID_veto(AndId<Muon>(PtEtaCut(muon_pt, 2.4), muID_veto));
@@ -181,6 +188,9 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   CHSjetCorr.reset(new CHSJetCorrections());
   CHSjetCorr->init(ctx);
 
+  // TTbarGen producer
+  if(isMC) ttgenprod.reset(new TTbarGenProducer(ctx, "ttbargen", true));
+
   //// EVENT SELECTION
   jet1_sel.reset(new NJetSelection(1, -1, JetId(PtEtaCut(jet1_pt, 2.5))));
   jet2_sel.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
@@ -188,17 +198,33 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
 
   // additional branch with Ak4 CHS jets
   h_CHSjets = ctx.get_handle<vector<Jet>>("jetsAk4CHS");
+  
+  // TTbarGen handle for mttbar calculation
+  h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
 
   // Book histograms
-  vector<string> histogram_tags = {"Input", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET"};
+  vector<string> histogram_tags = {"Input", "mtt_gen_inclusive", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET"};
+    
+  // Add mttbar bin tags
+  for (size_t i = 0; i+1 < mttbar_bin_edges.size(); ++i) {
+    const double low = mttbar_bin_edges[i];
+    const double high = mttbar_bin_edges[i+1];
+    const string bin_tag = "mtt_gen_" + to_string((int)low) + "_" + to_string((int)high);
+    histogram_tags.push_back(bin_tag);
+  }
+  
   book_histograms(ctx, histogram_tags);
 
   lumihists.reset(new LuminosityHists(ctx, "lumi"));
 }
 
-
 bool ZprimePreselectionModule::process(uhh2::Event& event){
-
+  
+  // Process TTbarGen first
+  if (isMC && ttgenprod) {
+    ttgenprod->process(event);
+  }
+  
   if(debug) cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
   if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
 
@@ -210,7 +236,41 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(debug) cout << "beginning: ok" << endl;
 
   fill_histograms(event, "Input");
-   if(debug) cout << "first plots input: ok" << endl;
+  if(debug) cout << "first plots input: ok" << endl;
+
+  // Calculate mttbar and fill appropriate bin histograms
+  if (isMC) {
+    try {
+      const auto& ttbargen = event.get(h_ttbargen);
+      
+      // Check if it's a semileptonic decay (e/mu only)
+      if (ttbargen.IsSemiLeptonicDecay()) {
+        const int lepId = std::abs(ttbargen.ChargedLepton().pdgId());
+        if (lepId == 11 || lepId == 13) { // electron or muon (includes tau->e/mu)
+          
+          const GenParticle& gen_top = ttbargen.Top();
+          const GenParticle& gen_antitop = ttbargen.Antitop();
+          const double mtt_gen = (gen_top.v4() + gen_antitop.v4()).M();
+          
+          // Fill inclusive histograms for ALL semileptonic events
+          fill_histograms(event, "mtt_gen_inclusive");
+          
+          // Find which mttbar bin this event belongs to
+          const int ibin = find_mtt_bin(mtt_gen);
+          if (ibin >= 0) {
+            const double low = mttbar_bin_edges[ibin];
+            const double high = mttbar_bin_edges[ibin+1];
+            const string bin_tag = "mtt_gen_" + to_string((int)low) + "_" + to_string((int)high);
+            
+            // Fill histograms for this specific mttbar bin
+            fill_histograms(event, bin_tag);
+          }
+        }
+      }
+    } catch (const std::exception& e) {
+      if (debug) std::cout << "TTbarGen failed: " << e.what() << std::endl;
+    }
+  }
 
   bool commonResult = common->process(event);
   if (!commonResult) return false;
@@ -231,7 +291,6 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   toppuppijetCorr->process(event);
   if(debug) cout << "TopPuppiJetCorrections: ok" << endl;
   fill_histograms(event, "PUPPICorrections");
-
 
   // GEN ME quark-flavor selection
   if(!event.isRealData){
@@ -260,7 +319,6 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   for(auto& muo : *event.muons){
     float    dRmin, pTrel;
     std::tie(dRmin, pTrel) = drmin_pTrel(muo, *event.jets);
-
     muo.set_tag(Muon::twodcut_dRmin, dRmin);
     muo.set_tag(Muon::twodcut_pTrel, pTrel);
   }
@@ -268,11 +326,9 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   for(auto& ele : *event.electrons){
     float    dRmin, pTrel;
     std::tie(dRmin, pTrel) = drmin_pTrel(ele, *event.jets);
-
     ele.set_tag(Electron::twodcut_dRmin, dRmin);
     ele.set_tag(Electron::twodcut_pTrel, pTrel);
   }
-
 
   jet_cleaner2->process(event);
   sort_by_pt<Jet>(*event.jets);
@@ -306,6 +362,7 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
   if(!pass_met) return false;
   if(debug) cout << "METCut: ok" << endl;
   fill_histograms(event, "MET");
+
 
   return true;
 }

@@ -45,7 +45,6 @@
 #include <UHH2/ZprimeSemiLeptonic/include/TopTagScaleFactor.h>
 #include <UHH2/ZprimeSemiLeptonic/include/TopMistagScaleFactor.h>
 
-#include <UHH2/common/include/TTbarGen.h>
 #include <UHH2/common/include/TTbarReconstruction.h>
 #include <UHH2/common/include/ReconstructionHypothesisDiscriminators.h>
 

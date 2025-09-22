@@ -504,7 +504,7 @@ void ZprimeSemiLeptonicHists::init(){
   ditop_deltaR      = book<TH1F>("ditop_deltaR", "#DeltaR(t,#bar{t})", 100, 0, 10.0);
   
   // DeltaY
-  DeltaY_reco            = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  // DeltaY_reco            = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_high       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_low        = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_d1         = book<TH1F>("DeltaY_reco_d1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
@@ -546,8 +546,7 @@ void ZprimeSemiLeptonicHists::init(){
   Delta_phi_1_match     = book<TH1F>("Delta_phi_1_match", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_2_match     = book<TH1F>("Delta_phi_2_match", "#Delta #phi ",16,-3.2,3.2);
 
-
-  DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  
   // DeltaY_reco_0_500     = book<TH1F>("DeltaY_reco_0_500", "#Delta Y_{(t,#bar{t})} 0<Mtt<500",2,-2.5,2.5);
   // DeltaY_reco_500_750   = book<TH1F>("DeltaY_reco_500_750", "#Delta Y_{(t,#bar{t})} 500<Mtt<750",2,-2.5,2.5);
   // DeltaY_reco_750_1000  = book<TH1F>("DeltaY_reco_750_1000", "#Delta Y_{(t,#bar{t})} 750<Mtt<1000",2,-2.5,2.5);
@@ -557,6 +556,11 @@ void ZprimeSemiLeptonicHists::init(){
   DeltaY_gen_best_plot  = book<TH1F>("DeltaY_gen_best_plot", "#Delta Y_{(t,#bar{t}) Gen Best}",2,-2.5,2.5);
   DeltaY_notMatched     = book<TH1F>("DeltaY_notMatched", "Reco Events Nor MATCHED",1,0,2);
   
+  // Mtt_gen               = book<TH1F>("Mtt_gen", "M_{t#bar{t}} GEN [GeV]", 100, 0, 2000);
+  // DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta|Y|_{(t,#bar{t})} GEN ", 50, -2.5, 2.5);
+  DeltaY_reco           = book<TH1F>("DeltaY_reco", "#Delta|Y|_{(t,#bar{t})} RECO ", 50, -2.5, 2.5);
+  // DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 50, -1.0, 1.0);
+  DeltaY_xi_reco        = book<TH1F>("DeltaY_xi_reco", "#xi = tanh(#Delta|Y|) RECO", 50, -1.0, 1.0);
  
   
   
@@ -1481,6 +1485,34 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
   
   if(debug) cout << "Before dY lines:" << endl;
 
+  // ================== GEN-level DeltaY for ALL ttbar events using TTbarGen (template method) =========================================================  
+  
+  // Fill generator-level histograms for ALL ttbar MC events using TTbarGen
+  // if(is_tt && is_mc) {
+  //   const auto& ttbargen = event.get(h_ttbargen);
+    
+  //   // Only process semileptonic decays (e+jets, mu+jets) - includes tau->e/mu
+  //   if(ttbargen.IsSemiLeptonicDecay()) {
+  //     const int lepId = std::abs(ttbargen.ChargedLepton().pdgId());
+  //     if(lepId == 11 || lepId == 13) {
+        
+  //       const GenParticle& gen_top = ttbargen.Top();
+  //       const GenParticle& gen_antitop = ttbargen.Antitop();
+        
+  //       // Calculate DeltaY at gen level
+  //       double gen_top_rapidity = gen_top.v4().Rapidity();
+  //       double gen_antitop_rapidity = gen_antitop.v4().Rapidity();
+        
+  //       double DeltaY_gen_val = std::abs(gen_top_rapidity) - std::abs(gen_antitop_rapidity);
+  //       double xi_gen_val = std::tanh(DeltaY_gen_val);
+  //       double mtt_gen_val = (gen_top.v4() + gen_antitop.v4()).M();
+
+  //       DeltaY_gen->Fill(DeltaY_gen_val, weight);
+  //       DeltaY_xi_gen->Fill(xi_gen_val, weight);
+  //       Mtt_gen->Fill(mtt_gen_val, weight);
+  //     }
+  //   }
+  // }
 
   
   // ================== DY new check gen matching for ttbar =========================================================
@@ -1696,6 +1728,10 @@ if (is_zprime_reconstructed_chi2 ){
     N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
     // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
     DeltaY_reco->Fill(dyreco, weight);
+    
+    // Fill xi histogram for reconstruction level
+    double xi_reco = TMath::TanH(dyreco);
+    DeltaY_xi_reco->Fill(xi_reco, weight);
   
   
   //start spin correlation
