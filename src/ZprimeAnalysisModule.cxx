@@ -129,6 +129,21 @@ protected:
   Event::Handle<bool> h_is_zprime_reconstructed_chi2, h_is_zprime_reconstructed_correctmatch;
   Event::Handle<float> h_weight;
 
+  // GEN-level variables from preselection (for template method)
+  uhh2::Event::Handle<float> h_xi_gen;
+  uhh2::Event::Handle<float> h_mtt_gen;
+  uhh2::Event::Handle<float> h_DeltaY_gen;
+
+  // read from input file
+  uhh2::Event::Handle<float> h_xi_gen_in;
+  uhh2::Event::Handle<float> h_DeltaY_gen_in;
+  uhh2::Event::Handle<float> h_mtt_gen_in;
+
+  // (optional) write-through to your output file so the next job can read again
+  uhh2::Event::Handle<float> h_xi_gen_out;
+  uhh2::Event::Handle<float> h_DeltaY_gen_out;
+  uhh2::Event::Handle<float> h_mtt_gen_out;
+  
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
 
   // Lumi hists
@@ -531,6 +546,18 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
       ratio_hist_ele->SetDirectory(0);
     }
   }
+
+  // GEN-level variables from preselection - read and write to carry forward
+  if(isMC) {
+    h_xi_gen_in     = ctx.declare_event_input<float>("xi_gen");
+    h_DeltaY_gen_in = ctx.declare_event_input<float>("DeltaY_gen");
+    h_mtt_gen_in    = ctx.declare_event_input<float>("mtt_gen");
+    
+    // Re-expose as outputs so AnalysisDNN can read them
+    h_xi_gen_out     = ctx.declare_event_output<float>("xi_gen");
+    h_DeltaY_gen_out = ctx.declare_event_output<float>("DeltaY_gen");
+    h_mtt_gen_out    = ctx.declare_event_output<float>("mtt_gen");
+  }
 }
 
 /*
@@ -549,6 +576,26 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   // Initialize reco flags with false
   event.set(h_is_zprime_reconstructed_chi2, false);
   event.set(h_is_zprime_reconstructed_correctmatch, false);
+
+  // Copy GEN-level variables from input to output (for template method)
+  // if(isMC) {
+  //   if(event.is_valid(h_xi_gen_in)) {
+  //     event.set(h_xi_gen_out,     event.get(h_xi_gen_in));
+  //     event.set(h_DeltaY_gen_out, event.get(h_DeltaY_gen_in));
+  //     event.set(h_mtt_gen_out,    event.get(h_mtt_gen_in));
+  //   }
+  // }
+
+  if(isMC && event.is_valid(h_xi_gen_in)) {
+  float xi = event.get(h_xi_gen_in);
+  if(!std::isfinite(xi)) {
+    // leave it unset; Hists guard will skip
+  } else {
+    event.set(h_xi_gen_out, xi);
+  }
+  if(event.is_valid(h_DeltaY_gen_in)) event.set(h_DeltaY_gen_out, event.get(h_DeltaY_gen_in));
+  if(event.is_valid(h_mtt_gen_in))    event.set(h_mtt_gen_out,    event.get(h_mtt_gen_in));
+  }
 
   if(!event.isRealData){
     if(!SignSplit->passes(event)) return false;
@@ -1101,6 +1148,12 @@ bool ZprimeAnalysisModule::process(uhh2::Event& event){
   Variables_module->process(event);
   fill_histograms(event, "NNInputsBeforeReweight");
   if(debug) cout << "NNInputsBeforeReweight: ok" << endl;
+
+  if(event.is_valid(h_xi_gen_in)) {
+    event.set(h_xi_gen_out,     event.get(h_xi_gen_in));
+    event.set(h_DeltaY_gen_out, event.get(h_DeltaY_gen_in));
+    event.set(h_mtt_gen_out,    event.get(h_mtt_gen_in));
+  }
 
   // histograms for systematics
   // if(!isEleTriggerMeasurement) SystematicsModule->process(event);

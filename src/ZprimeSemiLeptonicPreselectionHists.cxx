@@ -302,6 +302,11 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   Mtt_gen               = book<TH1F>("Mtt_gen", "M_{t#bar{t}} GEN [GeV]", 100, 0, 2000);
   DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta|Y|_{(t,#bar{t})} GEN ", 50, -2.5, 2.5);
   DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 50, -1.0, 1.0);
+  DeltaY_xi_gen_20      = book<TH1F>("DeltaY_xi_gen_20", "#xi = tanh(#Delta|Y|) GEN ", 20, -1.0, 1.0);
+  DeltaY_xi_gen_10      = book<TH1F>("DeltaY_xi_gen_10", "#xi = tanh(#Delta|Y|) GEN ", 10, -1.0, 1.0);
+  DeltaY_xi_gen_6       = book<TH1F>("DeltaY_xi_gen_6", "#xi = tanh(#Delta|Y|) GEN ", 6, -1.0, 1.0);
+
+  // Response matrix for template method
 
 }
 
@@ -787,7 +792,13 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
         DeltaY_gen->Fill(DeltaY_gen_val, weight);
         DeltaY_xi_gen->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_20->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_10->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_6->Fill(xi_gen_val, weight);
         Mtt_gen->Fill(mtt_gen_val, weight);
+      
+        // DeltaY_xi_genVsReco->Fill(xi_gen_val, xi_reco_val, weight);
+  
       }
     }
   }

@@ -1,4 +1,5 @@
 #include "UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicHists.h"
+#include <limits>
 #include "UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicModules.h"
 #include "UHH2/core/include/Event.h"
 #include <UHH2/core/include/Utils.h>
@@ -13,13 +14,154 @@
 #include <UHH2/core/include/LorentzVector.h>
 
 #include "TH1F.h"
+#include "TH1.h"
 #include "TH2D.h"
+#include "TFile.h"
 #include <iostream>
+
+#include <TMath.h>
+#include <memory>
+#include <string>
+#include <limits>
+#include <cmath>
+#include <vector>
+#include <glob.h>
+#include <iomanip>
+#include <cstring>
 
 
 
 using namespace std;
 using namespace uhh2;
+// helper: clone arbitrary TH1 (TH1F/TH1D) into a detached TH1D with identical binning/content
+static std::unique_ptr<TH1D> clone_as_TH1D(const TH1* src, const std::string &out_name){
+  if(!src) return nullptr;
+  const TAxis* ax = src->GetXaxis();
+  const int nb = ax->GetNbins();
+  std::unique_ptr<TH1D> dst;
+  const TArrayD* xbins = ax->GetXbins();
+  if(xbins && xbins->GetSize() > 0){
+    // variable binning
+    dst.reset(new TH1D(out_name.c_str(), src->GetTitle(), nb, xbins->GetArray()));
+  } else {
+    dst.reset(new TH1D(out_name.c_str(), src->GetTitle(), nb, ax->GetXmin(), ax->GetXmax()));
+  }
+  dst->SetDirectory(nullptr);
+  for(int i=1;i<=nb;++i){
+    dst->SetBinContent(i, src->GetBinContent(i));
+    dst->SetBinError  (i, src->GetBinError(i));
+  }
+  return dst;
+}
+
+
+//template method
+// Mirror a 1D hist: H(x) -> M(x) = H(-x)
+std::unique_ptr<TH1D> ZprimeSemiLeptonicHists::mirror_hist_1d(const TH1* H) {
+  auto H1 = dynamic_cast<const TH1D*>(H);
+  if(!H1) throw std::runtime_error("[NoAC] mirror_hist_1d expects TH1D");
+  auto M = std::unique_ptr<TH1D>(static_cast<TH1D*>(H1->Clone((std::string(H1->GetName())+"_mir").c_str())));
+  M->SetDirectory(nullptr);
+  M->Reset("ICES");
+  const TAxis* xax = H1->GetXaxis();
+  for(int i=1;i<=H1->GetNbinsX();++i){
+    const double xc = xax->GetBinCenter(i);
+    int j = xax->FindBin(-xc);
+    if(j < 1) j = 1;
+    if(j > H1->GetNbinsX()) j = H1->GetNbinsX();
+    M->SetBinContent(i, H1->GetBinContent(j));
+    M->SetBinError  (i, H1->GetBinError(j));
+  }
+  return M;
+}
+
+// Build W(xi; f) = [S + (1-f)A] / [S + A],then renormalize <W>_Hgen = 1
+std::unique_ptr<TH1D> ZprimeSemiLeptonicHists::build_noac_weights_from_gen(const TH1* Hgen_in, double f_noac) {
+  if(!Hgen_in) throw std::runtime_error("[NoAC] Hgen is null");
+  auto Hgen = dynamic_cast<const TH1D*>(Hgen_in);
+  if(!Hgen) throw std::runtime_error("[NoAC] Hgen must be TH1D");
+
+  auto Hmir = mirror_hist_1d(Hgen);
+  auto S = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen->Clone("NoAC_S"))); S->SetDirectory(nullptr); S->Reset("ICES");
+  auto A = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen->Clone("NoAC_A"))); A->SetDirectory(nullptr); A->Reset("ICES");
+
+  S->Add(Hgen, Hmir.get(), 0.5,  0.5);
+  A->Add(Hgen, Hmir.get(), 0.5, -0.5);
+
+  auto W = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen->Clone("NoAC_W")));
+  W->SetDirectory(nullptr); W->Reset("ICES");
+
+  const int nb = Hgen->GetNbinsX();
+  int n_bad = 0;
+  for(int i=1;i<=nb;++i){
+    const double s = S->GetBinContent(i);
+    const double a = A->GetBinContent(i);
+    const double denom = s + a;
+    const double numer = s + (1.0 - f_noac) * a;
+    double w = (denom>0.0 ? numer/denom : 1.0);
+    if(!(denom>0.0)) ++n_bad;
+    W->SetBinContent(i, w);
+  }
+  if(n_bad){
+    std::cout << "[NoAC] warning: " << n_bad << " GEN bins had (S+A)<=0; set w=1 there" << std::endl;
+  }
+
+  // renormalize <W> wrt Hgen content to keep total yield
+  double sumW=0.0, sum1=0.0;
+  for(int i=1;i<=nb;++i){
+    const double wi = W->GetBinContent(i);
+    const double hi = Hgen->GetBinContent(i);
+    sumW += wi*hi;
+    sum1 += hi;
+  }
+  if(sumW>0.0 && sum1>0.0){
+    const double norm = sumW/sum1;
+    for(int i=1;i<=nb;++i){
+      W->SetBinContent(i, W->GetBinContent(i)/norm);
+    }
+  }
+
+  // ------------------------------------------------------------
+  // [Diagnostics for sanity checks on built NoAC weights]
+  double minW =  1e9, maxW = -1e9;
+  double sumW_check = 0.0, sumH_check = 0.0;
+
+  for (int i = 1; i <= nb; ++i) {
+    const double wi = W->GetBinContent(i);
+    const double hi = Hgen->GetBinContent(i);
+    if (wi < minW) minW = wi;
+    if (wi > maxW) maxW = wi;
+    sumW_check += wi * hi;
+    sumH_check += hi;
+  }
+
+  const double meanW = (sumH_check > 0.0 ? sumW_check / sumH_check : 0.0);
+  // std::cout << std::fixed << std::setprecision(6)
+  //           << "[NoAC] Built W(xi; f=" << f_noac << ")\n"
+  //           << "       bins=" << nb
+  //           << "  bad=" << n_bad
+  //           << "  <W>_Hgen=" << meanW
+  //           << "  min(W)=" << minW
+  //           << "  max(W)=" << maxW << std::endl;
+  // // ------------------------------------------------------------
+  return W;
+}
+
+
+double ZprimeSemiLeptonicHists::lookup_noac_weight(double xi, const TH1* W){
+  if(!W || !std::isfinite(xi)) return 1.0;
+  double xmin = W->GetXaxis()->GetXmin();
+  double xmax = W->GetXaxis()->GetXmax();
+  if(xi <= xmin) xi = std::nextafter(xmin, xmax);
+  if(xi >= xmax) xi = std::nextafter(xmax, xmin);
+  int bin = W->GetXaxis()->FindFixBin(xi);
+  if(bin < 1) bin = 1;
+  if(bin > W->GetNbinsX()) bin = W->GetNbinsX();
+  const double w = W->GetBinContent(bin);
+  if(!std::isfinite(w) || w <= 0.0 || w > 100.0) return 1.0;
+  return w;
+}
+//template method ending
 
 ZprimeSemiLeptonicHists::ZprimeSemiLeptonicHists(uhh2::Context& ctx, const std::string& dirname):
 Hists(ctx, dirname) {
@@ -34,7 +176,7 @@ Hists(ctx, dirname) {
   isUL17        = (ctx.get("dataset_version").find("UL17")        != std::string::npos);
   isUL18        = (ctx.get("dataset_version").find("UL18")        != std::string::npos);
 
-  // debug = false;
+  // debug = true;
   NN = false;
   isMuon = false; isElectron = false;
   if(ctx.get("channel") == "muon") isMuon = true;
@@ -52,7 +194,132 @@ Hists(ctx, dirname) {
   h_BestZprimeCandidateCorrectMatch = ctx.get_handle<ZprimeCandidate*>("ZprimeCandidateBestCorrectMatch");
   h_is_zprime_reconstructed_chi2 = ctx.get_handle<bool>("is_zprime_reconstructed_chi2");
   h_is_zprime_reconstructed_correctmatch = ctx.get_handle<bool>("is_zprime_reconstructed_correctmatch");
+  h_xi_gen     = ctx.get_handle<float>("xi_gen");
+  h_DeltaY_gen = ctx.get_handle<float>("DeltaY_gen");
+  h_mtt_gen    = ctx.get_handle<float>("mtt_gen");
   //  h_chi2 = ctx.get_handle<float>("chi2");
+
+  // ------------------------------------------------------------
+  // template method
+  // NoAC config
+  use_noac_evtweights_ = (ctx.get("noac_apply_event_weight", "false") == "true");
+  noac_gen_file_       = ctx.get("noac_gen_file",    "");
+  noac_gen_hist_       = ctx.get("noac_gen_hist",    "");
+  noac_fraction_       = std::stod(ctx.get("noac_fraction", "0.0")); // 0=nominal, 1=NoAC
+
+  // Build W(xi; f) once from GEN preselection histogram. Support single file or glob pattern
+  if(is_mc && is_tt && use_noac_evtweights_ && !noac_gen_file_.empty() && !noac_gen_hist_.empty()){
+    std::unique_ptr<TH1D> sumHist;
+    auto accumulate_hist = [&](const TH1* hin){
+      if(!hin) return;
+      auto h1d = dynamic_cast<const TH1D*>(hin);
+      std::unique_ptr<TH1D> tmp;
+      if(!h1d){
+        tmp = clone_as_TH1D(hin, "xi_gen_tmp");
+        h1d = tmp.get();
+      }
+      if(!sumHist){
+        sumHist.reset(static_cast<TH1D*>(h1d->Clone("xi_gen_sum")));
+        sumHist->SetDirectory(nullptr);
+      } else {
+        sumHist->Add(h1d);
+      }
+    };
+
+    const bool has_glob = (noac_gen_file_.find('*') != std::string::npos) || (noac_gen_file_.find('?') != std::string::npos);
+    if(has_glob){
+      glob_t gl; memset(&gl, 0, sizeof(gl));
+      if(glob(noac_gen_file_.c_str(), 0, nullptr, &gl) == 0){
+        for(size_t i=0;i<gl.gl_pathc;++i){
+          std::unique_ptr<TFile> f(TFile::Open(gl.gl_pathv[i], "READ"));
+          if(!f || f->IsZombie()){
+            std::cerr << "[NoAC] skip unreadable file: " << gl.gl_pathv[i] << "\n";
+            continue;
+          }
+          TH1* h = dynamic_cast<TH1*>(f->Get(noac_gen_hist_.c_str()));
+          if(!h){
+            std::cerr << "[NoAC] missing hist '" << noac_gen_hist_ << "' in " << gl.gl_pathv[i] << "\n";
+            continue;
+          }
+          accumulate_hist(h);
+        }
+      }
+      globfree(&gl);
+    } else {
+      std::unique_ptr<TFile> fGen(TFile::Open(noac_gen_file_.c_str(), "READ"));
+      if(fGen && !fGen->IsZombie()){
+        TH1* h = dynamic_cast<TH1*>(fGen->Get(noac_gen_hist_.c_str()));
+        accumulate_hist(h);
+      }
+    }
+
+    if(sumHist){
+      // Build single f if configured
+      noac_weights_.reset();
+      noac_weights_m1_.reset();
+      noac_weights_0_.reset();
+      noac_weights_1_.reset();
+      noac_weights_m08_.reset();
+      noac_weights_m06_.reset();
+      noac_weights_m04_.reset();
+      noac_weights_m02_.reset();
+      noac_weights_02_.reset();
+      noac_weights_04_.reset();
+      noac_weights_06_.reset();
+      noac_weights_08_.reset();
+      try{
+        noac_weights_ = build_noac_weights_from_gen(sumHist.get(), noac_fraction_);
+      } catch(...) {}
+      // Always also build the standard trio {-1,0,1}
+      try{ noac_weights_m1_ = build_noac_weights_from_gen(sumHist.get(), -1.0); } catch(...) {}
+      try{ noac_weights_0_  = build_noac_weights_from_gen(sumHist.get(),  0.0); } catch(...) {}
+      try{ noac_weights_1_  = build_noac_weights_from_gen(sumHist.get(),  1.0); } catch(...) {}
+      try{ noac_weights_m08_ = build_noac_weights_from_gen(sumHist.get(), -0.8); } catch(...) {}
+      try{ noac_weights_m06_ = build_noac_weights_from_gen(sumHist.get(), -0.6); } catch(...) {}
+      try{ noac_weights_m04_ = build_noac_weights_from_gen(sumHist.get(), -0.4); } catch(...) {}
+      try{ noac_weights_m02_ = build_noac_weights_from_gen(sumHist.get(), -0.2); } catch(...) {}
+      try{ noac_weights_02_ = build_noac_weights_from_gen(sumHist.get(),  0.2); } catch(...) {}
+      try{ noac_weights_04_ = build_noac_weights_from_gen(sumHist.get(),  0.4); } catch(...) {}
+      try{ noac_weights_06_ = build_noac_weights_from_gen(sumHist.get(),  0.6); } catch(...) {}
+      try{ noac_weights_08_ = build_noac_weights_from_gen(sumHist.get(),  0.8); } catch(...) {}
+      // std::cout << "[NoAC] Built W(xi) from " << (has_glob?"glob":"file") << " for f in {-1,0,1}"
+      //           << (noac_weights_?" and configured f":"") << std::endl;
+
+      // Persist weight histograms into output (book TH1F clones to be written)
+      if(noac_weights_)  NoAC_W_cfg = book<TH1F>("NoAC_W_cfg",  "NoAC weight W(xi) configured f",  noac_weights_->GetNbinsX(), noac_weights_->GetXaxis()->GetXmin(), noac_weights_->GetXaxis()->GetXmax());
+      if(noac_weights_m1_) NoAC_W_m1 = book<TH1F>("NoAC_W_m1", "NoAC weight W(xi) f=-1", noac_weights_m1_->GetNbinsX(), noac_weights_m1_->GetXaxis()->GetXmin(), noac_weights_m1_->GetXaxis()->GetXmax());
+      if(noac_weights_0_)  NoAC_W_0  = book<TH1F>("NoAC_W_0",  "NoAC weight W(xi) f=0",  noac_weights_0_->GetNbinsX(),  noac_weights_0_->GetXaxis()->GetXmin(),  noac_weights_0_->GetXaxis()->GetXmax());
+      if(noac_weights_1_)  NoAC_W_1  = book<TH1F>("NoAC_W_1",  "NoAC weight W(xi) f=1",  noac_weights_1_->GetNbinsX(),  noac_weights_1_->GetXaxis()->GetXmin(),  noac_weights_1_->GetXaxis()->GetXmax());
+      if(noac_weights_m08_) NoAC_W_m08 = book<TH1F>("NoAC_W_m08", "NoAC weight W(xi) f=-0.8", noac_weights_m08_->GetNbinsX(), noac_weights_m08_->GetXaxis()->GetXmin(), noac_weights_m08_->GetXaxis()->GetXmax());
+      if(noac_weights_m06_) NoAC_W_m06 = book<TH1F>("NoAC_W_m06", "NoAC weight W(xi) f=-0.6", noac_weights_m06_->GetNbinsX(), noac_weights_m06_->GetXaxis()->GetXmin(), noac_weights_m06_->GetXaxis()->GetXmax());
+      if(noac_weights_m04_) NoAC_W_m04 = book<TH1F>("NoAC_W_m04", "NoAC weight W(xi) f=-0.4", noac_weights_m04_->GetNbinsX(), noac_weights_m04_->GetXaxis()->GetXmin(), noac_weights_m04_->GetXaxis()->GetXmax());
+      if(noac_weights_m02_) NoAC_W_m02 = book<TH1F>("NoAC_W_m02", "NoAC weight W(xi) f=-0.2", noac_weights_m02_->GetNbinsX(), noac_weights_m02_->GetXaxis()->GetXmin(), noac_weights_m02_->GetXaxis()->GetXmax());
+      if(noac_weights_02_) NoAC_W_02 = book<TH1F>("NoAC_W_02", "NoAC weight W(xi) f=0.2", noac_weights_02_->GetNbinsX(), noac_weights_02_->GetXaxis()->GetXmin(), noac_weights_02_->GetXaxis()->GetXmax());
+      if(noac_weights_04_) NoAC_W_04 = book<TH1F>("NoAC_W_04", "NoAC weight W(xi) f=0.4", noac_weights_04_->GetNbinsX(), noac_weights_04_->GetXaxis()->GetXmin(), noac_weights_04_->GetXaxis()->GetXmax());
+      if(noac_weights_06_) NoAC_W_06 = book<TH1F>("NoAC_W_06", "NoAC weight W(xi) f=0.6", noac_weights_06_->GetNbinsX(), noac_weights_06_->GetXaxis()->GetXmin(), noac_weights_06_->GetXaxis()->GetXmax());
+      if(noac_weights_08_) NoAC_W_08 = book<TH1F>("NoAC_W_08", "NoAC weight W(xi) f=0.8", noac_weights_08_->GetNbinsX(), noac_weights_08_->GetXaxis()->GetXmin(), noac_weights_08_->GetXaxis()->GetXmax());
+
+      auto copy_to = [](TH1F* dst, const TH1D* src){ if(!dst||!src) return; for(int i=1;i<=src->GetNbinsX();++i){ dst->SetBinContent(i, src->GetBinContent(i)); dst->SetBinError(i, 0.0); } };
+      copy_to(NoAC_W_cfg, noac_weights_.get());
+      copy_to(NoAC_W_m1,  noac_weights_m1_.get());
+      copy_to(NoAC_W_0,   noac_weights_0_.get());
+      copy_to(NoAC_W_1,   noac_weights_1_.get());
+      copy_to(NoAC_W_m08, noac_weights_m08_.get());
+      copy_to(NoAC_W_m06, noac_weights_m06_.get());
+      copy_to(NoAC_W_m04, noac_weights_m04_.get());
+      copy_to(NoAC_W_m02, noac_weights_m02_.get());
+      copy_to(NoAC_W_02, noac_weights_02_.get());
+      copy_to(NoAC_W_04, noac_weights_04_.get());
+      copy_to(NoAC_W_06, noac_weights_06_.get());
+      copy_to(NoAC_W_08, noac_weights_08_.get());
+    } else {
+      std::cerr << "[NoAC] ERROR: could not build GEN sum from '" << noac_gen_file_ << "' :: '" << noac_gen_hist_ << "'" << std::endl;
+    }
+  }
+  
+  // template method ending
+  // ------------------------------------------------------------
+
   init();
 }
 
@@ -505,8 +772,8 @@ void ZprimeSemiLeptonicHists::init(){
   
   // DeltaY
   // DeltaY_reco            = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
-  DeltaY_reco_high       = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
-  DeltaY_reco_low        = book<TH1F>("DeltaY_reco", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_high       = book<TH1F>("DeltaY_reco_high", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_low        = book<TH1F>("DeltaY_reco_low", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_d1         = book<TH1F>("DeltaY_reco_d1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_d2         = book<TH1F>("DeltaY_reco_d2", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_s1         = book<TH1F>("DeltaY_reco_s1", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
@@ -514,8 +781,8 @@ void ZprimeSemiLeptonicHists::init(){
 
 
 
-  DeltaY_reco_high_match       = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
-  DeltaY_reco_low_match        = book<TH1F>("DeltaY_reco_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_high_match       = book<TH1F>("DeltaY_reco_high_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
+  DeltaY_reco_low_match        = book<TH1F>("DeltaY_reco_low_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_d1_match         = book<TH1F>("DeltaY_reco_d1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_d2_match         = book<TH1F>("DeltaY_reco_d2_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
   DeltaY_reco_s1_match         = book<TH1F>("DeltaY_reco_s1_match", "#Delta Y_{(t,#bar{t})}",2,-2.5,2.5);
@@ -546,7 +813,7 @@ void ZprimeSemiLeptonicHists::init(){
   Delta_phi_1_match     = book<TH1F>("Delta_phi_1_match", "#Delta #phi ",16,-3.2,3.2);
   Delta_phi_2_match     = book<TH1F>("Delta_phi_2_match", "#Delta #phi ",16,-3.2,3.2);
 
-  
+
   // DeltaY_reco_0_500     = book<TH1F>("DeltaY_reco_0_500", "#Delta Y_{(t,#bar{t})} 0<Mtt<500",2,-2.5,2.5);
   // DeltaY_reco_500_750   = book<TH1F>("DeltaY_reco_500_750", "#Delta Y_{(t,#bar{t})} 500<Mtt<750",2,-2.5,2.5);
   // DeltaY_reco_750_1000  = book<TH1F>("DeltaY_reco_750_1000", "#Delta Y_{(t,#bar{t})} 750<Mtt<1000",2,-2.5,2.5);
@@ -558,11 +825,90 @@ void ZprimeSemiLeptonicHists::init(){
   
   // Mtt_gen               = book<TH1F>("Mtt_gen", "M_{t#bar{t}} GEN [GeV]", 100, 0, 2000);
   // DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta|Y|_{(t,#bar{t})} GEN ", 50, -2.5, 2.5);
-  DeltaY_reco           = book<TH1F>("DeltaY_reco", "#Delta|Y|_{(t,#bar{t})} RECO ", 50, -2.5, 2.5);
-  // DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 50, -1.0, 1.0);
-  DeltaY_xi_reco        = book<TH1F>("DeltaY_xi_reco", "#xi = tanh(#Delta|Y|) RECO", 50, -1.0, 1.0);
- 
   
+  //template method
+  
+  DeltaY_reco           = book<TH1F>("DeltaY_reco", "#Delta|Y|_{(t,#bar{t})} RECO ", 50, -2.5, 2.5);
+  // DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 20, -1.0, 1.0);
+  DeltaY_xi_reco        = book<TH1F>("DeltaY_xi_reco", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 50, -1.0, 1.0);
+  DeltaY_xi_reco_20     = book<TH1F>("DeltaY_xi_reco_20", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 20, -1.0, 1.0);
+  DeltaY_xi_reco_10     = book<TH1F>("DeltaY_xi_reco_10", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 10, -1.0, 1.0);
+  DeltaY_xi_reco_6      = book<TH1F>("DeltaY_xi_reco_6", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 6, -1.0, 1.0);
+  
+  // Response matrix for template method
+  DeltaY_xi_genVsReco = book<TH2F>("DeltaY_xi_genVsReco", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 50, -1.0, 1.0, 50, -1.0, 1.0);
+  DeltaY_xi_genVsReco_20 = book<TH2F>("DeltaY_xi_genVsReco_20", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 20, -1.0, 1.0, 20, -1.0, 1.0);
+  DeltaY_xi_genVsReco_10 = book<TH2F>("DeltaY_xi_genVsReco_10", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 10, -1.0, 1.0, 10, -1.0, 1.0);
+  DeltaY_xi_genVsReco_6 = book<TH2F>("DeltaY_xi_genVsReco_6", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 6, -1.0, 1.0, 6, -1.0, 1.0);
+  
+  // explicit unweighted copies
+  DeltaY_reco_unw       = book<TH1F>("DeltaY_reco_unw", "#Delta|Y| RECO (unweighted)", 50, -2.5, 2.5);
+  DeltaY_xi_reco_unw    = book<TH1F>("DeltaY_xi_reco_unw", "#xi RECO (unweighted)", 50, -1.0, 1.0);
+
+  // If multi-f weights present, book suffixed variants
+  if(use_noac_evtweights_ && (noac_weights_m1_ || noac_weights_0_ || noac_weights_1_ || noac_weights_m08_ || noac_weights_m06_ || noac_weights_m04_ || noac_weights_m02_ || noac_weights_02_ || noac_weights_04_ || noac_weights_06_ || noac_weights_08_)){
+    DeltaY_reco_noacm1 = book<TH1F>("DeltaY_reco_noacm1", "#Delta|Y| RECO (NoAC f=-1)", 50, -2.5, 2.5);
+    DeltaY_reco_noac0  = book<TH1F>("DeltaY_reco_noac0",  "#Delta|Y| RECO (NoAC f=0)",  50, -2.5, 2.5);
+    DeltaY_reco_noac1  = book<TH1F>("DeltaY_reco_noac1",  "#Delta|Y| RECO (NoAC f=1)",  50, -2.5, 2.5);
+    DeltaY_reco_noacm08 = book<TH1F>("DeltaY_reco_noacm08", "#Delta|Y| RECO (NoAC f=-0.8)", 50, -2.5, 2.5);
+    DeltaY_reco_noacm06 = book<TH1F>("DeltaY_reco_noacm06", "#Delta|Y| RECO (NoAC f=-0.6)", 50, -2.5, 2.5);
+    DeltaY_reco_noacm04 = book<TH1F>("DeltaY_reco_noacm04", "#Delta|Y| RECO (NoAC f=-0.4)", 50, -2.5, 2.5);
+    DeltaY_reco_noacm02 = book<TH1F>("DeltaY_reco_noacm02", "#Delta|Y| RECO (NoAC f=-0.2)", 50, -2.5, 2.5);
+    DeltaY_reco_noac02 = book<TH1F>("DeltaY_reco_noac02", "#Delta|Y| RECO (NoAC f=0.2)", 50, -2.5, 2.5);
+    DeltaY_reco_noac04 = book<TH1F>("DeltaY_reco_noac04", "#Delta|Y| RECO (NoAC f=0.4)", 50, -2.5, 2.5);
+    DeltaY_reco_noac06 = book<TH1F>("DeltaY_reco_noac06", "#Delta|Y| RECO (NoAC f=0.6)", 50, -2.5, 2.5);
+    DeltaY_reco_noac08 = book<TH1F>("DeltaY_reco_noac08", "#Delta|Y| RECO (NoAC f=0.8)", 50, -2.5, 2.5);
+
+    DeltaY_xi_reco_noacm1    = book<TH1F>("DeltaY_xi_reco_noacm1", "#xi RECO (NoAC f=-1)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noac0     = book<TH1F>("DeltaY_xi_reco_noac0",  "#xi RECO (NoAC f=0)",  50, -1.0, 1.0);
+    DeltaY_xi_reco_noac1     = book<TH1F>("DeltaY_xi_reco_noac1",  "#xi RECO (NoAC f=1)",  50, -1.0, 1.0);
+    DeltaY_xi_reco_noacm08   = book<TH1F>("DeltaY_xi_reco_noacm08", "#xi RECO (NoAC f=-0.8)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noacm06   = book<TH1F>("DeltaY_xi_reco_noacm06", "#xi RECO (NoAC f=-0.6)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noacm04   = book<TH1F>("DeltaY_xi_reco_noacm04", "#xi RECO (NoAC f=-0.4)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noacm02   = book<TH1F>("DeltaY_xi_reco_noacm02", "#xi RECO (NoAC f=-0.2)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noac02    = book<TH1F>("DeltaY_xi_reco_noac02", "#xi RECO (NoAC f=0.2)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noac04    = book<TH1F>("DeltaY_xi_reco_noac04", "#xi RECO (NoAC f=0.4)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noac06    = book<TH1F>("DeltaY_xi_reco_noac06", "#xi RECO (NoAC f=0.6)", 50, -1.0, 1.0);
+    DeltaY_xi_reco_noac08    = book<TH1F>("DeltaY_xi_reco_noac08", "#xi RECO (NoAC f=0.8)", 50, -1.0, 1.0);
+
+    DeltaY_xi_reco_20_noacm1 = book<TH1F>("DeltaY_xi_reco_20_noacm1", "#xi RECO 20 (NoAC f=-1)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac0  = book<TH1F>("DeltaY_xi_reco_20_noac0",  "#xi RECO 20 (NoAC f=0)",  20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac1  = book<TH1F>("DeltaY_xi_reco_20_noac1",  "#xi RECO 20 (NoAC f=1)",  20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noacm08 = book<TH1F>("DeltaY_xi_reco_20_noacm08", "#xi RECO 20 (NoAC f=-0.8)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noacm06 = book<TH1F>("DeltaY_xi_reco_20_noacm06", "#xi RECO 20 (NoAC f=-0.6)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noacm04 = book<TH1F>("DeltaY_xi_reco_20_noacm04", "#xi RECO 20 (NoAC f=-0.4)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noacm02 = book<TH1F>("DeltaY_xi_reco_20_noacm02", "#xi RECO 20 (NoAC f=-0.2)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac02 = book<TH1F>("DeltaY_xi_reco_20_noac02", "#xi RECO 20 (NoAC f=0.2)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac04 = book<TH1F>("DeltaY_xi_reco_20_noac04", "#xi RECO 20 (NoAC f=0.4)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac06 = book<TH1F>("DeltaY_xi_reco_20_noac06", "#xi RECO 20 (NoAC f=0.6)", 20, -1.0, 1.0);
+    DeltaY_xi_reco_20_noac08 = book<TH1F>("DeltaY_xi_reco_20_noac08", "#xi RECO 20 (NoAC f=0.8)", 20, -1.0, 1.0);
+
+    DeltaY_xi_reco_10_noacm1 = book<TH1F>("DeltaY_xi_reco_10_noacm1", "#xi RECO 10 (NoAC f=-1)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac0  = book<TH1F>("DeltaY_xi_reco_10_noac0",  "#xi RECO 10 (NoAC f=0)",  10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac1  = book<TH1F>("DeltaY_xi_reco_10_noac1",  "#xi RECO 10 (NoAC f=1)",  10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noacm08 = book<TH1F>("DeltaY_xi_reco_10_noacm08", "#xi RECO 10 (NoAC f=-0.8)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noacm06 = book<TH1F>("DeltaY_xi_reco_10_noacm06", "#xi RECO 10 (NoAC f=-0.6)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noacm04 = book<TH1F>("DeltaY_xi_reco_10_noacm04", "#xi RECO 10 (NoAC f=-0.4)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noacm02 = book<TH1F>("DeltaY_xi_reco_10_noacm02", "#xi RECO 10 (NoAC f=-0.2)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac02 = book<TH1F>("DeltaY_xi_reco_10_noac02", "#xi RECO 10 (NoAC f=0.2)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac04 = book<TH1F>("DeltaY_xi_reco_10_noac04", "#xi RECO 10 (NoAC f=0.4)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac06 = book<TH1F>("DeltaY_xi_reco_10_noac06", "#xi RECO 10 (NoAC f=0.6)", 10, -1.0, 1.0);
+    DeltaY_xi_reco_10_noac08 = book<TH1F>("DeltaY_xi_reco_10_noac08", "#xi RECO 10 (NoAC f=0.8)", 10, -1.0, 1.0);
+
+    DeltaY_xi_reco_6_noacm1  = book<TH1F>("DeltaY_xi_reco_6_noacm1",  "#xi RECO 6 (NoAC f=-1)",  6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac0   = book<TH1F>("DeltaY_xi_reco_6_noac0",   "#xi RECO 6 (NoAC f=0)",   6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac1   = book<TH1F>("DeltaY_xi_reco_6_noac1",   "#xi RECO 6 (NoAC f=1)",   6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noacm08 = book<TH1F>("DeltaY_xi_reco_6_noacm08", "#xi RECO 6 (NoAC f=-0.8)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noacm06 = book<TH1F>("DeltaY_xi_reco_6_noacm06", "#xi RECO 6 (NoAC f=-0.6)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noacm04 = book<TH1F>("DeltaY_xi_reco_6_noacm04", "#xi RECO 6 (NoAC f=-0.4)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noacm02 = book<TH1F>("DeltaY_xi_reco_6_noacm02", "#xi RECO 6 (NoAC f=-0.2)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac02 = book<TH1F>("DeltaY_xi_reco_6_noac02", "#xi RECO 6 (NoAC f=0.2)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac04 = book<TH1F>("DeltaY_xi_reco_6_noac04", "#xi RECO 6 (NoAC f=0.4)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac06 = book<TH1F>("DeltaY_xi_reco_6_noac06", "#xi RECO 6 (NoAC f=0.6)", 6, -1.0, 1.0);
+    DeltaY_xi_reco_6_noac08 = book<TH1F>("DeltaY_xi_reco_6_noac08", "#xi RECO 6 (NoAC f=0.8)", 6, -1.0, 1.0);
+  }
+
+  //template method ending
   
   vector<float> bins_Zprime4 = {0,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200,3400,3600,3800,4000,4400,4800,5200,5600,6000,6100};
   vector<float> bins_Zprime5 = {0,200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3300,3600,3900,4200,4500,5000,5100};
@@ -1686,6 +2032,16 @@ void ZprimeSemiLeptonicHists::fill(const Event & event){
     }
 
     if(debug) cout << "about to fill response matrix" << endl;
+    // bool matched = (deltaR_min_leptonic < 0.4 && deltaR_min_hadronic < 0.4 &&
+    //             best_gen_for_leptop >= 0 && best_gen_for_hadtop >= 0);
+
+    // if (matched) {
+    //   response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
+    //   DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);
+    //   DeltaY_gen_best_plot->Fill(DeltaY_gen_best, weight);
+    // } else {
+    //   DeltaY_notMatched->Fill(1., weight);
+    // }
 
     response_matrix->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
     DeltaY_reco_best_plot->Fill(DeltaY_reco_best, weight);
@@ -1727,12 +2083,162 @@ if (is_zprime_reconstructed_chi2 ){
     }
     N_lep_charge->Fill(BestZprimeCandidate->lepton().charge(),weight);
     // cout <<"Lepton charge is: "<< BestZprimeCandidate->lepton().charge()<<endl;
-    DeltaY_reco->Fill(dyreco, weight);
+    
+    // ------------------------------------------------------------
+    // template method
+
+    // Unweighted base copies (no NoAC)
+    const double w_nom = weight;
+    DeltaY_reco_unw->Fill(dyreco, w_nom);
+    float xi_reco = std::tanh(dyreco);
+    DeltaY_xi_reco_unw->Fill(xi_reco, w_nom);
+
+    // Legacy single configured f: fill base set weighted, else fill base unweighted
+    if(use_noac_evtweights_ && noac_weights_ && event.is_valid(h_xi_gen)){
+      const double xi_gen_evt = event.get(h_xi_gen);
+      const double w_cfg = lookup_noac_weight(xi_gen_evt, noac_weights_.get());
+      const double w_fill = w_nom * w_cfg;
+      DeltaY_reco->Fill(dyreco, w_fill);
+      DeltaY_xi_reco->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_20->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_10->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_6->Fill(xi_reco, w_fill);
+    } else {
+      DeltaY_reco->Fill(dyreco, w_nom);
+      DeltaY_xi_reco->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_20->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_10->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_6->Fill(xi_reco, w_nom);
+    }
+
+    // Always fill trio if available (separate suffixed sets)
+    if(use_noac_evtweights_ && event.is_valid(h_xi_gen)){
+      const double xi_gen_evt = event.get(h_xi_gen);
+      if(noac_weights_m1_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m1_.get());
+        if(DeltaY_reco_noacm1) DeltaY_reco_noacm1->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noacm1) DeltaY_xi_reco_noacm1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noacm1) DeltaY_xi_reco_20_noacm1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noacm1) DeltaY_xi_reco_10_noacm1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noacm1)  DeltaY_xi_reco_6_noacm1->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_0_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_0_.get());
+        if(DeltaY_reco_noac0) DeltaY_reco_noac0->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac0) DeltaY_xi_reco_noac0->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac0) DeltaY_xi_reco_20_noac0->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac0) DeltaY_xi_reco_10_noac0->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac0)  DeltaY_xi_reco_6_noac0->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_1_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_1_.get());
+        if(DeltaY_reco_noac1) DeltaY_reco_noac1->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac1) DeltaY_xi_reco_noac1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac1) DeltaY_xi_reco_20_noac1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac1) DeltaY_xi_reco_10_noac1->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac1)  DeltaY_xi_reco_6_noac1->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_m08_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m08_.get());
+        if(DeltaY_reco_noacm08) DeltaY_reco_noacm08->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noacm08) DeltaY_xi_reco_noacm08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noacm08) DeltaY_xi_reco_20_noacm08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noacm08) DeltaY_xi_reco_10_noacm08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noacm08)  DeltaY_xi_reco_6_noacm08->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_m06_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m06_.get());
+        if(DeltaY_reco_noacm06) DeltaY_reco_noacm06->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noacm06) DeltaY_xi_reco_noacm06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noacm06) DeltaY_xi_reco_20_noacm06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noacm06) DeltaY_xi_reco_10_noacm06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noacm06)  DeltaY_xi_reco_6_noacm06->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_m04_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m04_.get());
+        if(DeltaY_reco_noacm04) DeltaY_reco_noacm04->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noacm04) DeltaY_xi_reco_noacm04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noacm04) DeltaY_xi_reco_20_noacm04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noacm04) DeltaY_xi_reco_10_noacm04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noacm04)  DeltaY_xi_reco_6_noacm04->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_m02_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m02_.get());
+        if(DeltaY_reco_noacm02) DeltaY_reco_noacm02->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noacm02) DeltaY_xi_reco_noacm02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noacm02) DeltaY_xi_reco_20_noacm02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noacm02) DeltaY_xi_reco_10_noacm02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noacm02)  DeltaY_xi_reco_6_noacm02->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_02_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_02_.get());
+        if(DeltaY_reco_noac02) DeltaY_reco_noac02->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac02) DeltaY_xi_reco_noac02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac02) DeltaY_xi_reco_20_noac02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac02) DeltaY_xi_reco_10_noac02->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac02)  DeltaY_xi_reco_6_noac02->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_04_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_04_.get());
+        if(DeltaY_reco_noac04) DeltaY_reco_noac04->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac04) DeltaY_xi_reco_noac04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac04) DeltaY_xi_reco_20_noac04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac04) DeltaY_xi_reco_10_noac04->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac04)  DeltaY_xi_reco_6_noac04->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_06_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_06_.get());
+        if(DeltaY_reco_noac06) DeltaY_reco_noac06->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac06) DeltaY_xi_reco_noac06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac06) DeltaY_xi_reco_20_noac06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac06) DeltaY_xi_reco_10_noac06->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac06)  DeltaY_xi_reco_6_noac06->Fill(xi_reco, w_nom * w);
+      }
+      if(noac_weights_08_){
+        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_08_.get());
+        if(DeltaY_reco_noac08) DeltaY_reco_noac08->Fill(dyreco, w_nom * w);
+        if(DeltaY_xi_reco_noac08) DeltaY_xi_reco_noac08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_20_noac08) DeltaY_xi_reco_20_noac08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_10_noac08) DeltaY_xi_reco_10_noac08->Fill(xi_reco, w_nom * w);
+        if(DeltaY_xi_reco_6_noac08)  DeltaY_xi_reco_6_noac08->Fill(xi_reco, w_nom * w);
+      }
+    }
+
     
     // Fill xi histogram for reconstruction level
-    double xi_reco = TMath::TanH(dyreco);
-    DeltaY_xi_reco->Fill(xi_reco, weight);
-  
+    // Fill 2D response matrix (GEN vs RECO)
+    // if (is_mc && is_tt && event.is_valid(h_xi_gen)) {
+    //   float xi_gen = event.get(h_xi_gen);
+    //   // cout << "xi_gen=" << xi_gen << " xi_reco=" << xi_reco;
+    //   DeltaY_xi_genVsReco->Fill(xi_gen, xi_reco, weight);
+    // }
+
+    auto finite   = [](double x){ return std::isfinite(x); };
+    auto in_range = [](double x){ return x > -1.0 && x < 1.0; };
+    auto clamp    = [](double x){
+      if(!std::isfinite(x)) return x;
+      if(x >=  1.0) return std::nextafter(1.0, 0.0);
+      if(x <= -1.0) return std::nextafter(-1.0, 0.0);
+      return x;
+    };
+
+    if(event.is_valid(h_xi_gen)) {
+      double xi_gen = event.get(h_xi_gen);
+      if(finite(xi_gen) && finite(xi_reco)) {
+        xi_gen  = clamp(xi_gen);
+        xi_reco = clamp(xi_reco);
+        if(in_range(xi_gen) && in_range(xi_reco)) {
+          // cout << "xi_gen=" << xi_gen << " xi_reco=" << xi_reco << endl;
+          DeltaY_xi_genVsReco->Fill(xi_gen, xi_reco, weight);
+          DeltaY_xi_genVsReco_20->Fill(xi_gen, xi_reco, weight);
+          DeltaY_xi_genVsReco_10->Fill(xi_gen, xi_reco, weight);
+          DeltaY_xi_genVsReco_6->Fill(xi_gen, xi_reco, weight);
+        }
+      }
+    }
+
+    // end of template method
+    // ------------------------------------------------------------
   
   //start spin correlation
   // ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2); 
@@ -2365,3 +2871,4 @@ if (is_zprime_reconstructed_chi2 ){
 
 
 ZprimeSemiLeptonicHists::~ZprimeSemiLeptonicHists(){}
+

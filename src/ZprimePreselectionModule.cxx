@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <memory>
 
 #include <UHH2/core/include/AnalysisModule.h>
@@ -95,6 +96,9 @@ protected:
   // TTbarGen handle for mttbar calculation
   Event::Handle<TTbarGen> h_ttbargen;
   std::unique_ptr<TTbarGenProducer> ttgenprod;
+  uhh2::Event::Handle<float> h_xi_gen;
+  uhh2::Event::Handle<float> h_mtt_gen;
+  uhh2::Event::Handle<float> h_DeltaY_gen;
 
 };
 
@@ -110,7 +114,7 @@ void ZprimePreselectionModule::fill_histograms(uhh2::Event& event, string tag){
   HFolder(mytag)->fill(event);
 }
 
-ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
+ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx) {
 
   debug = false; // true/false
 
@@ -202,6 +206,13 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx){
   // TTbarGen handle for mttbar calculation
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
 
+  // GEN-level outputs (so they exist in the event and output tree)
+  if (isMC) {
+    h_xi_gen     = ctx.declare_event_output<float>("xi_gen");
+    h_mtt_gen    = ctx.declare_event_output<float>("mtt_gen");
+    h_DeltaY_gen = ctx.declare_event_output<float>("DeltaY_gen");
+  }
+
   // Book histograms
   vector<string> histogram_tags = {"Input", "mtt_gen_inclusive", "CommonModules", "HOTVRCorrections", "PUPPICorrections", "Lepton1", "JetID", "JetCleaner1", "JetCleaner2", "TopjetCleaner", "Jet1", "Jet2", "MET"};
     
@@ -240,35 +251,30 @@ bool ZprimePreselectionModule::process(uhh2::Event& event){
 
   // Calculate mttbar and fill appropriate bin histograms
   if (isMC) {
-    try {
-      const auto& ttbargen = event.get(h_ttbargen);
-      
-      // Check if it's a semileptonic decay (e/mu only)
-      if (ttbargen.IsSemiLeptonicDecay()) {
-        const int lepId = std::abs(ttbargen.ChargedLepton().pdgId());
-        if (lepId == 11 || lepId == 13) { // electron or muon (includes tau->e/mu)
-          
-          const GenParticle& gen_top = ttbargen.Top();
-          const GenParticle& gen_antitop = ttbargen.Antitop();
-          const double mtt_gen = (gen_top.v4() + gen_antitop.v4()).M();
-          
-          // Fill inclusive histograms for ALL semileptonic events
-          fill_histograms(event, "mtt_gen_inclusive");
-          
-          // Find which mttbar bin this event belongs to
-          const int ibin = find_mtt_bin(mtt_gen);
-          if (ibin >= 0) {
-            const double low = mttbar_bin_edges[ibin];
-            const double high = mttbar_bin_edges[ibin+1];
-            const string bin_tag = "mtt_gen_" + to_string((int)low) + "_" + to_string((int)high);
-            
-            // Fill histograms for this specific mttbar bin
-            fill_histograms(event, bin_tag);
-          }
+    // set defaults first, every event
+    event.set(h_xi_gen,     std::numeric_limits<float>::quiet_NaN());
+    event.set(h_mtt_gen,    std::numeric_limits<float>::quiet_NaN());
+    event.set(h_DeltaY_gen, std::numeric_limits<float>::quiet_NaN());
+    const auto& ttbargen = event.get(h_ttbargen);
+    if (ttbargen.IsSemiLeptonicDecay()) {
+      int lepId = std::abs(ttbargen.ChargedLepton().pdgId());
+      if (lepId == 11 || lepId == 13) { 
+        const auto& top  = ttbargen.Top();
+        const auto& atop = ttbargen.Antitop();
+        double mtt = (top.v4() + atop.v4()).M();
+        double dy  = std::abs(top.v4().Rapidity()) - std::abs(atop.v4().Rapidity());
+        event.set(h_xi_gen,     std::tanh(dy));
+        event.set(h_mtt_gen,    static_cast<float>(mtt));
+        event.set(h_DeltaY_gen, static_cast<float>(dy));
+
+        // Only fill histograms if e/muon semileptonic
+        fill_histograms(event, "mtt_gen_inclusive");
+        const int ibin = find_mtt_bin(mtt);
+        if (ibin >= 0) {
+          const string bin_tag = "mtt_gen_" + to_string((int)mttbar_bin_edges[ibin]) + "_" + to_string((int)mttbar_bin_edges[ibin+1]);
+          fill_histograms(event, bin_tag);
         }
       }
-    } catch (const std::exception& e) {
-      if (debug) std::cout << "TTbarGen failed: " << e.what() << std::endl;
     }
   }
 
