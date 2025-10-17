@@ -1185,6 +1185,9 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
           auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * (syst_tmistag.at(i)/tmistag_nominal) * w_noac_f);
         }
       }
+      for(unsigned int i=0; i<hists_toppt.size(); i++){
+        hists_toppt_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_toppt.at(i));
+      }
       if (debug)cout << "ttbar all sys fill deltay -mistag" <<endl;
       // ps variations
       for(unsigned int i=0; i<hists_ps.size(); i++){
@@ -1280,7 +1283,11 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         std::string key = std::string("DeltaY_xi_reco_6_") + mnames[i] + "_f_" + f0;
         auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * (syst_tmistag.at(i)/tmistag_nominal));
       }
-      // ISR/FSR
+      // Top pt reweighting
+      for(unsigned int i=0; i<hists_toppt.size(); i++){
+        hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+      }
+      //isr fsr
       for(unsigned int i=0; i<hists_ps.size(); i++){
         hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));
         static const char* psn[] = {"isr_up","isr_down","fsr_up","fsr_down"};
@@ -1617,6 +1624,27 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         if (debug)cout <<" done with d2 mistag" <<endl; 
 
       }
+          // Top pt reweighting
+      for(unsigned int i=0; i<hists_toppt.size(); i++){
+        
+          if (pt_hadTop > pt_hadTop_thresh && deltay>0){
+            hists_toppt_sigma_1.at(i)->Fill(sphi, weight * syst_toppt.at(i));
+          }
+          if (debug)cout <<" done with s1 toppt" <<endl; 
+          if (pt_hadTop > pt_hadTop_thresh && deltay<0){
+            hists_toppt_sigma_2.at(i)->Fill(sphi, weight * syst_toppt.at(i));
+          }
+          if (debug)cout <<" done with s2 toppt" <<endl; 
+          if(pt_hadTop < pt_hadTop_thresh && dphi>0){
+            hists_toppt_dy_d1.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+          }
+          if (debug)cout <<" done with d1 toppt" <<endl; 
+          if(pt_hadTop < pt_hadTop_thresh && dphi<0){
+            hists_toppt_dy_d2.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+          }
+          if (debug)cout <<" done with d2 toppt" <<endl; 
+        }
+            // ps variations
       
       for(unsigned int i=0; i<hists_ps.size(); i++){
         if (pt_hadTop > pt_hadTop_thresh && deltay>0){
