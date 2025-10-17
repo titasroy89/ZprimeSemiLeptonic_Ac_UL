@@ -1187,6 +1187,14 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
       for(unsigned int i=0; i<hists_toppt.size(); i++){
         hists_toppt_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_toppt.at(i));
+        // template method xi map for toppt
+        for(const float fv : f_values){
+          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
+          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
+          static const char* topptn[] = {"toppt_a_up", "toppt_a_down", "toppt_b_up", "toppt_b_down"};
+          std::string key = std::string("DeltaY_xi_reco_6_") + topptn[i] + "_f_" + f_str;
+          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * syst_toppt.at(i) * w_noac_f);
+        }
       }
       if (debug)cout << "ttbar all sys fill deltay -mistag" <<endl;
       // ps variations
@@ -1283,9 +1291,17 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         std::string key = std::string("DeltaY_xi_reco_6_") + mnames[i] + "_f_" + f0;
         auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * (syst_tmistag.at(i)/tmistag_nominal));
       }
-      // Top pt reweighting
-      for(unsigned int i=0; i<hists_toppt.size(); i++){
-        hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+      // Top pt reweighting for xi map (backgrounds: f=0 only)
+      {
+        std::string f0 = std::to_string(0.0f); 
+        std::replace(f0.begin(), f0.end(), '.', 'p'); 
+        std::replace(f0.begin(), f0.end(), '-', 'm');
+        static const char* topptn[] = {"toppt_a_up", "toppt_a_down", "toppt_b_up", "toppt_b_down"};
+        for(unsigned int i=0; i<hists_toppt.size(); i++){
+          hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+          std::string key = std::string("DeltaY_xi_reco_6_") + topptn[i] + "_f_" + f0;
+          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_toppt.at(i));
+        }
       }
       //isr fsr
       for(unsigned int i=0; i<hists_ps.size(); i++){
