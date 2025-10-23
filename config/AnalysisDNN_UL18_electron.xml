@@ -14,8 +14,12 @@
 <!ENTITY CHANNEL "electron">
 <!ENTITY SAMPLE "none">
 
+<<<<<<< HEAD
 <!ENTITY OUTPUTdir  "/data/dust/user/titasroy/Ac_UL_ntuples/2018/&CHANNEL;/">
 
+=======
+<!ENTITY OUTPUTdir  "/data/dust/group/cms/zprime-uhh/AnalysisDNN_UL17_new/&CHANNEL;/">
+>>>>>>> bb4bb24cfb7803baff0bc3983f1b6a8bf8d3a43f
 
 <!ENTITY EGamma_RunA SYSTEM "../data/Skimming_datasets_UL18_electron/DATA_EGamma_RunA_UL18.xml">
 <!ENTITY EGamma_RunB SYSTEM "../data/Skimming_datasets_UL18_electron/DATA_EGamma_RunB_UL18.xml">
@@ -62,7 +66,11 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
+<<<<<<< HEAD
 <ConfigSGE RAM="2" DISK="2" Mail="titasroy@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_2018_electron"/>
+=======
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL18_electron"/>
+>>>>>>> bb4bb24cfb7803baff0bc3983f1b6a8bf8d3a43f
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">

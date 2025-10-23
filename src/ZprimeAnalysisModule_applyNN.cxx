@@ -30,6 +30,8 @@
 #include <UHH2/common/include/CommonModules.h>
 #include <UHH2/common/include/LeptonScaleFactors.h>
 #include <UHH2/common/include/PSWeights.h>
+#include "TH1.h"
+#include "TFile.h"
 
 #include <UHH2/ZprimeSemiLeptonic/include/ModuleBASE.h>
 #include <UHH2/ZprimeSemiLeptonic/include/ZprimeSemiLeptonicSelections.h>
@@ -150,10 +152,10 @@ protected:
   uhh2::Event::Handle<float> h_Ak8_j3_tau32;
 
   uhh2::Event::Handle<float> h_N_Ak8;
-
   
 
 
+  
 };
 
 
@@ -250,9 +252,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //NN - DON'T FORGET TO CHANGE!
   //Muon
-  ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //Electron
-  // ifstream normfile ("/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+  // ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
   
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
@@ -270,12 +272,10 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
 
-  ///Muon
+  // /Muon
   vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_MET_phi, h_MET_pt, h_Mu_E, h_Mu_eta, h_Mu_phi, h_Mu_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
-  
   //Electron
   // vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ele_E, h_Ele_eta, h_Ele_phi, h_Ele_pt, h_MET_phi, h_MET_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
-  
   for(int i = 0; i < 59; ++i){
     // cout<<"looping over NN inputs "<< i <<endl;
 
@@ -389,6 +389,10 @@ protected:
   Event::Handle<float> h_Delta_phi_1_CR2, h_Delta_phi_2_CR2, h_Delta_phi_CR2; 
   Event::Handle<float> h_Sigma_phi_2_CR2_0_500, h_Sigma_phi_2_CR2_0_350, h_Sigma_phi_2_CR2_350_500, h_Sigma_phi_2_CR2_500_750, h_Sigma_phi_2_CR2_750_1000, h_Sigma_phi_2_CR2_1000_1500, h_Sigma_phi_2_CR2_1500_Inf, h_Sigma_phi_2_CR2_0_700, h_Sigma_phi_2_CR2_700_900, h_Sigma_phi_2_CR2_900_Inf;
 
+
+  uhh2::Event::Handle<float> h_xi_gen;
+  uhh2::Event::Handle<float> h_mtt_gen;
+  uhh2::Event::Handle<float> h_DeltaY_gen;
 
   
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
@@ -582,6 +586,8 @@ protected:
   std::unique_ptr<NeuralNetworkModule> NNModule;
 
    //bool isEleTriggerMeasurement;
+
+
 
 };
 
@@ -1088,7 +1094,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_350_SR", "DeltaY_reco_350_500_SR","DeltaY_reco_0_500_SR", "DeltaY_reco_0_700_SR", "DeltaY_reco_700_900_SR", "DeltaY_reco_900Inf_SR",
   "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1","DeltaY_reco_0_350_CR1", "DeltaY_reco_350_500_CR1", "DeltaY_reco_0_500_CR1","DeltaY_reco_0_700_CR1", "DeltaY_reco_700_900_CR1", "DeltaY_reco_900Inf_CR1", 
   "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_350_CR2", "DeltaY_reco_350_500_CR2","DeltaY_reco_0_500_CR2", "DeltaY_reco_0_700_CR2", "DeltaY_reco_700_900_CR2", "DeltaY_reco_900Inf_CR2",
-};
+  };
 
 
   book_histograms(ctx, histogram_tags);
@@ -1242,12 +1248,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   h_NNoutput2 = ctx.declare_event_output<double>("NNoutput2");
   // cout <<"about to get models" << endl;
 
-  //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
+   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
   
   //electron
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
 
   // Structure Constants Calculator for EFT
   // This calculates structure constants for each event using EFT weights
@@ -1260,6 +1266,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   }
   // structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
   h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
+
+  if(isMC) {
+    h_xi_gen     = ctx.declare_event_input<float>("xi_gen");
+    h_DeltaY_gen = ctx.declare_event_input<float>("DeltaY_gen");
+    h_mtt_gen    = ctx.declare_event_input<float>("mtt_gen");
+  }
+
 }
 
 /*
@@ -1272,14 +1285,13 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
 bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
- if(debug)cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
- if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
+  if(debug)cout << "++++++++++++ NEW EVENT ++++++++++++++" << endl;
+  if(debug) cout << " run.event: " << event.run << ". " << event.event << endl;
   // Initialize reco flags with false
   event.set(h_is_zprime_reconstructed_chi2, false);
   event.set(h_is_zprime_reconstructed_correctmatch, false);
   event.set(h_chi2,-100);
   event.set(h_weight,-100);
-  if(debug) cout << " set SR vars " << endl;
   //EFT vars SR
   event.set(h_Sigma_phi_SR,-10);
   event.set(h_Delta_phi_SR,-10);
@@ -1332,7 +1344,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_dyreco_2_SR_900_Inf,-10);
   event.set(h_dyreco_SR,-10); 
   if(debug) cout << " set CR1 vars " << endl;
- 
+
   //EFT vars CR1
   event.set(h_Sigma_phi_CR1,-10);
   event.set(h_Delta_phi_CR1,-10);
@@ -1383,13 +1395,8 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_1_CR1_0_700,-10);
   event.set(h_Sigma_phi_1_CR1_700_900,-10);
   event.set(h_Sigma_phi_1_CR1_900_Inf,-10);
-  
+
   if(debug) cout << " set CR2 vars " << endl;
-
-
-  
-  
-
 
   //EFT CR2
   event.set(h_Sigma_phi_CR2,-10);
@@ -1462,10 +1469,9 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_Sigma_phi_1_CR2_0_700,-10);
   event.set(h_Sigma_phi_1_CR2_700_900,-10);
   event.set(h_Sigma_phi_1_CR2_900_Inf,-10);
-  
-  //////////////end EFT vars ///////////
-  if(debug) cout << " done with EFT vars " << endl;
 
+  //////////////end EFT vars ///////////
+  
   event.set(h_NNoutput0, 0);
   event.set(h_NNoutput1, 0);
   event.set(h_NNoutput2, 0);
@@ -1964,7 +1970,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if( out1 == max_score ){
     if(debug) cout << "inside ST node, about to process EFT vars" << endl;
     VariablesEFTCR1_module->process(event);
-    fill_histograms(event, "DNN_output1");
+    fill_histograms(event, "DNN_output1");  
     if (debug)cout<<"processed CR1"<<endl;
 
     if(Mass_tt>=0 && Mass_tt < 500){
@@ -2102,32 +2108,32 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // Prints for the first 5 EFT events
   
   // Debug output for structure constants (only for first few events)
-  if (debug && isEFT) {static int event_counter = 0;
-    cout << "about to check structure constants debug " << endl;
-    if (event_counter < 5) {
-      // Get the structure constants from the event
-      if (event.is_valid(h_structure_constants)) {
-        std::vector<float> structure_constants = event.get(h_structure_constants);
+  // if (debug && isEFT) {static int event_counter = 0;
+  //   cout << "about to check structure constants debug " << endl;
+  //   if (event_counter < 5) {
+  //     // Get the structure constants from the event
+  //     if (event.is_valid(h_structure_constants)) {
+  //       std::vector<float> structure_constants = event.get(h_structure_constants);
         
-        std::cout << "===== Structure Constants Debug (Event " << event_counter << ") =====" << std::endl;
-        std::cout << "Number of structure constants: " << structure_constants.size() << std::endl;
+  //       std::cout << "===== Structure Constants Debug (Event " << event_counter << ") =====" << std::endl;
+  //       std::cout << "Number of structure constants: " << structure_constants.size() << std::endl;
         
-        if (!structure_constants.empty()) {
-          // Print first few constants
-          std::cout << "First few constants: ";
-          for (size_t i = 0; i < std::min(size_t(10), structure_constants.size()); ++i) {
-            std::cout << structure_constants[i] << " ";
-          }
-          std::cout << std::endl;
-        }
+  //       if (!structure_constants.empty()) {
+  //         // Print first few constants
+  //         std::cout << "First few constants: ";
+  //         for (size_t i = 0; i < std::min(size_t(10), structure_constants.size()); ++i) {
+  //           std::cout << structure_constants[i] << " ";
+  //         }
+  //         std::cout << std::endl;
+  //       }
         
-        // Increment counter after printing
-        event_counter++;
-      } else {
-        std::cout << "Structure constants not found in event!" << std::endl;
-      }
-    }
-  }
+  //       // Increment counter after printing
+  //       event_counter++;
+  //     } else {
+  //       std::cout << "Structure constants not found in event!" << std::endl;
+  //     }
+  //   }
+  // }
   if(debug) cout << "moving on to next event" << endl;
   return true;
 }
