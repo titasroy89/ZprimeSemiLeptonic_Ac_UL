@@ -405,6 +405,8 @@ protected:
   // DNN multiclass output hist
   std::unique_ptr<Hists> h_MulticlassNN_output;
 
+  std::unique_ptr<Hists> h_DeltaY_reco_SystVariations_Inclusive_SR;
+  std::unique_ptr<Hists> h_DeltaY_reco_PDFVariations_Inclusive_SR;
 
 
   // ================ SR ==================================================================================================================================================================================================================
@@ -997,6 +999,9 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   sel_2btag.reset(new NJetSelection(2,-1, id_btag));
 
   
+  h_DeltaY_reco_SystVariations_Inclusive_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_Inclusive_SR"));
+  h_DeltaY_reco_PDFVariations_Inclusive_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_Inclusive_SR"));
+
   // ================ SR ==================================================================================================================================================================================================================
   
   h_DeltaY_reco_SystVariations_0_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_SR"));
@@ -1267,7 +1272,9 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
   h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
 
-  if(isMC) {
+  // declare GEN inputs only for TTbar samples to avoid missing-branch errors on backgrounds/data
+  const bool need_gen_branches = (isMC && (ctx.get("dataset_version").find("TTTo") != std::string::npos));
+  if(need_gen_branches) {
     h_xi_gen     = ctx.declare_event_input<float>("xi_gen");
     h_DeltaY_gen = ctx.declare_event_input<float>("DeltaY_gen");
     h_mtt_gen    = ctx.declare_event_input<float>("mtt_gen");
@@ -1487,7 +1494,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   if(debug) cout<<"Top Tagger ok"<<endl;
 
-  fill_histograms(event, "Weights_Init");
+  // fill_histograms(event, "Weights_Init");
   //Setting low and high pt points
   // double muon_pt_high(55.);
   // bool muon_is_low = false;
@@ -1563,7 +1570,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     if(!isMC) return false;
     else event.weight = event.weight*(1-0.64774715284); // calculated following instructions ar https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2018Analysis
   }
-  fill_histograms(event, "Weights_HEM");
+  // fill_histograms(event, "Weights_HEM");
 
   // pileup weight
   PUWeight_module->process(event);
@@ -1574,7 +1581,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // lumi weight
   LumiWeight_module->process(event);
   if(debug)  cout<<"LumiWeight ok"<<endl;
-  fill_histograms(event, "Weights_Lumi");
+  // fill_histograms(event, "Weights_Lumi");
   // lumihists_Weights_Lumi->fill(event);
 
   // top pt reweighting
@@ -1594,17 +1601,17 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if (Prefiring_direction == "up") event.weight *= event.prefiringWeightUp;
     else if (Prefiring_direction == "down") event.weight *= event.prefiringWeightDown;
   }
-  fill_histograms(event, "Weights_Prefiring");
+  // fill_histograms(event, "Weights_Prefiring");
 
   // Write PSWeights from genInfo to own branch in output tree
   ps_weights->process(event);
-  fill_histograms(event, "Weights_PS");
+  // fill_histograms(event, "Weights_PS");
   // lumihists_Weights_PS->fill(event);
 
   // DeepAK8 TopTag SFs
   if(isdeepAK8) sf_toptag->process(event);
   if(debug) cout << "Weights_TopTag_SF: ok" << endl;
-  fill_histograms(event, "Weights_TopTag_SF");
+  // fill_histograms(event, "Weights_TopTag_SF");
   if(isdeepAK8) sf_topmistag->process(event);
   double muon_pt_high(55.);
   bool muon_is_low = false;
@@ -1654,7 +1661,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // }
   
   
-  fill_histograms(event, "TwoDCut_low1");
+  // fill_histograms(event, "TwoDCut_low1");
   
     
 
@@ -1674,7 +1681,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     else if(ele_is_high){
       sf_ele_id_high->process(event);
     }
-    fill_histograms(event, "IdEle_SF");
+    // fill_histograms(event, "IdEle_SF");
   }
 
   // apply muon isolation scale factors (low pT only)
@@ -1690,7 +1697,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       sf_muon_iso_syst_low_dummy->process(event);
 
     }
-    fill_histograms(event, "IsoMuon_SF");
+    // fill_histograms(event, "IsoMuon_SF");
   }
   if(isElectron){
      if(debug)  cout<<"doing muon iso dummy"<<endl;
@@ -1710,7 +1717,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       sf_muon_id_stat_high->process(event);
       sf_muon_id_syst_low->process(event);
     }
-    fill_histograms(event, "IdMuon_SF");
+    // fill_histograms(event, "IdMuon_SF");
   }
   if(isElectron){
      if(debug)  cout<<"doing muon id dummy"<<endl;
@@ -1725,12 +1732,12 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   if(isElectron){
     sf_ele_reco->process(event);
-    fill_histograms(event, "RecoEle_SF");
+    // fill_histograms(event, "RecoEle_SF");
   }
 
   // apply muon reco scale factors
   sf_muon_reco->process(event);
-  fill_histograms(event, "MuonReco_SF");
+  // fill_histograms(event, "MuonReco_SF");
    
 
   // apply lepton trigger scale factors
@@ -1747,7 +1754,7 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       sf_muon_trigger_syst_high->process(event);
 
     }
-    fill_histograms(event, "TriggerMuon_SF");
+    // fill_histograms(event, "TriggerMuon_SF");
   }
   if(isElectron){
     if(debug)  cout<<"doing muon trigger dummy"<<endl;
@@ -1757,12 +1764,12 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   }
   if(debug) cout << "leptons: ok" << endl;
   //Fill histograms before BTagging SF - used to extract Custom BTag SF in (NJets,HT)
-  fill_histograms(event, "BeforeBtagSF");
+  // fill_histograms(event, "BeforeBtagSF");
 
   // btag shape sf (Ak4 chs jets)
   // new: using new modules, with PUPPI-CHS matching
   sf_btagging->process(event);
-  fill_histograms(event, "AfterBtagSF");
+  // fill_histograms(event, "AfterBtagSF");
 
   // apply custom SF to correct for BTag SF shape effects on NJets/HT
   if(isMC && isMuon){
@@ -1787,16 +1794,16 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
     event.weight *= custom_sf;
   }
-  fill_histograms(event, "AfterCustomBtagSF");
+  // fill_histograms(event, "AfterCustomBtagSF");
   
   // Higher order corrections - EWK & QCD NLO
   NLOCorrections_module->process(event);
-  fill_histograms(event, "NLOCorrections");
+  // fill_histograms(event, "NLOCorrections");
   
   //apply ele trigger sf
   sf_ele_trigger->process(event);
-  fill_histograms(event, "TriggerEle_SF");
-  fill_histograms(event, "AfterBaseline");
+  // fill_histograms(event, "TriggerEle_SF");
+  // fill_histograms(event, "AfterBaseline");
 
   CandidateBuilder->process(event);
   if(debug) cout << "CandidateBuilder: ok" << endl;
@@ -1866,10 +1873,10 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if (debug) cout <<"done setting scores" <<endl;
   // Veto events with >= 2 TopTagged large-R jets
   if(!TopTagVetoSelection->passes(event)) return false;
-  fill_histograms(event, "TopTagVeto");
+  // fill_histograms(event, "TopTagVeto");
 
   if(!DeltaEta_selection->passes(event)) return false;
-  fill_histograms(event, "DeltaEtaCut");
+  // fill_histograms(event, "DeltaEtaCut");
 
   if(Chi2_selection->passes(event)){ 
     fill_histograms(event, "AfterChi2");
@@ -1891,9 +1898,14 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
     fill_histograms(event, "DNN_output0_nochi2");
     if(debug) cout << "signal DNN output0" << endl;
     if(Chi2_selection->passes(event)){  // cut on chi2<30 - only in SR == out0)
-      if(debug) cout << "signal DNN output0 chi2" << endl;
+      // cout << "signal DNN output0 chi2" << endl;
       // h_CHSMatchHists->fill(event);
       fill_histograms(event, "DNN_output0");
+      // cout << "signal DNN output0 chi2 fill syst vars" << endl;
+      h_DeltaY_reco_SystVariations_Inclusive_SR->fill(event);
+      // cout << "signal DNN output0 chi2 fill pdf vars" << endl;
+      h_DeltaY_reco_PDFVariations_Inclusive_SR->fill(event);
+      // cout << "signal DNN output0 chi2 fill mass bins" << endl;
       if(Mass_tt>=0 && Mass_tt < 500){
         fill_histograms(event, "DeltaY_reco_0_500_SR");
         if(debug) cout << "signal DNN output0 chi2 0_500" << endl;

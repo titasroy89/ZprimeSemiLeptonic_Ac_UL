@@ -21,10 +21,10 @@ ZprimeSemiLeptonicPreselectionHists::ZprimeSemiLeptonicPreselectionHists(uhh2::C
 Hists(ctx, dirname) {
   // Store context reference
   this->ctx = &ctx;
-  
+
   // Initialize TTbarGen handle
   h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
-  
+
   is_mc = ctx.get("dataset_type") == "MC";
   is_dy = ctx.get("dataset_version").find("DYJets") == 0;
   is_wjets = ctx.get("dataset_version").find("WJets") == 0;
@@ -302,6 +302,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   Mtt_gen               = book<TH1F>("Mtt_gen", "M_{t#bar{t}} GEN [GeV]", 100, 0, 2000);
   DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta|Y|_{(t,#bar{t})} GEN ", 50, -2.5, 2.5);
   DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 50, -1.0, 1.0);
+  DeltaY_xi_gen_36      = book<TH1F>("DeltaY_xi_gen_36", "#xi = tanh(#Delta|Y|) GEN ", 36, -1.0, 1.0);
   DeltaY_xi_gen_20      = book<TH1F>("DeltaY_xi_gen_20", "#xi = tanh(#Delta|Y|) GEN ", 20, -1.0, 1.0);
   DeltaY_xi_gen_10      = book<TH1F>("DeltaY_xi_gen_10", "#xi = tanh(#Delta|Y|) GEN ", 10, -1.0, 1.0);
   DeltaY_xi_gen_6       = book<TH1F>("DeltaY_xi_gen_6", "#xi = tanh(#Delta|Y|) GEN ", 6, -1.0, 1.0);
@@ -314,7 +315,7 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
 void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
   double weight = event.weight;
-  
+
   // Check if this is a TTbar MC event
   bool is_tt = ctx->get("dataset_version").find("TTTo") == 0;
   bool is_mc = ctx->get("dataset_type") == "MC";
@@ -792,6 +793,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
         DeltaY_gen->Fill(DeltaY_gen_val, weight);
         DeltaY_xi_gen->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_36->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_20->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_10->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_6->Fill(xi_gen_val, weight);
