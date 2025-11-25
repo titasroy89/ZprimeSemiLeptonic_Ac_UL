@@ -19,6 +19,8 @@
 #include "TFile.h"
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <vector>
 #include <glob.h>
 #include <cstring>
@@ -27,11 +29,13 @@ using namespace std;
 using namespace uhh2;
 
 //template method start
+// STEP 1: Build the NoAC weights from the generator histogram
+
 // --- NoAC helpers (mirror/S+A/lookup) ---
 std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::mirror_hist_1d(const TH1D &src){
   auto H = std::unique_ptr<TH1D>(static_cast<TH1D*>(src.Clone("H_mirror_tmp")));
   H->SetDirectory(0);
-  H->Reset();
+  H->Reset("ICES");
 
   // mirror the histogram around 0
   const TAxis *ax = src.GetXaxis();
@@ -42,42 +46,50 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::mirror_hist_1d(const T
     if(j < 1) j = 1;
     if(j > nb) j = nb;
     H->SetBinContent(i, src.GetBinContent(j));
+    H->SetBinError(i, src.GetBinError(j));
   }
   return H;
 }
 
 // build the NoAC weights from the generator histogram
+// STEP 3: Decompose the generator histogram into S and A components
 std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_from_gen(const TH1D &Hgen_in, double f_noac){
   auto Hmir = mirror_hist_1d(Hgen_in);
   auto S = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen_in.Clone("H_S")));
   auto A = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen_in.Clone("H_A")));
   S->SetDirectory(0); A->SetDirectory(0);
   S->Reset(); A->Reset();
-  S->Add(&Hgen_in, Hmir.get(), 0.5,  0.5);
-  A->Add(&Hgen_in, Hmir.get(), 0.5, -0.5);
+  S->Add(&Hgen_in, Hmir.get(), 0.5,  0.5); //0.5 is the weight for the original and mirrored histogram
+  A->Add(&Hgen_in, Hmir.get(), 0.5, -0.5); //0.5 is the weight for the original and mirrored (-0.5)histogram
 
+  // STEP 4: Build the NoAC weights from the S and A components
   auto W = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen_in.Clone("NoAC_W_sys")));
-  W->SetDirectory(0);
-  W->Reset();
+  W->SetDirectory(0); // detach the histogram from the file
+  W->Reset(); // reset the histogram
   const int nb = W->GetXaxis()->GetNbins();
   for(int i=1;i<=nb;++i){
     const double s = S->GetBinContent(i);
     const double a = A->GetBinContent(i);
     const double denom = s + a;
-    const double numer = s + (1.0 - f_noac) * a;
-    const double w = denom > 0.0 ? (numer / denom) : 1.0;
-    W->SetBinContent(i, w);
+    const double numer = s + (1.0 - f_noac) * a; 
+    const double w = denom > 0.0 ? (numer / denom) : 1.0; //if the denominator is greater than 0, divide the numerator by the denominator, otherwise set to 1.0
+    W->SetBinContent(i, w); //set the content of the bin to the weight
   }
+  
+  // STEP 5: Normalize the NoAC weights to the sum of the content of the histogram
+  // The fit in Combine assumes that the shape variations (NoAC_up and down) have the same total number of events as the nominal shape.
   // normalize <W>_Hgen = 1
+  // CHECKED: Before normalization, W(f=+1) + W(f=-1) = 2 in each bin.
+  // After normalization, ⟨W⟩ = 1 for each f, which is what Combine wants for pure shape variations.
   double sumW = 0.0, sumH = 0.0;
   for(int i=1;i<=nb;++i){
     const double wi = W->GetBinContent(i);
     const double hi = Hgen_in.GetBinContent(i);
-    sumW += wi * hi;
-    sumH += hi;
+    sumW += wi * hi; //sum of the weights * the content of the histogram. Calulcates the total weighted number of events. 
+    sumH += hi; //sum of the content of the histogram
   }
   if(sumW > 0.0 && sumH > 0.0){
-    const double norm = sumW / sumH;
+    const double norm = sumW / sumH; //normalize the weights to the sum of the content of the histogram
     for(int i=1;i<=nb;++i){
       W->SetBinContent(i, W->GetBinContent(i) / norm);
     }
@@ -86,15 +98,28 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_fro
 }
 
 // lookup the NoAC weight for a given xi
+// Clamps xi to be inside the histogram range to avoid edge effects
+// Clamps xi_gen_evt to [-0.999999, 0.999999] to avoid edge effects
 double ZprimeSemiLeptonicSystematicsHists::lookup_noac_weight(const TH1 *W, double xi){
-  if(!W) return 1.0;
-  auto ax = W->GetXaxis();
-  int ib = ax->FindBin(xi);
-  if(ib < 1) ib = 1;
-  if(ib > ax->GetNbins()) ib = ax->GetNbins();
-  const double w = W->GetBinContent(ib);
-  if(!(w > 0.0) || !std::isfinite(w)) return 1.0;
+  if(!W || !std::isfinite(xi)) return 1.0;
+  double xmin = W->GetXaxis()->GetXmin();
+  double xmax = W->GetXaxis()->GetXmax();
+  // Clamp xi to be inside the histogram range to avoid edge effects
+  if(xi <= xmin) xi = std::nextafter(xmin, xmax);
+  if(xi >= xmax) xi = std::nextafter(xmax, xmin);
+  int bin = W->GetXaxis()->FindFixBin(xi);
+  if(bin < 1) bin = 1;
+  if(bin > W->GetNbinsX()) bin = W->GetNbinsX();
+  const double w = W->GetBinContent(bin);
+  if(!std::isfinite(w) || w <= 0.0 || w > 100.0) return 1.0;
   return w;
+}
+
+static inline double clamp_xi(double x){
+  // keep inside histogram range (-1,1) to avoid edge effects
+  if (x <= -1.0) return -0.999999;
+  if (x >= +1.0) return +0.999999;
+  return x;
 }
 //template method end
 
@@ -202,6 +227,9 @@ Hists(ctx, dirname) {
   h_toppt_b_up         = ctx.get_handle<float>("weight_toppt_b_up");
   h_toppt_b_down       = ctx.get_handle<float>("weight_toppt_b_down");
   
+  // STEP 6: Build weight maps for the NoAC weights. 
+  // Creates a weight histogram for each f value, using the NoAC weights and the sumH histogram.
+  // Stores them in the noac_weights_map for event by event.
   //template method start
   if(is_mc && is_tt){
     // --- NoAC setup for xi = tanh(DeltaY) (multi-f) ---
@@ -210,14 +238,16 @@ Hists(ctx, dirname) {
     noac_gen_file_ = ctx.get("noac_gen_file");
     noac_gen_hist_ = ctx.get("noac_gen_hist");
 
-    // f values for the NoAC weights
-    f_values = {-1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f};
+    // f values for the NoAC weights (all f values from kNoACSpecs)
+    f_values = {-100.0f, -12.0f, -8.0f, -4.0f, -2.0f, -1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 2.0f, 4.0f, 8.0f, 12.0f, 100.0f};
 
     if(use_noac_evtweights_ && !noac_gen_file_.empty() && !noac_gen_hist_.empty()){
     // Glob inputs to get the generator histogram files
     glob_t gl; memset(&gl, 0, sizeof(gl));
       int r = glob(noac_gen_file_.c_str(), 0, nullptr, &gl);
-      // sum the generator histograms
+      // STEP 1: Sum all of the DeltaY_xi_gen histograms from ttree which was carried from preselection
+      // Reads gen-level tanh(delta|y|) histograms from all TTbar files
+      // Sums them into a single sumH histogram
       TH1D *sumH = nullptr;
       if(r == 0){
         // loop over the generator histogram files
@@ -238,7 +268,7 @@ Hists(ctx, dirname) {
         // build the NoAC weights from the generator histogram
         noac_weights_map.clear();
         for(const float fv : f_values){
-          try{ noac_weights_map[fv] = build_noac_weights_from_gen(*sumH, fv); } catch(...){}
+          try{ noac_weights_map[fv] = build_noac_weights_from_gen(*sumH, fv); } catch(...){ }
         }
         delete sumH;
       }
@@ -649,7 +679,72 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
 
   //template method start
   // template method variable: xi = tanh(DeltaY), 6 bins in [-1,1]
+  // Nominals
   DeltaY_xi_reco_6          = book<TH1F>("DeltaY_xi_reco_6", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_12         = book<TH1F>("DeltaY_xi_reco_12", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_18         = book<TH1F>("DeltaY_xi_reco_18", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_24         = book<TH1F>("DeltaY_xi_reco_24", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_30         = book<TH1F>("DeltaY_xi_reco_30", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_36         = book<TH1F>("DeltaY_xi_reco_36", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_50         = book<TH1F>("DeltaY_xi_reco_50", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  // NoAC systematics (f=±1)
+  DeltaY_xi_reco_6_NoAC_up   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_down = book<TH1F>("DeltaY_xi_reco_6_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_up   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_down = book<TH1F>("DeltaY_xi_reco_12_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_up   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_down = book<TH1F>("DeltaY_xi_reco_18_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_up   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_down = book<TH1F>("DeltaY_xi_reco_24_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_up   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_down = book<TH1F>("DeltaY_xi_reco_30_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_up   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_down = book<TH1F>("DeltaY_xi_reco_36_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_up   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_down = book<TH1F>("DeltaY_xi_reco_50_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  // NoAC systematics for f=±2, ±8, ±12
+  DeltaY_xi_reco_6_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_6_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_12_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_18_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_24_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_30_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_36_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
+  DeltaY_xi_reco_50_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
   // lepton/trigger/pileup/prefiring
   DeltaY_xi_reco_6_ele_reco_up      = book<TH1F>("DeltaY_xi_reco_6_ele_reco_up",      ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
   DeltaY_xi_reco_6_ele_reco_down    = book<TH1F>("DeltaY_xi_reco_6_ele_reco_down",    ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
@@ -715,46 +810,100 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_xi_reco_6_toppt_b_up         = book<TH1F>("DeltaY_xi_reco_6_toppt_b_up",         ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
   DeltaY_xi_reco_6_toppt_b_down       = book<TH1F>("DeltaY_xi_reco_6_toppt_b_down",       ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
 
-  // --- TEMPLATE METHOD HISTOGRAM BOOKING (map with per-f keys for all systematics) ---
+  // --- NoAC templates removed (now using dedicated NoAC_up/down histograms) ---
+  // --- BOOK xi systematics for 12 and 50 bins into name->hist map ---
   {
-    std::vector<std::string> syst_names = {"ele_reco", "ele_id", "ele_trigger", "mu_reco", "mu_iso_stat", "mu_iso_syst", "mu_id_stat", "mu_id_syst", "mu_trigger_stat", "mu_trigger_syst", "pu", "prefiring"};
-    std::vector<std::string> scale_names = {"murmuf_upup", "murmuf_upnone", "murmuf_noneup", "murmuf_nonedown", "murmuf_downnone", "murmuf_downdown"};
-    std::vector<std::string> btag_names = {"btag_cferr1_up", "btag_cferr1_down", "btag_cferr2_up", "btag_cferr2_down", "btag_hf_up", "btag_hf_down", "btag_hfstats1_up", "btag_hfstats1_down", "btag_hfstats2_up", "btag_hfstats2_down", "btag_lf_up", "btag_lf_down", "btag_lfstats1_up", "btag_lfstats1_down", "btag_lfstats2_up", "btag_lfstats2_down"};
-    std::vector<std::string> ttag_names = {"ttag_corr_up", "ttag_corr_down", "ttag_uncorr_up", "ttag_uncorr_down"};
-    std::vector<std::string> tmistag_names = {"tmistag_up", "tmistag_down"};
-    std::vector<std::string> toppt_names = {"toppt_a_up", "toppt_a_down", "toppt_b_up", "toppt_b_down"};
-    std::vector<std::string> ps_names = {"isr_up", "isr_down", "fsr_up", "fsr_down"};
-
-    std::vector<std::string> all_vars;
-    // loop over the systematics
-    for(const auto &n : syst_names){ all_vars.push_back(n+"_up"); all_vars.push_back(n+"_down"); }
-    // loop over the scale systematics
-    all_vars.insert(all_vars.end(), scale_names.begin(), scale_names.end());
-    // loop over the btag systematics
-    all_vars.insert(all_vars.end(), btag_names.begin(), btag_names.end());
-    // loop over the ttag systematics
-    all_vars.insert(all_vars.end(), ttag_names.begin(), ttag_names.end());
-    // loop over the tmistag systematics
-    all_vars.insert(all_vars.end(), tmistag_names.begin(), tmistag_names.end());
-    // loop over the toppt systematics
-    all_vars.insert(all_vars.end(), toppt_names.begin(), toppt_names.end());
-    // loop over the ps systematics
-    all_vars.insert(all_vars.end(), ps_names.begin(), ps_names.end());
-
-    for(const auto &var : all_vars){
-      // loop over the f values
-      for(const float fv : f_values){
-        // convert the f value to a string
-        std::string f_str = std::to_string(fv);
-        std::replace(f_str.begin(), f_str.end(), '.', 'p');
-        std::replace(f_str.begin(), f_str.end(), '-', 'm');
-        // create the name of the histogram
-        std::string name = "DeltaY_xi_reco_6_" + var + "_f_" + f_str;
-        // if the histogram does not exist, book it
-        if(h_deltaY_xi_reco_map.find(name) == h_deltaY_xi_reco_map.end()){
-          // book the histogram
-          h_deltaY_xi_reco_map[name] = book<TH1F>(name.c_str(), ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-        }
+    auto book_by_name = [&](const std::string &hname, int nb){
+      if(h_deltaY_xi_reco_map.find(hname) == h_deltaY_xi_reco_map.end()){
+        h_deltaY_xi_reco_map[hname] = book<TH1F>(hname.c_str(), ";tanh(#Delta y)_{reco};Events / bin", nb, -1.0, 1.0);
+      }
+    };
+    // Helper function to get exact suffix matching kNoACSpecs
+    auto get_noac_suffix = [](float fv) -> std::string {
+      static const std::map<float, std::string> f_to_suffix = {
+        {-100.0f, "noacm100"}, {-12.0f, "noacm12"}, {-8.0f, "noacm8"}, {-4.0f, "noacm4"}, {-2.0f, "noacm2"},
+        {-1.0f, "noacm1"}, {-0.8f, "noacm08"}, {-0.6f, "noacm06"}, {-0.4f, "noacm04"}, {-0.2f, "noacm02"},
+        {0.0f, "noac0"},
+        {0.2f, "noac02"}, {0.4f, "noac04"}, {0.6f, "noac06"}, {0.8f, "noac08"},
+        {1.0f, "noac1"}, {2.0f, "noac2"}, {4.0f, "noac4"}, {8.0f, "noac8"}, {12.0f, "noac12"}, {100.0f, "noac100"}
+      };
+      auto it = f_to_suffix.find(fv);
+      if(it != f_to_suffix.end()) return it->second;
+      // Fallback (shouldn't happen)
+      if(std::abs(fv) < 0.01f) return "noac0";
+      else if(fv < 0) return "noacm" + std::to_string(static_cast<int>(std::abs(fv)));
+      else return "noac" + std::to_string(static_cast<int>(fv));
+    };
+    // simple up/down tags
+    const std::vector<std::pair<std::string,int>> xi_binnings = {
+      {"DeltaY_xi_reco_12_", 12},
+      {"DeltaY_xi_reco_18_", 18},
+      {"DeltaY_xi_reco_24_", 24},
+      {"DeltaY_xi_reco_30_", 30},
+      {"DeltaY_xi_reco_36_", 36},
+      {"DeltaY_xi_reco_50_", 50}
+    };
+    // Book all NoAC f-value histograms (matching Hists naming: DeltaY_xi_reco_N_noacX)
+    const int all_bins[] = {6, 12, 18, 24, 30, 36, 50};
+    const std::vector<float> all_f_values = {-100.0f, -12.0f, -8.0f, -4.0f, -2.0f, -1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 2.0f, 4.0f, 8.0f, 12.0f, 100.0f};
+    for(int nb : all_bins){
+      for(float fv : all_f_values){
+        std::string suffix = get_noac_suffix(fv);
+        std::string hname = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
+        book_by_name(hname, nb);
+      }
+    }
+    std::vector<std::string> simple_tags = {"ele_reco","ele_id","ele_trigger","mu_reco","mu_iso_stat","mu_iso_syst","mu_id_stat","mu_id_syst","mu_trigger_stat","mu_trigger_syst","pu","prefiring"};
+    for(const auto &tg : simple_tags){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + tg + "_up", cfg.second);
+        book_by_name(cfg.first + tg + "_down", cfg.second);
+      }
+    }
+    // murmuf 6-point
+    std::vector<std::string> mm = {"upup","upnone","noneup","nonedown","downnone","downdown"};
+    for(const auto &v : mm){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + std::string("murmuf_") + v, cfg.second);
+      }
+    }
+    // ps (isr/fsr)
+    std::vector<std::string> ps = {"isr_up","isr_down","fsr_up","fsr_down"};
+    for(const auto &v : ps){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + v, cfg.second);
+      }
+    }
+    // btag set
+    std::vector<std::string> btag_tags = {
+      "btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down",
+      "btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down",
+      "btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down",
+      "btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"
+    };
+    for(const auto &v : btag_tags){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + v, cfg.second);
+      }
+    }
+    // ttag
+    std::vector<std::string> ttag_tags = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
+    for(const auto &v : ttag_tags){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + v, cfg.second);
+      }
+    }
+    // tmistag
+    for(const auto &v : {std::string("tmistag_up"), std::string("tmistag_down")}){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + v, cfg.second);
+      }
+    }
+    // toppt
+    std::vector<std::string> toppt_tags = {"toppt_a_up","toppt_a_down","toppt_b_up","toppt_b_down"};
+    for(const auto &v : toppt_tags){
+      for(const auto &cfg : xi_binnings){
+        book_by_name(cfg.first + v, cfg.second);
       }
     }
   }
@@ -863,14 +1012,14 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   vector<TH1F*> hists_sigma_1_up = {Sigma_phi_1_ele_reco_up, Sigma_phi_1_ele_id_up, Sigma_phi_1_ele_trigger_up, Sigma_phi_1_mu_reco_up, Sigma_phi_1_mu_iso_stat_up,Sigma_phi_1_mu_iso_syst_up, Sigma_phi_1_mu_id_stat_up, Sigma_phi_1_mu_id_syst_up, Sigma_phi_1_mu_trigger_stat_up, Sigma_phi_1_mu_trigger_syst_up, Sigma_phi_1_pu_up, Sigma_phi_1_prefiring_up};
   vector<TH1F*> hists_sigma_2_up = {Sigma_phi_2_ele_reco_up, Sigma_phi_2_ele_id_up, Sigma_phi_2_ele_trigger_up, Sigma_phi_2_mu_reco_up, Sigma_phi_2_mu_iso_stat_up,Sigma_phi_2_mu_iso_syst_up, Sigma_phi_2_mu_id_stat_up, Sigma_phi_2_mu_id_syst_up, Sigma_phi_2_mu_trigger_stat_up, Sigma_phi_2_mu_trigger_syst_up, Sigma_phi_2_pu_up, Sigma_phi_2_prefiring_up};
   vector<TH1F*> hists_deltaY_xi_reco_6_up = {DeltaY_xi_reco_6_ele_reco_up, DeltaY_xi_reco_6_ele_id_up, DeltaY_xi_reco_6_ele_trigger_up, DeltaY_xi_reco_6_mu_reco_up, DeltaY_xi_reco_6_mu_iso_stat_up,DeltaY_xi_reco_6_mu_iso_syst_up, DeltaY_xi_reco_6_mu_id_stat_up, DeltaY_xi_reco_6_mu_id_syst_up, DeltaY_xi_reco_6_mu_trigger_stat_up, DeltaY_xi_reco_6_mu_trigger_syst_up, DeltaY_xi_reco_6_pu_up, DeltaY_xi_reco_6_prefiring_up};
-
+  
   vector<TH1F*> hists_down   = {DeltaY_ele_reco_down, DeltaY_ele_id_down, DeltaY_ele_trigger_down, DeltaY_mu_reco_down, DeltaY_mu_iso_stat_down, DeltaY_mu_iso_syst_down, DeltaY_mu_id_stat_down, DeltaY_mu_id_syst_down, DeltaY_mu_trigger_stat_down, DeltaY_mu_trigger_syst_down, DeltaY_pu_down, DeltaY_prefiring_down};
   vector<TH1F*> hists_dy_d1_down = {DeltaY_reco_d1_ele_reco_down, DeltaY_reco_d1_ele_id_down, DeltaY_reco_d1_ele_trigger_down, DeltaY_reco_d1_mu_reco_down, DeltaY_reco_d1_mu_iso_stat_down,DeltaY_reco_d1_mu_iso_syst_down, DeltaY_reco_d1_mu_id_stat_down, DeltaY_reco_d1_mu_id_syst_down, DeltaY_reco_d1_mu_trigger_stat_down, DeltaY_reco_d1_mu_trigger_syst_down, DeltaY_reco_d1_pu_down, DeltaY_reco_d1_prefiring_down};
   vector<TH1F*> hists_dy_d2_down = {DeltaY_reco_d2_ele_reco_down, DeltaY_reco_d2_ele_id_down, DeltaY_reco_d2_ele_trigger_down, DeltaY_reco_d2_mu_reco_down, DeltaY_reco_d2_mu_iso_stat_down,DeltaY_reco_d2_mu_iso_syst_down, DeltaY_reco_d2_mu_id_stat_down, DeltaY_reco_d2_mu_id_syst_down, DeltaY_reco_d2_mu_trigger_stat_down, DeltaY_reco_d2_mu_trigger_syst_down, DeltaY_reco_d2_pu_down, DeltaY_reco_d2_prefiring_down};
   vector<TH1F*> hists_sigma_1_down = {Sigma_phi_1_ele_reco_down, Sigma_phi_1_ele_id_down, Sigma_phi_1_ele_trigger_down, Sigma_phi_1_mu_reco_down, Sigma_phi_1_mu_iso_stat_down, Sigma_phi_1_mu_iso_syst_down, Sigma_phi_1_mu_id_stat_down, Sigma_phi_1_mu_id_syst_down, Sigma_phi_1_mu_trigger_stat_down, Sigma_phi_1_mu_trigger_syst_down, Sigma_phi_1_pu_down, Sigma_phi_1_prefiring_down};
   vector<TH1F*> hists_sigma_2_down = {Sigma_phi_2_ele_reco_down, Sigma_phi_2_ele_id_down, Sigma_phi_2_ele_trigger_down, Sigma_phi_2_mu_reco_down, Sigma_phi_2_mu_iso_stat_down, Sigma_phi_2_mu_iso_syst_down, Sigma_phi_2_mu_id_stat_down, Sigma_phi_2_mu_id_syst_down, Sigma_phi_2_mu_trigger_stat_down, Sigma_phi_2_mu_trigger_syst_down, Sigma_phi_2_pu_down, Sigma_phi_2_prefiring_down};
   vector<TH1F*> hists_deltaY_xi_reco_6_down = {DeltaY_xi_reco_6_ele_reco_down, DeltaY_xi_reco_6_ele_id_down, DeltaY_xi_reco_6_ele_trigger_down, DeltaY_xi_reco_6_mu_reco_down, DeltaY_xi_reco_6_mu_iso_stat_down,DeltaY_xi_reco_6_mu_iso_syst_down, DeltaY_xi_reco_6_mu_id_stat_down, DeltaY_xi_reco_6_mu_id_syst_down, DeltaY_xi_reco_6_mu_trigger_stat_down, DeltaY_xi_reco_6_mu_trigger_syst_down, DeltaY_xi_reco_6_pu_down, DeltaY_xi_reco_6_prefiring_down};
-
+  
   vector<TH2F*> hists_up_tt  = {DeltaY_ele_reco_up_tt, DeltaY_ele_id_up_tt, DeltaY_ele_trigger_up_tt, DeltaY_mu_reco_up_tt, DeltaY_mu_iso_stat_up_tt, DeltaY_mu_id_stat_up_tt, DeltaY_mu_trigger_stat_up_tt, DeltaY_mu_iso_syst_up_tt, DeltaY_mu_id_syst_up_tt, DeltaY_mu_trigger_syst_up_tt,  DeltaY_pu_up_tt, DeltaY_prefiring_up_tt};
   vector<TH2F*> hists_down_tt= {DeltaY_ele_reco_down_tt, DeltaY_ele_id_down_tt, DeltaY_ele_trigger_down_tt, DeltaY_mu_reco_down_tt, DeltaY_mu_iso_stat_down_tt, DeltaY_mu_id_stat_down_tt, DeltaY_mu_trigger_stat_down_tt, DeltaY_mu_iso_syst_down_tt, DeltaY_mu_id_syst_down_tt, DeltaY_mu_trigger_syst_down_tt, DeltaY_pu_down_tt, DeltaY_prefiring_down_tt};
 
@@ -883,7 +1032,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   vector<TH1F*> hists_scale_sigma_1 = {Sigma_phi_1_murmuf_upup, Sigma_phi_1_murmuf_upnone, Sigma_phi_1_murmuf_noneup, Sigma_phi_1_murmuf_nonedown, Sigma_phi_1_murmuf_downnone, Sigma_phi_1_murmuf_downdown};
   vector<TH1F*> hists_scale_sigma_2 = {Sigma_phi_2_murmuf_upup, Sigma_phi_2_murmuf_upnone, Sigma_phi_2_murmuf_noneup, Sigma_phi_2_murmuf_nonedown, Sigma_phi_2_murmuf_downnone, Sigma_phi_2_murmuf_downdown};
   vector<TH1F*> hists_scale_deltaY_xi_reco_6 = {DeltaY_xi_reco_6_murmuf_upup, DeltaY_xi_reco_6_murmuf_upnone, DeltaY_xi_reco_6_murmuf_noneup, DeltaY_xi_reco_6_murmuf_nonedown, DeltaY_xi_reco_6_murmuf_downnone, DeltaY_xi_reco_6_murmuf_downdown};
-  
+
   vector<TH2F*> hists_scale_tt = {DeltaY_murmuf_upup_tt, DeltaY_murmuf_upnone_tt, DeltaY_murmuf_noneup_tt, DeltaY_murmuf_nonedown_tt, DeltaY_murmuf_downnone_tt, DeltaY_murmuf_downdown_tt};
 
   // btag variations need special treatment
@@ -1091,6 +1240,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       DeltaY_tt->Fill(DeltaY_reco_best, DeltaY_gen_best, weight);
       if (debug)cout << "ttbar all sys fill deltay-nominal " <<endl;
       
+      // STEP 7: Calculate the reco and gen xi values. Event by event.
       //template method start
       // --- Template method: xi = tanh(DeltaY_reco) built from reco tops (not best/gen-matched)
       double deltay_reco = 0.0;
@@ -1101,113 +1251,200 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
 
       const double deltay_xi = TMath::TanH(deltay_reco);
-      const double xi_gen_evt = static_cast<double>(event.get(h_xi_gen));
-      double w_noac = 1.0;
-      if(use_noac_evtweights_ && noac_weights_){
-        w_noac = lookup_noac_weight(noac_weights_.get(), xi_gen_evt);
+      double xi_gen_evt = static_cast<double>(event.get(h_xi_gen));
+      // Clamp xi_gen_evt to valid range to avoid edge effects in weight lookup
+      if(xi_gen_evt <= -1.0) xi_gen_evt = -0.999999;
+      if(xi_gen_evt >= +1.0) xi_gen_evt = +0.999999;
+
+      // Fill base xi nominals (matching Hists behavior: with NoAC weights if enabled)
+      if(use_noac_evtweights_ && !noac_weights_map.empty() && noac_weights_map.count(0.0f)){
+        // Use f=0 weight for nominal (or could use a default configured f value)
+        const double w_nom = lookup_noac_weight(noac_weights_map[0.0f].get(), xi_gen_evt);
+        DeltaY_xi_reco_6->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_12->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_18->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_24->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_30->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_36->Fill(deltay_xi, weight * w_nom);
+        DeltaY_xi_reco_50->Fill(deltay_xi, weight * w_nom);
+      } else {
+        // Fill without NoAC weights
+        DeltaY_xi_reco_6->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_12->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_18->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_24->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_30->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_36->Fill(deltay_xi, weight);
+        DeltaY_xi_reco_50->Fill(deltay_xi, weight);
       }
-      
-      // Fill xi systematics with NoAC for TT (DRY with vectors)
-      DeltaY_xi_reco_6->Fill(deltay_xi, weight * w_noac);
+
+      // STEP 9: Fill NoAC systematics for all f values (matching Hists naming convention exactly)
+
+      // RECO deltay_xi determines which bin is filled
+      // GEN xi_gen_evt determines which weight is applied from the weight map
+      // Weight w_f depends on the f value
+
+      // Fill NoAC systematics for all f values (matching Hists naming convention exactly)
+      if(use_noac_evtweights_ && !noac_weights_map.empty()){
+        const int bin_schemes[] = {6, 12, 18, 24, 30, 36, 50};
+        // Map f values to exact suffixes from kNoACSpecs (same as in init)
+        static const std::map<float, std::string> f_to_suffix = {
+          {-100.0f, "noacm100"}, {-12.0f, "noacm12"}, {-8.0f, "noacm8"}, {-4.0f, "noacm4"}, {-2.0f, "noacm2"},
+          {-1.0f, "noacm1"}, {-0.8f, "noacm08"}, {-0.6f, "noacm06"}, {-0.4f, "noacm04"}, {-0.2f, "noacm02"},
+          {0.0f, "noac0"},
+          {0.2f, "noac02"}, {0.4f, "noac04"}, {0.6f, "noac06"}, {0.8f, "noac08"},
+          {1.0f, "noac1"}, {2.0f, "noac2"}, {4.0f, "noac4"}, {8.0f, "noac8"}, {12.0f, "noac12"}, {100.0f, "noac100"}
+        };
+        for(const float fv : f_values){
+          if(!noac_weights_map.count(fv)) continue;
+          // STEP 8: Lookup the NoAC weight for the current f value
+          const double w_f = lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt);
+          // Get exact suffix matching kNoACSpecs
+          std::string suffix;
+          auto it_suffix = f_to_suffix.find(fv);
+          if(it_suffix != f_to_suffix.end()){
+            suffix = it_suffix->second;
+          } else {
+            // Fallback (shouldn't happen if f_values matches kNoACSpecs)
+            if(std::abs(fv) < 0.01f) suffix = "noac0";
+            else if(fv < 0) suffix = "noacm" + std::to_string(static_cast<int>(std::abs(fv)));
+            else suffix = "noac" + std::to_string(static_cast<int>(fv));
+          }
+          // Fill all binning schemes for this f value
+          for(int nb : bin_schemes){
+            std::string hname = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
+            auto it = h_deltaY_xi_reco_map.find(hname);
+            if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * w_f);
+          }
+        }
+      }
       //template method end
       // up/down variations (multi-f map)
+      // Get NoAC weight for f=0 (nominal) if available
+      double w_noac_nominal = 1.0;
+      if(use_noac_evtweights_ && !noac_weights_map.empty() && noac_weights_map.count(0.0f)){
+        w_noac_nominal = lookup_noac_weight(noac_weights_map[0.0f].get(), xi_gen_evt);
+      }
       for(unsigned int i=0; i<names.size(); i++){
-        hists_up_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_up.at(i)/syst_nominal.at(i));
-        hists_down_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_down.at(i)/syst_nominal.at(i));
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          // convert the f value to a string
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          // create the name of the histogram
-          std::string key_up = "DeltaY_xi_reco_6_" + names.at(i) + "_up_f_" + f_str;
-          std::string key_dn = "DeltaY_xi_reco_6_" + names.at(i) + "_down_f_" + f_str;
-          // fill the histogram
-          auto it_up = h_deltaY_xi_reco_map.find(key_up); if(it_up != h_deltaY_xi_reco_map.end()) it_up->second->Fill(deltay_xi, weight * (syst_up.at(i)/syst_nominal.at(i)) * w_noac_f);
-          // fill the histogram
-          auto it_dn = h_deltaY_xi_reco_map.find(key_dn); if(it_dn != h_deltaY_xi_reco_map.end()) it_dn->second->Fill(deltay_xi, weight * (syst_down.at(i)/syst_nominal.at(i)) * w_noac_f);
+        const double w_up = weight * syst_up.at(i)/syst_nominal.at(i);
+        const double w_dn = weight * syst_down.at(i)/syst_nominal.at(i);
+        hists_up_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_up);
+        hists_down_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_dn);
+        // xi systematics (with NoAC f=0 weight applied to match nominal)
+        hists_deltaY_xi_reco_6_up.at(i)->Fill(deltay_xi, w_up * w_noac_nominal);
+        hists_deltaY_xi_reco_6_down.at(i)->Fill(deltay_xi, w_dn * w_noac_nominal);
+        // also fill 12/50 bin booked maps
+        {
+          std::string tag = names.at(i);
+          auto fill_by_name = [&](const std::string &nm, double w){
+            auto it = h_deltaY_xi_reco_map.find(nm);
+            if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w);
+          };
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string prefix = "DeltaY_xi_reco_" + std::to_string(nb) + "_";
+            fill_by_name(prefix + tag + "_up", w_up * w_noac_nominal);
+            fill_by_name(prefix + tag + "_down", w_dn * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "ttbar all sys fill deltay-systematics " <<endl;
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
-        hists_scale_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_scale.at(i));
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          std::string key = "DeltaY_xi_reco_6_" + std::string("murmuf_") + (i==0?"upup": i==1?"upnone": i==2?"noneup": i==3?"nonedown": i==4?"downnone":"downdown") + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * syst_scale.at(i) * w_noac_f);
+        const double w_sc = weight * syst_scale.at(i);
+        hists_scale_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_sc);
+        hists_scale_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_sc * w_noac_nominal);
+        // name-based 12/50
+        static const char* mmv[6] = {"upup","upnone","noneup","nonedown","downnone","downdown"};
+        if(i<6){
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_murmuf_" + mmv[i];
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_sc * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "ttbar all sys fill deltay-scale variations " <<endl;
       // btag variations
       for(unsigned int i=0; i<hists_btag.size(); i++){
-        hists_btag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_btag.at(i)/btag_nominal);
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          static const char* bnames[] = {"btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down","btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down","btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down","btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"};
-          std::string key = std::string("DeltaY_xi_reco_6_") + bnames[i] + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * (syst_btag.at(i)/btag_nominal) * w_noac_f);
+        const double w_bt = weight * (syst_btag.at(i)/btag_nominal);
+        hists_btag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_bt);
+        hists_btag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_bt * w_noac_nominal);
+        // derive tag name from order
+        static const char* btags[] = {"btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down","btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down","btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down","btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"};
+        if(i<16){
+          std::string tag = btags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + tag;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_bt * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "ttbar all sys fill deltay - btag" <<endl;
       // ttag variations!
       for(unsigned int i=0; i<hists_ttag.size(); i++){
-        hists_ttag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_ttag.at(i)/ttag_nominal);
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          static const char* tnames[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
-          std::string key = std::string("DeltaY_xi_reco_6_") + tnames[i] + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * (syst_ttag.at(i)/ttag_nominal) * w_noac_f);
+        const double w_tt = weight * (syst_ttag.at(i)/ttag_nominal);
+        hists_ttag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_tt);
+        hists_ttag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_tt * w_noac_nominal);
+        static const char* tags[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_tt * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "ttbar all sys fill deltay- ttag " <<endl;
       // tmistag variations
       if (debug)cout <<"size for mistag: "<<hists_tmistag.size()<<endl;
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
-        hists_tmistag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_tmistag.at(i)/tmistag_nominal);
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          static const char* mnames[] = {"tmistag_up","tmistag_down"};
-          std::string key = std::string("DeltaY_xi_reco_6_") + mnames[i] + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * (syst_tmistag.at(i)/tmistag_nominal) * w_noac_f);
+        const double w_tm = weight * (syst_tmistag.at(i)/tmistag_nominal);
+        hists_tmistag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_tm);
+        hists_tmistag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_tm * w_noac_nominal);
+        const char* t = (i==0? "tmistag_up" : "tmistag_down");
+        const int map_bins[] = {12,18,24,30,36,50};
+        for(int nb : map_bins){
+          std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+          auto it = h_deltaY_xi_reco_map.find(name);
+          if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_tm * w_noac_nominal);
         }
       }
       for(unsigned int i=0; i<hists_toppt.size(); i++){
-        hists_toppt_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_toppt.at(i));
-        // template method xi map for toppt
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          static const char* topptn[] = {"toppt_a_up", "toppt_a_down", "toppt_b_up", "toppt_b_down"};
-          std::string key = std::string("DeltaY_xi_reco_6_") + topptn[i] + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * syst_toppt.at(i) * w_noac_f);
+        const double w_tp = weight * syst_toppt.at(i);
+        hists_toppt_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_tp);
+        hists_toppt_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_tp * w_noac_nominal);
+        static const char* tags[] = {"toppt_a_up","toppt_a_down","toppt_b_up","toppt_b_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_tp * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "ttbar all sys fill deltay -mistag" <<endl;
       // ps variations
       for(unsigned int i=0; i<hists_ps.size(); i++){
-        hists_ps_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, weight * syst_ps.at(i));
-        
-        //template method
-        for(const float fv : f_values){
-          const double w_noac_f = (noac_weights_map.count(fv) ? lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt) : 1.0);
-          std::string f_str = std::to_string(fv); std::replace(f_str.begin(), f_str.end(), '.', 'p'); std::replace(f_str.begin(), f_str.end(), '-', 'm');
-          static const char* psn[] = {"isr_up","isr_down","fsr_up","fsr_down"};
-          std::string key = std::string("DeltaY_xi_reco_6_") + psn[i] + "_f_" + f_str;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * syst_ps.at(i) * w_noac_f);
+        const double w_ps = weight * syst_ps.at(i);
+        hists_ps_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_ps);
+        hists_ps_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_ps * w_noac_nominal);
+        static const char* tags[] = {"isr_up","isr_down","fsr_up","fsr_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, w_ps * w_noac_nominal);
+          }
         }
       }
       if (debug)cout << "done with ttbar RM deltay" <<endl;
@@ -1242,73 +1479,129 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         deltay=(TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity())); 
       }
       DeltaY->Fill(deltay, weight);
-      //template method end
-      // Template method xi for non-TT MC (no NoAC) → fill only f=0 templates in the map
+      // Template method xi for non-TT MC (no NoAC). Fill xi nominal only
       const double xi_reco = TMath::TanH(deltay);
       DeltaY_xi_reco_6->Fill(xi_reco, weight);
+      DeltaY_xi_reco_12->Fill(xi_reco, weight);
+      DeltaY_xi_reco_18->Fill(xi_reco, weight);
+      DeltaY_xi_reco_24->Fill(xi_reco, weight);
+      DeltaY_xi_reco_30->Fill(xi_reco, weight);
+      DeltaY_xi_reco_36->Fill(xi_reco, weight);
+      DeltaY_xi_reco_50->Fill(xi_reco, weight);
       if (debug)cout <<"fill nominal "<<endl;
-      std::string f0 = std::to_string(0.0f); 
-      std::replace(f0.begin(), f0.end(), '.', 'p'); 
-      std::replace(f0.begin(), f0.end(), '-', 'm');
-
+      // Fill explicit xi systematics (no f dependence)
       for(unsigned int i=0; i<names.size(); i++){
         if (debug)cout <<"filling : "<<names[i]<<endl;
         hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
         hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
-        std::string key_up = "DeltaY_xi_reco_6_" + names.at(i) + "_up_f_" + f0;
-        std::string key_dn = "DeltaY_xi_reco_6_" + names.at(i) + "_down_f_" + f0;
-        auto it_up = h_deltaY_xi_reco_map.find(key_up); 
-        if(it_up != h_deltaY_xi_reco_map.end()) it_up->second->Fill(xi_reco, weight * (syst_up.at(i)/syst_nominal.at(i)));
-        
-        auto it_dn = h_deltaY_xi_reco_map.find(key_dn); 
-        if(it_dn != h_deltaY_xi_reco_map.end()) it_dn->second->Fill(xi_reco, weight * (syst_down.at(i)/syst_nominal.at(i)));
+        // only 6-bin per-syst are booked
+        hists_deltaY_xi_reco_6_up.at(i)->Fill(xi_reco, weight * (syst_up.at(i)/syst_nominal.at(i)));
+        hists_deltaY_xi_reco_6_down.at(i)->Fill(xi_reco, weight * (syst_down.at(i)/syst_nominal.at(i)));
+        // also fill 12/50 bin maps
+        {
+          std::string tag = names.at(i);
+          auto fill_by_name = [&](const std::string &nm, double w){
+            auto it = h_deltaY_xi_reco_map.find(nm);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, w);
+          };
+          const double w_up_val = weight * syst_up.at(i)/syst_nominal.at(i);
+          const double w_down_val = weight * syst_down.at(i)/syst_nominal.at(i);
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string prefix = "DeltaY_xi_reco_" + std::to_string(nb) + "_";
+            fill_by_name(prefix + tag + "_up", w_up_val);
+            fill_by_name(prefix + tag + "_down", w_down_val);
+          }
+        }
+        // cout << "filling xi systematics for " << names[i] <<" xi_reco: "<<xi_reco<< " weight: "<<weight * (syst_up.at(i)/syst_nominal.at(i))  << endl; 
       }
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
         hists_scale.at(i)->Fill(deltay, weight * syst_scale.at(i));
-        std::string key = std::string("DeltaY_xi_reco_6_") + "murmuf_" + (i==0?"upup": i==1?"upnone": i==2?"noneup": i==3?"nonedown": i==4?"downnone":"downdown") + "_f_" + f0;
-        auto it = h_deltaY_xi_reco_map.find(key); 
-        if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_scale.at(i));
+        hists_scale_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * syst_scale.at(i));
+        // name-based 12/50
+        static const char* mmv[6] = {"upup","upnone","noneup","nonedown","downnone","downdown"};
+        if(i<6){
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_murmuf_" + mmv[i];
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_scale.at(i));
+          }
+        }
       }
       // btag variations
       for(unsigned int i=0; i<hists_btag.size(); i++){
         hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-        static const char* bnames[] = {"btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down","btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down","btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down","btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"};
-        std::string key = std::string("DeltaY_xi_reco_6_") + bnames[i] + "_f_" + f0;
-        auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * (syst_btag.at(i)/btag_nominal));
+        hists_btag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_btag.at(i)/btag_nominal));
+        // derive tag name from order
+        static const char* btags[] = {"btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down","btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down","btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down","btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"};
+        if(i<16){
+          std::string tag = btags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + tag;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_btag.at(i)/btag_nominal);
+          }
+        }
       }
       // ttag variations
       for(unsigned int i=0; i<hists_ttag.size(); i++){
         hists_ttag.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
-        static const char* tnames[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
-        std::string key = std::string("DeltaY_xi_reco_6_") + tnames[i] + "_f_" + f0;
-        auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * (syst_ttag.at(i)/ttag_nominal));
+        hists_ttag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_ttag.at(i)/ttag_nominal));
+        static const char* tags[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins[] = {12,18,24,30,36,50};
+          for(int nb : map_bins){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_ttag.at(i)/ttag_nominal);
+          }
+        }
       }
       // tmistag variations
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
         hists_tmistag.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
-        static const char* mnames[] = {"tmistag_up","tmistag_down"};
-        std::string key = std::string("DeltaY_xi_reco_6_") + mnames[i] + "_f_" + f0;
-        auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * (syst_tmistag.at(i)/tmistag_nominal));
-      }
-      // Top pt reweighting for xi map (backgrounds: f=0 only)
-      {
-        std::string f0 = std::to_string(0.0f); 
-        std::replace(f0.begin(), f0.end(), '.', 'p'); 
-        std::replace(f0.begin(), f0.end(), '-', 'm');
-        static const char* topptn[] = {"toppt_a_up", "toppt_a_down", "toppt_b_up", "toppt_b_down"};
-        for(unsigned int i=0; i<hists_toppt.size(); i++){
-          hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i));
-          std::string key = std::string("DeltaY_xi_reco_6_") + topptn[i] + "_f_" + f0;
-          auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_toppt.at(i));
+        hists_tmistag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_tmistag.at(i)/tmistag_nominal));
+        const char* t = (i==0? "tmistag_up" : "tmistag_down");
+        const int map_bins[] = {12,18,24,30,36,50};
+        for(int nb : map_bins){
+          std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+          auto it = h_deltaY_xi_reco_map.find(name);
+          if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_tmistag.at(i)/tmistag_nominal);
         }
       }
-      //isr fsr
+      // Top pt xi
+      for(unsigned int i=0; i<hists_toppt.size(); i++){
+        hists_toppt.at(i)->Fill(deltay, weight * syst_toppt.at(i));
+        hists_toppt_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * syst_toppt.at(i));
+        static const char* tags[] = {"toppt_a_up","toppt_a_down","toppt_b_up","toppt_b_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins_mm[] = {12,18,24,30,36,50};
+          for(int nb : map_bins_mm){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_toppt.at(i));
+          }
+        }
+      }
+      // isr fsr xi
       for(unsigned int i=0; i<hists_ps.size(); i++){
         hists_ps.at(i)->Fill(deltay, weight * syst_ps.at(i));
-        static const char* psn[] = {"isr_up","isr_down","fsr_up","fsr_down"};
-        std::string key = std::string("DeltaY_xi_reco_6_") + psn[i] + "_f_" + f0;
-        auto it = h_deltaY_xi_reco_map.find(key); if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_ps.at(i));
+        hists_ps_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * syst_ps.at(i));
+        static const char* tags[] = {"isr_up","isr_down","fsr_up","fsr_down"};
+        if(i<4){
+          std::string t = tags[i];
+          const int map_bins_mm[] = {12,18,24,30,36,50};
+          for(int nb : map_bins_mm){
+            std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
+            auto it = h_deltaY_xi_reco_map.find(name);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_ps.at(i));
+          }
+        }
       }
      
      }//end loop for all MC but ttbar for Deltay

@@ -28,11 +28,61 @@
 #include <glob.h>
 #include <iomanip>
 #include <cstring>
+#include <sstream>
 
 
 
 using namespace std;
 using namespace uhh2;
+
+namespace {
+struct NoACSpec {
+  double f;
+  const char* suffix;
+};
+
+const std::vector<NoACSpec> kNoACSpecs = {
+  {-100.0, "noacm100"},
+  {-12.0,  "noacm12"},
+  {-8.0,   "noacm8"},
+  {-4.0,   "noacm4"},
+  {-2.0,   "noacm2"},
+  {-1.0,   "noacm1"},
+  {-0.8,   "noacm08"},
+  {-0.6,   "noacm06"},
+  {-0.4,   "noacm04"},
+  {-0.2,   "noacm02"},
+  { 0.0,   "noac0"},
+  { 0.2,   "noac02"},
+  { 0.4,   "noac04"},
+  { 0.6,   "noac06"},
+  { 0.8,   "noac08"},
+  { 1.0,   "noac1"},
+  { 2.0,   "noac2"},
+  { 4.0,   "noac4"},
+  { 8.0,   "noac8"},
+  { 12.0,  "noac12"},
+  { 100.0, "noac100"}
+};
+
+const std::vector<int> kXiTemplateBinnings = {50, 36, 30, 24, 20, 18, 12, 10, 6};
+
+std::string format_noac_title(double f){
+  std::ostringstream oss;
+  oss << std::showpos << std::fixed << std::setprecision(2) << f;
+  std::string str = oss.str();
+  // trim trailing zeros and decimal point
+  auto pos = str.find('.');
+  if(pos != std::string::npos){
+    while(!str.empty() && str.back() == '0') str.pop_back();
+    if(!str.empty() && str.back() == '.') str.pop_back();
+  }
+  if(str.front() == '+') str.erase(0,1);
+  if(str=="-0") str="-0";
+  return str;
+}
+} // namespace
+
 // helper: clone arbitrary TH1 (TH1F/TH1D) into a detached TH1D with identical binning/content
 static std::unique_ptr<TH1D> clone_as_TH1D(const TH1* src, const std::string &out_name){
   if(!src) return nullptr;
@@ -207,7 +257,7 @@ Hists(ctx, dirname) {
   noac_gen_hist_       = ctx.get("noac_gen_hist",    "");
   noac_fraction_       = std::stod(ctx.get("noac_fraction", "0.0")); // 0=nominal, 1=NoAC
 
-  // Build W(xi; f) once from GEN preselection histogram. Support single file or glob pattern
+  // Build weights from GEN preselection histogram
   if(is_mc && is_tt && use_noac_evtweights_ && !noac_gen_file_.empty() && !noac_gen_hist_.empty()){
     std::unique_ptr<TH1D> sumHist;
     auto accumulate_hist = [&](const TH1* hin){
@@ -254,64 +304,47 @@ Hists(ctx, dirname) {
     }
 
     if(sumHist){
-      // Build single f if configured
       noac_weights_.reset();
-      noac_weights_m1_.reset();
-      noac_weights_0_.reset();
-      noac_weights_1_.reset();
-      noac_weights_m08_.reset();
-      noac_weights_m06_.reset();
-      noac_weights_m04_.reset();
-      noac_weights_m02_.reset();
-      noac_weights_02_.reset();
-      noac_weights_04_.reset();
-      noac_weights_06_.reset();
-      noac_weights_08_.reset();
+      noac_weight_map_.clear();
+      noac_weight_shapes_.clear();
       try{
         noac_weights_ = build_noac_weights_from_gen(sumHist.get(), noac_fraction_);
       } catch(...) {}
-      // Always also build the standard trio {-1,0,1}
-      try{ noac_weights_m1_ = build_noac_weights_from_gen(sumHist.get(), -1.0); } catch(...) {}
-      try{ noac_weights_0_  = build_noac_weights_from_gen(sumHist.get(),  0.0); } catch(...) {}
-      try{ noac_weights_1_  = build_noac_weights_from_gen(sumHist.get(),  1.0); } catch(...) {}
-      try{ noac_weights_m08_ = build_noac_weights_from_gen(sumHist.get(), -0.8); } catch(...) {}
-      try{ noac_weights_m06_ = build_noac_weights_from_gen(sumHist.get(), -0.6); } catch(...) {}
-      try{ noac_weights_m04_ = build_noac_weights_from_gen(sumHist.get(), -0.4); } catch(...) {}
-      try{ noac_weights_m02_ = build_noac_weights_from_gen(sumHist.get(), -0.2); } catch(...) {}
-      try{ noac_weights_02_ = build_noac_weights_from_gen(sumHist.get(),  0.2); } catch(...) {}
-      try{ noac_weights_04_ = build_noac_weights_from_gen(sumHist.get(),  0.4); } catch(...) {}
-      try{ noac_weights_06_ = build_noac_weights_from_gen(sumHist.get(),  0.6); } catch(...) {}
-      try{ noac_weights_08_ = build_noac_weights_from_gen(sumHist.get(),  0.8); } catch(...) {}
-      // std::cout << "[NoAC] Built W(xi) from " << (has_glob?"glob":"file") << " for f in {-1,0,1}"
-      //           << (noac_weights_?" and configured f":"") << std::endl;
 
-      // Persist weight histograms into output (book TH1F clones to be written)
-      if(noac_weights_)  NoAC_W_cfg = book<TH1F>("NoAC_W_cfg",  "NoAC weight W(xi) configured f",  noac_weights_->GetNbinsX(), noac_weights_->GetXaxis()->GetXmin(), noac_weights_->GetXaxis()->GetXmax());
-      if(noac_weights_m1_) NoAC_W_m1 = book<TH1F>("NoAC_W_m1", "NoAC weight W(xi) f=-1", noac_weights_m1_->GetNbinsX(), noac_weights_m1_->GetXaxis()->GetXmin(), noac_weights_m1_->GetXaxis()->GetXmax());
-      if(noac_weights_0_)  NoAC_W_0  = book<TH1F>("NoAC_W_0",  "NoAC weight W(xi) f=0",  noac_weights_0_->GetNbinsX(),  noac_weights_0_->GetXaxis()->GetXmin(),  noac_weights_0_->GetXaxis()->GetXmax());
-      if(noac_weights_1_)  NoAC_W_1  = book<TH1F>("NoAC_W_1",  "NoAC weight W(xi) f=1",  noac_weights_1_->GetNbinsX(),  noac_weights_1_->GetXaxis()->GetXmin(),  noac_weights_1_->GetXaxis()->GetXmax());
-      if(noac_weights_m08_) NoAC_W_m08 = book<TH1F>("NoAC_W_m08", "NoAC weight W(xi) f=-0.8", noac_weights_m08_->GetNbinsX(), noac_weights_m08_->GetXaxis()->GetXmin(), noac_weights_m08_->GetXaxis()->GetXmax());
-      if(noac_weights_m06_) NoAC_W_m06 = book<TH1F>("NoAC_W_m06", "NoAC weight W(xi) f=-0.6", noac_weights_m06_->GetNbinsX(), noac_weights_m06_->GetXaxis()->GetXmin(), noac_weights_m06_->GetXaxis()->GetXmax());
-      if(noac_weights_m04_) NoAC_W_m04 = book<TH1F>("NoAC_W_m04", "NoAC weight W(xi) f=-0.4", noac_weights_m04_->GetNbinsX(), noac_weights_m04_->GetXaxis()->GetXmin(), noac_weights_m04_->GetXaxis()->GetXmax());
-      if(noac_weights_m02_) NoAC_W_m02 = book<TH1F>("NoAC_W_m02", "NoAC weight W(xi) f=-0.2", noac_weights_m02_->GetNbinsX(), noac_weights_m02_->GetXaxis()->GetXmin(), noac_weights_m02_->GetXaxis()->GetXmax());
-      if(noac_weights_02_) NoAC_W_02 = book<TH1F>("NoAC_W_02", "NoAC weight W(xi) f=0.2", noac_weights_02_->GetNbinsX(), noac_weights_02_->GetXaxis()->GetXmin(), noac_weights_02_->GetXaxis()->GetXmax());
-      if(noac_weights_04_) NoAC_W_04 = book<TH1F>("NoAC_W_04", "NoAC weight W(xi) f=0.4", noac_weights_04_->GetNbinsX(), noac_weights_04_->GetXaxis()->GetXmin(), noac_weights_04_->GetXaxis()->GetXmax());
-      if(noac_weights_06_) NoAC_W_06 = book<TH1F>("NoAC_W_06", "NoAC weight W(xi) f=0.6", noac_weights_06_->GetNbinsX(), noac_weights_06_->GetXaxis()->GetXmin(), noac_weights_06_->GetXaxis()->GetXmax());
-      if(noac_weights_08_) NoAC_W_08 = book<TH1F>("NoAC_W_08", "NoAC weight W(xi) f=0.8", noac_weights_08_->GetNbinsX(), noac_weights_08_->GetXaxis()->GetXmin(), noac_weights_08_->GetXaxis()->GetXmax());
+      for(const auto &spec : noac_points_){
+        try{
+          auto W = build_noac_weights_from_gen(sumHist.get(), spec.second);
+          if(W) noac_weight_map_[spec.first] = std::move(W);
+        } catch(...) {
+          // ignore failures for individual f values
+        }
+      }
 
-      auto copy_to = [](TH1F* dst, const TH1D* src){ if(!dst||!src) return; for(int i=1;i<=src->GetNbinsX();++i){ dst->SetBinContent(i, src->GetBinContent(i)); dst->SetBinError(i, 0.0); } };
-      copy_to(NoAC_W_cfg, noac_weights_.get());
-      copy_to(NoAC_W_m1,  noac_weights_m1_.get());
-      copy_to(NoAC_W_0,   noac_weights_0_.get());
-      copy_to(NoAC_W_1,   noac_weights_1_.get());
-      copy_to(NoAC_W_m08, noac_weights_m08_.get());
-      copy_to(NoAC_W_m06, noac_weights_m06_.get());
-      copy_to(NoAC_W_m04, noac_weights_m04_.get());
-      copy_to(NoAC_W_m02, noac_weights_m02_.get());
-      copy_to(NoAC_W_02, noac_weights_02_.get());
-      copy_to(NoAC_W_04, noac_weights_04_.get());
-      copy_to(NoAC_W_06, noac_weights_06_.get());
-      copy_to(NoAC_W_08, noac_weights_08_.get());
+      auto copy_to_hist = [](TH1F* dst, const TH1D* src){
+        if(!dst || !src) return;
+        dst->Reset("ICES");
+        for(int i=1;i<=src->GetNbinsX();++i){
+          dst->SetBinContent(i, src->GetBinContent(i));
+          dst->SetBinError(i, 0.0);
+        }
+      };
+
+      if(noac_weights_){
+        NoAC_W_cfg = book<TH1F>("NoAC_W_cfg", "NoAC weight W(xi) configured f", noac_weights_->GetNbinsX(),
+                                 noac_weights_->GetXaxis()->GetXmin(), noac_weights_->GetXaxis()->GetXmax());
+        copy_to_hist(NoAC_W_cfg, noac_weights_.get());
+      }
+
+      for(const auto &spec : noac_points_){
+        auto it = noac_weight_map_.find(spec.first);
+        if(it == noac_weight_map_.end()) continue;
+        const TH1D* src = it->second.get();
+        std::string hist_name = "NoAC_W_" + spec.first;
+        std::string title = "NoAC weight W(xi) f=" + format_noac_title(spec.second);
+        TH1F* h = book<TH1F>(hist_name.c_str(), title.c_str(), src->GetNbinsX(), src->GetXaxis()->GetXmin(), src->GetXaxis()->GetXmax());
+        copy_to_hist(h, src);
+        noac_weight_shapes_[spec.first] = h;
+      }
     } else {
       std::cerr << "[NoAC] ERROR: could not build GEN sum from '" << noac_gen_file_ << "' :: '" << noac_gen_hist_ << "'" << std::endl;
     }
@@ -324,6 +357,12 @@ Hists(ctx, dirname) {
 }
 
 void ZprimeSemiLeptonicHists::init(){
+  xi_template_binnings_.assign(kXiTemplateBinnings.begin(), kXiTemplateBinnings.end());
+  noac_points_.clear();
+  for(const auto &spec : kNoACSpecs){
+    noac_points_.emplace_back(spec.suffix, spec.f);
+  }
+
   //CHS jets
   CHS_pt_jet   = book<TH1F>("CHS_pt_jet", "p_{T}^{jets} [GeV]", 45, 0, 900);
   CHS_pt_jet1  = book<TH1F>("CHS_pt_jet1", "p_{T}^{jet 1} [GeV]", 45, 0, 900);
@@ -831,81 +870,43 @@ void ZprimeSemiLeptonicHists::init(){
   DeltaY_reco           = book<TH1F>("DeltaY_reco", "#Delta|Y|_{(t,#bar{t})} RECO ", 50, -2.5, 2.5);
   // DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 20, -1.0, 1.0);
   DeltaY_xi_reco        = book<TH1F>("DeltaY_xi_reco", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 50, -1.0, 1.0);
+  DeltaY_xi_reco_36     = book<TH1F>("DeltaY_xi_reco_36", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 36, -1.0, 1.0);
+  DeltaY_xi_reco_30     = book<TH1F>("DeltaY_xi_reco_30", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 30, -1.0, 1.0);
+  DeltaY_xi_reco_24     = book<TH1F>("DeltaY_xi_reco_24", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 24, -1.0, 1.0);
   DeltaY_xi_reco_20     = book<TH1F>("DeltaY_xi_reco_20", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 20, -1.0, 1.0);
+  DeltaY_xi_reco_18     = book<TH1F>("DeltaY_xi_reco_18", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 18, -1.0, 1.0);
+  DeltaY_xi_reco_12     = book<TH1F>("DeltaY_xi_reco_12", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 12, -1.0, 1.0);
   DeltaY_xi_reco_10     = book<TH1F>("DeltaY_xi_reco_10", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 10, -1.0, 1.0);
   DeltaY_xi_reco_6      = book<TH1F>("DeltaY_xi_reco_6", "#xi = tanh(#Delta|Y|) RECO (event weighted by w(xi_{GEN}))", 6, -1.0, 1.0);
   
-  // Response matrix for template method
-  DeltaY_xi_genVsReco = book<TH2F>("DeltaY_xi_genVsReco", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 50, -1.0, 1.0, 50, -1.0, 1.0);
-  DeltaY_xi_genVsReco_20 = book<TH2F>("DeltaY_xi_genVsReco_20", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 20, -1.0, 1.0, 20, -1.0, 1.0);
-  DeltaY_xi_genVsReco_10 = book<TH2F>("DeltaY_xi_genVsReco_10", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 10, -1.0, 1.0, 10, -1.0, 1.0);
-  DeltaY_xi_genVsReco_6 = book<TH2F>("DeltaY_xi_genVsReco_6", "#xi_{GEN} vs #xi_{RECO};#xi_{GEN};#xi_{RECO}", 6, -1.0, 1.0, 6, -1.0, 1.0);
-  
-  // explicit unweighted copies
+  // unweighted copies
   DeltaY_reco_unw       = book<TH1F>("DeltaY_reco_unw", "#Delta|Y| RECO (unweighted)", 50, -2.5, 2.5);
   DeltaY_xi_reco_unw    = book<TH1F>("DeltaY_xi_reco_unw", "#xi RECO (unweighted)", 50, -1.0, 1.0);
 
-  // If multi-f weights present, book suffixed variants
-  if(use_noac_evtweights_ && (noac_weights_m1_ || noac_weights_0_ || noac_weights_1_ || noac_weights_m08_ || noac_weights_m06_ || noac_weights_m04_ || noac_weights_m02_ || noac_weights_02_ || noac_weights_04_ || noac_weights_06_ || noac_weights_08_)){
-    DeltaY_reco_noacm1 = book<TH1F>("DeltaY_reco_noacm1", "#Delta|Y| RECO (NoAC f=-1)", 50, -2.5, 2.5);
-    DeltaY_reco_noac0  = book<TH1F>("DeltaY_reco_noac0",  "#Delta|Y| RECO (NoAC f=0)",  50, -2.5, 2.5);
-    DeltaY_reco_noac1  = book<TH1F>("DeltaY_reco_noac1",  "#Delta|Y| RECO (NoAC f=1)",  50, -2.5, 2.5);
-    DeltaY_reco_noacm08 = book<TH1F>("DeltaY_reco_noacm08", "#Delta|Y| RECO (NoAC f=-0.8)", 50, -2.5, 2.5);
-    DeltaY_reco_noacm06 = book<TH1F>("DeltaY_reco_noacm06", "#Delta|Y| RECO (NoAC f=-0.6)", 50, -2.5, 2.5);
-    DeltaY_reco_noacm04 = book<TH1F>("DeltaY_reco_noacm04", "#Delta|Y| RECO (NoAC f=-0.4)", 50, -2.5, 2.5);
-    DeltaY_reco_noacm02 = book<TH1F>("DeltaY_reco_noacm02", "#Delta|Y| RECO (NoAC f=-0.2)", 50, -2.5, 2.5);
-    DeltaY_reco_noac02 = book<TH1F>("DeltaY_reco_noac02", "#Delta|Y| RECO (NoAC f=0.2)", 50, -2.5, 2.5);
-    DeltaY_reco_noac04 = book<TH1F>("DeltaY_reco_noac04", "#Delta|Y| RECO (NoAC f=0.4)", 50, -2.5, 2.5);
-    DeltaY_reco_noac06 = book<TH1F>("DeltaY_reco_noac06", "#Delta|Y| RECO (NoAC f=0.6)", 50, -2.5, 2.5);
-    DeltaY_reco_noac08 = book<TH1F>("DeltaY_reco_noac08", "#Delta|Y| RECO (NoAC f=0.8)", 50, -2.5, 2.5);
-
-    DeltaY_xi_reco_noacm1    = book<TH1F>("DeltaY_xi_reco_noacm1", "#xi RECO (NoAC f=-1)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noac0     = book<TH1F>("DeltaY_xi_reco_noac0",  "#xi RECO (NoAC f=0)",  50, -1.0, 1.0);
-    DeltaY_xi_reco_noac1     = book<TH1F>("DeltaY_xi_reco_noac1",  "#xi RECO (NoAC f=1)",  50, -1.0, 1.0);
-    DeltaY_xi_reco_noacm08   = book<TH1F>("DeltaY_xi_reco_noacm08", "#xi RECO (NoAC f=-0.8)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noacm06   = book<TH1F>("DeltaY_xi_reco_noacm06", "#xi RECO (NoAC f=-0.6)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noacm04   = book<TH1F>("DeltaY_xi_reco_noacm04", "#xi RECO (NoAC f=-0.4)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noacm02   = book<TH1F>("DeltaY_xi_reco_noacm02", "#xi RECO (NoAC f=-0.2)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noac02    = book<TH1F>("DeltaY_xi_reco_noac02", "#xi RECO (NoAC f=0.2)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noac04    = book<TH1F>("DeltaY_xi_reco_noac04", "#xi RECO (NoAC f=0.4)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noac06    = book<TH1F>("DeltaY_xi_reco_noac06", "#xi RECO (NoAC f=0.6)", 50, -1.0, 1.0);
-    DeltaY_xi_reco_noac08    = book<TH1F>("DeltaY_xi_reco_noac08", "#xi RECO (NoAC f=0.8)", 50, -1.0, 1.0);
-
-    DeltaY_xi_reco_20_noacm1 = book<TH1F>("DeltaY_xi_reco_20_noacm1", "#xi RECO 20 (NoAC f=-1)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac0  = book<TH1F>("DeltaY_xi_reco_20_noac0",  "#xi RECO 20 (NoAC f=0)",  20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac1  = book<TH1F>("DeltaY_xi_reco_20_noac1",  "#xi RECO 20 (NoAC f=1)",  20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noacm08 = book<TH1F>("DeltaY_xi_reco_20_noacm08", "#xi RECO 20 (NoAC f=-0.8)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noacm06 = book<TH1F>("DeltaY_xi_reco_20_noacm06", "#xi RECO 20 (NoAC f=-0.6)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noacm04 = book<TH1F>("DeltaY_xi_reco_20_noacm04", "#xi RECO 20 (NoAC f=-0.4)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noacm02 = book<TH1F>("DeltaY_xi_reco_20_noacm02", "#xi RECO 20 (NoAC f=-0.2)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac02 = book<TH1F>("DeltaY_xi_reco_20_noac02", "#xi RECO 20 (NoAC f=0.2)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac04 = book<TH1F>("DeltaY_xi_reco_20_noac04", "#xi RECO 20 (NoAC f=0.4)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac06 = book<TH1F>("DeltaY_xi_reco_20_noac06", "#xi RECO 20 (NoAC f=0.6)", 20, -1.0, 1.0);
-    DeltaY_xi_reco_20_noac08 = book<TH1F>("DeltaY_xi_reco_20_noac08", "#xi RECO 20 (NoAC f=0.8)", 20, -1.0, 1.0);
-
-    DeltaY_xi_reco_10_noacm1 = book<TH1F>("DeltaY_xi_reco_10_noacm1", "#xi RECO 10 (NoAC f=-1)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac0  = book<TH1F>("DeltaY_xi_reco_10_noac0",  "#xi RECO 10 (NoAC f=0)",  10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac1  = book<TH1F>("DeltaY_xi_reco_10_noac1",  "#xi RECO 10 (NoAC f=1)",  10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noacm08 = book<TH1F>("DeltaY_xi_reco_10_noacm08", "#xi RECO 10 (NoAC f=-0.8)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noacm06 = book<TH1F>("DeltaY_xi_reco_10_noacm06", "#xi RECO 10 (NoAC f=-0.6)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noacm04 = book<TH1F>("DeltaY_xi_reco_10_noacm04", "#xi RECO 10 (NoAC f=-0.4)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noacm02 = book<TH1F>("DeltaY_xi_reco_10_noacm02", "#xi RECO 10 (NoAC f=-0.2)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac02 = book<TH1F>("DeltaY_xi_reco_10_noac02", "#xi RECO 10 (NoAC f=0.2)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac04 = book<TH1F>("DeltaY_xi_reco_10_noac04", "#xi RECO 10 (NoAC f=0.4)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac06 = book<TH1F>("DeltaY_xi_reco_10_noac06", "#xi RECO 10 (NoAC f=0.6)", 10, -1.0, 1.0);
-    DeltaY_xi_reco_10_noac08 = book<TH1F>("DeltaY_xi_reco_10_noac08", "#xi RECO 10 (NoAC f=0.8)", 10, -1.0, 1.0);
-
-    DeltaY_xi_reco_6_noacm1  = book<TH1F>("DeltaY_xi_reco_6_noacm1",  "#xi RECO 6 (NoAC f=-1)",  6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac0   = book<TH1F>("DeltaY_xi_reco_6_noac0",   "#xi RECO 6 (NoAC f=0)",   6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac1   = book<TH1F>("DeltaY_xi_reco_6_noac1",   "#xi RECO 6 (NoAC f=1)",   6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noacm08 = book<TH1F>("DeltaY_xi_reco_6_noacm08", "#xi RECO 6 (NoAC f=-0.8)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noacm06 = book<TH1F>("DeltaY_xi_reco_6_noacm06", "#xi RECO 6 (NoAC f=-0.6)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noacm04 = book<TH1F>("DeltaY_xi_reco_6_noacm04", "#xi RECO 6 (NoAC f=-0.4)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noacm02 = book<TH1F>("DeltaY_xi_reco_6_noacm02", "#xi RECO 6 (NoAC f=-0.2)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac02 = book<TH1F>("DeltaY_xi_reco_6_noac02", "#xi RECO 6 (NoAC f=0.2)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac04 = book<TH1F>("DeltaY_xi_reco_6_noac04", "#xi RECO 6 (NoAC f=0.4)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac06 = book<TH1F>("DeltaY_xi_reco_6_noac06", "#xi RECO 6 (NoAC f=0.6)", 6, -1.0, 1.0);
-    DeltaY_xi_reco_6_noac08 = book<TH1F>("DeltaY_xi_reco_6_noac08", "#xi RECO 6 (NoAC f=0.8)", 6, -1.0, 1.0);
+  // f-value histograms (suffixed variants)
+  // These will be filled with NoAC weights if available, otherwise unweighted
+  for(const auto &spec : noac_points_){
+    const std::string suffix(spec.first);
+    const double fval = spec.second;
+    if(noac_histograms_.count(suffix)) continue;
+    std::string f_str = format_noac_title(fval);
+    NoACHistBundle bundle;
+    bundle.deltaY = book<TH1F>(("DeltaY_reco_" + suffix).c_str(),
+                               ("#Delta|Y| RECO (NoAC f=" + f_str + ")").c_str(),
+                               50, -2.5, 2.5);
+    for(int nb : xi_template_binnings_){
+      std::string hist_name;
+      std::string title;
+      if(nb == 50){
+        hist_name = "DeltaY_xi_reco_" + suffix;
+        title = "#xi RECO (NoAC f=" + f_str + ")";
+      } else {
+        hist_name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
+        title = "#xi RECO " + std::to_string(nb) + " (NoAC f=" + f_str + ")";
+      }
+      bundle.xi_histograms[nb] = book<TH1F>(hist_name.c_str(), title.c_str(), nb, -1.0, 1.0);
+    }
+    noac_histograms_[suffix] = bundle;
   }
 
   //template method ending
@@ -2093,147 +2094,54 @@ if (is_zprime_reconstructed_chi2 ){
     float xi_reco = std::tanh(dyreco);
     DeltaY_xi_reco_unw->Fill(xi_reco, w_nom);
 
-    // Legacy single configured f: fill base set weighted, else fill base unweighted
+    // single configured f-value: fill base set weighted, else fill base unweighted
     if(use_noac_evtweights_ && noac_weights_ && event.is_valid(h_xi_gen)){
       const double xi_gen_evt = event.get(h_xi_gen);
       const double w_cfg = lookup_noac_weight(xi_gen_evt, noac_weights_.get());
       const double w_fill = w_nom * w_cfg;
       DeltaY_reco->Fill(dyreco, w_fill);
       DeltaY_xi_reco->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_36->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_30->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_24->Fill(xi_reco, w_fill);
       DeltaY_xi_reco_20->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_18->Fill(xi_reco, w_fill);
+      DeltaY_xi_reco_12->Fill(xi_reco, w_fill);
       DeltaY_xi_reco_10->Fill(xi_reco, w_fill);
       DeltaY_xi_reco_6->Fill(xi_reco, w_fill);
     } else {
       DeltaY_reco->Fill(dyreco, w_nom);
       DeltaY_xi_reco->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_36->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_30->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_24->Fill(xi_reco, w_nom);
       DeltaY_xi_reco_20->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_18->Fill(xi_reco, w_nom);
+      DeltaY_xi_reco_12->Fill(xi_reco, w_nom);
       DeltaY_xi_reco_10->Fill(xi_reco, w_nom);
       DeltaY_xi_reco_6->Fill(xi_reco, w_nom);
     }
 
-    // Always fill trio if available (separate suffixed sets)
-    if(use_noac_evtweights_ && event.is_valid(h_xi_gen)){
-      const double xi_gen_evt = event.get(h_xi_gen);
-      if(noac_weights_m1_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m1_.get());
-        if(DeltaY_reco_noacm1) DeltaY_reco_noacm1->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noacm1) DeltaY_xi_reco_noacm1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noacm1) DeltaY_xi_reco_20_noacm1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noacm1) DeltaY_xi_reco_10_noacm1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noacm1)  DeltaY_xi_reco_6_noacm1->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_0_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_0_.get());
-        if(DeltaY_reco_noac0) DeltaY_reco_noac0->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac0) DeltaY_xi_reco_noac0->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac0) DeltaY_xi_reco_20_noac0->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac0) DeltaY_xi_reco_10_noac0->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac0)  DeltaY_xi_reco_6_noac0->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_1_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_1_.get());
-        if(DeltaY_reco_noac1) DeltaY_reco_noac1->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac1) DeltaY_xi_reco_noac1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac1) DeltaY_xi_reco_20_noac1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac1) DeltaY_xi_reco_10_noac1->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac1)  DeltaY_xi_reco_6_noac1->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_m08_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m08_.get());
-        if(DeltaY_reco_noacm08) DeltaY_reco_noacm08->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noacm08) DeltaY_xi_reco_noacm08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noacm08) DeltaY_xi_reco_20_noacm08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noacm08) DeltaY_xi_reco_10_noacm08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noacm08)  DeltaY_xi_reco_6_noacm08->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_m06_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m06_.get());
-        if(DeltaY_reco_noacm06) DeltaY_reco_noacm06->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noacm06) DeltaY_xi_reco_noacm06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noacm06) DeltaY_xi_reco_20_noacm06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noacm06) DeltaY_xi_reco_10_noacm06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noacm06)  DeltaY_xi_reco_6_noacm06->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_m04_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m04_.get());
-        if(DeltaY_reco_noacm04) DeltaY_reco_noacm04->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noacm04) DeltaY_xi_reco_noacm04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noacm04) DeltaY_xi_reco_20_noacm04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noacm04) DeltaY_xi_reco_10_noacm04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noacm04)  DeltaY_xi_reco_6_noacm04->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_m02_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_m02_.get());
-        if(DeltaY_reco_noacm02) DeltaY_reco_noacm02->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noacm02) DeltaY_xi_reco_noacm02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noacm02) DeltaY_xi_reco_20_noacm02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noacm02) DeltaY_xi_reco_10_noacm02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noacm02)  DeltaY_xi_reco_6_noacm02->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_02_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_02_.get());
-        if(DeltaY_reco_noac02) DeltaY_reco_noac02->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac02) DeltaY_xi_reco_noac02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac02) DeltaY_xi_reco_20_noac02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac02) DeltaY_xi_reco_10_noac02->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac02)  DeltaY_xi_reco_6_noac02->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_04_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_04_.get());
-        if(DeltaY_reco_noac04) DeltaY_reco_noac04->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac04) DeltaY_xi_reco_noac04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac04) DeltaY_xi_reco_20_noac04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac04) DeltaY_xi_reco_10_noac04->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac04)  DeltaY_xi_reco_6_noac04->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_06_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_06_.get());
-        if(DeltaY_reco_noac06) DeltaY_reco_noac06->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac06) DeltaY_xi_reco_noac06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac06) DeltaY_xi_reco_20_noac06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac06) DeltaY_xi_reco_10_noac06->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac06)  DeltaY_xi_reco_6_noac06->Fill(xi_reco, w_nom * w);
-      }
-      if(noac_weights_08_){
-        const double w = lookup_noac_weight(xi_gen_evt, noac_weights_08_.get());
-        if(DeltaY_reco_noac08) DeltaY_reco_noac08->Fill(dyreco, w_nom * w);
-        if(DeltaY_xi_reco_noac08) DeltaY_xi_reco_noac08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_20_noac08) DeltaY_xi_reco_20_noac08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_10_noac08) DeltaY_xi_reco_10_noac08->Fill(xi_reco, w_nom * w);
-        if(DeltaY_xi_reco_6_noac08)  DeltaY_xi_reco_6_noac08->Fill(xi_reco, w_nom * w);
-      }
-    }
-
-    
-    // Fill xi histogram for reconstruction level
-    // Fill 2D response matrix (GEN vs RECO)
-    // if (is_mc && is_tt && event.is_valid(h_xi_gen)) {
-    //   float xi_gen = event.get(h_xi_gen);
-    //   // cout << "xi_gen=" << xi_gen << " xi_reco=" << xi_reco;
-    //   DeltaY_xi_genVsReco->Fill(xi_gen, xi_reco, weight);
-    // }
-
-    auto finite   = [](double x){ return std::isfinite(x); };
-    auto in_range = [](double x){ return x > -1.0 && x < 1.0; };
-    auto clamp    = [](double x){
-      if(!std::isfinite(x)) return x;
-      if(x >=  1.0) return std::nextafter(1.0, 0.0);
-      if(x <= -1.0) return std::nextafter(-1.0, 0.0);
-      return x;
-    };
-
-    if(event.is_valid(h_xi_gen)) {
-      double xi_gen = event.get(h_xi_gen);
-      if(finite(xi_gen) && finite(xi_reco)) {
-        xi_gen  = clamp(xi_gen);
-        xi_reco = clamp(xi_reco);
-        if(in_range(xi_gen) && in_range(xi_reco)) {
-          // cout << "xi_gen=" << xi_gen << " xi_reco=" << xi_reco << endl;
-          DeltaY_xi_genVsReco->Fill(xi_gen, xi_reco, weight);
-          DeltaY_xi_genVsReco_20->Fill(xi_gen, xi_reco, weight);
-          DeltaY_xi_genVsReco_10->Fill(xi_gen, xi_reco, weight);
-          DeltaY_xi_genVsReco_6->Fill(xi_gen, xi_reco, weight);
+    // Always fill f-value histograms (separate suffixed sets)
+    // Fill with NoAC weights if available, otherwise fill unweighted
+    for(const auto &spec : noac_points_){
+      auto bundle_it = noac_histograms_.find(spec.first);
+      if(bundle_it == noac_histograms_.end()) continue;
+      auto &bundle = bundle_it->second;
+      
+      double w_fill = w_nom; // Default: unweighted
+      if(use_noac_evtweights_ && event.is_valid(h_xi_gen)){
+        const double xi_gen_evt = event.get(h_xi_gen);
+        auto weight_it = noac_weight_map_.find(spec.first);
+        if(weight_it != noac_weight_map_.end() && weight_it->second){
+          const double w = lookup_noac_weight(xi_gen_evt, weight_it->second.get());
+          w_fill = w_nom * w;
         }
+      }
+      
+      if(bundle.deltaY) bundle.deltaY->Fill(dyreco, w_fill);
+      for(const auto &xi_entry : bundle.xi_histograms){
+        if(xi_entry.second) xi_entry.second->Fill(xi_reco, w_fill);
       }
     }
 
