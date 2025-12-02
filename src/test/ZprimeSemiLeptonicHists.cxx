@@ -253,6 +253,7 @@ Hists(ctx, dirname) {
   // Only initialize the handle for non-EFT TTbar samples to avoid UHH2 complaining about unset handles
   if(is_tt && dataset_version.find("EFT") == std::string::npos) {
     // Only try to get handle for non-EFT TTbar samples
+    // Note: This handle may not exist in all samples, but we try anyway
     h_ttbargen = ctx.get_handle<TTbarGen>("ttbargen");
   }
   //  h_chi2 = ctx.get_handle<float>("chi2");
@@ -2787,3 +2788,4 @@ if (is_zprime_reconstructed_chi2 ){
 
 
 ZprimeSemiLeptonicHists::~ZprimeSemiLeptonicHists(){}
+
