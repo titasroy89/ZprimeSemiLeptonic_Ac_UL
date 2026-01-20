@@ -12,16 +12,17 @@
 <!ENTITY IS_LOOSER_SELECTION "false">
 <!ENTITY IS_ELE_TRIGGER "false">
 <!ENTITY CHANNEL "muon">
-<!ENTITY OUTPUTdir "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL18/&CHANNEL;/">
+<!ENTITY SAMPLE "none">
+<!ENTITY OUTPUTdir "/data/dust/group/cms/zprime-uhh/hdamp/AnalysisDNN/UL18/&CHANNEL;/">
 
-<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_UL18_muon_hdamp_up/MC_TTToSemiLeptonic_UL18.xml">
-<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_UL18_muon_hdamp_up/MC_TTToHadronic_UL18.xml">
-<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_UL18_muon_hdamp_up/MC_TTTo2L2Nu_UL18.xml">
+<!ENTITY TTToSemiLeptonic SYSTEM "../data/Skimming_datasets_DNN_UL18_muon_hdamp_up/MC_TTToSemiLeptonic_UL18.xml">
+<!ENTITY TTToHadronic SYSTEM "../data/Skimming_datasets_DNN_UL18_muon_hdamp_up/MC_TTToHadronic_UL18.xml">
+<!ENTITY TTTo2L2Nu SYSTEM "../data/Skimming_datasets_DNN_UL18_muon_hdamp_up/MC_TTTo2L2Nu_UL18.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL18_muon_hdamp_up"/>
+<ConfigSGE RAM="4" DISK="4" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL18_muon_hdamp_up"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -30,10 +31,10 @@
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
-		<InputData Lumi="27607.55594233" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
-		<InputData Lumi="31972.35237271" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
-		<InputData Lumi="24.98985042" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> </InputData>
-		
+		<InputData Lumi="159964509.280123" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
+		<InputData Lumi="44032318.241364" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>  
+		<InputData Lumi="112938209.076622" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> </InputData> 
+
 		<UserConfig>
 			<Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>
 			<Item Name="GenParticleCollection" Value="GenParticles"/>
@@ -47,15 +48,15 @@
 			<Item Name="METName" Value="slimmedMETsPuppi"/>
 			<Item Name="genMETName" Value="slimmedMETs_GenMET"/>
 
-			<Item Name="lumi_file" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON_normtag.root"/>
+			<Item Name="lumi_file" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON_normtag.root"/>
 			<Item Name="lumihists_lumi_per_bin" Value="500.0"/>
 
-			<Item Name="pileup_directory" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyMCPileupHistogram_UL18.root"/>
-			<Item Name="pileup_directory_data" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18.root"/>
-			<Item Name="pileup_directory_data_up" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18_72383.root"/>
-			<Item Name="pileup_directory_data_down" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18_66017.root"/>
+			<Item Name="pileup_directory" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyMCPileupHistogram_UL18.root"/>
+			<Item Name="pileup_directory_data" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18.root"/>
+			<Item Name="pileup_directory_data_up" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18_72383.root"/>
+			<Item Name="pileup_directory_data_down" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL18/MyDataPileupHistogram_UL18_66017.root"/>
 
-			<Item Name="NLOCorrections" Value = "/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/"/>
+			<Item Name="NLOCorrections" Value = "/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/"/>
 
 			<Item Name="is_hotvr" Value="&IS_HOTVR;"/>
 			<Item Name="is_deepAK8" Value="&IS_DEEPAK8;"/>
@@ -79,9 +80,12 @@
 				<Item Name="jecsmear_direction" Value="nominal"/>
 				<Item Name="ScaleVariationMuR" Value="nominal"/>
 				<Item Name="ScaleVariationMuF" Value="nominal"/>
-				<Item Name="SystDirection_MuonId" Value="nominal"/>
-				<Item Name="SystDirection_MuonIso" Value="nominal"/>
-				<Item Name="SystDirection_MuonTrigger" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonId_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonIso_syst" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_stat" Value="nominal"/>
+				<Item Name="SystDirection_MuonTrigger_syst" Value="nominal"/>
 				<Item Name="SystDirection_ElectronId" Value="nominal"/>
 				<Item Name="SystDirection_ElectronReco" Value="nominal"/>
 				<Item Name="Sys_PU" Value="central"/>
@@ -91,6 +95,12 @@
 				<Item Name="Systematic_TopPt_a" Value="nominal"/>
 				<Item Name="Systematic_TopPt_b" Value="nominal"/>
 				<Item Name="channel" Value="&CHANNEL;"/>
+				<Item Name="sample" Value="&SAMPLE;"/>
+      
+				<Item Name="noac_apply_event_weight"     Value="true"/>
+				<Item Name="noac_use_mtt_binning"        Value="true"/>
+				<Item Name="noac_gen_file"               Value="/data/dust/group/cms/zprime-uhh/hdamp/Preselection/UL18/workdir_Preselection_UL18_hdamp_up/uhh2.AnalysisModuleRunner.MC.TTToSemiLeptonic*.root"/>
+				<Item Name="noac_gen_hist"               Value="mtt_gen_inclusive_General/DeltaY_xi_gen"/>
 
 				<Item Name="AnalysisModule" Value="ZprimeAnalysisModule_applyNN"/>
 			</UserConfig>

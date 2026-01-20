@@ -139,7 +139,7 @@ protected:
   uhh2::Event::Handle<float> h_DeltaY_gen_in;
   uhh2::Event::Handle<float> h_mtt_gen_in;
 
-  // (optional) write-through to your output file so the next job can read again
+  // write-through to your output file so the next job can read again
   uhh2::Event::Handle<float> h_xi_gen_out;
   uhh2::Event::Handle<float> h_DeltaY_gen_out;
   uhh2::Event::Handle<float> h_mtt_gen_out;
@@ -503,7 +503,8 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     }
     if( (ctx.get("dataset_version").find("TTToHadronic") != std::string::npos)
      || (ctx.get("dataset_version").find("TTToSemiLeptonic") != std::string::npos)
-     || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos) ) {
+     || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos)
+     || (ctx.get("dataset_version").find("TTJets_Madgraph") != std::string::npos) ) {
       sample_name = "TTbar";
     }
     if( (ctx.get("dataset_version").find("MC_EFT_Mttbar_0-700_UL17") != std::string::npos)
@@ -553,7 +554,7 @@ ZprimeAnalysisModule::ZprimeAnalysisModule(uhh2::Context& ctx){
     h_DeltaY_gen_in = ctx.declare_event_input<float>("DeltaY_gen");
     h_mtt_gen_in    = ctx.declare_event_input<float>("mtt_gen");
     
-    // Re-expose as outputs so AnalysisDNN can read them
+    // outputs so AnalysisDNN can read them
     h_xi_gen_out     = ctx.declare_event_output<float>("xi_gen");
     h_DeltaY_gen_out = ctx.declare_event_output<float>("DeltaY_gen");
     h_mtt_gen_out    = ctx.declare_event_output<float>("mtt_gen");

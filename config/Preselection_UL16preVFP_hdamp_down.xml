@@ -2,14 +2,14 @@
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd" [
 
 <!ENTITY TargetLumi  "19520"> <!-- from https://twiki.cern.ch/twiki/bin/view/CMS/TWikiLUM#SummaryTable, https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopSystematics#Luminosity -->
-<!ENTITY PRESELdir "/nfs/dust/cms/group/zprime-uhh/Presel_UL16preVFP_hdamp_down/">
+<!ENTITY PRESELdir "/data/dust/group/cms/zprime-uhh/hdamp/Preselection/UL16preVFP">
 <!ENTITY b_Cacheable "False">
 <!ENTITY NEVT        "-1">
 <!ENTITY IS_HOTVR    "false">
 
-<!ENTITY TTToSemiLeptonic_UL16preVFP SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTToSemiLeptonic_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
-<!ENTITY TTToHadronic_UL16preVFP     SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTToHadronic_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
-<!ENTITY TTTo2L2Nu_UL16preVFP        SYSTEM "/nfs/dust/cms/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTTo2L2Nu_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
+<!ENTITY TTToSemiLeptonic_UL16preVFP SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTToSemiLeptonic_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
+<!ENTITY TTToHadronic_UL16preVFP     SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTToHadronic_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
+<!ENTITY TTTo2L2Nu_UL16preVFP        SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-datasets/RunII_106X_v2/SM/UL16preVFP/TTTo2L2Nu_hdampDOWN_CP5_powheg-pythia8_Summer20UL16APV_v1.xml">
 ]>
 
 <!--
@@ -22,17 +22,27 @@
 	<Package Name="SUHH2ZprimeSemiLeptonic.par"/>
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&PRESELdir;/" PostFix="" TargetLumi="&TargetLumi;">
-		<InputData Lumi="38324119.10316820" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16preVFP" Cacheable="&b_Cacheable;">
+
+		<!-- Lumi calculation: Lumi = N_gen / xsec -->
+		<!-- N_gen values from dataset XML files (Method=weights): -->
+		<!-- TTToSemiLeptonic_hdampDOWN: N_gen = 13961893555.7 -->
+		<!-- TTToHadronic_hdampDOWN: N_gen = 11446167870.6 -->
+		<!-- TTTo2L2Nu_hdampDOWN: N_gen = 1197862430.31 -->
+		<!-- Standard Powheg cross-sections -->
+		<!-- TTToSemiLeptonic: 365.34 pb -->
+		<!-- TTToHadronic: 377.96 pb -->
+		<!-- TTTo2L2Nu: 88.29 pb -->
+		<InputData Lumi="38216164.547271" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTToSemiLeptonic_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 			<OutputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="30112435.30788320" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="30284072.046248" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTToHadronic_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 			<OutputTree Name="AnalysisTree" />
 		</InputData>
-		<InputData Lumi="13715751.68558230" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL16preVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="13567362.445464" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL16preVFP" Cacheable="&b_Cacheable;">
 			&TTTo2L2Nu_UL16preVFP;
 			<InputTree Name="AnalysisTree" />
 			<OutputTree Name="AnalysisTree" />
@@ -52,13 +62,13 @@
 			<Item Name="genMETName"              Value="slimmedMETs_GenMET"/>
 			<Item Name="additionalBranches"      Value="jetsAk4CHS"/>
 
-			<Item Name="lumi_file"              Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_UL16preVFP_normtag.root"/>
+			<Item Name="lumi_file"              Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_UL16preVFP_normtag.root"/>
 			<Item Name="lumihists_lumi_per_bin" Value="500.0"/>
 
-			<Item Name="pileup_directory"           Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyMCPileupHistogram_UL16preVFP.root"/>
-			<Item Name="pileup_directory_data"      Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP.root"/>
-			<Item Name="pileup_directory_data_up"   Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP_72383.root"/>
-			<Item Name="pileup_directory_data_down" Value="/nfs/dust/cms/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP_66017.root"/>
+			<Item Name="pileup_directory"           Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyMCPileupHistogram_UL16preVFP.root"/>
+			<Item Name="pileup_directory_data"      Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP.root"/>
+			<Item Name="pileup_directory_data_up"   Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP_72383.root"/>
+			<Item Name="pileup_directory_data_down" Value="/data/dust/user/jabuschh/uhh2-106X_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL16preVFP/MyDataPileupHistogram_UL16preVFP_66017.root"/>
 
 			<Item Name="is_HOTVR" Value="&IS_HOTVR;"/>
 			<Item Name="Sys_PU"   Value="central"/>

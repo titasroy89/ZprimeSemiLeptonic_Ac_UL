@@ -30,20 +30,17 @@
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
 		<!-- TTbar -->
-		<InputData Lumi="8478.18489527" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16postVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="117575358.677" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic_UL16postVFP" Cacheable="&b_Cacheable;">
 			&TTToSemiLeptonic_UL16postVFP;
 			<InputTree Name="AnalysisTree" />
-			<!-- <OutputTree Name="AnalysisTree" /> -->
 		</InputData>
-		<InputData Lumi="6.20339691" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16postVFP" Cacheable="&b_Cacheable;">
+		 <InputData Lumi="88489755.8674" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic_UL16postVFP" Cacheable="&b_Cacheable;">
 			&TTToHadronic_UL16postVFP;
 			<InputTree Name="AnalysisTree" />
-			<!-- <OutputTree Name="AnalysisTree" /> -->
 		</InputData>
-		<InputData Lumi="8638.48088047" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL16postVFP" Cacheable="&b_Cacheable;">
+		<InputData Lumi="35403476.3356" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu_UL16postVFP" Cacheable="&b_Cacheable;">
 			&TTTo2L2Nu_UL16postVFP;
 			<InputTree Name="AnalysisTree" />
-			<!-- <OutputTree Name="AnalysisTree" /> -->
 		</InputData>
 		
 		<UserConfig>

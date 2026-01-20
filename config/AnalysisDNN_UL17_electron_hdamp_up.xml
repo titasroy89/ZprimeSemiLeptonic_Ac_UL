@@ -29,9 +29,9 @@
 
   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&OUTPUTdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
-    <InputData Lumi="16329.99267000" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
-    <InputData Lumi="21076.73000911" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
-    <InputData Lumi="4.86169529" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> </InputData>
+    <InputData Lumi="108226394.925549" NEventsMax="&NEVT;" Type="MC" Version="TTToSemiLeptonic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToSemiLeptonic; <InputTree Name="AnalysisTree"/> </InputData>
+    <InputData Lumi="32457083.560313" NEventsMax="&NEVT;" Type="MC" Version="TTTo2L2Nu&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTTo2L2Nu; <InputTree Name="AnalysisTree"/> </InputData>
+    <InputData Lumi="81388652.553709" NEventsMax="&NEVT;" Type="MC" Version="TTToHadronic&YEARsuffix;" Cacheable="&b_Cacheable;"> &TTToHadronic; <InputTree Name="AnalysisTree"/> </InputData>
 
     <UserConfig>
       <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices"/>

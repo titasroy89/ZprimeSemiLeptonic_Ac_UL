@@ -14,14 +14,14 @@
 <!ENTITY OUTPUTdir           "/data/dust/group/cms/zprime-uhh/Analysis_EFT_UL17/&CHANNEL;">
 
 <!-- TTbar -->
-<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_afterpreselection_semilepton_EFT/MC_MC_EFT_Mttbar_0-700_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_afterpreselection_semilepton_EFT/MC_MC_EFT_Mttbar_700-900_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_afterpreselection_semilepton_EFT/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_UL17_afterpreselection_semilepton/MC_MC_EFT_Mttbar_0-700_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_UL17_afterpreselection_semilepton/MC_MC_EFT_Mttbar_700-900_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_EFT_UL17_afterpreselection_semilepton/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
 ]>
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="10" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Analysis_EFT_UL17_muon_semilepton_deltayreco_deltaPhi_sigmaPhi_ttree_new"/>
+<ConfigSGE RAM="4" DISK="4" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_Analysis_EFT_UL17_muon_semilepton"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -98,6 +98,11 @@
       <Item Name="Systematic_TopPt_a"          Value="nominal"/>
       <Item Name="Systematic_TopPt_b"          Value="nominal"/>
       <Item Name="channel"                     Value="&CHANNEL;"/>
+
+      <Item Name="noac_apply_event_weight"     Value="true"/>
+      <Item Name="noac_gen_file"               Value="/data/dust/group/cms/zprime-uhh/Preselection_EFT_UL17/workdir_Preselection_EFT_UL17_semilepton_templatemethod/uhh2.AnalysisModuleRunner.MC.*.root"/>
+      <Item Name="noac_gen_hist"               Value="mtt_gen_inclusive_General/DeltaY_xi_gen"/>
+      <Item Name="noac_fraction"               Value="1"/>
 
       <Item Name="AnalysisModule" Value="ZprimeAnalysisModule_EFT"/>
     </UserConfig>

@@ -22,7 +22,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_muon_semilepton"/>
+<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_muon_semilepton_newgen"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -33,19 +33,19 @@
 
     <!-- EFT samples -->
 
-    <InputData Lumi="20062.54" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_0-700_UL17" Cacheable="&b_Cacheable;">
+    <InputData Lumi="484927.16" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_0-700_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_0-700_UL17;
       <InputTree Name="AnalysisTree" />
       <OutputTree Name="AnalysisTree" />
     </InputData>
 
-    <InputData Lumi="52879.35" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_700-900_UL17" Cacheable="&b_Cacheable;">
+    <InputData Lumi="1186869.20" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_700-900_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_700-900_UL17;
       <InputTree Name="AnalysisTree" />
       <OutputTree Name="AnalysisTree" />
     </InputData>
 
-    <InputData Lumi="91527.92" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_900-Inf_UL17" Cacheable="&b_Cacheable;">
+    <InputData Lumi="831529.52" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_900-Inf_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_900-Inf_UL17;
       <InputTree Name="AnalysisTree" />
       <OutputTree Name="AnalysisTree" />
@@ -110,6 +110,13 @@
       <Item Name="Systematic_TopPt_a" Value="nominal"/>
       <Item Name="Systematic_TopPt_b" Value="nominal"/>
       <Item Name="channel" Value="&CHANNEL;"/>
+
+      <Item Name="noac_apply_event_weight"     Value="true"/>
+      <Item Name="noac_use_mtt_binning"        Value="false"/>
+      <Item Name="noac_gen_file"               Value="/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/output_DNN/UL17/Preselection/workdir_Preselection_EFT_UL17_semilepton_templatemethod_lumicorrected/uhh2.AnalysisModuleRunner.MC.*.root"/>
+      <Item Name="noac_gen_hist"               Value="mtt_gen_inclusive_General/DeltaY_xi_gen"/>
+      <Item Name="noac_fraction"               Value="2"/>
+
 
       <Item Name="AnalysisModule" Value="ZprimeAnalysisModule_applyNN"/>
     </UserConfig>

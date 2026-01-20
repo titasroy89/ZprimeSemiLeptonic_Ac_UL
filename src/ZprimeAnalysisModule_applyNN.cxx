@@ -253,9 +253,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
 
   //NN - DON'T FORGET TO CHANGE!
   //Muon
-  // ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
+  ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/NormInfo.txt", ios::in);
   //Electron
-  ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
+  // ifstream normfile ("/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/NormInfo.txt", ios::in);
   
   if(!normfile.good()) throw runtime_error("NeuralNetworkModule: The specified norm file does not exist.");
   if (normfile.is_open()){
@@ -274,9 +274,9 @@ void NeuralNetworkModule::CreateInputs(Event & event){
   //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
 
   // /Muon
-  // vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_MET_phi, h_MET_pt, h_Mu_E, h_Mu_eta, h_Mu_phi, h_Mu_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
+  vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_MET_phi, h_MET_pt, h_Mu_E, h_Mu_eta, h_Mu_phi, h_Mu_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
   //Electron
-  vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ele_E, h_Ele_eta, h_Ele_phi, h_Ele_pt, h_MET_phi, h_MET_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
+  // vector<uhh2::Event::Handle<float>> inputs = {h_Ak4_j1_E, h_Ak4_j1_deepjetbscore, h_Ak4_j1_eta, h_Ak4_j1_m, h_Ak4_j1_phi, h_Ak4_j1_pt, h_Ak4_j2_E, h_Ak4_j2_deepjetbscore, h_Ak4_j2_eta, h_Ak4_j2_m, h_Ak4_j2_phi, h_Ak4_j2_pt, h_Ak4_j3_E, h_Ak4_j3_deepjetbscore, h_Ak4_j3_eta, h_Ak4_j3_m, h_Ak4_j3_phi, h_Ak4_j3_pt, h_Ak4_j4_E, h_Ak4_j4_deepjetbscore, h_Ak4_j4_eta, h_Ak4_j4_m, h_Ak4_j4_phi, h_Ak4_j4_pt, h_Ak4_j5_E, h_Ak4_j5_deepjetbscore, h_Ak4_j5_eta, h_Ak4_j5_m, h_Ak4_j5_phi, h_Ak4_j5_pt, h_Ak8_j1_E, h_Ak8_j1_eta, h_Ak8_j1_mSD, h_Ak8_j1_phi, h_Ak8_j1_pt, h_Ak8_j1_tau21, h_Ak8_j1_tau32, h_Ak8_j2_E, h_Ak8_j2_eta, h_Ak8_j2_mSD, h_Ak8_j2_phi, h_Ak8_j2_pt, h_Ak8_j2_tau21, h_Ak8_j2_tau32, h_Ak8_j3_E, h_Ak8_j3_eta, h_Ak8_j3_mSD, h_Ak8_j3_phi, h_Ak8_j3_pt, h_Ak8_j3_tau21, h_Ak8_j3_tau32, h_Ele_E, h_Ele_eta, h_Ele_phi, h_Ele_pt, h_MET_phi, h_MET_pt, h_N_Ak4, h_N_Ak8}; // in alphabetical order to match NormInfo.txt
   for(int i = 0; i < 59; ++i){
     // cout<<"looping over NN inputs "<< i <<endl;
 
@@ -300,6 +300,8 @@ protected:
 
   bool debug;
   // bool isEFT;
+  bool is_ttbar_or_eft;
+  bool gen_branches_declared; // Track if gen branches were actually declared
   
   // Cleaners
   std::unique_ptr<MuonCleaner>     muon_cleaner_low, muon_cleaner_high;
@@ -365,7 +367,6 @@ protected:
   Event::Handle<bool> h_is_zprime_reconstructed_chi2, h_is_zprime_reconstructed_correctmatch;
   Event::Handle<float> h_chi2;
   Event::Handle<float> h_weight;
-  Event::Handle<float> h_weight_pu, h_weight_pu_up, h_weight_pu_down;
   Event::Handle<float> h_eventweight_SR;
   Event::Handle<float> h_dyreco_SR, h_dyreco_1_SR, h_dyreco_2_SR;  
   Event::Handle<float> h_dyreco_1_SR_0_500, h_dyreco_1_SR_0_350, h_dyreco_1_SR_350_500, h_dyreco_1_SR_500_750, h_dyreco_1_SR_750_1000, h_dyreco_1_SR_1000_1500, h_dyreco_1_SR_1500_Inf, h_dyreco_1_SR_0_700, h_dyreco_1_SR_700_900, h_dyreco_1_SR_900_Inf;
@@ -395,6 +396,12 @@ protected:
   uhh2::Event::Handle<float> h_xi_gen;
   uhh2::Event::Handle<float> h_mtt_gen;
   uhh2::Event::Handle<float> h_DeltaY_gen;
+
+  // write-through to your output file so the next job can read again
+  uhh2::Event::Handle<float> h_xi_gen_out;
+  uhh2::Event::Handle<float> h_DeltaY_gen_out;
+  uhh2::Event::Handle<float> h_mtt_gen_out;
+
 
   
   uhh2::Event::Handle<ZprimeCandidate*> h_BestZprimeCandidateChi2;
@@ -625,6 +632,7 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   }
   // Configuration
   isMC = (ctx.get("dataset_type") == "MC");
+  gen_branches_declared = false; // Initialize to false, will be set to true only when branches are declared
   ishotvr = (ctx.get("is_hotvr") == "true");
   isdeepAK8 = (ctx.get("is_deepAK8") == "true");
   TString mode = "hotvr";
@@ -812,9 +820,6 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
   h_chi2 = ctx.declare_event_output<float> ("rec_chi2");
   h_weight = ctx.declare_event_output<float> ("weight");
-  h_weight_pu = ctx.get_handle<float>("weight_pu");
-  h_weight_pu_up = ctx.get_handle<float>("weight_pu_up");
-  h_weight_pu_down = ctx.get_handle<float>("weight_pu_down");
   h_eventweight_SR = ctx.declare_event_output<float> ("eventweight");
 
   h_dyreco_SR = ctx.declare_event_output<float>("dyreco_SR");
@@ -1014,12 +1019,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // ================ SR ==================================================================================================================================================================================================================
   
   // h_DeltaY_reco_SystVariations_0_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_500_SR"));
-  // h_DeltaY_reco_SystVariations_0_350_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_350_SR"));
-  // h_DeltaY_reco_SystVariations_350_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_350_500_SR"));
-  // h_DeltaY_reco_SystVariations_500_750_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_SR"));
-  // h_DeltaY_reco_SystVariations_750_1000_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_SR"));
-  // h_DeltaY_reco_SystVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_SR"));
-  // h_DeltaY_reco_SystVariations_1500Inf_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_SR"));
+  h_DeltaY_reco_SystVariations_0_350_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_350_SR"));
+  h_DeltaY_reco_SystVariations_350_500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_350_500_SR"));
+  h_DeltaY_reco_SystVariations_500_750_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_500_750_SR"));
+  h_DeltaY_reco_SystVariations_750_1000_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_750_1000_SR"));
+  h_DeltaY_reco_SystVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1000_1500_SR"));
+  h_DeltaY_reco_SystVariations_1500Inf_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_1500Inf_SR"));
   // h_DeltaY_reco_SystVariations_0_700_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_0_700_SR"));
   // h_DeltaY_reco_SystVariations_700_900_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_700_900_SR"));
   // h_DeltaY_reco_SystVariations_900Inf_SR.reset(new ZprimeSemiLeptonicSystematicsHists(ctx, "DeltaY_reco_SystVariations_900Inf_SR"));
@@ -1027,12 +1032,12 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   if(debug) cout << "[DEBUG] DeltaY_reco_SystVariations_0_500_SR created successfully!" << endl;
 
   // h_DeltaY_reco_PDFVariations_0_500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_500_SR"));
-  // h_DeltaY_reco_PDFVariations_0_350_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_350_SR"));
-  // h_DeltaY_reco_PDFVariations_350_500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_350_500_SR"));
-  // h_DeltaY_reco_PDFVariations_500_750_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_SR"));
-  // h_DeltaY_reco_PDFVariations_750_1000_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_SR"));
-  // h_DeltaY_reco_PDFVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_SR"));
-  // h_DeltaY_reco_PDFVariations_1500Inf_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_SR"));
+  h_DeltaY_reco_PDFVariations_0_350_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_350_SR"));
+  h_DeltaY_reco_PDFVariations_350_500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_350_500_SR"));
+  h_DeltaY_reco_PDFVariations_500_750_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_500_750_SR"));
+  h_DeltaY_reco_PDFVariations_750_1000_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_750_1000_SR"));
+  h_DeltaY_reco_PDFVariations_1000_1500_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1000_1500_SR"));
+  h_DeltaY_reco_PDFVariations_1500Inf_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_1500Inf_SR"));
   // h_DeltaY_reco_PDFVariations_0_700_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_0_700_SR"));
   // h_DeltaY_reco_PDFVariations_700_900_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_700_900_SR"));
   // h_DeltaY_reco_PDFVariations_900Inf_SR.reset(new ZprimeSemiLeptonicPDFHists(ctx, "DeltaY_reco_PDFVariations_900Inf_SR"));
@@ -1107,10 +1112,11 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   "DNN_output0_nochi2",
   "DNN_output0",
   // "DNN_output1","DNN_output2","DNN_output1_chi2","DNN_output2_chi2","DNN_output0_TopTag", "DNN_output0_NoTopTag",
-  // "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_350_SR", "DeltaY_reco_350_500_SR","DeltaY_reco_0_500_SR", "DeltaY_reco_0_700_SR", "DeltaY_reco_700_900_SR", "DeltaY_reco_900Inf_SR",
+  "DeltaY_reco_1500Inf_SR" ,"DeltaY_reco_1000_1500_SR" ,"DeltaY_reco_750_1000_SR" ,"DeltaY_reco_500_750_SR", "DeltaY_reco_0_350_SR", "DeltaY_reco_350_500_SR",
+  // "DeltaY_reco_0_500_SR", "DeltaY_reco_0_700_SR", "DeltaY_reco_700_900_SR", "DeltaY_reco_900Inf_SR",
   // "DeltaY_reco_1500Inf_CR1" ,"DeltaY_reco_1000_1500_CR1" ,"DeltaY_reco_750_1000_CR1" ,"DeltaY_reco_500_750_CR1","DeltaY_reco_0_350_CR1", "DeltaY_reco_350_500_CR1", "DeltaY_reco_0_500_CR1","DeltaY_reco_0_700_CR1", "DeltaY_reco_700_900_CR1", "DeltaY_reco_900Inf_CR1", 
   // "DeltaY_reco_1500Inf_CR2" ,"DeltaY_reco_1000_1500_CR2" ,"DeltaY_reco_750_1000_CR2" ,"DeltaY_reco_500_750_CR2", "DeltaY_reco_0_350_CR2", "DeltaY_reco_350_500_CR2","DeltaY_reco_0_500_CR2", "DeltaY_reco_0_700_CR2", "DeltaY_reco_700_900_CR2", "DeltaY_reco_900Inf_CR2",
-};
+  };
 
   if(debug) cout << "[DEBUG] About to book histograms..." << endl;
   book_histograms(ctx, histogram_tags);
@@ -1139,7 +1145,8 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
     }
     if( (ctx.get("dataset_version").find("TTToHadronic") != std::string::npos)
      || (ctx.get("dataset_version").find("TTToSemiLeptonic") != std::string::npos)
-     || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos) ) {
+     || (ctx.get("dataset_version").find("TTTo2L2Nu") != std::string::npos)
+     || (ctx.get("dataset_version").find("TTJets_Madgraph") != std::string::npos) ) {
       sample_name = "TTbar";
     }
     if( (ctx.get("dataset_version").find("MC_EFT_Mttbar_0-700_UL17") != std::string::npos)
@@ -1269,10 +1276,10 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
 
    //Only Ele or Mu variables!! DON'T FORGET TO CHANGE!
   //muon
-  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
+  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_muon/model.config.pbtxt"));
   
   //electron
-  NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
+  // NNModule.reset( new NeuralNetworkModule(ctx, "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.pb", "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/KerasNN/NN_DeepAK8_UL17_ele/model.config.pbtxt"));
 
   // Structure Constants Calculator for EFT
   // This calculates structure constants for each event using EFT weights
@@ -1286,21 +1293,29 @@ ZprimeAnalysisModule_applyNN::ZprimeAnalysisModule_applyNN(uhh2::Context& ctx){
   // structure_constants_calculator.reset(new StructureConstantsCalculator(ctx));
   h_structure_constants = ctx.get_handle<std::vector<float>>("structure_constants");
 
-  // declare GEN inputs only for TTbar samples (including EFT) to avoid missing-branch errors on backgrounds/data
-  std::string dataset_version = ctx.get("dataset_version");
-  const bool is_ttbar_or_eft = (isMC && ((dataset_version.find("TTTo") != std::string::npos) || (dataset_version.find("EFT") != std::string::npos)));
-  const bool use_noac = (ctx.get("noac_apply_event_weight", "false") == "true");
-  const bool declare_gen_branches = is_ttbar_or_eft && use_noac;
-  
-  if(declare_gen_branches) {
-    // Declare GEN branches needed for template method NoAC weight calculations
-    // Note: EFT samples must have these branches for NoAC weights to work
-    h_xi_gen     = ctx.declare_event_input<float>("xi_gen");
-    h_DeltaY_gen = ctx.declare_event_input<float>("DeltaY_gen");
-    h_mtt_gen    = ctx.declare_event_input<float>("mtt_gen");
-  }
+  if(isMC) {
+    // declare GEN inputs only for TTbar samples (including EFT and MadGraph) to avoid missing-branch errors
+    std::string dataset_version = ctx.get("dataset_version");
+    is_ttbar_or_eft = (isMC && ((dataset_version.find("TTTo") != std::string::npos) || (dataset_version.find("TTJets") != std::string::npos) || (dataset_version.find("EFT") != std::string::npos)));
+    const bool use_noac = (ctx.get("noac_apply_event_weight", "false") == "true");
+    const bool declare_gen_branches = is_ttbar_or_eft && use_noac;
+    gen_branches_declared = declare_gen_branches; // Track if branches were declared
+    
+    if(declare_gen_branches) {
+      // Declare GEN branches needed for template method NoAC weight calculations
+      // Note: EFT samples must have these branches for NoAC weights to work
+      h_xi_gen     = ctx.declare_event_input<float>("xi_gen");
+      h_DeltaY_gen = ctx.declare_event_input<float>("DeltaY_gen");
+      h_mtt_gen    = ctx.declare_event_input<float>("mtt_gen");
 
-  if(debug) cout << "[DEBUG] Handles created successfully!" << endl;
+      // outputs so AnalysisDNN can read them
+      h_xi_gen_out     = ctx.declare_event_output<float>("xi_gen");
+      h_DeltaY_gen_out = ctx.declare_event_output<float>("DeltaY_gen");
+      h_mtt_gen_out    = ctx.declare_event_output<float>("mtt_gen");
+    }
+
+    if(debug) cout << "[DEBUG] Handles created successfully!" << endl;
+  }
 }
 
 /*
@@ -1507,14 +1522,31 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   event.set(h_NNoutput1, 0);
   event.set(h_NNoutput2, 0);
 
-  
+  if(debug) cout << " set NNoutput " << endl;
+
+  // Only access gen branches for ttbar/EFT samples
+  if(isMC && is_ttbar_or_eft && event.is_valid(h_xi_gen)) {
+    float xi = event.get(h_xi_gen);
+    if(!std::isfinite(xi)) {
+      // leave it unset; Hists guard will skip
+    } else {
+      event.set(h_xi_gen_out, xi);
+    }
+    if(event.is_valid(h_DeltaY_gen)) event.set(h_DeltaY_gen_out, event.get(h_DeltaY_gen));
+    if(event.is_valid(h_mtt_gen))    event.set(h_mtt_gen_out,    event.get(h_mtt_gen));
+    }
+
+  if(debug) cout << " set xi_gen " << endl;
+
   //Tagger
   if(ishotvr){
     TopTaggerHOTVR->process(event);
     hadronic_top->process(event);
+    if(debug) cout << " done with TopTaggerHOTVR " << endl;
   }else if(isdeepAK8){
     TopTaggerDeepAK8->process(event);
     hadronic_top->process(event);
+    if(debug) cout << " done with TopTaggerDeepAK8 " << endl;
   }
   if(debug) cout<<"Top Tagger ok"<<endl;
 
@@ -1598,7 +1630,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
 
   // pileup weight
     PUWeight_module->process(event);
-
   if(debug)  cout<<"PUWeight ok"<<endl;
   // fill_histograms(event, "Weights_PU");
   // lumihists_Weights_PU->fill(event);
@@ -1667,7 +1698,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
         ele_is_high = true;
       }
     }
-    if(debug && event_counter <= 5) cout << "[DEBUG] Finished looping over electrons" << endl;
   }
   sort_by_pt<Electron>(*event.electrons);
   
@@ -1872,7 +1902,6 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
   // bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2); 
   float Mass_tt = BestZprimeCandidate->Zprime_v4().M();
-
   if(debug) cout << "starting DNN" << endl;
   //float Mttbar_reco =inv_mass(BestZprimeCandidate->BestZprimeCandidate->top_leptonic_v4()+BestZprimeCandidate->BestZprimeCandidate->top_hadronic_v4());
   //cout << "what is Mttbar:" << Mttbar_reco<<endl;
@@ -1904,9 +1933,11 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   if(!DeltaEta_selection->passes(event)) return false;
   // fill_histograms(event, "DeltaEtaCut");
 
+  if(debug) cout << "before chi2" << endl;
   if(Chi2_selection->passes(event)){ 
     fill_histograms(event, "AfterChi2");
   }
+  if(debug) cout << "after chi2" << endl;
   // VariablesEFTSR_module->process(event);
   // if(debug) cout << "done EFT SR" << endl;
   // VariablesEFTCR1_module->process(event);
@@ -1915,7 +1946,13 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
   // VariablesEFTCR2_module->process(event);
   // if(debug) cout << "done EFT CR2" << endl;
 
-
+  // Only access gen branches for ttbar/EFT samples
+  if(isMC && is_ttbar_or_eft && event.is_valid(h_xi_gen)) {
+    event.set(h_xi_gen_out,     event.get(h_xi_gen));
+    event.set(h_DeltaY_gen_out, event.get(h_DeltaY_gen));
+    event.set(h_mtt_gen_out,    event.get(h_mtt_gen));
+  }
+  if(debug) cout << "after gen assignments" << endl;
 
   // out0=TTbar, out1=ST, out2=WJets
   if( out0 == max_score ){
@@ -1927,31 +1964,30 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       // cout << "signal DNN output0 chi2" << endl;
       // h_CHSMatchHists->fill(event);
       fill_histograms(event, "DNN_output0");
-      // cout << "signal DNN output0 chi2 fill syst vars" << endl;
       h_DeltaY_reco_SystVariations_Inclusive_SR->fill(event);
-      // cout << "signal DNN output0 chi2 fill pdf vars" << endl;
       h_DeltaY_reco_PDFVariations_Inclusive_SR->fill(event);
-      // cout << "signal DNN output0 chi2 fill mass bins" << endl;
       // if(Mass_tt>=0 && Mass_tt < 500){
       //   fill_histograms(event, "DeltaY_reco_0_500_SR");
       //   if(debug) cout << "signal DNN output0 chi2 0_500" << endl;
-      //   // h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
+      //   h_DeltaY_reco_PDFVariations_0_500_SR->fill(event);
       //   if(debug) cout << "signal PDF 0_500" << endl;
-      //   //h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
+      //   h_DeltaY_reco_SystVariations_0_500_SR->fill(event);
       //   if(debug) cout << "signal all syst vars" << endl;
       // }
-      // if(Mass_tt>=0 && Mass_tt < 350){
-      //   if(debug) cout << "signal DNN output0 chi2 0_350" << endl;
-      //   fill_histograms(event, "DeltaY_reco_0_350_SR");
-      //   //h_DeltaY_reco_SystVariations_0_350_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_0_350_SR->fill(event);
-      // }
-      // if(Mass_tt>=350 && Mass_tt < 500){
-      //   if(debug) cout << "signal DNN output0 chi2 350_500" << endl;
-      //   fill_histograms(event, "DeltaY_reco_350_500_SR");
-      //   //h_DeltaY_reco_SystVariations_350_500_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_350_500_SR->fill(event);
-      // }
+      if(Mass_tt>=0 && Mass_tt < 350){
+        // cout << "In RECO Mttbar bin 0-350" << endl;
+        if(debug) cout << "signal DNN output0 chi2 0_350" << endl;
+        fill_histograms(event, "DeltaY_reco_0_350_SR");
+        h_DeltaY_reco_SystVariations_0_350_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_0_350_SR->fill(event);
+      }
+      if(Mass_tt>=350 && Mass_tt < 500){
+        // cout << "In RECO Mttbar bin 350_500" << endl;
+        if(debug) cout << "signal DNN output0 chi2 350_500" << endl;
+        fill_histograms(event, "DeltaY_reco_350_500_SR");
+        h_DeltaY_reco_SystVariations_350_500_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_350_500_SR->fill(event);
+      }
       // if (Mass_tt>=0 && Mass_tt < 700){
       //   if(debug) cout << "signal DNN output0 chi2 0_700" << endl;
       //   fill_histograms(event, "DeltaY_reco_0_700_SR");
@@ -1970,30 +2006,34 @@ bool ZprimeAnalysisModule_applyNN::process(uhh2::Event& event){
       //   //h_DeltaY_reco_SystVariations_900Inf_SR->fill(event);
       //   // h_DeltaY_reco_PDFVariations_900Inf_SR->fill(event);
       // }
-      // if(Mass_tt>=500 && Mass_tt < 750){
-      //   if(debug) cout << "signal DNN output0 chi2 500_750" << endl;
-      //   fill_histograms(event, "DeltaY_reco_500_750_SR");
-      //   //h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
-      // }
-      // if(Mass_tt>=750 && Mass_tt < 1000){
-      //   if(debug) cout << "signal DNN output0 chi2 750_1000" << endl;
-      //   fill_histograms(event, "DeltaY_reco_750_1000_SR");
-      //   //h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
-      // }
-      // if(Mass_tt>=1000 && Mass_tt < 1500){
-      //   if(debug) cout << "signal DNN output0 chi2 1000_1500" << endl;
-      //   fill_histograms(event, "DeltaY_reco_1000_1500_SR");
-      //   //h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
-      // }
-      // if(Mass_tt>=1500){
-      //   if(debug) cout << "signal DNN output0 chi2 1500_1000" << endl;
-      //   fill_histograms(event, "DeltaY_reco_1500Inf_SR");
-      //   //h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
-      //   // h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
-      // }
+      if(Mass_tt>=500 && Mass_tt < 750){
+        // cout << "In RECO Mttbar bin 500_750" << endl;
+        if(debug) cout << "signal DNN output0 chi2 500_750" << endl;
+        fill_histograms(event, "DeltaY_reco_500_750_SR");
+        h_DeltaY_reco_SystVariations_500_750_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_500_750_SR->fill(event);
+      }
+      if(Mass_tt>=750 && Mass_tt < 1000){
+        // cout << "In RECO Mttbar bin 750_1000" << endl;
+        if(debug) cout << "signal DNN output0 chi2 750_1000" << endl;
+        fill_histograms(event, "DeltaY_reco_750_1000_SR");
+        h_DeltaY_reco_SystVariations_750_1000_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_750_1000_SR->fill(event);
+      }
+      if(Mass_tt>=1000 && Mass_tt < 1500){
+        // cout << "In RECO Mttbar bin 1000_1500" << endl;
+        if(debug) cout << "signal DNN output0 chi2 1000_1500" << endl;
+        fill_histograms(event, "DeltaY_reco_1000_1500_SR");
+        h_DeltaY_reco_SystVariations_1000_1500_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_1000_1500_SR->fill(event);
+      }
+      if(Mass_tt>=1500){
+        // cout << "In RECO Mttbar bin 1500_Inf" << endl;
+        if(debug) cout << "signal DNN output0 chi2 1500_1000" << endl;
+        fill_histograms(event, "DeltaY_reco_1500Inf_SR");
+        h_DeltaY_reco_SystVariations_1500Inf_SR->fill(event);
+        h_DeltaY_reco_PDFVariations_1500Inf_SR->fill(event);
+      }
      
       // if( ZprimeTopTag_selection->passes(event) ){
       //   fill_histograms(event, "DNN_output0_TopTag");
