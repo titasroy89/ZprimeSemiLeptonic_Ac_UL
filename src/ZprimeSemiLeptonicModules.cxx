@@ -375,8 +375,15 @@ bool ZprimeCorrectMatchDiscriminator::process(uhh2::Event& event){
     else if(gp.pdgId() == -6) n_antitop++;
   }
   if(n_top != 1 || n_antitop != 1) return false;
-  // bool check_decay = ttgenprod->process(event);
-  //if(!check_decay) return false; //FixME: sometimes decay prodcts of ttbar are not Wb+Wb. Why?
+  
+  // Create ttbargen if it doesn't exist (e.g., when reading from preselection output files)
+  // TTbarGen objects are typically not stored in ROOT files, so we recreate from GenParticles
+  if(!event.is_valid(h_ttbargen_)) {
+    ttgenprod->process(event);
+  }
+  
+  // Check if ttbargen is valid after creation
+  if(!event.is_valid(h_ttbargen_)) return false;
 
   vector<ZprimeCandidate>& candidates = event.get(h_ZprimeCandidates_);
   if(candidates.size() < 1) return false;
@@ -3622,9 +3629,9 @@ std::vector<float> StructureConstantsCalculator::calculate_new_weights(
     const std::vector<float>& structs, 
     const std::vector<float>& wc_values) {
   
-  if(wc_values.size() != static_cast<size_t>(num_WCs_) || structs.size() < 1 + num_WCs_ + num_WCs_ + (num_WCs_*(num_WCs_-1))/2) {
-    return {1.0}; // Return default weight if dimensions don't match
-  }
+ //if(wc_values.size() != static_cast<size_t>(num_WCs_) || structs.size() < 1 + num_WCs_ + num_WCs_ + (num_WCs_*(num_WCs_-1))/2) {
+  // return {1.0}; // Return default weight if dimensions don't match
+  //}
   
   // Constant term
   float weight = structs[0];

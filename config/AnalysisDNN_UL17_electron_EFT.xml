@@ -11,17 +11,19 @@
 <!ENTITY IS_LOOSER_SELECTION "false">
 <!ENTITY IS_ELE_TRIGGER      "false">
 <!ENTITY CHANNEL             "electron">
+<!ENTITY SAMPLE "eft">
+
 <!ENTITY OUTPUTdir           "/data/dust/group/cms/zprime-uhh/AnalysisDNN_EFT_UL17/&CHANNEL;">
 
 <!-- TTbar -->
-<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_0-700_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_700-900_UL17.xml">
-<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_DNNafterselection_dilepton/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_0-700_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_analysisDNN_semilepton/MC_MC_EFT_Mttbar_0-700_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_700-900_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_analysisDNN_semilepton/MC_MC_EFT_Mttbar_700-900_UL17.xml">
+<!ENTITY MC_EFT_Mttbar_900-Inf_UL17 SYSTEM "/data/dust/user/beozek/uuh2-106X_v2/CMSSW_10_6_28/src/UHH2/ZprimeSemiLeptonic/data/Skimming_datasets_UL17_EFT_electron_analysisDNN_semilepton/MC_MC_EFT_Mttbar_900-Inf_UL17.xml">
 ]>
 
 <!--
-<ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="1" AutoResubmit="0"/>
-<ConfigSGE RAM="2" DISK="2" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_electron_dilepton"/>
+<ConfigParse NEventsBreak="0" LastBreak="0" FileSplit="5" AutoResubmit="0"/>
+<ConfigSGE RAM="4" DISK="4" Mail="bozek3@uic.edu" Notification="as" Workdir="workdir_AnalysisDNN_UL17_EFT_electron_semilepton_templatemethod"/>
 -->
 
 <JobConfiguration JobName="ZprimePreselectionJob" OutputLevel="INFO">
@@ -35,19 +37,19 @@
     <InputData Lumi="17659.24" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_0-700_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_0-700_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>
 
     <InputData Lumi="61088.10" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_700-900_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_700-900_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>
 
     <InputData Lumi="69051.00" NEventsMax="&NEVT;" Type="MC" Version="MC_EFT_Mttbar_900-Inf_UL17" Cacheable="&b_Cacheable;">
       &MC_EFT_Mttbar_900-Inf_UL17;
       <InputTree Name="AnalysisTree" />
-      <!-- <OutputTree Name="AnalysisTree" /> -->
+      <OutputTree Name="AnalysisTree" />
     </InputData>  
 
     <UserConfig>
@@ -62,6 +64,7 @@
       <Item Name="TopPuppiJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi"/>
       <Item Name="METName" Value="slimmedMETsPuppi"/>
       <Item Name="genMETName" Value="slimmedMETs_GenMET"/>
+      <Item Name="sample" Value="&SAMPLE;"/>
 
       <Item Name="lumi_file" Value="/data/dust/user/deleokse/RunII_106_v2/CMSSW_10_6_28/src/UHH2/common/UHH2-data/UL17/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON_normtag.root"/>
       <Item Name="lumihists_lumi_per_bin" Value="500.0"/>
@@ -108,6 +111,12 @@
       <Item Name="Systematic_TopPt_a" Value="nominal"/>
       <Item Name="Systematic_TopPt_b" Value="nominal"/>
       <Item Name="channel" Value="&CHANNEL;"/>
+
+      <Item Name="noac_apply_event_weight"     Value="true"/>
+      <Item Name="noac_gen_file"               Value="/data/dust/group/cms/zprime-uhh/Preselection_EFT_UL17/workdir_Preselection_EFT_UL17_semilepton_templatemethod/uhh2.AnalysisModuleRunner.MC.*.root"/>
+      <Item Name="noac_gen_hist"               Value="mtt_gen_inclusive_General/DeltaY_xi_gen"/>
+      <Item Name="noac_fraction"               Value="2"/>
+
 
       <Item Name="AnalysisModule" Value="ZprimeAnalysisModule_applyNN"/>
     </UserConfig>

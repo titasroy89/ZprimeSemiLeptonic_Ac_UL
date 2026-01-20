@@ -5,6 +5,9 @@
 #include <UHH2/common/include/Utils.h>
 #include "UHH2/common/include/JetIds.h"
 #include <math.h>
+#include <cmath>
+#include <map>
+#include <limits>
 
 #include <UHH2/common/include/TTbarGen.h>
 #include <UHH2/common/include/TTbarReconstruction.h>
@@ -17,6 +20,8 @@
 #include "TH2D.h"
 #include "TH2F.h"
 #include "TFile.h"
+#include "TTree.h"
+#include "TBranch.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -29,6 +34,7 @@ using namespace std;
 using namespace uhh2;
 
 //template method start
+// ------------------- Mirror / S+A / weight construction -------------------
 // STEP 1: Build the NoAC weights from the generator histogram
 
 // --- NoAC helpers (mirror/S+A/lookup) ---
@@ -37,7 +43,9 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::mirror_hist_1d(const T
   H->SetDirectory(0);
   H->Reset("ICES");
 
-  // mirror the histogram around 0
+  // mirroring bin content around 0 using the bin center.
+  // for each bin i, finds the bin at -x (j=ax->FindBin(-xc)), and copies the content and error of that bin to bin i.
+  // Result: H(x)=H(-x)
   const TAxis *ax = src.GetXaxis();
   const int nb = ax->GetNbins();
   for(int i=1;i<=nb;++i){
@@ -51,8 +59,8 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::mirror_hist_1d(const T
   return H;
 }
 
+// STEP 2: Decompose the generator histogram into S and A components
 // build the NoAC weights from the generator histogram
-// STEP 3: Decompose the generator histogram into S and A components
 std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_from_gen(const TH1D &Hgen_in, double f_noac){
   auto Hmir = mirror_hist_1d(Hgen_in);
   auto S = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen_in.Clone("H_S")));
@@ -62,7 +70,12 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_fro
   S->Add(&Hgen_in, Hmir.get(), 0.5,  0.5); //0.5 is the weight for the original and mirrored histogram
   A->Add(&Hgen_in, Hmir.get(), 0.5, -0.5); //0.5 is the weight for the original and mirrored (-0.5)histogram
 
-  // STEP 4: Build the NoAC weights from the S and A components
+  // STEP 3: Build the NoAC weights from the S and A components
+  // S = 0.5 * Hgen_in + 0.5 * Hmir
+  // A = 0.5 * Hgen_in - 0.5 * Hmir
+  // W = (S + (1.0 - f_noac) * A) / (S + A)
+  // f_noac is the NoAC weight factor
+  // W is the NoAC weight
   auto W = std::unique_ptr<TH1D>(static_cast<TH1D*>(Hgen_in.Clone("NoAC_W_sys")));
   W->SetDirectory(0); // detach the histogram from the file
   W->Reset(); // reset the histogram
@@ -76,7 +89,7 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_fro
     W->SetBinContent(i, w); //set the content of the bin to the weight
   }
   
-  // STEP 5: Normalize the NoAC weights to the sum of the content of the histogram
+  // STEP 4: Normalize the NoAC weights to the sum of the content of the histogram
   // The fit in Combine assumes that the shape variations (NoAC_up and down) have the same total number of events as the nominal shape.
   // normalize <W>_Hgen = 1
   // CHECKED: Before normalization, W(f=+1) + W(f=-1) = 2 in each bin.
@@ -96,6 +109,7 @@ std::unique_ptr<TH1D> ZprimeSemiLeptonicSystematicsHists::build_noac_weights_fro
   }
   return W;
 }
+// ------------------- Mirror / S+A / weight construction -------------------
 
 // lookup the NoAC weight for a given xi
 // Clamps xi to be inside the histogram range to avoid edge effects
@@ -115,26 +129,114 @@ double ZprimeSemiLeptonicSystematicsHists::lookup_noac_weight(const TH1 *W, doub
   return w;
 }
 
+// Helper function for safe systematic ratio calculation (division by zero protection)
+// Returns weight * (var/nom) if both are finite and nom != 0, otherwise returns weight
+static inline double safe_syst_ratio(double weight, double var, double nom){
+  if(!std::isfinite(nom) || nom == 0.0 || !std::isfinite(var)){
+    return weight; // Use nominal weight if division is unsafe
+  }
+  const double ratio = var / nom;
+  if(!std::isfinite(ratio)){
+    return weight; // Use nominal weight if result is non-finite
+  }
+  return weight * ratio;
+}
+
+// ------------------- clamp xi to be inside the histogram range to avoid edge effects -------------------
 static inline double clamp_xi(double x){
   // keep inside histogram range (-1,1) to avoid edge effects
+  if(!std::isfinite(x)) return 0.0;
   if (x <= -1.0) return -0.999999;
   if (x >= +1.0) return +0.999999;
   return x;
 }
-//template method end
 
-// Static member definitions - shared across all instances
+// Centralized helper: map f value to NoAC suffix (used in booking and filling)
+static inline std::string get_noac_suffix_from_f(float fv){
+  static const std::map<float, std::string> f_to_suffix = {
+    {-100.0f, "noacm100"}, {-12.0f, "noacm12"}, {-8.0f, "noacm8"}, {-4.0f, "noacm4"}, {-2.0f, "noacm2"},
+    {-1.0f, "noacm1"}, {-0.8f, "noacm08"}, {-0.6f, "noacm06"}, {-0.4f, "noacm04"}, {-0.2f, "noacm02"},
+    {0.0f, "noac0"},
+    {0.2f, "noac02"}, {0.4f, "noac04"}, {0.6f, "noac06"}, {0.8f, "noac08"},
+    {1.0f, "noac1"}, {2.0f, "noac2"}, {4.0f, "noac4"}, {8.0f, "noac8"}, {12.0f, "noac12"}, {100.0f, "noac100"}
+  };
+  auto it = f_to_suffix.find(fv);
+  if(it != f_to_suffix.end()) return it->second;
+  // Fallback (shouldn't happen if f_values matches kNoACSpecs)
+  if(std::abs(fv) < 0.01f) return "noac0";
+  else if(fv < 0) return "noacm" + std::to_string(static_cast<int>(std::abs(fv)));
+  else return "noac" + std::to_string(static_cast<int>(fv));
+}
+
+// Static member definitions
 std::map<float, std::unique_ptr<TH1D>> ZprimeSemiLeptonicSystematicsHists::noac_weights_map;
 bool ZprimeSemiLeptonicSystematicsHists::noac_weights_initialized = false;
+std::map<float, std::vector<std::unique_ptr<TH1D>>> ZprimeSemiLeptonicSystematicsHists::noac_weights_mtt_map;
+std::vector<double> ZprimeSemiLeptonicSystematicsHists::noac_mtt_edges = {0.0, 350.0, 500.0, 750.0, 1000.0, 1500.0, 10000.0};
+bool ZprimeSemiLeptonicSystematicsHists::noac_weights_mtt_initialized = false;
+
+// Helper function to find mttbar bin index
+// Loops over noac_mtt_edges and returns the bin index ib where mtt lives.
+// This is the GEN-level mtt bin index used later per event.
+// If outside range, returns first/last bin index. this ensures 1500 < mtt < 10000 is actually 1500 < mtt < Inf
+int ZprimeSemiLeptonicSystematicsHists::find_mtt_bin(double mtt){
+  const int nmtt = (int)noac_mtt_edges.size() - 1;
+  for(int ib = 0; ib < nmtt; ++ib){
+    if(mtt >= noac_mtt_edges[ib] && mtt < noac_mtt_edges[ib+1]) return ib;
+  }
+  // Clamp to edges if outside range
+  if(mtt < noac_mtt_edges.front()) return 0;
+  if(mtt >= noac_mtt_edges.back()) return nmtt-1;
+  return -1; // should not happen
+}
+// ------------------- Static state for inclusive vs mtt-binned weights -------------------
+
+//template method end
 
 ZprimeSemiLeptonicSystematicsHists::ZprimeSemiLeptonicSystematicsHists(uhh2::Context& ctx, const std::string& dirname):
 Hists(ctx, dirname) {
+  debug = false;
+  // Parse RECO mtt bin from dirname (e.g., "DeltaY_reco_SystVariations_500_750_SR" -> [500, 750))
+  reco_mtt_lo_ = -1.0;
+  reco_mtt_hi_ = -1.0;
+  has_reco_mtt_bin_ = false;
+  
+  // Try to extract RECO mtt bin from dirname
+  // Pattern: "DeltaY_reco_SystVariations_<lo>_<hi>_SR" or "DeltaY_reco_SystVariations_Inclusive_SR"
+  if(dirname.find("DeltaY_reco_SystVariations_") != std::string::npos){
+    size_t pos = dirname.find("DeltaY_reco_SystVariations_");
+    if(pos != std::string::npos){
+      std::string suffix = dirname.substr(pos + strlen("DeltaY_reco_SystVariations_"));
+      if(suffix.find("Inclusive") == std::string::npos){
+        // Try to parse "500_750_SR" or "1500Inf_SR"
+        size_t underscore1 = suffix.find("_");
+        if(underscore1 != std::string::npos){
+          std::string lo_str = suffix.substr(0, underscore1);
+          size_t underscore2 = suffix.find("_", underscore1 + 1);
+          if(underscore2 != std::string::npos){
+            std::string hi_str = suffix.substr(underscore1 + 1, underscore2 - underscore1 - 1);
+            try{
+              reco_mtt_lo_ = std::stod(lo_str);
+              if(hi_str == "Inf" || hi_str.find("Inf") != std::string::npos){
+                reco_mtt_hi_ = 10000.0; // Use large number for "Inf"
+              } else {
+                reco_mtt_hi_ = std::stod(hi_str);
+              }
+              has_reco_mtt_bin_ = true;
+            } catch(...){
+              // Parsing failed, treat as inclusive
+            }
+          }
+        }
+      }
+    }
+  }
 
   is_mc = ctx.get("dataset_type") == "MC";
   is_Muon = ctx.get("channel") == "muon";
   std::string dataset_version = ctx.get("dataset_version");
-  is_tt = (dataset_version.find("TTTo") == 0) || (dataset_version.find("EFT") != std::string::npos);
-  
+  is_tt = (dataset_version.find("TTTo") == 0) || (dataset_version.find("EFT") != std::string::npos) || (dataset_version.find("TTJets") != std::string::npos);
+
   isMuon = false; isElectron = false;
   if(ctx.get("channel") == "muon") isMuon = true;
   if(ctx.get("channel") == "electron") isElectron = true;
@@ -232,58 +334,191 @@ Hists(ctx, dirname) {
   h_toppt_b_up         = ctx.get_handle<float>("weight_toppt_b_up");
   h_toppt_b_down       = ctx.get_handle<float>("weight_toppt_b_down");
   
-  // STEP 6: Build weight maps for the NoAC weights. 
+  // template method start
+  // -------------------  Constructor: building inclusive and mtt-binned GEN histograms and weights -------------------
+
+  // STEP 5: Build weight maps for the NoAC weights. 
   // Creates a weight histogram for each f value, using the NoAC weights and the sumH histogram.
   // Stores them in the noac_weights_map for event by event.
-  //template method start
   if(is_mc && is_tt){
     // --- NoAC setup for xi = tanh(DeltaY) (multi-f) ---
-    h_xi_gen = ctx.get_handle<float>("xi_gen");
+    h_xi_gen = ctx.get_handle<float>("xi_gen"); // gen-level tanh(delta|y|) for NoAC weights
+    h_mtt_gen = ctx.get_handle<float>("mtt_gen");  // gen-level mttbar for binning
     use_noac_evtweights_ = (ctx.get("noac_apply_event_weight") == string("true"));
+    // Optional: control whether GEN-mtt-binned NoAC weights are used (default: true).
+    // Set noac_use_mtt_binning = "false" in the XML to force purely inclusive GEN weights.
+    
+    try{
+      use_noac_mtt_binning_ = (ctx.get("noac_use_mtt_binning") != std::string("false"));
+    } catch(const std::exception &){
+      use_noac_mtt_binning_ = true;
+    }
     noac_gen_file_ = ctx.get("noac_gen_file");
     noac_gen_hist_ = ctx.get("noac_gen_hist");
 
     // f values for the NoAC weights (all f values from kNoACSpecs)
     f_values = {-100.0f, -12.0f, -8.0f, -4.0f, -2.0f, -1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 2.0f, 4.0f, 8.0f, 12.0f, 100.0f};
 
-    if(use_noac_evtweights_ && !noac_gen_file_.empty() && !noac_gen_hist_.empty()){
-      // Only initialize once - weights are shared across all instances
-      if(!noac_weights_initialized){
-        // Glob inputs to get the generator histogram files
+    if(use_noac_evtweights_ && !noac_gen_file_.empty()){
+      if(!noac_weights_initialized || !noac_weights_mtt_initialized){
+        TH1D *sumH_inclusive = nullptr;
+        std::vector<TH1D*> sumH_mtt;  // one per mttbar bin
+        const int nmtt = (int)noac_mtt_edges.size() - 1;
+        sumH_mtt.reserve(nmtt);
+        for(int ib = 0; ib < nmtt; ++ib){
+          sumH_mtt.push_back(nullptr);
+        }
+
         glob_t gl; memset(&gl, 0, sizeof(gl));
         int r = glob(noac_gen_file_.c_str(), 0, nullptr, &gl);
-        // STEP 1: Sum all of the DeltaY_xi_gen histograms from ttree which was carried from preselection
+
+        // STEP 1: Sum all of the histograms from ttree which was carried from preselection
         // Reads gen-level tanh(delta|y|) histograms from all TTbar files
-        // Sums them into a single sumH histogram
-        TH1D *sumH = nullptr;
-        if(r == 0){
-          // loop over the generator histogram files
-          for(size_t i=0;i<gl.gl_pathc;++i){
+        if(r == 0 && gl.gl_pathc > 0){
+          if(debug) cout << "INFO: Initializing NoAC weights from " << gl.gl_pathc << " preselection files (histograms only)..." << endl;
+
+          // Helper: load any 1D histogram (TH1D/TH1F) and return a TH1D clone (owned by caller)
+          auto load_as_TH1D = [](TFile* f, const std::string &name) -> std::unique_ptr<TH1D>{
+            if(!f) return nullptr;
+            TH1 *h_any = dynamic_cast<TH1*>(f->Get(name.c_str()));
+            if(!h_any) return nullptr;
+            // Clone into TH1* first to avoid leaking if Clone() returns TH1F
+            TH1 *h_tmp = static_cast<TH1*>(h_any->Clone("tmp"));
+            if(!h_tmp) return nullptr;
+            // Try to cast to TH1D
+            TH1D *h_clone = dynamic_cast<TH1D*>(h_tmp);
+            if(h_clone){
+              h_clone->SetDirectory(0);
+              return std::unique_ptr<TH1D>(h_clone);
+            }
+            // If Clone() returned TH1F, promote by copying into TH1D
+            TH1D *h_new = new TH1D((std::string(h_any->GetName())+"_asTH1D").c_str(),
+                                    h_any->GetTitle(),
+                                    h_any->GetNbinsX(),
+                                    h_any->GetXaxis()->GetXmin(),
+                                    h_any->GetXaxis()->GetXmax());
+            h_new->SetDirectory(0);
+            h_new->Sumw2();
+            for(int ib=1; ib<=h_any->GetNbinsX(); ++ib){
+              h_new->SetBinContent(ib, h_any->GetBinContent(ib));
+              h_new->SetBinError(ib,   h_any->GetBinError(ib));
+            }
+            // Clean up the temporary clone
+            delete h_tmp;
+            return std::unique_ptr<TH1D>(h_new);
+          };
+
+          for(size_t i=0; i<gl.gl_pathc; ++i){
             const char *fp = gl.gl_pathv[i];
             std::unique_ptr<TFile> f(TFile::Open(fp));
             if(!f || f->IsZombie()) continue;
-            TH1 *h = dynamic_cast<TH1*>(f->Get(noac_gen_hist_.c_str()));
-            if(!h) continue;
-            std::unique_ptr<TH1D> hD(static_cast<TH1D*>(h->Clone("_tmpH")));
-            hD->SetDirectory(0);
-            if(!sumH){ sumH = static_cast<TH1D*>(hD->Clone("Hgen_sum_sys")); sumH->SetDirectory(0); }
-            else { sumH->Add(hD.get()); }
+
+            if(noac_gen_hist_.empty()){
+              cout << "WARNING: noac_gen_hist is empty; cannot build NoAC weights from " << fp << endl;
+              continue;
+            }
+
+            // Inclusive stored histogram
+            auto h_stored_ptr = load_as_TH1D(f.get(), noac_gen_hist_);
+            if(!h_stored_ptr){
+              cout << "WARNING: Expected stored histogram '" << noac_gen_hist_ << "' not found in " << fp << ". Skipping this file for NoAC weights." << endl;
+              continue;
+            }
+            if(!sumH_inclusive){
+              sumH_inclusive = static_cast<TH1D*>(h_stored_ptr->Clone("Hgen_sum_from_hist"));
+              sumH_inclusive->SetDirectory(0);
+              sumH_inclusive->Sumw2();
+              } else {
+              sumH_inclusive->Add(h_stored_ptr.get());
+            }
+
+            // mtt-binned stored histograms
+            for(int ib = 0; ib < nmtt; ++ib){
+              TString mttName = TString::Format("%s_mtt%d", noac_gen_hist_.c_str(), ib);
+              auto h_stored_mtt_ptr = load_as_TH1D(f.get(), mttName.Data());
+              if(!h_stored_mtt_ptr){
+                cout << "WARNING: Expected stored mtt histogram '" << mttName << "' not found in " << fp << "." << endl;
+                continue;
+              }
+              if(!sumH_mtt[ib]){
+                sumH_mtt[ib] = static_cast<TH1D*>(h_stored_mtt_ptr->Clone(TString::Format("Hgen_sum_mtt%d_from_hist", ib)));
+                sumH_mtt[ib]->SetDirectory(0);
+                sumH_mtt[ib]->Sumw2();
+              } else {
+                sumH_mtt[ib]->Add(h_stored_mtt_ptr.get());
+              }
+            }
+            f->Close();
           }
-          globfree(&gl);
+        } else {
+          std::cout << "WARNING: NoAC initialization: glob(\""
+                    << noac_gen_file_
+                    << "\") found no files. Inclusive NoAC weights will remain disabled."
+                    << std::endl;
         }
-        if(sumH){
-          // build the NoAC weights from the generator histogram
+        // Always free glob resources
+        globfree(&gl);
+        
+        // ------------------- Convert GEN histograms to weight histograms W_f(xi) -------------------
+        if(sumH_inclusive){
           noac_weights_map.clear();
           for(const float fv : f_values){
             try{ 
-              noac_weights_map[fv] = build_noac_weights_from_gen(*sumH, fv);
+              noac_weights_map[fv] = build_noac_weights_from_gen(*sumH_inclusive, fv);
             } catch(...){ 
-              // Skip failed weights
+              cout << "WARNING: Failed to build NoAC weights for f=" << fv << endl;
             }
           }
-          noac_weights_initialized = true;  // Mark as initialized so other instances skip
-          delete sumH;
+          noac_weights_initialized = true;
+          delete sumH_inclusive;
+        } else {
+          cout << "WARNING: No valid inclusive GEN histogram found. NoAC inclusive weights disabled." << endl;
         }
+        
+        // Build mttbar-binned weights from stored histograms if available
+        {
+          const int nmtt_built = (int)sumH_mtt.size();
+          noac_weights_mtt_map.clear();
+          for(const float fv : f_values){
+            std::vector<std::unique_ptr<TH1D>> v;
+            v.reserve(nmtt_built);
+            for(int ib = 0; ib < nmtt_built; ++ib){
+              if(sumH_mtt[ib]){
+                try{
+                  v.push_back(build_noac_weights_from_gen(*sumH_mtt[ib], fv));
+                } catch(...){
+                  cout << "WARNING: Failed to build NoAC weights for f=" << fv << " mtt bin " << ib << endl;
+                  v.push_back(nullptr);
+                }
+              } else {
+                v.push_back(nullptr);
+              }
+            }
+            noac_weights_mtt_map[fv] = std::move(v);
+          }
+          noac_weights_mtt_initialized = true;
+          for(auto *h : sumH_mtt) delete h;
+        }
+
+
+        // Simple debug print for inclusive NoAC weights:
+        // check a few representative f values to confirm non-trivial weights.
+        // if(noac_weights_initialized){
+        //   const std::vector<float> check_f = {0.0f, 1.0f, -1.0f, 4.0f, -4.0f};
+        //   const double xi_test = 0.2;
+        //   std::cout << "NoAC inclusive weights summary at xi = " << xi_test << " :" << std::endl;
+        //   for(float fv : check_f){
+        //     auto itW = noac_weights_map.find(fv);
+        //     if(itW == noac_weights_map.end() || !itW->second){
+        //       std::cout << "  f=" << fv << " : [no inclusive weight hist]" << std::endl;
+        //       continue;
+        //     }
+        //     double w_plus = lookup_noac_weight(itW->second.get(), xi_test);
+        //     double w_minus = lookup_noac_weight(itW->second.get(), -xi_test);
+        //     std::cout << "  f=" << fv << " : W(" << xi_test << ")=" << w_plus
+        //               << "  W(" << -xi_test << ")=" << w_minus << std::endl;
+        //   }
+        // }
       }  // End of initialization block
     }
   }
@@ -619,10 +854,27 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
 
 
 
-
-
   // Zprime reconstruction
   DeltaY_tt                    = book<TH2F>("DeltaY_tt", "#DeltaY_{t#bar{t}} ",                                       2, -2.5, 2.5, 2, -2.5, 2.5);
+  DeltaY_reco_vs_gen           = book<TH2F>("DeltaY_reco_vs_gen", "RECO vs GEN #xi; #xi_{reco}; #xi_{gen}", 100, -1.0, 1.0, 100, -1.0, 1.0);
+  Mtt_reco_vs_gen              = book<TH2F>("Mtt_reco_vs_gen", "RECO vs GEN M_{t#bar{t}}; M_{t#bar{t}}^{reco} [GeV]; M_{t#bar{t}}^{gen} [GeV]", 100, 0, 3000, 100, 0, 3000);
+  
+  {
+      auto book_gen_by_name = [&](const std::string &hname, int nb){
+      if(h_deltaY_xi_gen_map.find(hname) == h_deltaY_xi_gen_map.end()){
+        h_deltaY_xi_gen_map[hname] = book<TH1F>(hname.c_str(), ";tanh(#Delta y)_{gen};Events / bin", nb, -1.0, 1.0);
+      }
+    };
+    
+
+    // Book GEN templates for all f values (currently 18 bins)
+    const std::vector<float> all_f_values = {-100.0f, -12.0f, -8.0f, -4.0f, -2.0f, -1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 2.0f, 4.0f, 8.0f, 12.0f, 100.0f};
+    
+    for(float fv : all_f_values){
+        std::string suffix = get_noac_suffix_from_f(fv);
+        book_gen_by_name("DeltaY_xi_gen_18_" + suffix, 18);
+    }
+  }
   DeltaY_mu_reco_up_tt         = book<TH2F>("DeltaY_mu_reco_up_tt",   "#DeltaY_{t#bar{t}} mu_reco_up",                2, -2.5, 2.5, 2, -2.5, 2.5);
   DeltaY_mu_reco_down_tt       = book<TH2F>("DeltaY_mu_reco_down_tt", "#DeltaY_{t#bar{t}} mu_reco_down",              2, -2.5, 2.5, 2, -2.5, 2.5);
   DeltaY_pu_up_tt              = book<TH2F>("DeltaY_pu_up_tt",   "#DeltaY_{t#bar{t}} pu_up",                          2, -2.5, 2.5, 2, -2.5, 2.5);
@@ -700,64 +952,6 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_xi_reco_30         = book<TH1F>("DeltaY_xi_reco_30", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
   DeltaY_xi_reco_36         = book<TH1F>("DeltaY_xi_reco_36", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
   DeltaY_xi_reco_50         = book<TH1F>("DeltaY_xi_reco_50", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  // NoAC systematics (f=±1)
-  DeltaY_xi_reco_6_NoAC_up   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_down = book<TH1F>("DeltaY_xi_reco_6_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_up   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_down = book<TH1F>("DeltaY_xi_reco_12_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_up   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_down = book<TH1F>("DeltaY_xi_reco_18_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_up   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_down = book<TH1F>("DeltaY_xi_reco_24_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_up   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_down = book<TH1F>("DeltaY_xi_reco_30_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_up   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_down = book<TH1F>("DeltaY_xi_reco_36_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_up   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_down = book<TH1F>("DeltaY_xi_reco_50_NoAC_down", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  // NoAC systematics for f=±2, ±8, ±12
-  DeltaY_xi_reco_6_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_6_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_6_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_6_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_12_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_12_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_12_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 12, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_18_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_18_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_18_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 18, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_24_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_24_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_24_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 24, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_30_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_30_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_30_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 30, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_36_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_36_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_36_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 36, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_up_f2   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f2", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_down_f2 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f2", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_up_f8   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f8", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_down_f8 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f8", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_up_f12   = book<TH1F>("DeltaY_xi_reco_50_NoAC_up_f12", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
-  DeltaY_xi_reco_50_NoAC_down_f12 = book<TH1F>("DeltaY_xi_reco_50_NoAC_down_f12", ";tanh(#Delta y)_{reco};Events / bin", 50, -1.0, 1.0);
   // lepton/trigger/pileup/prefiring
   DeltaY_xi_reco_6_ele_reco_up      = book<TH1F>("DeltaY_xi_reco_6_ele_reco_up",      ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
   DeltaY_xi_reco_6_ele_reco_down    = book<TH1F>("DeltaY_xi_reco_6_ele_reco_down",    ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
@@ -823,6 +1017,8 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
   DeltaY_xi_reco_6_toppt_b_up         = book<TH1F>("DeltaY_xi_reco_6_toppt_b_up",         ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
   DeltaY_xi_reco_6_toppt_b_down       = book<TH1F>("DeltaY_xi_reco_6_toppt_b_down",       ";tanh(#Delta y)_{reco};Events / bin", 6, -1.0, 1.0);
 
+  // template method start
+  
   // --- NoAC templates removed (now using dedicated NoAC_up/down histograms) ---
   // --- BOOK xi systematics for 12 and 50 bins into name->hist map ---
   {
@@ -830,22 +1026,6 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
       if(h_deltaY_xi_reco_map.find(hname) == h_deltaY_xi_reco_map.end()){
         h_deltaY_xi_reco_map[hname] = book<TH1F>(hname.c_str(), ";tanh(#Delta y)_{reco};Events / bin", nb, -1.0, 1.0);
       }
-    };
-    // Helper function to get exact suffix matching kNoACSpecs
-    auto get_noac_suffix = [](float fv) -> std::string {
-      static const std::map<float, std::string> f_to_suffix = {
-        {-100.0f, "noacm100"}, {-12.0f, "noacm12"}, {-8.0f, "noacm8"}, {-4.0f, "noacm4"}, {-2.0f, "noacm2"},
-        {-1.0f, "noacm1"}, {-0.8f, "noacm08"}, {-0.6f, "noacm06"}, {-0.4f, "noacm04"}, {-0.2f, "noacm02"},
-        {0.0f, "noac0"},
-        {0.2f, "noac02"}, {0.4f, "noac04"}, {0.6f, "noac06"}, {0.8f, "noac08"},
-        {1.0f, "noac1"}, {2.0f, "noac2"}, {4.0f, "noac4"}, {8.0f, "noac8"}, {12.0f, "noac12"}, {100.0f, "noac100"}
-      };
-      auto it = f_to_suffix.find(fv);
-      if(it != f_to_suffix.end()) return it->second;
-      // Fallback (shouldn't happen)
-      if(std::abs(fv) < 0.01f) return "noac0";
-      else if(fv < 0) return "noacm" + std::to_string(static_cast<int>(std::abs(fv)));
-      else return "noac" + std::to_string(static_cast<int>(fv));
     };
     // simple up/down tags
     const std::vector<std::pair<std::string,int>> xi_binnings = {
@@ -859,13 +1039,39 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
     // Book all NoAC f-value histograms (matching Hists naming: DeltaY_xi_reco_N_noacX)
     const int all_bins[] = {6, 12, 18, 24, 30, 36, 50};
     const std::vector<float> all_f_values = {-100.0f, -12.0f, -8.0f, -4.0f, -2.0f, -1.0f, -0.8f, -0.6f, -0.4f, -0.2f, 0.0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 2.0f, 4.0f, 8.0f, 12.0f, 100.0f};
+    
+    // Book inclusive NoAC histograms
     for(int nb : all_bins){
       for(float fv : all_f_values){
-        std::string suffix = get_noac_suffix(fv);
+        std::string suffix = get_noac_suffix_from_f(fv);
         std::string hname = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
         book_by_name(hname, nb);
       }
     }
+    
+    // (2) NEW: GEN-mtt-binned NoAC templates
+    //
+    // For each GEN-mtt bin [edge_i, edge_{i+1}) and each f, we book:
+    //   DeltaY_xi_reco_<nb>_mtt<lo>_<hi>_<suffix>
+    //
+    const int nmtt = (int)noac_mtt_edges.size() - 1;
+    for(int ib = 0; ib < nmtt; ++ib){
+      const int mtt_lo = (int)noac_mtt_edges[ib];
+      const int mtt_hi = (int)noac_mtt_edges[ib+1];
+      
+      for(int nb : all_bins){
+        for(float fv : all_f_values){
+          const std::string suffix = get_noac_suffix_from_f(fv);
+          std::ostringstream ss;
+          ss << "DeltaY_xi_reco_" << nb
+             << "_mtt" << mtt_lo << "_" << mtt_hi
+             << "_" << suffix;
+          book_by_name(ss.str(), nb);
+        }
+      }
+    }
+  // template method end
+    
     std::vector<std::string> simple_tags = {"ele_reco","ele_id","ele_trigger","mu_reco","mu_iso_stat","mu_iso_syst","mu_id_stat","mu_id_syst","mu_trigger_stat","mu_trigger_syst","pu","prefiring"};
     for(const auto &tg : simple_tags){
       for(const auto &cfg : xi_binnings){
@@ -873,6 +1079,7 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
         book_by_name(cfg.first + tg + "_down", cfg.second);
       }
     }
+
     // murmuf 6-point
     std::vector<std::string> mm = {"upup","upnone","noneup","nonedown","downnone","downdown"};
     for(const auto &v : mm){
@@ -928,6 +1135,31 @@ void ZprimeSemiLeptonicSystematicsHists::init(){
 void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
   double weight = event.weight;
+  
+  // Helper function to compute DeltaY from ZprimeCandidate
+  auto compute_deltay = [&](ZprimeCandidate* cand, bool isLeptonPositive) -> double {
+    if(!cand) return 99.0;
+    if(isLeptonPositive) {
+      return TMath::Abs(cand->top_leptonic_v4().Rapidity()) - TMath::Abs(cand->top_hadronic_v4().Rapidity());
+    } else {
+      return TMath::Abs(cand->top_hadronic_v4().Rapidity()) - TMath::Abs(cand->top_leptonic_v4().Rapidity());
+    }
+  };
+  
+  // Helper function to determine if lepton is positive
+  auto get_is_lepton_positive = [&]() -> bool {
+    if(isMuon && event.muons->size() > 0){
+      return event.muons->at(0).charge() == 1;
+    }
+    if(isElectron && event.electrons->size() > 0){
+      return event.electrons->at(0).charge() == 1;
+    }
+    return false;
+  };
+  
+  // Determine lepton charge once at the start
+  bool isLeptonPositive = get_is_lepton_positive();
+  
   float ele_reco_nominal   = event.get(h_ele_reco);
   float ele_reco_up        = event.get(h_ele_reco_up);
   float ele_reco_down      = event.get(h_ele_reco_down);
@@ -1104,8 +1336,6 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
   
   vector<TH2F*> hists_ps_tt = {DeltaY_isr_up_tt, DeltaY_isr_down_tt, DeltaY_fsr_up_tt, DeltaY_fsr_down_tt};
 
-
-  bool debug=false;
   // Zprime reco
   bool is_zprime_reconstructed_chi2 = event.get(h_is_zprime_reconstructed_chi2);
   ZprimeCandidate* BestZprimeCandidate = event.get(h_BestZprimeCandidateChi2);
@@ -1150,8 +1380,10 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         if(abs(genparticles->at(j).pdgId()) == 6 ){
           if (genparticles->at(j).index() == 2 || genparticles->at(j).index() == 3){
             LorentzVector genparticle_p4(genparticles->at(j).pt(), genparticles->at(j).eta(), genparticles->at(j).phi(), genparticles->at(j).energy());
-            deltaR_leptonic_values.push_back(std::make_pair(deltaR(lep_top, genparticle_p4),genparticles->at(j).index() ));
-            deltaR_hadronic_values.push_back(std::make_pair(deltaR(had_top, genparticle_p4), genparticles->at(j).index()));
+            // IMPORTANT: Store vector index j, not genparticles->at(j).index()
+            // The index() method may not equal the vector position
+            deltaR_leptonic_values.push_back(std::make_pair(deltaR(lep_top, genparticle_p4), static_cast<int>(j)));
+            deltaR_hadronic_values.push_back(std::make_pair(deltaR(had_top, genparticle_p4), static_cast<int>(j)));
             // if (debug)cout << "deltaR: " << deltaR(lep_top, genparticle_p4) << j << endl;
           }
         }
@@ -1204,23 +1436,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
       float_t DeltaY_gen_best = 99.0;
       float_t DeltaY_reco_best = 99.0;
-      bool isLeptonPositive = false;
        if (debug)cout << "ttbar all sys calc deltay " <<endl;
-      if(isMuon){
-        if (event.muons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
-
-      if(isElectron){
-        if (event.electrons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
 
       if (deltaR_min_leptonic < 0.4 && deltaR_min_hadronic < 0.4 && best_gen_for_leptop >= 0 && best_gen_for_hadtop >= 0) {
      
@@ -1257,31 +1473,107 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       //template method start
       // --- Template method: xi = tanh(DeltaY_reco) built from reco tops (not best/gen-matched)
       double deltay_reco = 0.0;
-      if (isLeptonPositive) {
+      if(isLeptonPositive) {
         deltay_reco = TMath::Abs(lep_top.Rapidity()) - TMath::Abs(had_top.Rapidity());
       } else {
         deltay_reco = TMath::Abs(had_top.Rapidity()) - TMath::Abs(lep_top.Rapidity());
       }
 
       const double deltay_xi = TMath::TanH(deltay_reco);
-      double xi_gen_evt = static_cast<double>(event.get(h_xi_gen));
-      // Clamp xi_gen_evt to valid range to avoid edge effects in weight lookup
-      if(xi_gen_evt <= -1.0) xi_gen_evt = -0.999999;
-      if(xi_gen_evt >= +1.0) xi_gen_evt = +0.999999;
+      // Only access gen branches if they are valid (branches were declared in main module)
+      double xi_gen_evt = 0.0; // Initialize to default value
+      if(event.is_valid(h_xi_gen)){
+        xi_gen_evt = clamp_xi(static_cast<double>(event.get(h_xi_gen)));
+        DeltaY_reco_vs_gen->Fill(deltay_xi, xi_gen_evt, weight);
+      }
+      
+      // Fill Mtt reco vs gen
+      if(BestZprimeCandidate && event.is_valid(h_mtt_gen)){
+          float mtt_reco = BestZprimeCandidate->Zprime_v4().M();
+          float mtt_gen_val = static_cast<float>(event.get(h_mtt_gen)); // using handle defined earlier
+          Mtt_reco_vs_gen->Fill(mtt_reco, mtt_gen_val, weight);
+      }
+      
+      // ---------------- NoAC: compute GEN-based weight (no reco-bin condition) ----------------
+      // CRITICAL: Weight selection is based on GEN mttbar bin ONLY.
+      // RECO mttbar is ONLY used for directory organization, NOT for weight selection.
+      // This handles migration: events outside the RECO bin but inside a GEN bin still get the weight.
+      // Only enable NoAC if gen branches are valid (were declared in main module)
+      const bool do_noac = (is_mc && is_tt && use_noac_evtweights_ && noac_weights_initialized && event.is_valid(h_xi_gen));
+      
+      double mtt_gen_evt = 0.0;
+      int gen_mtt_ib = -1;  // GEN mttbar bin index (used for weight lookup)
+      
+      if(do_noac){
+        try{
+          mtt_gen_evt = static_cast<double>(event.get(h_mtt_gen));
+          gen_mtt_ib = find_mtt_bin(mtt_gen_evt);
+          // Safety: clamp to valid range
+          const int nmtt = (int)noac_mtt_edges.size() - 1;
+          if(gen_mtt_ib >= 0 && gen_mtt_ib >= nmtt) gen_mtt_ib = nmtt - 1;
+        } catch(...){
+          // If mtt_gen not available, gen_mtt_ib stays -1 and we'll use inclusive weights
+          gen_mtt_ib = -1;
+        }
+      }
+      
+      // Helper lambda: compute NoAC weight for a specific GEN mttbar bin template
+      // Returns the weight if the event's GEN bin matches the template bin, else 1.0
+      auto noac_weight_for_gen_bin = [&](float fv, int template_gen_ib) -> double {
+        if(!do_noac) return 1.0;
+        
+        // Only apply NoAC weight if the event's GEN bin matches the template bin
+        if(gen_mtt_ib != template_gen_ib) return 1.0;
+        
+        // Event's GEN bin matches template bin -> apply NoAC weight
+        if(use_noac_mtt_binning_ && noac_weights_mtt_initialized){
+          auto it = noac_weights_mtt_map.find(fv);
+          if(it != noac_weights_mtt_map.end()
+             && template_gen_ib >= 0
+             && template_gen_ib < (int)it->second.size()
+             && it->second[template_gen_ib]){
+            
+            return lookup_noac_weight(it->second[template_gen_ib].get(), xi_gen_evt);
+          }
+        }
+        
+        // Fallback: inclusive weights (if GEN-mtt-binned weights not available)
+        auto it2 = noac_weights_map.find(fv);
+        if(it2 != noac_weights_map.end() && it2->second){
+          return lookup_noac_weight(it2->second.get(), xi_gen_evt);
+        }
+        return 1.0;
+      };
+      
+      // Helper lambda: compute inclusive NoAC weight (always uses inclusive weights, never GEN-mtt-binned)
+      auto noac_weight_inclusive = [&](float fv) -> double {
+        if(!do_noac) return 1.0;
+        auto it = noac_weights_map.find(fv);
+        if(it != noac_weights_map.end() && it->second){
+          return lookup_noac_weight(it->second.get(), xi_gen_evt);
+        }
+        return 1.0;
+      };
+      // -----------------------------------------------------------------------
+      
+      // NOTE: RECO mttbar is ONLY used for directory organization. It does NOT affect NoAC weight selection.
+      // Weight selection is based on GEN mttbar bin only, so migrations are fully preserved.
+      // 
+      // RECO mtt computation removed - not currently used since mttbar histograms are not booked.
+      // If you need to fill mttbar histograms, uncomment the following and the mttbar filling code:
+      //   double mtt_reco_evt = -1.0;
+      //   bool has_reco_mtt = false;
+      //   if(BestZprimeCandidate){
+      //     mtt_reco_evt = BestZprimeCandidate->Zprime_v4().M();
+      //     has_reco_mtt = true;
+      //   }
 
       // Fill base xi nominals (matching Hists behavior: with NoAC weights if enabled)
-      if(use_noac_evtweights_ && !noac_weights_map.empty() && noac_weights_map.count(0.0f)){
-        // Use f=0 weight for nominal (or could use a default configured f value)
-        const double w_nom = lookup_noac_weight(noac_weights_map[0.0f].get(), xi_gen_evt);
-        DeltaY_xi_reco_6->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_12->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_18->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_24->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_30->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_36->Fill(deltay_xi, weight * w_nom);
-        DeltaY_xi_reco_50->Fill(deltay_xi, weight * w_nom);
-      } else {
-        // Fill without NoAC weights
+      // --- Inclusive nominal (f=0) ---
+      // Note: f=0 weight is by definition 1.0 (S+A)/(S+A), so nominal always uses weight directly
+      // Declare w_noac_nominal for reuse in systematics (where it may differ from 1.0)
+      double w_noac_nominal = 1.0;
+      // Always fill nominal with weight (f=0 is always 1.0, no lookup needed)
         DeltaY_xi_reco_6->Fill(deltay_xi, weight);
         DeltaY_xi_reco_12->Fill(deltay_xi, weight);
         DeltaY_xi_reco_18->Fill(deltay_xi, weight);
@@ -1289,55 +1581,127 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
         DeltaY_xi_reco_30->Fill(deltay_xi, weight);
         DeltaY_xi_reco_36->Fill(deltay_xi, weight);
         DeltaY_xi_reco_50->Fill(deltay_xi, weight);
-      }
+      
+      
+      // STEP 9: NoAC templates
+      //
+      //  (a) inclusive templates:  DeltaY_xi_reco_N_noacX
+      //      all events are reweighted with the *inclusive* W_f(xi_gen)
+      //
+      //  (b) GEN-mtt-differential templates:
+      //      DeltaY_xi_reco_N_mtt<lo>_<hi>_noacX
+      //      for a given GEN-mtt bin [lo,hi) only events in that bin are
+      //      reweighted; events outside keep nominal weight.
 
-      // STEP 9: Fill NoAC systematics for all f values (matching Hists naming convention exactly)
-
-      // RECO deltay_xi determines which bin is filled
-      // GEN xi_gen_evt determines which weight is applied from the weight map
-      // Weight w_f depends on the f value
-
-      // Fill NoAC systematics for all f values (matching Hists naming convention exactly)
-      if(use_noac_evtweights_ && !noac_weights_map.empty()){
+      // (a) Inclusive NoAC templates (global f)
+      // CRITICAL: No RECO mttbar condition in weighting decision.
+      // Weight selection is based on GEN mttbar bin AND GEN xi (tanh bin).
+      // RECO mttbar is only used for directory organization
+      // IMPORTANT: Even for inclusive templates, we use GEN-mtt-binned weights based on the event's GEN bin.
+      // This ensures consistency: each event uses the weight for its GEN mttbar bin and GEN xi (tanh bin).
+      if(do_noac){
         const int bin_schemes[] = {6, 12, 18, 24, 30, 36, 50};
-        // Map f values to exact suffixes from kNoACSpecs (same as in init)
-        static const std::map<float, std::string> f_to_suffix = {
-          {-100.0f, "noacm100"}, {-12.0f, "noacm12"}, {-8.0f, "noacm8"}, {-4.0f, "noacm4"}, {-2.0f, "noacm2"},
-          {-1.0f, "noacm1"}, {-0.8f, "noacm08"}, {-0.6f, "noacm06"}, {-0.4f, "noacm04"}, {-0.2f, "noacm02"},
-          {0.0f, "noac0"},
-          {0.2f, "noac02"}, {0.4f, "noac04"}, {0.6f, "noac06"}, {0.8f, "noac08"},
-          {1.0f, "noac1"}, {2.0f, "noac2"}, {4.0f, "noac4"}, {8.0f, "noac8"}, {12.0f, "noac12"}, {100.0f, "noac100"}
-        };
+
         for(const float fv : f_values){
-          if(!noac_weights_map.count(fv)) continue;
-          // STEP 8: Lookup the NoAC weight for the current f value
-          const double w_f = lookup_noac_weight(noac_weights_map[fv].get(), xi_gen_evt);
-          // Get exact suffix matching kNoACSpecs
-          std::string suffix;
-          auto it_suffix = f_to_suffix.find(fv);
-          if(it_suffix != f_to_suffix.end()){
-            suffix = it_suffix->second;
+          // Use GEN-mtt-binned weight for the event's own GEN bin (if available), else fallback to inclusive
+          double w_f = 1.0;
+          if(use_noac_mtt_binning_ && noac_weights_mtt_initialized && gen_mtt_ib >= 0){
+            // Use GEN-mtt-binned weight for this event's GEN bin
+            auto it = noac_weights_mtt_map.find(fv);
+            if(it != noac_weights_mtt_map.end()
+               && gen_mtt_ib >= 0
+               && gen_mtt_ib < (int)it->second.size()
+               && it->second[gen_mtt_ib]){
+              w_f = lookup_noac_weight(it->second[gen_mtt_ib].get(), xi_gen_evt);
+            } else {
+              // Fallback to inclusive weights if GEN-mtt-binned not available
+              w_f = noac_weight_inclusive(fv);
+            }
           } else {
-            // Fallback (shouldn't happen if f_values matches kNoACSpecs)
-            if(std::abs(fv) < 0.01f) suffix = "noac0";
-            else if(fv < 0) suffix = "noacm" + std::to_string(static_cast<int>(std::abs(fv)));
-            else suffix = "noac" + std::to_string(static_cast<int>(fv));
+            // Fallback to inclusive weights if GEN-mtt-binning disabled or not initialized
+            w_f = noac_weight_inclusive(fv);
           }
-          // Fill all binning schemes for this f value
+          const std::string suffix = get_noac_suffix_from_f(fv);
+
+          // Fill all reco xi binnings for this f (inclusive in mtt)
           for(int nb : bin_schemes){
-            std::string hname = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
-            auto it = h_deltaY_xi_reco_map.find(hname);
-            if(it != h_deltaY_xi_reco_map.end()) it->second->Fill(deltay_xi, weight * w_f);
+            std::string hname =
+              "DeltaY_xi_reco_" + std::to_string(nb) + "_" + suffix;
+            auto itH = h_deltaY_xi_reco_map.find(hname);
+            if(itH != h_deltaY_xi_reco_map.end())
+              itH->second->Fill(deltay_xi, weight * w_f);
           }
+
+          // inclusive GEN-level xi templates
+          std::string hname_gen_18 = "DeltaY_xi_gen_18_" + suffix;
+          auto it_gen_18 = h_deltaY_xi_gen_map.find(hname_gen_18);
+          if(it_gen_18 != h_deltaY_xi_gen_map.end())
+            it_gen_18->second->Fill(xi_gen_evt, weight * w_f);
         }
       }
-      //template method end
+
+      // (b) GEN-mtt-binned NoAC templates (differential f_k)
+      //
+      // CRITICAL: Weight selection is based on GEN mttbar bin ONLY (no RECO bin condition).
+      // RECO mttbar is ONLY used for directory organization, NOT for weight selection.
+      //
+      // For each event:
+      //   - Loop over ALL GEN-mtt-binned templates
+      //   - If the event's GEN mttbar bin matches the template's GEN bin: apply NoAC weight
+      //   - If the event's GEN mttbar bin does NOT match: apply weight = 1.0
+      //   - This ensures all templates are filled, showing migration effects
+      //
+      // Example: Event with GEN mttbar = 600 GeV (bin [500,750)) in RECO bin [750,1000)
+      //   - Fills DeltaY_xi_reco_18_mtt500_750_noac4 with NoAC weight (matches GEN bin)
+      //   - Fills DeltaY_xi_reco_18_mtt1000_1500_noac4 with weight = 1.0 (doesn't match GEN bin)
+      //   - This shows migration: events from GEN [500,750) appear in RECO [750,1000) folder
+      //
+      if(do_noac && use_noac_mtt_binning_ && noac_weights_mtt_initialized){
+        const int bin_schemes[] = {6, 12, 18, 24, 30, 36, 50};
+        const int nmtt = (int)noac_mtt_edges.size() - 1;
+        
+        // Loop over ALL GEN mttbar bins (templates)
+        for(int ib_template = 0; ib_template < nmtt; ++ib_template){
+          const int mtt_lo = (int)noac_mtt_edges[ib_template];
+          const int mtt_hi = (int)noac_mtt_edges[ib_template + 1];
+          
+          // For each f value
+          for(const float fv : f_values){
+            // Compute weight: NoAC weight if event's GEN bin matches template bin, else 1.0
+            const double w_noac = noac_weight_for_gen_bin(fv, ib_template);
+            const std::string suffix = get_noac_suffix_from_f(fv);
+            
+            // Fill all xi_reco binnings for this GEN mttbar bin template and f value
+            for(int nb : bin_schemes){
+              std::ostringstream ss;
+              ss << "DeltaY_xi_reco_" << nb
+                 << "_mtt" << mtt_lo << "_" << mtt_hi
+                 << "_" << suffix;
+              auto itH = h_deltaY_xi_reco_map.find(ss.str());
+              if(itH != h_deltaY_xi_reco_map.end())
+                itH->second->Fill(deltay_xi, weight * w_noac);
+            }
+            
+            // Fill mttbar histogram for this GEN-mtt bin template and f value
+            // NOTE: Mttbar histograms are not currently booked, so this code is commented out.
+            // If you want to plot mttbar distributions, you need to book them in the book() method
+            // and declare h_mtt_reco_map as a member variable.
+            // if(has_reco_mtt){
+            //   std::ostringstream ss_mtt;
+            //   ss_mtt << "Mtt_reco_18_mtt" << mtt_lo << "_" << mtt_hi << "_" << suffix;
+            //   auto itH_mtt = h_mtt_reco_map.find(ss_mtt.str());
+            //   if(itH_mtt != h_mtt_reco_map.end())
+            //     itH_mtt->second->Fill(mtt_reco_evt, weight * w_noac);
+            // }
+          } // loop over f values
+        }   // loop over all GEN mttbar bin templates
+      }     // end (b) GEN-mtt-binned NoAC
+      
+
+
       // up/down variations (multi-f map)
-      // Get NoAC weight for f=0 (nominal) if available
-      double w_noac_nominal = 1.0;
-      if(use_noac_evtweights_ && !noac_weights_map.empty() && noac_weights_map.count(0.0f)){
-        w_noac_nominal = lookup_noac_weight(noac_weights_map[0.0f].get(), xi_gen_evt);
-      }
+      // Note: w_noac_nominal is already set to 1.0 above (f=0 is always 1.0 by definition)
+      // No lookup needed here
       for(unsigned int i=0; i<names.size(); i++){
         const double w_up = weight * syst_up.at(i)/syst_nominal.at(i);
         const double w_dn = weight * syst_down.at(i)/syst_nominal.at(i);
@@ -1372,6 +1736,11 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
           }
         }
       }
+
+      //template method end
+
+
+
       if (debug)cout << "ttbar all sys fill deltay-systematics " <<endl;
       // scale variations
       for(unsigned int i=0; i<hists_scale.size(); i++){
@@ -1392,7 +1761,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       if (debug)cout << "ttbar all sys fill deltay-scale variations " <<endl;
       // btag variations
       for(unsigned int i=0; i<hists_btag.size(); i++){
-        const double w_bt = weight * (syst_btag.at(i)/btag_nominal);
+        const double w_bt = safe_syst_ratio(weight, syst_btag.at(i), btag_nominal);
         hists_btag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_bt);
         hists_btag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_bt * w_noac_nominal);
         // derive tag name from order
@@ -1410,7 +1779,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       if (debug)cout << "ttbar all sys fill deltay - btag" <<endl;
       // ttag variations!
       for(unsigned int i=0; i<hists_ttag.size(); i++){
-        const double w_tt = weight * (syst_ttag.at(i)/ttag_nominal);
+        const double w_tt = safe_syst_ratio(weight, syst_ttag.at(i), ttag_nominal);
         hists_ttag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_tt);
         hists_ttag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_tt * w_noac_nominal);
         static const char* tags[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
@@ -1428,7 +1797,7 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       // tmistag variations
       if (debug)cout <<"size for mistag: "<<hists_tmistag.size()<<endl;
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
-        const double w_tm = weight * (syst_tmistag.at(i)/tmistag_nominal);
+        const double w_tm = safe_syst_ratio(weight, syst_tmistag.at(i), tmistag_nominal);
         hists_tmistag_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_tm);
         hists_tmistag_deltaY_xi_reco_6.at(i)->Fill(deltay_xi, w_tm * w_noac_nominal);
         const char* t = (i==0? "tmistag_up" : "tmistag_down");
@@ -1478,30 +1847,8 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       // float Mreco = BestZprimeCandidate->Zprime_v4().M();
       if (debug)cout << "in other MC cat"<<endl;
       if (debug)cout <<"one event loop"<<endl;
-      float deltay=99.;
-      bool isLeptonPositive = false;
       if (debug)cout << "ttbar all sys calc deltay " <<endl;
-      if(isMuon){
-        if (event.muons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
-     
-      if(isElectron){
-        if (event.electrons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
-      if (isLeptonPositive) {
-        deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
-      }
-      else {
-        deltay=(TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity())); 
-      }
+      float deltay = compute_deltay(BestZprimeCandidate, isLeptonPositive);
       DeltaY->Fill(deltay, weight);
       // Template method xi for non-TT MC (no NoAC). Fill xi nominal only
       const double xi_reco = TMath::TanH(deltay);
@@ -1516,11 +1863,11 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       // Fill explicit xi systematics (no f dependence)
       for(unsigned int i=0; i<names.size(); i++){
         if (debug)cout <<"filling : "<<names[i]<<endl;
-        hists_up.at(i)->Fill(deltay, weight * syst_up.at(i)/syst_nominal.at(i));
-        hists_down.at(i)->Fill(deltay, weight * syst_down.at(i)/syst_nominal.at(i));
+        hists_up.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+        hists_down.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         // only 6-bin per-syst are booked
-        hists_deltaY_xi_reco_6_up.at(i)->Fill(xi_reco, weight * (syst_up.at(i)/syst_nominal.at(i)));
-        hists_deltaY_xi_reco_6_down.at(i)->Fill(xi_reco, weight * (syst_down.at(i)/syst_nominal.at(i)));
+        hists_deltaY_xi_reco_6_up.at(i)->Fill(xi_reco, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+        hists_deltaY_xi_reco_6_down.at(i)->Fill(xi_reco, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         // also fill 12/50 bin maps
         {
           std::string tag = names.at(i);
@@ -1528,8 +1875,8 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
             auto it = h_deltaY_xi_reco_map.find(nm);
             if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, w);
           };
-          const double w_up_val = weight * syst_up.at(i)/syst_nominal.at(i);
-          const double w_down_val = weight * syst_down.at(i)/syst_nominal.at(i);
+          const double w_up_val = safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i));
+          const double w_down_val = safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i));
           const int map_bins[] = {12,18,24,30,36,50};
           for(int nb : map_bins){
             std::string prefix = "DeltaY_xi_reco_" + std::to_string(nb) + "_";
@@ -1556,8 +1903,8 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       }
       // btag variations
       for(unsigned int i=0; i<hists_btag.size(); i++){
-        hists_btag.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
-        hists_btag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_btag.at(i)/btag_nominal));
+        hists_btag.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
+        hists_btag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
         // derive tag name from order
         static const char* btags[] = {"btag_cferr1_up","btag_cferr1_down","btag_cferr2_up","btag_cferr2_down","btag_hf_up","btag_hf_down","btag_hfstats1_up","btag_hfstats1_down","btag_hfstats2_up","btag_hfstats2_down","btag_lf_up","btag_lf_down","btag_lfstats1_up","btag_lfstats1_down","btag_lfstats2_up","btag_lfstats2_down"};
         if(i<16){
@@ -1566,14 +1913,15 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
           for(int nb : map_bins){
             std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + tag;
             auto it = h_deltaY_xi_reco_map.find(name);
-            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_btag.at(i)/btag_nominal);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
           }
         }
       }
       // ttag variations
       for(unsigned int i=0; i<hists_ttag.size(); i++){
-        hists_ttag.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
-        hists_ttag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_ttag.at(i)/ttag_nominal));
+        const double w_tt = safe_syst_ratio(weight, syst_ttag.at(i), ttag_nominal);
+        hists_ttag.at(i)->Fill(deltay, w_tt);
+        hists_ttag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, w_tt);
         static const char* tags[] = {"ttag_corr_up","ttag_corr_down","ttag_uncorr_up","ttag_uncorr_down"};
         if(i<4){
           std::string t = tags[i];
@@ -1581,20 +1929,21 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
           for(int nb : map_bins){
             std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
             auto it = h_deltaY_xi_reco_map.find(name);
-            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_ttag.at(i)/ttag_nominal);
+            if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, w_tt);
           }
         }
       }
       // tmistag variations
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
-        hists_tmistag.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
-        hists_tmistag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, weight * (syst_tmistag.at(i)/tmistag_nominal));
+        const double w_tm = safe_syst_ratio(weight, syst_tmistag.at(i), tmistag_nominal);
+        hists_tmistag.at(i)->Fill(deltay, w_tm);
+        hists_tmistag_deltaY_xi_reco_6.at(i)->Fill(xi_reco, w_tm);
         const char* t = (i==0? "tmistag_up" : "tmistag_down");
         const int map_bins[] = {12,18,24,30,36,50};
         for(int nb : map_bins){
           std::string name = "DeltaY_xi_reco_" + std::to_string(nb) + "_" + t;
           auto it = h_deltaY_xi_reco_map.find(name);
-          if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, weight * syst_tmistag.at(i)/tmistag_nominal);
+          if(it!=h_deltaY_xi_reco_map.end()) it->second->Fill(xi_reco, w_tm);
         }
       }
       // Top pt xi
@@ -1816,53 +2165,31 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
 
 
         // Map back into original domain if necessary
-      bool isLeptonPositive = false;
       if (debug)cout << "ttbar all sys calc deltay " <<endl;
-      if(isMuon){
-        if (event.muons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
-     
-      if(isElectron){
-        if (event.electrons->at(0).charge() == 1){
-          isLeptonPositive = true;
-        } else {
-          isLeptonPositive = false;
-        }
-      }
-      float deltay=99.;
-      if (isLeptonPositive) {
-        deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
-      }
-      else {
-        deltay=(TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity())); 
-      }
+      float deltay = compute_deltay(BestZprimeCandidate, isLeptonPositive);
       // float deltay=(TMath::Abs(BestZprimeCandidate->top_leptonic_v4().Rapidity()) - TMath::Abs(BestZprimeCandidate->top_hadronic_v4().Rapidity()));
       
       
       for(unsigned int i=0; i<names.size(); i++){
         if (debug)cout <<" done with dy " <<endl;
         if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-            hists_sigma_1_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
-            hists_sigma_1_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
+            hists_sigma_1_up.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+            hists_sigma_1_down.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         }
         if (debug)cout <<" done with sigma1" <<endl;    
         if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-          hists_sigma_2_up.at(i)->Fill(sphi, weight * syst_up.at(i)/syst_nominal.at(i));
-          hists_sigma_2_down.at(i)->Fill(sphi, weight * syst_down.at(i)/syst_nominal.at(i));
+          hists_sigma_2_up.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+          hists_sigma_2_down.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         }
         if (debug)cout <<" done with sigma2" <<endl;  
         if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-          hists_dy_d1_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
-          hists_dy_d1_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
+          hists_dy_d1_up.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+          hists_dy_d1_down.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         }
         if (debug)cout <<" done with d1" <<endl;  
         if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-          hists_dy_d2_up.at(i)->Fill(deltay,weight * syst_up.at(i)/syst_nominal.at(i));
-          hists_dy_d2_down.at(i)->Fill(deltay,weight * syst_down.at(i)/syst_nominal.at(i));
+          hists_dy_d2_up.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_up.at(i), syst_nominal.at(i)));
+          hists_dy_d2_down.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_down.at(i), syst_nominal.at(i)));
         }
         if (debug)cout <<" done with d2" <<endl;  //}
       }
@@ -1900,59 +2227,61 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       for(unsigned int i=0; i<hists_btag.size(); i++){
        
         if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-          hists_btag_sigma_1.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
+          hists_btag_sigma_1.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
         }
         if (debug)cout <<" done with s1 btag " << i << endl; 
         if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-          hists_btag_sigma_2.at(i)->Fill(sphi, weight * syst_btag.at(i)/btag_nominal);
+          hists_btag_sigma_2.at(i)->Fill(sphi, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
         }
         if (debug)cout <<" done with s2 btag " << i << endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-          hists_btag_dy_d1.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
+          hists_btag_dy_d1.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
         }
         if (debug)cout <<" done with d1 btag " <<i <<endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-          hists_btag_dy_d2.at(i)->Fill(deltay, weight * syst_btag.at(i)/btag_nominal);
+          hists_btag_dy_d2.at(i)->Fill(deltay, safe_syst_ratio(weight, syst_btag.at(i), btag_nominal));
         }
         if (debug)cout <<" done with d2 btag " <<i << endl; 
       }
           // ttag variations!
       for(unsigned int i=0; i<hists_ttag.size(); i++){
        
+        const double w_tt = safe_syst_ratio(weight, syst_ttag.at(i), ttag_nominal);
         if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-          hists_ttag_sigma_1.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
+          hists_ttag_sigma_1.at(i)->Fill(sphi, w_tt);
           }
         if (debug)cout <<" done with s1 ttag" <<endl; 
         if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-          hists_ttag_sigma_2.at(i)->Fill(sphi, weight * syst_ttag.at(i)/ttag_nominal);
+          hists_ttag_sigma_2.at(i)->Fill(sphi, w_tt);
           }
         if (debug)cout <<" done with s2 ttag" <<endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-          hists_ttag_dy_d1.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
+          hists_ttag_dy_d1.at(i)->Fill(deltay, w_tt);
         }
         if (debug)cout <<" done with d1 ttag" <<endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-          hists_ttag_dy_d2.at(i)->Fill(deltay, weight * syst_ttag.at(i)/ttag_nominal);
+          hists_ttag_dy_d2.at(i)->Fill(deltay, w_tt);
         }
         if (debug)cout <<" done with d2 ttag" <<endl; 
       }
           // tmistag variations
       for(unsigned int i=0; i<hists_tmistag.size(); i++){
         
+        const double w_tm = safe_syst_ratio(weight, syst_tmistag.at(i), tmistag_nominal);
         if (pt_hadTop > pt_hadTop_thresh && deltay>0){
-          hists_tmistag_sigma_1.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
+          hists_tmistag_sigma_1.at(i)->Fill(sphi, w_tm);
           }
         if (debug)cout <<" done with s1 mistag" <<endl; 
         if (pt_hadTop > pt_hadTop_thresh && deltay<0){
-          hists_tmistag_sigma_2.at(i)->Fill(sphi, weight * syst_tmistag.at(i)/tmistag_nominal);
+          hists_tmistag_sigma_2.at(i)->Fill(sphi, w_tm);
           }
         if (debug)cout <<" done with s2 mistag" <<endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi>0){
-          hists_tmistag_dy_d1.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
+          hists_tmistag_dy_d1.at(i)->Fill(deltay, w_tm);
         }
         if (debug)cout <<" done with d1 mistag" <<endl; 
         if(pt_hadTop < pt_hadTop_thresh && dphi<0){
-          hists_tmistag_dy_d2.at(i)->Fill(deltay, weight * syst_tmistag.at(i)/tmistag_nominal);
+          hists_tmistag_dy_d2.at(i)->Fill(deltay, w_tm);
         }
         if (debug)cout <<" done with d2 mistag" <<endl; 
 

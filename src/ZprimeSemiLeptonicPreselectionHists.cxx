@@ -302,11 +302,45 @@ void ZprimeSemiLeptonicPreselectionHists::init(){
   Mtt_gen               = book<TH1F>("Mtt_gen", "M_{t#bar{t}} GEN [GeV]", 100, 0, 2000);
   DeltaY_gen            = book<TH1F>("DeltaY_gen", "#Delta|Y|_{(t,#bar{t})} GEN ", 50, -2.5, 2.5);
   DeltaY_xi_gen         = book<TH1F>("DeltaY_xi_gen", "#xi = tanh(#Delta|Y|) GEN ", 50, -1.0, 1.0);
+  DeltaY_xi_gen_300     = book<TH1F>("DeltaY_xi_gen_300", "#xi = tanh(#Delta|Y|) GEN ", 300, -1.0, 1.0);
+  DeltaY_xi_gen_100     = book<TH1F>("DeltaY_xi_gen_100", "#xi = tanh(#Delta|Y|) GEN ", 100, -1.0, 1.0);
   DeltaY_xi_gen_36      = book<TH1F>("DeltaY_xi_gen_36", "#xi = tanh(#Delta|Y|) GEN ", 36, -1.0, 1.0);
   DeltaY_xi_gen_20      = book<TH1F>("DeltaY_xi_gen_20", "#xi = tanh(#Delta|Y|) GEN ", 20, -1.0, 1.0);
+  DeltaY_xi_gen_18      = book<TH1F>("DeltaY_xi_gen_18", "#xi = tanh(#Delta|Y|) GEN ", 18, -1.0, 1.0);
   DeltaY_xi_gen_10      = book<TH1F>("DeltaY_xi_gen_10", "#xi = tanh(#Delta|Y|) GEN ", 10, -1.0, 1.0);
   DeltaY_xi_gen_6       = book<TH1F>("DeltaY_xi_gen_6", "#xi = tanh(#Delta|Y|) GEN ", 6, -1.0, 1.0);
+  
+  // mtt-binned xi (300 bins) to feed NoAC template weights: bin edges match Systematics (0,350,500,750,1000,1500,10000)
+  DeltaY_xi_gen_300_mtt0 = book<TH1F>("DeltaY_xi_gen_300_mtt0", "#xi = tanh(#Delta|Y|) GEN (0-350)", 300, -1.0, 1.0);
+  DeltaY_xi_gen_300_mtt1 = book<TH1F>("DeltaY_xi_gen_300_mtt1", "#xi = tanh(#Delta|Y|) GEN (350-500)", 300, -1.0, 1.0);
+  DeltaY_xi_gen_300_mtt2 = book<TH1F>("DeltaY_xi_gen_300_mtt2", "#xi = tanh(#Delta|Y|) GEN (500-750)", 300, -1.0, 1.0);
+  DeltaY_xi_gen_300_mtt3 = book<TH1F>("DeltaY_xi_gen_300_mtt3", "#xi = tanh(#Delta|Y|) GEN (750-1000)", 300, -1.0, 1.0);
+  DeltaY_xi_gen_300_mtt4 = book<TH1F>("DeltaY_xi_gen_300_mtt4", "#xi = tanh(#Delta|Y|) GEN (1000-1500)", 300, -1.0, 1.0);
+  DeltaY_xi_gen_300_mtt5 = book<TH1F>("DeltaY_xi_gen_300_mtt5", "#xi = tanh(#Delta|Y|) GEN (1500-10000)", 300, -1.0, 1.0);
 
+  // mtt-binned xi (100 bins) to feed NoAC template weights: bin edges match Systematics (0,350,500,750,1000,1500,10000)
+  DeltaY_xi_gen_100_mtt0 = book<TH1F>("DeltaY_xi_gen_100_mtt0", "#xi = tanh(#Delta|Y|) GEN (0-350)", 100, -1.0, 1.0);
+  DeltaY_xi_gen_100_mtt1 = book<TH1F>("DeltaY_xi_gen_100_mtt1", "#xi = tanh(#Delta|Y|) GEN (350-500)", 100, -1.0, 1.0);
+  DeltaY_xi_gen_100_mtt2 = book<TH1F>("DeltaY_xi_gen_100_mtt2", "#xi = tanh(#Delta|Y|) GEN (500-750)", 100, -1.0, 1.0);
+  DeltaY_xi_gen_100_mtt3 = book<TH1F>("DeltaY_xi_gen_100_mtt3", "#xi = tanh(#Delta|Y|) GEN (750-1000)", 100, -1.0, 1.0);
+  DeltaY_xi_gen_100_mtt4 = book<TH1F>("DeltaY_xi_gen_100_mtt4", "#xi = tanh(#Delta|Y|) GEN (1000-1500)", 100, -1.0, 1.0);
+  DeltaY_xi_gen_100_mtt5 = book<TH1F>("DeltaY_xi_gen_100_mtt5", "#xi = tanh(#Delta|Y|) GEN (1500-10000)", 100, -1.0, 1.0);
+
+  // mtt-binned xi (50 bins) to feed NoAC template weights: bin edges match Systematics (0,350,500,750,1000,1500,10000)
+  DeltaY_xi_gen_mtt0 = book<TH1F>("DeltaY_xi_gen_mtt0", "#xi = tanh(#Delta|Y|) GEN (0-350)", 50, -1.0, 1.0);
+  DeltaY_xi_gen_mtt1 = book<TH1F>("DeltaY_xi_gen_mtt1", "#xi = tanh(#Delta|Y|) GEN (350-500)", 50, -1.0, 1.0);
+  DeltaY_xi_gen_mtt2 = book<TH1F>("DeltaY_xi_gen_mtt2", "#xi = tanh(#Delta|Y|) GEN (500-750)", 50, -1.0, 1.0);
+  DeltaY_xi_gen_mtt3 = book<TH1F>("DeltaY_xi_gen_mtt3", "#xi = tanh(#Delta|Y|) GEN (750-1000)", 50, -1.0, 1.0);
+  DeltaY_xi_gen_mtt4 = book<TH1F>("DeltaY_xi_gen_mtt4", "#xi = tanh(#Delta|Y|) GEN (1000-1500)", 50, -1.0, 1.0);
+  DeltaY_xi_gen_mtt5 = book<TH1F>("DeltaY_xi_gen_mtt5", "#xi = tanh(#Delta|Y|) GEN (1500-10000)", 50, -1.0, 1.0);
+
+  // mtt-binned xi (18 bins) to feed NoAC template weights: bin edges match Systematics (0,350,500,750,1000,1500,10000) 
+  DeltaY_xi_gen_18_mtt0 = book<TH1F>("DeltaY_xi_gen_18_mtt0", "#xi = tanh(#Delta|Y|) GEN (0-350)", 18, -1.0, 1.0);
+  DeltaY_xi_gen_18_mtt1 = book<TH1F>("DeltaY_xi_gen_18_mtt1", "#xi = tanh(#Delta|Y|) GEN (350-500)", 18, -1.0, 1.0);
+  DeltaY_xi_gen_18_mtt2 = book<TH1F>("DeltaY_xi_gen_18_mtt2", "#xi = tanh(#Delta|Y|) GEN (500-750)", 18, -1.0, 1.0);
+  DeltaY_xi_gen_18_mtt3 = book<TH1F>("DeltaY_xi_gen_18_mtt3", "#xi = tanh(#Delta|Y|) GEN (750-1000)", 18, -1.0, 1.0);
+  DeltaY_xi_gen_18_mtt4 = book<TH1F>("DeltaY_xi_gen_18_mtt4", "#xi = tanh(#Delta|Y|) GEN (1000-1500)", 18, -1.0, 1.0);
+  DeltaY_xi_gen_18_mtt5 = book<TH1F>("DeltaY_xi_gen_18_mtt5", "#xi = tanh(#Delta|Y|) GEN (1500-10000)", 18, -1.0, 1.0);
   // Response matrix for template method
 
 }
@@ -316,8 +350,9 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
   double weight = event.weight;
 
-  // Check if this is a TTbar MC event
-  bool is_tt = ctx->get("dataset_version").find("TTTo") == 0;
+  // Check if this is a TTbar MC event (including EFT and MadGraph samples)
+  std::string dataset_version = ctx->get("dataset_version");
+  bool is_tt = (dataset_version.find("TTTo") == 0) || (dataset_version.find("TTJets") != std::string::npos) || (dataset_version.find("EFT") != std::string::npos);
   bool is_mc = ctx->get("dataset_type") == "MC";
     
 
@@ -771,7 +806,7 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
   // cout<< "general: ok" << endl; 
 
   // Template method: Fill GEN-level histograms for ALL ttbar MC events
-  if(is_tt && is_mc) {
+  if(is_tt && is_mc && event.is_valid(h_ttbargen)) {
     
     const auto& ttbargen = event.get(h_ttbargen);
     
@@ -793,10 +828,67 @@ void ZprimeSemiLeptonicPreselectionHists::fill(const Event & event){
 
         DeltaY_gen->Fill(DeltaY_gen_val, weight);
         DeltaY_xi_gen->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_300->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_100->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_36->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_20->Fill(xi_gen_val, weight);
+        DeltaY_xi_gen_18->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_10->Fill(xi_gen_val, weight);
         DeltaY_xi_gen_6->Fill(xi_gen_val, weight);
+
+        // mtt-binned xi histograms (match NoAC weights binning)
+        const double mtt_edges[] = {0.0, 350.0, 500.0, 750.0, 1000.0, 1500.0, 10000.0};
+        int mtt_bin = -1;
+        for(int ib = 0; ib < 6; ++ib){
+          if(mtt_gen_val >= mtt_edges[ib] && mtt_gen_val < mtt_edges[ib+1]){
+            mtt_bin = ib;
+            break;
+          }
+        }
+        if(mtt_bin == -1){
+          if(mtt_gen_val < mtt_edges[0]) mtt_bin = 0;
+          else if(mtt_gen_val >= mtt_edges[6]) mtt_bin = 5;
+        }
+        switch (mtt_bin) {
+          case 0:
+            DeltaY_xi_gen_300_mtt0->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt0->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt0->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt0->Fill(xi_gen_val, weight);
+            break;
+          case 1:
+            DeltaY_xi_gen_300_mtt1->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt1->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt1->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt1->Fill(xi_gen_val, weight);
+            break;
+          case 2:
+            DeltaY_xi_gen_300_mtt2->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt2->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt2->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt2->Fill(xi_gen_val, weight);
+            break;
+          case 3:
+            DeltaY_xi_gen_300_mtt3->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt3->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt3->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt3->Fill(xi_gen_val, weight);
+            break;
+          case 4:
+            DeltaY_xi_gen_300_mtt4->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt4->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt4->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt4->Fill(xi_gen_val, weight);
+            break;
+          case 5:
+            DeltaY_xi_gen_300_mtt5->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_100_mtt5->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_18_mtt5->Fill(xi_gen_val, weight);
+            DeltaY_xi_gen_mtt5->Fill(xi_gen_val, weight);
+            break;
+          default:
+            break;
+        }
         Mtt_gen->Fill(mtt_gen_val, weight);
       
         // DeltaY_xi_genVsReco->Fill(xi_gen_val, xi_reco_val, weight);

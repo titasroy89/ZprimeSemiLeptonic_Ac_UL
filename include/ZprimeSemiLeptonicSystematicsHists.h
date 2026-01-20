@@ -186,43 +186,6 @@ protected:
   TH1F *DeltaY_xi_reco_30;
   TH1F *DeltaY_xi_reco_36;
   TH1F *DeltaY_xi_reco_50;
-  // NoAC systematics (f=+1 is Down, f=-1 is Up) - all binning schemes
-  TH1F *DeltaY_xi_reco_6_NoAC_up;
-  TH1F *DeltaY_xi_reco_6_NoAC_down;
-  TH1F *DeltaY_xi_reco_12_NoAC_up;
-  TH1F *DeltaY_xi_reco_12_NoAC_down;
-  TH1F *DeltaY_xi_reco_18_NoAC_up;
-  TH1F *DeltaY_xi_reco_18_NoAC_down;
-  TH1F *DeltaY_xi_reco_24_NoAC_up;
-  TH1F *DeltaY_xi_reco_24_NoAC_down;
-  TH1F *DeltaY_xi_reco_30_NoAC_up;
-  TH1F *DeltaY_xi_reco_30_NoAC_down;
-  TH1F *DeltaY_xi_reco_36_NoAC_up;
-  TH1F *DeltaY_xi_reco_36_NoAC_down;
-  TH1F *DeltaY_xi_reco_50_NoAC_up;
-  TH1F *DeltaY_xi_reco_50_NoAC_down;
-  // NoAC systematics for f=±2, ±8, ±12 - all binning schemes
-  TH1F *DeltaY_xi_reco_6_NoAC_up_f2;   TH1F *DeltaY_xi_reco_6_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_6_NoAC_up_f8;   TH1F *DeltaY_xi_reco_6_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_6_NoAC_up_f12;  TH1F *DeltaY_xi_reco_6_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_12_NoAC_up_f2;  TH1F *DeltaY_xi_reco_12_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_12_NoAC_up_f8;  TH1F *DeltaY_xi_reco_12_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_12_NoAC_up_f12; TH1F *DeltaY_xi_reco_12_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_18_NoAC_up_f2;  TH1F *DeltaY_xi_reco_18_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_18_NoAC_up_f8;  TH1F *DeltaY_xi_reco_18_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_18_NoAC_up_f12; TH1F *DeltaY_xi_reco_18_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_24_NoAC_up_f2;  TH1F *DeltaY_xi_reco_24_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_24_NoAC_up_f8;  TH1F *DeltaY_xi_reco_24_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_24_NoAC_up_f12; TH1F *DeltaY_xi_reco_24_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_30_NoAC_up_f2;  TH1F *DeltaY_xi_reco_30_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_30_NoAC_up_f8;  TH1F *DeltaY_xi_reco_30_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_30_NoAC_up_f12; TH1F *DeltaY_xi_reco_30_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_36_NoAC_up_f2;  TH1F *DeltaY_xi_reco_36_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_36_NoAC_up_f8;  TH1F *DeltaY_xi_reco_36_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_36_NoAC_up_f12; TH1F *DeltaY_xi_reco_36_NoAC_down_f12;
-  TH1F *DeltaY_xi_reco_50_NoAC_up_f2;  TH1F *DeltaY_xi_reco_50_NoAC_down_f2;
-  TH1F *DeltaY_xi_reco_50_NoAC_up_f8;  TH1F *DeltaY_xi_reco_50_NoAC_down_f8;
-  TH1F *DeltaY_xi_reco_50_NoAC_up_f12; TH1F *DeltaY_xi_reco_50_NoAC_down_f12;
   // lepton/trigger/pileup/prefiring - 6 bins
   TH1F *DeltaY_xi_reco_6_ele_reco_up;      TH1F *DeltaY_xi_reco_6_ele_reco_down;
   TH1F *DeltaY_xi_reco_6_ele_id_up;        TH1F *DeltaY_xi_reco_6_ele_id_down;
@@ -648,6 +611,11 @@ protected:
 
 
   TH2F *DeltaY_tt;
+  TH2F *DeltaY_reco_vs_gen;
+  TH2F *Mtt_reco_vs_gen;
+
+  // New: GEN-level templates
+  std::map<std::string, TH1F*> h_deltaY_xi_gen_map;
   TH2F *DeltaY_mu_reco_up_tt;
   TH2F *DeltaY_mu_reco_down_tt;
   TH2F *DeltaY_pu_up_tt;
@@ -718,10 +686,17 @@ protected:
 
   // --- NoAC support for tanh systematics (TT-only) ---
   bool use_noac_evtweights_ = false;
+  bool use_noac_mtt_binning_ = false; // if false: use purely inclusive GEN NoAC weights
+  
+  // RECO mtt bin information (parsed from dirname)
+  double reco_mtt_lo_ = -1.0;  // Lower edge of RECO mtt bin (e.g., 500 for [500, 750))
+  double reco_mtt_hi_ = -1.0;  // Upper edge of RECO mtt bin (e.g., 750 for [500, 750))
+  bool has_reco_mtt_bin_ = false;  // Whether dirname contains a specific RECO mtt bin (false for "Inclusive")
   std::string noac_gen_file_;
   std::string noac_gen_hist_;
   double noac_fraction_ = 0.0;
   uhh2::Event::Handle<float> h_xi_gen;
+  uhh2::Event::Handle<float> h_mtt_gen;  // gen-level mttbar for binning
   std::unique_ptr<TH1D> noac_weights_;
 
   static std::unique_ptr<TH1D> mirror_hist_1d(const TH1D &src);
@@ -730,8 +705,16 @@ protected:
   
   // Template-method (xi) multi-f infrastructure
   std::vector<float> f_values;
-  static std::map<float, std::unique_ptr<TH1D>> noac_weights_map;  // Static: shared across all instances
+  static std::map<float, std::unique_ptr<TH1D>> noac_weights_map;  // Static: shared across all instances (inclusive)
   static bool noac_weights_initialized;  // Flag to track if weights have been initialized
+  // mttbar-binned weights: f -> vector over mttbar bins, each entry is a 1D weight hist in xi
+  static std::map<float, std::vector<std::unique_ptr<TH1D>>> noac_weights_mtt_map;
+  static std::vector<double> noac_mtt_edges;  // mttbar bin edges
+  static bool noac_weights_mtt_initialized;
+  
+  // Helper function to find mttbar bin index
+  static int find_mtt_bin(double mtt);
   std::map<std::string, TH1F*> h_deltaY_xi_reco_map;
+
   virtual ~ZprimeSemiLeptonicSystematicsHists();
 };

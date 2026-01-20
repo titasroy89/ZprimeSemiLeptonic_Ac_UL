@@ -1,0 +1,17 @@
+Summary of template method implementation in the SystematicsHists.cxx script
+
+1. Build GEN templates
+Symmetric/Antisymmetric decomposition: The build_noac_weights_from_gen function (lines 61-108) computes S and A components from the input GEN histograms (xi_gen).
+Weight computation: It calculates W_f = (S + (1-f)A)/(S+A) and includes a normalization step (lines 94-106) to ensure <W> = 1 which is appropriate for shape variations in Combine.
+Mtt-binning: It has mtt_gen dependence via noac_weights_mtt_map (in init), creating specific weight maps for defined m_ttbar bins (lines 297-448).
+
+
+2. Apply weights event-by-event
+Event Loop: In fill(), it computes xi_{reco} = tanh(deltaY) (lines 1406-1413).
+Weight Lookup: It retrieves the GEN-level xi and mttbar for the event and looks up the corresponding weight using the correct mttbar bin (lines 1463-1522).
+Histogram Filling: It fills DeltaY_xi_reco histograms for every f value defined in f_values and for multiple binning schemes (6, 12, ..., 50 bins).
+
+
+3. Use these reco templates in Combine
+Output: It produces the necessary DeltaY_xi_reco_N_noacX histograms. These specific histograms are exactly what Combine needs to treat f as a POI (interpolating between the templates).
+Systematics: Standard systematics (JEC, JER, scale, PDF, etc.) are handled by applying the nominal f=0 NoAC weight (lines 1544+), which is the correct procedure for defining variations around the central hypothesis.
