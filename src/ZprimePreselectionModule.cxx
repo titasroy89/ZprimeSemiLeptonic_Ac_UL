@@ -143,6 +143,8 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx) {
   double jet2_pt(30.);
   double MET(20.);
 
+
+
   // GEN Flavor selection [W+jets flavor-splitting]
   if(ctx.get("dataset_version").find("WJets") != std::string::npos){
     if     (ctx.get("dataset_version").find("_B") != std::string::npos) genflavor_sel.reset(new GenFlavorSelection("b"));
@@ -163,6 +165,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx) {
   jet_cleaner2.reset(new JetCleaner(ctx, 20., 2.5));
   hotvrjet_cleaner.reset(new TopJetCleaner(ctx, PtEtaCut(200., 2.5)));
   topjet_puppi_IDcleaner.reset(new TopJetCleaner(ctx, jetID_PUPPI, "toppuppijets"));
+  //eta changes to 2.4 only for 2016
   topjet_puppi_cleaner.reset(new TopJetCleaner(ctx, TopJetId(PtEtaCut(200., 2.5)), "toppuppijets"));
 
   // Split interference signal samples by sign
@@ -196,6 +199,7 @@ ZprimePreselectionModule::ZprimePreselectionModule(uhh2::Context& ctx) {
   if(isMC) ttgenprod.reset(new TTbarGenProducer(ctx, "ttbargen", true));
 
   //// EVENT SELECTION
+  //eta changed to 2.4 only for 2016
   jet1_sel.reset(new NJetSelection(1, -1, JetId(PtEtaCut(jet1_pt, 2.5))));
   jet2_sel.reset(new NJetSelection(2, -1, JetId(PtEtaCut(jet2_pt, 2.5))));
   met_sel.reset(new METCut(MET, uhh2::infinity));

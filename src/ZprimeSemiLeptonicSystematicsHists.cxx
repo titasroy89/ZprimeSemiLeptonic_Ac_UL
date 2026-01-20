@@ -1341,6 +1341,17 @@ void ZprimeSemiLeptonicSystematicsHists::fill(const Event & event){
       for(unsigned int i=0; i<names.size(); i++){
         const double w_up = weight * syst_up.at(i)/syst_nominal.at(i);
         const double w_dn = weight * syst_down.at(i)/syst_nominal.at(i);
+        // cout <<names.size() << names[i] << i <<endl;
+        // if (i==11){
+        //   if( w_up==0.0|| w_dn==0.0||weight==0.0){
+        //     cout << "zero weight detected!" << endl;
+        //     cout<<"weight: "<< weight << endl;
+        //     cout<<"syst up: "<< syst_up.at(i) << " syst down: " << syst_down.at(i)<< "syst nominal: " <<syst_nominal.at(i) << i << endl;
+        //     cout << "weight up: "<< w_up<<" weight down: " << w_dn<< "weight nominal: " <<weight<< i << endl;
+        //   } 
+          
+        //   // if (debug)cout << "weight up: "<< w_up<<" weight down: " << w_dn<< "weight nominal: " <<weight<< i << endl;
+        // }
         hists_up_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_up);
         hists_down_tt.at(i)->Fill(DeltaY_reco_best, DeltaY_gen_best, w_dn);
         // xi systematics (with NoAC f=0 weight applied to match nominal)
