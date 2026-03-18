@@ -26,9 +26,9 @@
 
 	<Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="&PRESELdir;/" PostFix="" TargetLumi="&TargetLumi;">
 
-    <InputData Lumi="619098.5052" NEventsMax="&NEVT;" Type="MC" Version="MC_TTToSemiLeptonic_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTToSemiLeptonic_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-	<InputData Lumi="180852.5705" NEventsMax="&NEVT;" Type="MC" Version="MC_TTTo2L2Nu_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTTo2L2Nu_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
-	<InputData Lumi="1864693.386" NEventsMax="&NEVT;" Type="MC" Version="MC_TTToHadronic_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTToHadronic_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> 
+    <InputData Lumi="508656.497" NEventsMax="&NEVT;" Type="MC" Version="MC_TTToSemiLeptonic_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTToSemiLeptonic_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>
+	<!-- <InputData Lumi="180852.5705" NEventsMax="&NEVT;" Type="MC" Version="MC_TTTo2L2Nu_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTTo2L2Nu_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData> -->
+	<!-- <InputData Lumi="1864693.386" NEventsMax="&NEVT;" Type="MC" Version="MC_TTToHadronic_mtop171p5_UL18" Cacheable="&b_Cacheable;"> &MC_TTToHadronic_mtop171p5_UL18; <InputTree Name="AnalysisTree"/> <OutputTree Name="AnalysisTree"/> </InputData>  -->
 
 
 <UserConfig>
@@ -58,7 +58,7 @@
 
 			<Item Name="use_sframe_weight"  Value="false"/>
 			<Item Name="jersmear_direction" Value="nominal"/>
-			<Item Name="jecsmear_direction" Value="up"/>
+			<Item Name="jecsmear_direction" Value="nominal"/>
 
 			<Item Name="AnalysisModule" Value="ZprimePreselectionModule"/>
 		</UserConfig>
